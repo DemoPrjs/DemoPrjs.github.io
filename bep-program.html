@@ -1,0 +1,1389 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Business Enterprise Program (BEP) — Georgia Vocational Rehabilitation Agency</title>
+  <meta name="description" content="End-to-end management of Georgia's Business Enterprise Program (BEP) — operator lifecycle, facility management, financial reporting, RSA-15, vendor portal, and accessibility." />
+  <style>
+    /* ── Reset & Base ── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+      color: #1a1a1a;
+      background: #fff;
+      overflow-x: hidden;
+      line-height: 1.5;
+    }
+    a { color: inherit; }
+    img { display: block; max-width: 100%; }
+
+    /* ── Brand (GVRA-inspired) ── */
+    :root {
+      --gvra-blue:       #1a4480;
+      --gvra-blue-dark:  #0b2545;
+      --gvra-blue-light: #e7eef7;
+      --gvra-blue-mid:   #b9cae5;
+      --accent:          #c8a84b;   /* gold accent */
+      --accent-dark:     #a88d2f;
+      --green:           #2e7d32;
+      --green-light:     #e8f5e9;
+      --charcoal:        #212121;
+      --gray:            #5a6470;
+      --gray-light:      #f4f6f9;
+      --white:           #ffffff;
+      --border:          #d9dde4;
+      --shadow-sm:       0 2px 8px rgba(11,37,69,.08);
+      --shadow-md:       0 6px 24px rgba(11,37,69,.10);
+      --shadow-lg:       0 16px 48px rgba(11,37,69,.16);
+      --radius:          10px;
+      --radius-lg:       18px;
+      --transition:      all .25s cubic-bezier(.4,0,.2,1);
+    }
+
+    /* ── Skip Link (a11y) ── */
+    .skip-link {
+      position: absolute;
+      left: -9999px;
+      top: 0;
+      background: var(--gvra-blue-dark);
+      color: #fff;
+      padding: 10px 16px;
+      z-index: 9999;
+      font-weight: 700;
+      border-radius: 0 0 8px 0;
+    }
+    .skip-link:focus { left: 0; outline: 3px solid var(--accent); }
+
+    :focus-visible {
+      outline: 3px solid var(--accent);
+      outline-offset: 2px;
+      border-radius: 4px;
+    }
+
+    /* ── Top Notification Bar ── */
+    .topbar {
+      background: var(--gvra-blue-dark);
+      color: #fff;
+      font-size: 13px;
+      padding: 8px 40px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 16px;
+    }
+    .topbar-left { display: flex; gap: 18px; align-items: center; }
+    .topbar-left span { opacity: .85; }
+    .topbar a { color: #fff; text-decoration: underline; opacity: .9; }
+    .topbar a:hover { opacity: 1; }
+
+    /* ── Nav ── */
+    nav.main-nav {
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+      background: var(--white);
+      border-bottom: 3px solid var(--accent);
+      padding: 0 40px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      height: 76px;
+      box-shadow: var(--shadow-sm);
+    }
+    .nav-brand { display: flex; align-items: center; }
+    .nav-brand img.brand-logo {
+      height: 52px; width: auto; display: block;
+    }
+    .nav-links { display: flex; gap: 28px; align-items: center; }
+    .nav-links a {
+      font-size: 14px; font-weight: 600; color: var(--charcoal);
+      text-decoration: none; transition: var(--transition);
+      padding: 6px 0; position: relative;
+    }
+    .nav-links a:hover { color: var(--gvra-blue); }
+    .nav-links a.active { color: var(--gvra-blue); }
+    .nav-links a.active::after {
+      content: ''; position: absolute; left: 0; right: 0; bottom: -4px;
+      height: 2px; background: var(--accent);
+    }
+    .nav-cta {
+      background: var(--gvra-blue);
+      color: #fff !important;
+      padding: 10px 20px;
+      border-radius: 8px;
+      font-weight: 700 !important;
+    }
+    .nav-cta:hover { background: var(--gvra-blue-dark); }
+
+    /* ── Hero ── */
+    .hero {
+      position: relative;
+      padding: 2.5rem 40px 3.5rem;
+      color: #ffffff;
+      background-color: #0f2e43;
+      background-image:
+        linear-gradient(135deg, rgba(11,37,69,.78) 0%, rgba(26,68,128,.62) 60%, rgba(26,68,128,.55) 100%),
+        url("Hero%20Banner.png");
+      background-position: center center;
+      background-repeat: no-repeat;
+      background-size: cover;
+      overflow: visible;
+      margin-bottom: 0;
+      clip-path: ellipse(90% 100% at 50% 0%);
+    }
+    .hero::before {
+      content: '';
+      position: absolute; inset: 0;
+      background: linear-gradient(180deg, rgba(11,37,69,.15) 0%, rgba(11,37,69,.35) 100%);
+      pointer-events: none;
+    }
+    .hero-inner {
+      max-width: 1280px;
+      margin: 0 auto;
+      position: relative; z-index: 1;
+    }
+    .hero-eyebrow {
+      display: inline-flex; align-items: center; gap: 10px;
+      background: rgba(255,255,255,.12);
+      border: 1px solid rgba(255,255,255,.28);
+      border-radius: 100px;
+      padding: 6px 16px;
+      font-size: 12px; font-weight: 700;
+      letter-spacing: .12em; text-transform: uppercase;
+      margin-bottom: 20px;
+    }
+    .hero-eyebrow-dot { width: 8px; height: 8px; background: var(--accent); border-radius: 50%; animation: pulse 2s infinite; }
+    @keyframes pulse { 0%,100% { opacity: 1; transform: scale(1); } 50% { opacity: .5; transform: scale(1.4); } }
+    .hero h1 {
+      font-size: clamp(34px, 4vw, 54px);
+      font-weight: 800;
+      line-height: 1.08;
+      margin-bottom: 18px;
+      letter-spacing: -.02em;
+      max-width: 820px;
+    }
+    .hero h1 em { font-style: normal; color: var(--accent); }
+    .hero-sub {
+      font-size: 17px; line-height: 1.65;
+      color: rgba(255,255,255,.9);
+      max-width: 720px;
+      margin-bottom: 30px;
+    }
+    .hero-btns { display: flex; gap: 14px; flex-wrap: wrap; }
+    .btn-primary {
+      background: var(--accent); color: var(--gvra-blue-dark);
+      padding: 14px 28px; border-radius: 8px;
+      font-weight: 800; font-size: 15px; text-decoration: none;
+      transition: var(--transition); display: inline-flex; align-items: center; gap: 8px;
+      border: none; cursor: pointer;
+    }
+    .btn-primary:hover { background: #d6b860; transform: translateY(-2px); box-shadow: 0 8px 24px rgba(0,0,0,.2); }
+    .btn-secondary {
+      background: transparent; color: #fff;
+      padding: 14px 28px; border-radius: 8px;
+      font-weight: 700; font-size: 15px; text-decoration: none;
+      border: 2px solid rgba(255,255,255,.5);
+      transition: var(--transition);
+      display: inline-flex; align-items: center; gap: 8px;
+    }
+    .btn-secondary:hover { border-color: #fff; background: rgba(255,255,255,.1); }
+
+    /* Hero visual: lifecycle hub */
+    .hero-visual {
+      background: rgba(255,255,255,.06);
+      border: 1px solid rgba(255,255,255,.18);
+      border-radius: 20px;
+      padding: 28px;
+      backdrop-filter: blur(6px);
+    }
+    .lifecycle {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 12px;
+    }
+    .lc-node {
+      background: rgba(255,255,255,.08);
+      border: 1px solid rgba(255,255,255,.18);
+      border-radius: 12px;
+      padding: 16px 14px;
+      text-align: center;
+    }
+    .lc-node .ico {
+      font-size: 22px; line-height: 1; margin-bottom: 8px;
+    }
+    .lc-node .lbl {
+      font-size: 12px; font-weight: 700; letter-spacing: .04em;
+      color: #fff; text-transform: uppercase;
+    }
+    .lc-node .sub { font-size: 11px; color: rgba(255,255,255,.7); margin-top: 4px; }
+
+    /* ── Stats Bar ── */
+    .stats-bar {
+      background: var(--charcoal);
+      padding: 28px 40px;
+    }
+    .stats-inner {
+      max-width: 1200px; margin: 0 auto;
+      display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px;
+    }
+    .stat-item { text-align: center; padding: 8px 0; border-right: 1px solid rgba(255,255,255,.1); }
+    .stat-item:last-child { border-right: none; }
+    .stat-value { font-size: 30px; font-weight: 800; color: var(--accent); line-height: 1; }
+    .stat-label { font-size: 12px; color: rgba(255,255,255,.65); margin-top: 6px; letter-spacing: .04em; text-transform: uppercase; }
+
+    /* ── Section Base ── */
+    section { padding: 72px 40px; }
+    section:nth-of-type(even) { background: var(--gray-light); }
+    .section-inner { max-width: 1200px; margin: 0 auto; }
+    .section-header { text-align: center; margin-bottom: 48px; }
+    .section-eyebrow {
+      display: inline-block;
+      background: var(--gvra-blue-light);
+      color: var(--gvra-blue-dark);
+      font-size: 12px; font-weight: 800;
+      letter-spacing: .12em; text-transform: uppercase;
+      padding: 6px 16px; border-radius: 100px;
+      margin-bottom: 14px;
+    }
+    .section-title {
+      font-size: clamp(26px, 3vw, 38px);
+      font-weight: 800; color: var(--charcoal);
+      line-height: 1.2; letter-spacing: -.02em;
+    }
+    .section-sub {
+      font-size: 17px; color: var(--gray);
+      max-width: 720px; margin: 14px auto 0; line-height: 1.65;
+    }
+    .req-tag {
+      display: inline-block;
+      background: var(--accent); color: var(--gvra-blue-dark);
+      font-size: 11px; font-weight: 800;
+      letter-spacing: .08em;
+      padding: 3px 9px; border-radius: 4px;
+      margin-right: 8px; vertical-align: middle;
+    }
+
+    /* ── 12.1 Overview cards ── */
+    .overview-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 22px;
+    }
+    .ov-card {
+      background: #fff;
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding: 28px;
+      position: relative;
+      transition: var(--transition);
+    }
+    .ov-card:hover { box-shadow: var(--shadow-md); transform: translateY(-3px); border-color: var(--gvra-blue-mid); }
+    .ov-card .num {
+      position: absolute; top: 20px; right: 22px;
+      font-size: 38px; font-weight: 800;
+      color: var(--gvra-blue-light); line-height: 1;
+    }
+    .ov-card h3 { font-size: 18px; font-weight: 800; margin-bottom: 8px; color: var(--charcoal); }
+    .ov-card p { font-size: 14px; color: var(--gray); line-height: 1.6; }
+    .ov-icon {
+      width: 48px; height: 48px;
+      background: var(--gvra-blue-light); color: var(--gvra-blue-dark);
+      border-radius: 10px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 22px; margin-bottom: 14px;
+    }
+
+    /* ── 12.2/12.3 Lifecycle / Case Flow ── */
+    .two-col {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 36px;
+      align-items: start;
+    }
+    .panel {
+      background: #fff;
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding: 28px;
+    }
+    .panel h3 {
+      font-size: 18px; font-weight: 800; color: var(--charcoal);
+      margin-bottom: 14px; display: flex; align-items: center; gap: 10px;
+    }
+    .panel h3::before {
+      content: ''; width: 6px; height: 22px; background: var(--accent); border-radius: 3px;
+    }
+    .flow-list { list-style: none; display: flex; flex-direction: column; gap: 12px; }
+    .flow-list li {
+      display: grid;
+      grid-template-columns: 30px 1fr;
+      gap: 12px;
+      align-items: start;
+      padding: 12px 14px;
+      background: var(--gray-light);
+      border-left: 3px solid var(--gvra-blue);
+      border-radius: 6px;
+    }
+    .flow-list li .step {
+      width: 26px; height: 26px;
+      background: var(--gvra-blue); color: #fff;
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 12px; font-weight: 800;
+    }
+    .flow-list li strong { display: block; font-size: 14px; color: var(--charcoal); margin-bottom: 2px; }
+    .flow-list li span { font-size: 13px; color: var(--gray); line-height: 1.5; }
+
+    /* Case flow callout (VR → BEP funds) */
+    .vr-bep-callout {
+      margin-top: 28px;
+      background: linear-gradient(135deg, var(--gvra-blue) 0%, var(--gvra-blue-dark) 100%);
+      color: #fff;
+      border-radius: var(--radius-lg);
+      padding: 28px;
+    }
+    .vr-bep-callout h4 {
+      font-size: 18px; margin-bottom: 10px;
+      display: flex; align-items: center; gap: 10px;
+    }
+    .vr-bep-callout p { font-size: 14px; opacity: .9; line-height: 1.65; }
+    .vr-bep-flow {
+      display: grid;
+      grid-template-columns: 1fr auto 1fr auto 1fr;
+      gap: 12px;
+      align-items: center;
+      margin-top: 18px;
+    }
+    .vr-bep-flow .box {
+      background: rgba(255,255,255,.1);
+      border: 1px solid rgba(255,255,255,.2);
+      border-radius: 10px;
+      padding: 14px;
+      text-align: center;
+    }
+    .vr-bep-flow .box strong { display: block; font-size: 13px; }
+    .vr-bep-flow .box small { font-size: 11px; opacity: .8; }
+    .vr-bep-flow .arrow { color: var(--accent); font-size: 22px; font-weight: 800; text-align: center; }
+
+    /* ── 12.4 Facility / Sites ── */
+    .facility-toolbar {
+      display: flex; flex-wrap: wrap; gap: 12px;
+      justify-content: space-between; align-items: center;
+      background: #fff; border: 1px solid var(--border);
+      border-radius: 12px; padding: 14px 18px; margin-bottom: 18px;
+    }
+    .facility-toolbar .filters { display: flex; gap: 8px; flex-wrap: wrap; }
+    .chip {
+      font-size: 12px; font-weight: 700;
+      padding: 6px 12px;
+      border: 1px solid var(--border);
+      border-radius: 100px;
+      background: #fff; color: var(--charcoal);
+      cursor: pointer;
+      transition: var(--transition);
+    }
+    .chip.active, .chip:hover { background: var(--gvra-blue); color: #fff; border-color: var(--gvra-blue); }
+    .table-wrap { background: #fff; border: 1px solid var(--border); border-radius: 12px; overflow: hidden; }
+    table.data { width: 100%; border-collapse: collapse; font-size: 14px; }
+    table.data caption { text-align: left; padding: 14px 18px; font-weight: 800; font-size: 16px; color: var(--charcoal); background: var(--gvra-blue-light); border-bottom: 1px solid var(--border); }
+    table.data thead th {
+      text-align: left; font-size: 12px; letter-spacing: .06em; text-transform: uppercase;
+      color: var(--gray); padding: 12px 14px; border-bottom: 1px solid var(--border);
+      background: var(--gray-light); font-weight: 800;
+    }
+    table.data tbody td { padding: 12px 14px; border-bottom: 1px solid var(--border); color: var(--charcoal); }
+    table.data tbody tr:last-child td { border-bottom: none; }
+    table.data tbody tr:hover { background: var(--gvra-blue-light); }
+    .pill {
+      display: inline-block; font-size: 11px; font-weight: 800;
+      padding: 3px 10px; border-radius: 100px; letter-spacing: .04em; text-transform: uppercase;
+    }
+    .pill.active { background: var(--green-light); color: var(--green); }
+    .pill.pending { background: #fff3cd; color: #856404; }
+    .pill.vacant { background: #fde2e2; color: #b71c1c; }
+    .pill.review { background: var(--gvra-blue-light); color: var(--gvra-blue-dark); }
+    .link-btn {
+      background: none; border: none; padding: 0;
+      color: var(--gvra-blue); font-weight: 700; cursor: pointer; font-size: 13px;
+      text-decoration: underline;
+    }
+    .link-btn:hover { color: var(--gvra-blue-dark); }
+
+    /* ── 12.5 Financial ── */
+    .kpi-grid {
+      display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px;
+      margin-bottom: 28px;
+    }
+    .kpi {
+      background: #fff; border: 1px solid var(--border); border-radius: 12px;
+      padding: 18px;
+    }
+    .kpi .label { font-size: 12px; color: var(--gray); text-transform: uppercase; letter-spacing: .06em; font-weight: 700; }
+    .kpi .value { font-size: 26px; font-weight: 800; color: var(--charcoal); margin-top: 6px; }
+    .kpi .delta { font-size: 12px; margin-top: 4px; font-weight: 700; }
+    .kpi .delta.up { color: var(--green); }
+    .kpi .delta.down { color: #b71c1c; }
+
+    .chart-card {
+      background: #fff; border: 1px solid var(--border); border-radius: 12px;
+      padding: 22px;
+    }
+    .chart-card h4 { font-size: 16px; font-weight: 800; margin-bottom: 16px; }
+    .bar-chart {
+      display: grid;
+      grid-template-columns: repeat(12, 1fr);
+      gap: 10px;
+      align-items: end;
+      height: 200px;
+      padding-top: 8px;
+    }
+    .bar-chart .bar {
+      background: linear-gradient(180deg, var(--gvra-blue) 0%, var(--gvra-blue-dark) 100%);
+      border: none;
+      border-radius: 4px 4px 0 0;
+      position: relative;
+      padding: 0;
+      cursor: pointer;
+      transition: var(--transition);
+    }
+    .bar-chart .bar:hover { filter: brightness(1.15); transform: translateY(-2px); }
+    .bar-chart .bar.active {
+      background: linear-gradient(180deg, var(--accent) 0%, var(--accent-dark) 100%);
+      box-shadow: 0 6px 16px rgba(200,168,75,.35);
+    }
+    .bar-chart .bar::after {
+      content: attr(data-month);
+      position: absolute; bottom: -20px; left: 0; right: 0;
+      text-align: center; font-size: 11px; color: var(--gray); font-weight: 700;
+    }
+    .bar-chart-wrap { padding-bottom: 28px; }
+
+    /* ── 12.6 Accessibility ── */
+    .a11y-grid {
+      display: grid; grid-template-columns: 1.05fr .95fr; gap: 36px; align-items: center;
+    }
+    .a11y-list { list-style: none; display: flex; flex-direction: column; gap: 12px; }
+    .a11y-list li {
+      display: grid; grid-template-columns: 32px 1fr; gap: 12px; align-items: start;
+      padding: 14px; background: #fff; border: 1px solid var(--border); border-radius: 10px;
+    }
+    .a11y-list .check {
+      width: 28px; height: 28px; border-radius: 50%;
+      background: var(--green-light); color: var(--green);
+      display: flex; align-items: center; justify-content: center;
+      font-weight: 800;
+    }
+    .a11y-list strong { display: block; font-size: 14px; color: var(--charcoal); margin-bottom: 2px; }
+    .a11y-list span { font-size: 13px; color: var(--gray); line-height: 1.55; }
+    .a11y-screen {
+      background: #fff; border: 1px solid var(--border); border-radius: 14px;
+      padding: 22px; box-shadow: var(--shadow-md);
+    }
+    .a11y-screen .sr-banner {
+      background: var(--gvra-blue-dark); color: #fff;
+      padding: 10px 14px; border-radius: 8px; font-size: 13px;
+      display: flex; align-items: center; gap: 10px;
+      margin-bottom: 14px;
+    }
+    .a11y-screen .sr-banner .dot { width: 10px; height: 10px; border-radius: 50%; background: var(--accent); }
+    .a11y-screen .field {
+      border: 2px solid var(--gvra-blue);
+      border-radius: 8px; padding: 12px; margin-bottom: 10px;
+      background: var(--gvra-blue-light);
+    }
+    .a11y-screen .field label { font-size: 12px; font-weight: 800; color: var(--gvra-blue-dark); display: block; margin-bottom: 4px; }
+    .a11y-screen .field .val { font-size: 14px; color: var(--charcoal); }
+    .a11y-screen .upload-btn {
+      background: var(--gvra-blue); color: #fff;
+      padding: 12px 18px; border-radius: 8px; border: none;
+      font-weight: 800; font-size: 14px; cursor: pointer; width: 100%;
+    }
+
+    /* ── 12.7 RSA-15 ── */
+    .rsa-card {
+      background: #fff; border: 1px solid var(--border); border-radius: var(--radius-lg);
+      padding: 28px;
+    }
+    .rsa-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 32px; align-items: start; }
+    .rsa-fields { display: grid; gap: 12px; }
+    .form-field label { display: block; font-size: 12px; font-weight: 800; color: var(--charcoal); margin-bottom: 4px; letter-spacing: .04em; text-transform: uppercase; }
+    .form-field select, .form-field input {
+      width: 100%; padding: 10px 12px; font-size: 14px;
+      border: 1px solid var(--border); border-radius: 8px;
+      background: #fff; color: var(--charcoal);
+    }
+    .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+    .rsa-preview {
+      background: var(--gray-light); border: 1px dashed var(--border); border-radius: 12px;
+      padding: 18px;
+    }
+    .rsa-preview h5 {
+      font-size: 12px; letter-spacing: .08em; text-transform: uppercase; color: var(--gray);
+      font-weight: 800; margin-bottom: 10px;
+    }
+    .rsa-preview .row {
+      display: grid; grid-template-columns: 1fr auto; gap: 8px;
+      padding: 8px 0; border-bottom: 1px solid var(--border); font-size: 13px;
+    }
+    .rsa-preview .row:last-of-type { border-bottom: none; }
+    .rsa-preview .row strong { font-weight: 800; color: var(--charcoal); }
+    .rsa-actions { margin-top: 14px; display: flex; gap: 10px; flex-wrap: wrap; }
+    .btn-sm {
+      font-size: 13px; font-weight: 800; padding: 9px 14px;
+      border-radius: 8px; border: 1px solid var(--gvra-blue);
+      background: #fff; color: var(--gvra-blue); cursor: pointer;
+    }
+    .btn-sm.primary { background: var(--gvra-blue); color: #fff; }
+    .btn-sm.primary:hover { background: var(--gvra-blue-dark); }
+    .btn-sm:hover { background: var(--gvra-blue-light); }
+
+    /* ── 12.8 QuickBooks integration ── */
+    .qb-grid { display: grid; grid-template-columns: 1.05fr .95fr; gap: 36px; align-items: center; }
+    .qb-diagram {
+      background: #fff; border: 1px solid var(--border); border-radius: var(--radius-lg);
+      padding: 28px;
+    }
+    .qb-diagram .row {
+      display: grid; grid-template-columns: 1fr auto 1fr; gap: 14px; align-items: center;
+      margin-bottom: 14px;
+    }
+    .qb-box {
+      background: var(--gvra-blue-light); border: 1px solid var(--gvra-blue-mid);
+      border-radius: 12px; padding: 14px; text-align: center;
+    }
+    .qb-box.alt { background: #e6f4ea; border-color: #c8e6c9; }
+    .qb-box strong { display: block; font-size: 14px; color: var(--charcoal); }
+    .qb-box small { font-size: 12px; color: var(--gray); }
+    .qb-arrow { font-size: 20px; color: var(--accent); font-weight: 800; }
+    .qb-sync {
+      margin-top: 18px; padding: 14px;
+      background: var(--gray-light); border-radius: 10px;
+      display: flex; align-items: center; justify-content: space-between; gap: 12px;
+      font-size: 13px;
+    }
+    .qb-sync .dot { width: 10px; height: 10px; border-radius: 50%; background: var(--green); display: inline-block; margin-right: 6px; }
+
+    /* ── 12.9 Vendor Portal ── */
+    .portal-frame {
+      background: #fff; border: 1px solid var(--border); border-radius: var(--radius-lg);
+      box-shadow: var(--shadow-md);
+      overflow: hidden;
+    }
+    .portal-top {
+      background: var(--gvra-blue-dark); color: #fff;
+      padding: 14px 20px;
+      display: flex; align-items: center; justify-content: space-between; gap: 12px;
+    }
+    .portal-top strong { font-size: 15px; }
+    .portal-top .sr-badge {
+      background: rgba(255,255,255,.12);
+      border: 1px solid rgba(255,255,255,.25);
+      padding: 4px 10px; font-size: 11px; border-radius: 100px;
+      font-weight: 800; letter-spacing: .06em; text-transform: uppercase;
+    }
+    .portal-body { padding: 24px; display: grid; grid-template-columns: 240px 1fr; gap: 22px; }
+    .portal-menu { display: flex; flex-direction: column; gap: 4px; }
+    .portal-menu a {
+      display: block; padding: 10px 12px; font-size: 14px; font-weight: 700;
+      color: var(--charcoal); border-radius: 8px;
+      text-decoration: none;
+    }
+    .portal-menu a.active { background: var(--gvra-blue); color: #fff; }
+    .portal-menu a:hover:not(.active) { background: var(--gvra-blue-light); }
+    .portal-main h4 { font-size: 18px; font-weight: 800; margin-bottom: 10px; }
+    .portal-cards { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-bottom: 18px; }
+    .portal-card {
+      border: 1px solid var(--border); border-radius: 10px; padding: 16px;
+      background: var(--gray-light);
+    }
+    .portal-card .lbl { font-size: 12px; color: var(--gray); font-weight: 700; text-transform: uppercase; letter-spacing: .06em; }
+    .portal-card .val { font-size: 22px; font-weight: 800; margin-top: 4px; color: var(--charcoal); }
+    .upload-zone {
+      border: 2px dashed var(--gvra-blue); background: var(--gvra-blue-light);
+      border-radius: 12px; padding: 22px; text-align: center;
+    }
+    .upload-zone .icon { font-size: 30px; }
+    .upload-zone strong { display: block; margin-top: 6px; font-size: 15px; }
+    .upload-zone span { font-size: 13px; color: var(--gray); }
+    .upload-zone button {
+      margin-top: 12px; background: var(--gvra-blue); color: #fff;
+      border: none; padding: 10px 18px; font-weight: 800; border-radius: 8px;
+      cursor: pointer; font-size: 14px;
+    }
+
+    /* ── CTA Banner ── */
+    .cta {
+      background: linear-gradient(135deg, var(--gvra-blue-dark) 0%, var(--gvra-blue) 100%);
+      color: #fff;
+      border-radius: 0;
+      padding: 56px 40px;
+      text-align: center;
+    }
+    .cta h2 { font-size: clamp(24px, 3vw, 34px); font-weight: 800; margin-bottom: 12px; }
+    .cta p { font-size: 16px; opacity: .85; max-width: 640px; margin: 0 auto 22px; line-height: 1.6; }
+    .cta-btns { display: flex; gap: 14px; justify-content: center; flex-wrap: wrap; }
+
+    /* ── Footer ── */
+    footer {
+      background: var(--charcoal); color: rgba(255,255,255,.75);
+      padding: 40px;
+      font-size: 13px;
+    }
+    .footer-inner {
+      max-width: 1200px; margin: 0 auto;
+      display: grid; grid-template-columns: 1.4fr 1fr 1fr 1fr; gap: 30px;
+    }
+    footer h5 { color: #fff; font-size: 13px; text-transform: uppercase; letter-spacing: .08em; margin-bottom: 12px; }
+    footer a { color: rgba(255,255,255,.7); text-decoration: none; display: block; padding: 4px 0; }
+    footer a:hover { color: var(--accent); }
+    .footer-bottom {
+      max-width: 1200px; margin: 30px auto 0; padding-top: 20px;
+      border-top: 1px solid rgba(255,255,255,.1);
+      display: flex; justify-content: space-between; flex-wrap: wrap; gap: 10px;
+      font-size: 12px; color: rgba(255,255,255,.55);
+    }
+
+    /* ── Responsive ── */
+    @media (max-width: 980px) {
+      .two-col, .a11y-grid, .qb-grid, .rsa-grid { grid-template-columns: 1fr; }
+      .overview-grid { grid-template-columns: 1fr 1fr; }
+      .kpi-grid { grid-template-columns: 1fr 1fr; }
+      .stats-inner { grid-template-columns: 1fr 1fr; }
+      .portal-body { grid-template-columns: 1fr; }
+      .footer-inner { grid-template-columns: 1fr 1fr; }
+      .nav-links a:not(.nav-cta) { display: none; }
+      .vr-bep-flow { grid-template-columns: 1fr; }
+      .vr-bep-flow .arrow { transform: rotate(90deg); }
+    }
+    @media (max-width: 620px) {
+      .overview-grid, .kpi-grid, .stats-inner, .portal-cards, .footer-inner { grid-template-columns: 1fr; }
+      section { padding: 56px 22px; }
+      .hero, nav.main-nav, .topbar, .stats-bar, footer, .cta { padding-left: 22px; padding-right: 22px; }
+      .bar-chart { grid-template-columns: repeat(6, 1fr); }
+    }
+  </style>
+</head>
+<body>
+  <a href="#main" class="skip-link">Skip to main content</a>
+
+  <!-- Main nav -->
+  <nav class="main-nav" aria-label="Primary">
+    <a href="#" class="nav-brand" aria-label="Georgia Vocational Rehabilitation Agency home">
+      <img class="brand-logo" src="GVRA.png" alt="Georgia Vocational Rehabilitation Agency" />
+    </a>
+    <div class="nav-links" role="navigation">
+      <a href="#overview" class="active">Overview</a>
+      <a href="#lifecycle">Operator Lifecycle</a>
+      <a href="#facilities">Facilities</a>
+      <a href="#financial">Financials</a>
+      <a href="#reporting">Reporting</a>
+      <a href="#vendor-portal" class="nav-cta">Vendor Portal</a>
+    </div>
+  </nav>
+
+  <main id="main">
+
+  <!-- HERO -->
+  <header class="hero" aria-labelledby="hero-title">
+    <div class="hero-inner">
+      <div>
+        <div class="hero-eyebrow"><span class="hero-eyebrow-dot" aria-hidden="true"></span>Georgia Vocational Rehabilitation Agency</div>
+        <h1 id="hero-title">Business Enterprise Program <em>(BEP)</em> Management Platform</h1>
+        <p class="hero-sub">End-to-end management of Georgia's BEP &mdash; operator lifecycle, facility &amp; equipment tracking, financial reporting, RSA-15 submissions, vendor agreements, and accessible vendor portal &mdash; in one secure, auditable system.</p>
+        <div class="hero-btns">
+          <a class="btn-primary" href="#vendor-portal">Open Vendor Portal &rsaquo;</a>
+          <a class="btn-secondary" href="#overview">Explore Capabilities</a>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- Stats -->
+  <div class="stats-bar" aria-label="Program statistics">
+    <div class="stats-inner">
+      <div class="stat-item"><div class="stat-value">42</div><div class="stat-label">Active Operators</div></div>
+      <div class="stat-item"><div class="stat-value">118</div><div class="stat-label">Facilities &amp; Sites</div></div>
+      <div class="stat-item"><div class="stat-value">$6.4M</div><div class="stat-label">FY Revenue Tracked</div></div>
+      <div class="stat-item"><div class="stat-value">100%</div><div class="stat-label">WCAG 2.1 AA</div></div>
+    </div>
+  </div>
+
+  <!-- 12.1 OVERVIEW -->
+  <section id="overview" aria-labelledby="overview-title">
+    <div class="section-inner">
+      <div class="section-header">
+        <div class="section-eyebrow">End-to-End Management</div>
+        <h2 class="section-title" id="overview-title">One platform for the full BEP lifecycle</h2>
+        <p class="section-sub">Unified oversight of operators, facilities, equipment, finances, and compliance &mdash; with audit trails on every action and role-based access for GVRA staff, operators, and program directors.</p>
+      </div>
+
+      <div class="overview-grid">
+        <article class="ov-card">
+          <div class="num" aria-hidden="true">01</div>
+          <div class="ov-icon" aria-hidden="true">&#128100;</div>
+          <h3>Operator Lifecycle</h3>
+          <p>Recruitment, intake, certification, licensure, assignment, performance reviews, reassignment, and exit &mdash; all on one record.</p>
+        </article>
+        <article class="ov-card">
+          <div class="num" aria-hidden="true">02</div>
+          <div class="ov-icon" aria-hidden="true">&#127970;</div>
+          <h3>Facility Management</h3>
+          <p>Create and maintain vending sites, cafeterias, and snack bars. Track location attributes, leases, and operator assignment history.</p>
+        </article>
+        <article class="ov-card">
+          <div class="num" aria-hidden="true">03</div>
+          <div class="ov-icon" aria-hidden="true">&#128176;</div>
+          <h3>Financial Reporting</h3>
+          <p>Monthly operator revenue, set-aside collections, fees, expenses, and facility P&amp;L &mdash; aggregated for RSA-15 and ad hoc reports.</p>
+        </article>
+        <article class="ov-card">
+          <div class="num" aria-hidden="true">04</div>
+          <div class="ov-icon" aria-hidden="true">&#128295;</div>
+          <h3>Equipment Tracking</h3>
+          <p>Asset register for every machine, fryer, and POS terminal &mdash; warranty, maintenance, replacement schedule, and depreciation.</p>
+        </article>
+        <article class="ov-card">
+          <div class="num" aria-hidden="true">05</div>
+          <div class="ov-icon" aria-hidden="true">&#9989;</div>
+          <h3>Compliance</h3>
+          <p>Health inspections, vendor agreements, insurance certificates, CEUs, and Randolph-Sheppard Act safeguards with renewal alerts.</p>
+        </article>
+        <article class="ov-card">
+          <div class="num" aria-hidden="true">06</div>
+          <div class="ov-icon" aria-hidden="true">&#128202;</div>
+          <h3>Oversight Dashboards</h3>
+          <p>Real-time KPIs for program managers: revenue trends, vacancy rates, training pipeline, and outstanding submissions.</p>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <!-- 12.2 / 12.3 LIFECYCLE & CASE FLOW -->
+  <section id="lifecycle" aria-labelledby="lifecycle-title">
+    <div class="section-inner">
+      <div class="section-header">
+        <div class="section-eyebrow">Case Flow &amp; Operator Lifecycle</div>
+        <h2 class="section-title" id="lifecycle-title">BEP-specific case flow with VR coordination</h2>
+        <p class="section-sub">Captures certification &amp; training history, supports vendor and facility/site agreements, required documentation uploads, and CEUs &mdash; with seamless funds coordination for clients who originally entered through VR.</p>
+      </div>
+
+      <div class="two-col">
+        <div class="panel" aria-labelledby="case-flow">
+          <h3 id="case-flow">BEP-specific case flow (non-VR)</h3>
+          <ol class="flow-list">
+            <li><span class="step">1</span><div><strong>Intake &amp; Eligibility</strong><span>Direct BEP intake for legally blind applicants, with eligibility verification independent of VR caseload.</span></div></li>
+            <li><span class="step">2</span><div><strong>Training Enrollment</strong><span>Pre-licensure training program with attendance, evaluations, and curriculum modules captured in the case record.</span></div></li>
+            <li><span class="step">3</span><div><strong>Certification &amp; Licensure</strong><span>Issue BEP license; track certification history, retests, and continuing education units (CEUs).</span></div></li>
+            <li><span class="step">4</span><div><strong>Operator Agreements</strong><span>Upload signed vendor agreements, facility/site agreements, insurance, and W-9 &mdash; with e-signature.</span></div></li>
+            <li><span class="step">5</span><div><strong>Assignment &amp; Operation</strong><span>Facility placement, monthly reporting, performance reviews, and CEU tracking through retirement or exit.</span></div></li>
+          </ol>
+        </div>
+
+        <div class="panel" aria-labelledby="operator-actions">
+          <h3 id="operator-actions">Operator selection, assignment &amp; exit</h3>
+          <ol class="flow-list">
+            <li><span class="step">A</span><div><strong>Operator Selection</strong><span>Eligible operators are ranked by seniority, performance, and training scores when a facility becomes available.</span></div></li>
+            <li><span class="step">B</span><div><strong>Facility Assignment</strong><span>Assign operator to one or more vending sites or cafeterias; system enforces conflicts and capacity rules.</span></div></li>
+            <li><span class="step">C</span><div><strong>Reassignment</strong><span>Move operator between facilities with full transition checklist (inventory transfer, deposit reconciliation, key handover).</span></div></li>
+            <li><span class="step">D</span><div><strong>Exit from BEP</strong><span>Capture exit reason (retirement, voluntary, performance), final reports, and asset return; record retained for audit.</span></div></li>
+          </ol>
+        </div>
+      </div>
+
+      <div class="vr-bep-callout" aria-labelledby="vr-bep-title">
+        <h4 id="vr-bep-title"><span aria-hidden="true">&#128257;</span> Coordinating funds &amp; case history between VR and BEP</h4>
+        <p>When a client originally entered through Vocational Rehabilitation (VR), their case history is preserved and accessible to BEP. Funds may be coordinated across programs for <strong>allowable BEP-related purchases</strong> (e.g., adaptive technology, training tools) with full auditability and approval workflows.</p>
+        <div class="vr-bep-flow">
+          <div class="box"><strong>VR Case</strong><small>Original eligibility &amp; services</small></div>
+          <div class="arrow" aria-hidden="true">&rarr;</div>
+          <div class="box"><strong>BEP Case</strong><small>Transitions retain VR history</small></div>
+          <div class="arrow" aria-hidden="true">&rarr;</div>
+          <div class="box"><strong>Funds Coordination</strong><small>Allowable purchases tracked across budgets</small></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 12.4 FACILITIES -->
+  <section id="facilities" aria-labelledby="facilities-title">
+    <div class="section-inner">
+      <div class="section-header">
+        <div class="section-eyebrow">Facilities &amp; Site Management</div>
+        <h2 class="section-title" id="facilities-title">Create, maintain &amp; assign vending sites, cafeterias and locations</h2>
+        <p class="section-sub">Every site, machine, and cafeteria is a managed record &mdash; with lease terms, equipment, hours, contacts, assignment history, and revenue.</p>
+      </div>
+
+      <div class="facility-toolbar">
+        <div class="filters" role="group" aria-label="Filter facilities">
+          <button class="chip active" type="button" data-filter="all">All Sites</button>
+          <button class="chip" type="button" data-filter="vending">Vending</button>
+          <button class="chip" type="button" data-filter="cafeteria">Cafeteria</button>
+          <button class="chip" type="button" data-filter="snack">Snack Bar</button>
+          <button class="chip" type="button" data-filter="vacant">Vacant</button>
+        </div>
+        <button class="btn-sm primary" type="button">+ Add New Facility</button>
+      </div>
+
+      <div class="table-wrap">
+        <table class="data" aria-label="Facilities and operator assignments">
+          <caption>Facilities &amp; Operator Assignments</caption>
+          <thead>
+            <tr>
+              <th scope="col">Facility</th>
+              <th scope="col">Type</th>
+              <th scope="col">Location</th>
+              <th scope="col">Assigned Operator</th>
+              <th scope="col">Equipment</th>
+              <th scope="col">Status</th>
+              <th scope="col">Actions</th>
+            </tr>
+          </thead>
+          <tbody id="facility-rows">
+            <!-- Cafeterias -->
+            <tr data-type="cafeteria" data-status="active">
+              <td><strong>Atlanta Federal Center</strong></td>
+              <td>Cafeteria</td>
+              <td>Atlanta, GA</td>
+              <td>Marcus Allen (BEP-1042)</td>
+              <td>14 assets</td>
+              <td><span class="pill active">Active</span></td>
+              <td><button class="link-btn" type="button">Manage</button></td>
+            </tr>
+            <tr data-type="cafeteria" data-status="review">
+              <td><strong>Robins AFB Cafeteria</strong></td>
+              <td>Cafeteria</td>
+              <td>Warner Robins, GA</td>
+              <td>Devon Carter (BEP-1019)</td>
+              <td>31 assets</td>
+              <td><span class="pill review">Inspection Due</span></td>
+              <td><button class="link-btn" type="button">Schedule Inspection</button></td>
+            </tr>
+            <tr data-type="cafeteria" data-status="active">
+              <td><strong>Sam Nunn Federal Cafeteria</strong></td>
+              <td>Cafeteria</td>
+              <td>Atlanta, GA</td>
+              <td>Renee Whitaker (BEP-1067)</td>
+              <td>26 assets</td>
+              <td><span class="pill active">Active</span></td>
+              <td><button class="link-btn" type="button">Manage</button></td>
+            </tr>
+            <tr data-type="cafeteria" data-status="active">
+              <td><strong>Fort Stewart Dining Facility</strong></td>
+              <td>Cafeteria</td>
+              <td>Hinesville, GA</td>
+              <td>James Holloway (BEP-1023)</td>
+              <td>42 assets</td>
+              <td><span class="pill active">Active</span></td>
+              <td><button class="link-btn" type="button">Manage</button></td>
+            </tr>
+            <tr data-type="cafeteria" data-status="vacant">
+              <td><strong>Columbus Courthouse Cafe</strong></td>
+              <td>Cafeteria</td>
+              <td>Columbus, GA</td>
+              <td>&mdash;</td>
+              <td>18 assets</td>
+              <td><span class="pill vacant">Vacant</span></td>
+              <td><button class="link-btn" type="button">Assign Operator</button></td>
+            </tr>
+            <tr data-type="cafeteria" data-status="pending">
+              <td><strong>Augusta VA Medical Cafe</strong></td>
+              <td>Cafeteria</td>
+              <td>Augusta, GA</td>
+              <td>Pending assignment</td>
+              <td>22 assets</td>
+              <td><span class="pill pending">Pending</span></td>
+              <td><button class="link-btn" type="button">Review Candidates</button></td>
+            </tr>
+
+            <!-- Vending -->
+            <tr data-type="vending" data-status="active">
+              <td><strong>Macon VA Vending Route</strong></td>
+              <td>Vending</td>
+              <td>Macon, GA</td>
+              <td>Tasha Booker (BEP-1085)</td>
+              <td>22 machines</td>
+              <td><span class="pill active">Active</span></td>
+              <td><button class="link-btn" type="button">Manage</button></td>
+            </tr>
+            <tr data-type="vending" data-status="pending">
+              <td><strong>Athens DOL Vending</strong></td>
+              <td>Vending</td>
+              <td>Athens, GA</td>
+              <td>Pending assignment</td>
+              <td>9 machines</td>
+              <td><span class="pill pending">Pending</span></td>
+              <td><button class="link-btn" type="button">Review Candidates</button></td>
+            </tr>
+            <tr data-type="vending" data-status="active">
+              <td><strong>Dobbins ARB Vending Route</strong></td>
+              <td>Vending</td>
+              <td>Marietta, GA</td>
+              <td>Andre Mitchell (BEP-1051)</td>
+              <td>18 machines</td>
+              <td><span class="pill active">Active</span></td>
+              <td><button class="link-btn" type="button">Manage</button></td>
+            </tr>
+            <tr data-type="vending" data-status="active">
+              <td><strong>Albany SSA Vending</strong></td>
+              <td>Vending</td>
+              <td>Albany, GA</td>
+              <td>Priya Sharma (BEP-1074)</td>
+              <td>12 machines</td>
+              <td><span class="pill active">Active</span></td>
+              <td><button class="link-btn" type="button">Manage</button></td>
+            </tr>
+            <tr data-type="vending" data-status="review">
+              <td><strong>Rome Federal Building Vending</strong></td>
+              <td>Vending</td>
+              <td>Rome, GA</td>
+              <td>Carl Peterson (BEP-1036)</td>
+              <td>10 machines</td>
+              <td><span class="pill review">Inspection Due</span></td>
+              <td><button class="link-btn" type="button">Schedule Inspection</button></td>
+            </tr>
+            <tr data-type="vending" data-status="vacant">
+              <td><strong>Valdosta Post Office Vending</strong></td>
+              <td>Vending</td>
+              <td>Valdosta, GA</td>
+              <td>&mdash;</td>
+              <td>7 machines</td>
+              <td><span class="pill vacant">Vacant</span></td>
+              <td><button class="link-btn" type="button">Assign Operator</button></td>
+            </tr>
+
+            <!-- Snack Bars -->
+            <tr data-type="snack" data-status="vacant">
+              <td><strong>Savannah Courthouse Snack Bar</strong></td>
+              <td>Snack Bar</td>
+              <td>Savannah, GA</td>
+              <td>&mdash;</td>
+              <td>6 assets</td>
+              <td><span class="pill vacant">Vacant</span></td>
+              <td><button class="link-btn" type="button">Assign Operator</button></td>
+            </tr>
+            <tr data-type="snack" data-status="active">
+              <td><strong>Capitol Hill Snack Bar</strong></td>
+              <td>Snack Bar</td>
+              <td>Atlanta, GA</td>
+              <td>Linda Reyes (BEP-1058)</td>
+              <td>8 assets</td>
+              <td><span class="pill active">Active</span></td>
+              <td><button class="link-btn" type="button">Manage</button></td>
+            </tr>
+            <tr data-type="snack" data-status="active">
+              <td><strong>GA DOT HQ Snack Bar</strong></td>
+              <td>Snack Bar</td>
+              <td>Atlanta, GA</td>
+              <td>Brian Kowalski (BEP-1029)</td>
+              <td>9 assets</td>
+              <td><span class="pill active">Active</span></td>
+              <td><button class="link-btn" type="button">Manage</button></td>
+            </tr>
+            <tr data-type="snack" data-status="active">
+              <td><strong>Gainesville Court Snack Bar</strong></td>
+              <td>Snack Bar</td>
+              <td>Gainesville, GA</td>
+              <td>Erica Daniels (BEP-1063)</td>
+              <td>7 assets</td>
+              <td><span class="pill active">Active</span></td>
+              <td><button class="link-btn" type="button">Manage</button></td>
+            </tr>
+            <tr data-type="snack" data-status="review">
+              <td><strong>Brunswick Federal Snack Bar</strong></td>
+              <td>Snack Bar</td>
+              <td>Brunswick, GA</td>
+              <td>Jonah Pierce (BEP-1047)</td>
+              <td>5 assets</td>
+              <td><span class="pill review">Inspection Due</span></td>
+              <td><button class="link-btn" type="button">Schedule Inspection</button></td>
+            </tr>
+            <tr data-type="snack" data-status="pending">
+              <td><strong>Decatur Courthouse Snack Bar</strong></td>
+              <td>Snack Bar</td>
+              <td>Decatur, GA</td>
+              <td>Pending assignment</td>
+              <td>6 assets</td>
+              <td><span class="pill pending">Pending</span></td>
+              <td><button class="link-btn" type="button">Review Candidates</button></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <!-- 12.5 FINANCIAL -->
+  <section id="financial" aria-labelledby="financial-title">
+    <div class="section-inner">
+      <div class="section-header">
+        <div class="section-eyebrow">Financial Activity Tracking</div>
+        <h2 class="section-title" id="financial-title">Operator revenue, facility P&amp;L, fees &amp; set-aside</h2>
+        <p class="section-sub">Track operator revenue per facility, post expenses and equipment costs, and record fees or set-aside collections owed to GVRA &mdash; with reconciliation against bank deposits and QuickBooks.</p>
+      </div>
+
+      <div class="kpi-grid">
+        <div class="kpi">
+          <div class="label">Gross Revenue <span id="kpi-period">(YTD)</span></div>
+          <div class="value" id="kpi-revenue">$6.42M</div>
+          <div class="delta up" id="kpi-revenue-delta">&uarr; 8.3% vs FY25</div>
+        </div>
+        <div class="kpi">
+          <div class="label">Set-Aside Collected</div>
+          <div class="value" id="kpi-setaside">$214,800</div>
+          <div class="delta up" id="kpi-setaside-delta">&uarr; 6.1%</div>
+        </div>
+        <div class="kpi">
+          <div class="label">Operator Net Income</div>
+          <div class="value" id="kpi-net">$2.18M</div>
+          <div class="delta up" id="kpi-net-delta">&uarr; 4.7%</div>
+        </div>
+        <div class="kpi">
+          <div class="label">Outstanding Reports</div>
+          <div class="value" id="kpi-reports">3</div>
+          <div class="delta down" id="kpi-reports-delta">2 overdue</div>
+        </div>
+      </div>
+
+      <div class="chart-card">
+        <h4>Monthly Revenue &amp; Set-Aside Activity &mdash; FY26 <span style="font-weight:600;color:var(--gray);font-size:13px;margin-left:8px">(click a month to drill in)</span></h4>
+        <div class="bar-chart-wrap">
+          <div class="bar-chart" role="group" aria-label="Monthly revenue bar chart, July through June. Select a month to view details.">
+            <button class="bar" style="height:62%" data-month="Jul" type="button" aria-label="July"></button>
+            <button class="bar" style="height:70%" data-month="Aug" type="button" aria-label="August"></button>
+            <button class="bar" style="height:55%" data-month="Sep" type="button" aria-label="September"></button>
+            <button class="bar" style="height:78%" data-month="Oct" type="button" aria-label="October"></button>
+            <button class="bar" style="height:82%" data-month="Nov" type="button" aria-label="November"></button>
+            <button class="bar" style="height:74%" data-month="Dec" type="button" aria-label="December"></button>
+            <button class="bar" style="height:88%" data-month="Jan" type="button" aria-label="January"></button>
+            <button class="bar" style="height:92%" data-month="Feb" type="button" aria-label="February"></button>
+            <button class="bar" style="height:80%" data-month="Mar" type="button" aria-label="March"></button>
+            <button class="bar" style="height:86%" data-month="Apr" type="button" aria-label="April"></button>
+            <button class="bar" style="height:95%" data-month="May" type="button" aria-label="May"></button>
+            <button class="bar" style="height:60%" data-month="Jun" type="button" aria-label="June"></button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 12.6 ACCESSIBILITY -->
+  <section id="accessibility" aria-labelledby="a11y-title">
+    <div class="section-inner">
+      <div class="section-header">
+        <div class="section-eyebrow">Accessibility</div>
+        <h2 class="section-title" id="a11y-title">Built for blind &amp; low-vision operators &mdash; WCAG 2.1 AA</h2>
+        <p class="section-sub">Operators independently complete and upload monthly financial reports using the keyboard, screen readers, and assistive technology of their choice.</p>
+      </div>
+
+      <div class="a11y-grid">
+        <ul class="a11y-list" aria-label="Accessibility features">
+          <li><span class="check" aria-hidden="true">&#10003;</span><div><strong>Screen-reader optimized</strong><span>Tested with JAWS, NVDA, and VoiceOver. Semantic landmarks, ARIA labels, and live regions on every dynamic component.</span></div></li>
+          <li><span class="check" aria-hidden="true">&#10003;</span><div><strong>Keyboard-first</strong><span>Every action reachable without a mouse. Visible focus indicators and logical tab order throughout.</span></div></li>
+          <li><span class="check" aria-hidden="true">&#10003;</span><div><strong>High-contrast &amp; resize</strong><span>Supports browser zoom to 200% and OS high-contrast modes without loss of content.</span></div></li>
+          <li><span class="check" aria-hidden="true">&#10003;</span><div><strong>Accessible file upload</strong><span>Operators can attach income statements, balance sheets, and receipts directly from their device &mdash; with descriptive status announcements.</span></div></li>
+          <li><span class="check" aria-hidden="true">&#10003;</span><div><strong>Plain-language forms</strong><span>Form labels, errors, and confirmation messages are concise and read clearly with assistive tech.</span></div></li>
+        </ul>
+
+        <div class="a11y-screen" aria-label="Sample monthly report upload">
+          <div class="sr-banner"><span class="dot" aria-hidden="true"></span><span>Screen reader: &ldquo;Upload monthly report, button.&rdquo;</span></div>
+          <div class="field">
+            <label for="rep-month">Report Month</label>
+            <div class="val" id="rep-month">May 2026</div>
+          </div>
+          <div class="field">
+            <label for="rep-facility">Facility</label>
+            <div class="val" id="rep-facility">Atlanta Federal Center &mdash; Cafeteria</div>
+          </div>
+          <div class="field">
+            <label for="rep-file">Attached File</label>
+            <div class="val" id="rep-file">May-2026-Income-Statement.pdf (216 KB)</div>
+          </div>
+          <button class="upload-btn" type="button">Submit Monthly Report</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 12.7 RSA-15 -->
+  <section id="reporting" aria-labelledby="rsa-title">
+    <div class="section-inner">
+      <div class="section-header">
+        <div class="section-eyebrow">RSA-15 &amp; Ad Hoc Reporting</div>
+        <h2 class="section-title" id="rsa-title">Generate RSA-15 &mdash; and any ad hoc report &mdash; on demand</h2>
+        <p class="section-sub">Pre-built RSA-15 template with all federally required data elements, plus a drag-and-drop ad hoc report builder for state and internal reporting needs.</p>
+      </div>
+
+      <div class="rsa-card">
+        <div class="rsa-grid">
+          <form class="rsa-fields" aria-label="RSA-15 report parameters" onsubmit="return false;">
+            <div class="form-field">
+              <label for="rpt-template">Report Template</label>
+              <select id="rpt-template">
+                <option>RSA-15 Annual</option>
+                <option>RSA-15 Quarterly (Ad hoc)</option>
+                <option>Operator Earnings by Facility</option>
+                <option>Set-Aside Collections Summary</option>
+                <option>Custom (Ad Hoc Builder)</option>
+              </select>
+            </div>
+            <div class="form-row">
+              <div class="form-field">
+                <label for="rpt-from">From</label>
+                <input id="rpt-from" type="date" value="2025-10-01" />
+              </div>
+              <div class="form-field">
+                <label for="rpt-to">To</label>
+                <input id="rpt-to" type="date" value="2026-09-30" />
+              </div>
+            </div>
+            <div class="form-field">
+              <label for="rpt-fac">Facility Scope</label>
+              <select id="rpt-fac">
+                <option>All Facilities</option>
+                <option>Federal Buildings only</option>
+                <option>State Buildings only</option>
+                <option>Selected Operators&hellip;</option>
+              </select>
+            </div>
+            <div class="form-field">
+              <label for="rpt-fmt">Output Format</label>
+              <select id="rpt-fmt">
+                <option>PDF (signed)</option>
+                <option>Excel (.xlsx)</option>
+                <option>RSA-15 XML submission</option>
+                <option>Accessible HTML</option>
+              </select>
+            </div>
+            <div class="rsa-actions">
+              <button class="btn-sm primary" type="submit">Generate Report</button>
+              <button class="btn-sm" type="button">Save as Template</button>
+              <button class="btn-sm" type="button">Schedule Recurring</button>
+            </div>
+          </form>
+
+          <aside class="rsa-preview" aria-label="RSA-15 preview">
+            <h5>RSA-15 Preview &mdash; FY26</h5>
+            <div class="row"><span>Total Operators</span><strong>42</strong></div>
+            <div class="row"><span>Total Facilities</span><strong>118</strong></div>
+            <div class="row"><span>Gross Sales</span><strong>$6,422,180</strong></div>
+            <div class="row"><span>Operator Earnings</span><strong>$2,184,940</strong></div>
+            <div class="row"><span>Set-Aside Collected</span><strong>$214,810</strong></div>
+            <div class="row"><span>Federal Property Sites</span><strong>61</strong></div>
+            <div class="row"><span>Compliance Submissions</span><strong>100%</strong></div>
+          </aside>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 12.8 QUICKBOOKS -->
+  <section id="integration" aria-labelledby="qb-title">
+    <div class="section-inner">
+      <div class="section-header">
+        <div class="section-eyebrow">QuickBooks &amp; Financial Tooling</div>
+        <h2 class="section-title" id="qb-title">Integrated with QuickBooks for payroll, tax &amp; set-aside</h2>
+        <p class="section-sub">Two-way sync with QuickBooks (or equivalent) supports vendor payroll, 1099 / tax processing, and automated set-aside payment workflows from operators to GVRA.</p>
+      </div>
+
+      <div class="qb-grid">
+        <div class="qb-diagram" aria-label="QuickBooks integration diagram">
+          <div class="row">
+            <div class="qb-box"><strong>BEP Platform</strong><small>Operator revenue &amp; deductions</small></div>
+            <div class="qb-arrow" aria-hidden="true">&harr;</div>
+            <div class="qb-box alt"><strong>QuickBooks Online</strong><small>Vendor payroll &amp; tax</small></div>
+          </div>
+          <div class="row">
+            <div class="qb-box"><strong>Set-Aside Ledger</strong><small>Calculated per facility</small></div>
+            <div class="qb-arrow" aria-hidden="true">&rarr;</div>
+            <div class="qb-box alt"><strong>GVRA Bank ACH</strong><small>Automated payments</small></div>
+          </div>
+          <div class="row">
+            <div class="qb-box"><strong>Operator 1099 Data</strong><small>Annual earnings</small></div>
+            <div class="qb-arrow" aria-hidden="true">&rarr;</div>
+            <div class="qb-box alt"><strong>Tax e-filing</strong><small>IRS &amp; GA DOR</small></div>
+          </div>
+          <div class="qb-sync">
+            <span><span class="dot" aria-hidden="true"></span><strong>Connection healthy</strong> &mdash; Last sync 12 min ago</span>
+            <button class="btn-sm" type="button">Sync now</button>
+          </div>
+        </div>
+        <div>
+          <h3 style="font-size:20px;font-weight:800;margin-bottom:12px;color:var(--charcoal)">What the integration delivers</h3>
+          <ul class="a11y-list">
+            <li><span class="check" aria-hidden="true">&#10003;</span><div><strong>Vendor payroll</strong><span>Run payroll for operator&rsquo;s employees through QuickBooks with hours and earnings imported from the BEP platform.</span></div></li>
+            <li><span class="check" aria-hidden="true">&#10003;</span><div><strong>Tax processing</strong><span>Federal &amp; state withholdings, 1099 generation, and year-end tax forms aligned to BEP earnings records.</span></div></li>
+            <li><span class="check" aria-hidden="true">&#10003;</span><div><strong>Set-aside payments</strong><span>Calculated automatically from gross revenue and remitted to GVRA via ACH on a scheduled cadence.</span></div></li>
+            <li><span class="check" aria-hidden="true">&#10003;</span><div><strong>Reconciliation</strong><span>Bank deposits, invoices, and journal entries reconciled back to facility &amp; operator records.</span></div></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 12.9 VENDOR PORTAL -->
+  <section id="vendor-portal" aria-labelledby="portal-title">
+    <div class="section-inner">
+      <div class="section-header">
+        <div class="section-eyebrow">BEP Vendor Portal</div>
+        <h2 class="section-title" id="portal-title">A dedicated, accessible portal for blind operators</h2>
+        <p class="section-sub">Operators upload financial reports, review facility activity, and make set-aside payments to GVRA &mdash; with full screen-reader support and keyboard navigation confirmed against WCAG 2.1 AA.</p>
+      </div>
+
+      <div class="portal-frame" role="region" aria-label="Vendor portal preview">
+        <div class="portal-top">
+          <strong>BEP Vendor Portal &mdash; Marcus Allen (BEP-1042)</strong>
+          <span class="sr-badge"><span aria-hidden="true">&#9856;</span> Screen Reader Ready</span>
+        </div>
+        <div class="portal-body">
+          <nav class="portal-menu" aria-label="Vendor portal sections">
+            <a href="#" class="active">Dashboard</a>
+            <a href="#">Upload Reports</a>
+            <a href="#">My Facilities</a>
+            <a href="#">Revenue &amp; Expenses</a>
+            <a href="#">Set-Aside Payments</a>
+            <a href="#">Documents &amp; CEUs</a>
+            <a href="#">Support</a>
+          </nav>
+          <div class="portal-main">
+            <h4>Operator Dashboard</h4>
+            <div class="portal-cards">
+              <div class="portal-card"><div class="lbl">May Gross Revenue</div><div class="val">$48,212</div></div>
+              <div class="portal-card"><div class="lbl">Set-Aside Due</div><div class="val">$1,608</div></div>
+              <div class="portal-card"><div class="lbl">Next Report Due</div><div class="val">Jun 15, 2026</div></div>
+              <div class="portal-card"><div class="lbl">CEU Hours (FY)</div><div class="val">14 / 20</div></div>
+            </div>
+            <div class="upload-zone" role="group" aria-label="Upload financial report">
+              <div class="icon" aria-hidden="true">&#128194;</div>
+              <strong>Upload Income Statement &amp; Balance Sheet</strong>
+              <span>PDF, XLSX, or CSV up to 10&nbsp;MB. Screen-reader status announcements during upload.</span>
+              <button type="button">Choose File to Upload</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  </main>
+
+  <!-- Footer -->
+  <footer aria-label="Site footer">
+    <div class="footer-inner">
+      <div>
+        <h5>Georgia Vocational Rehabilitation Agency</h5>
+        <p style="line-height:1.7;color:rgba(255,255,255,.7)">The Business Enterprise Program (BEP) supports Georgians who are legally blind in operating profitable vending and food-service businesses on federal and state property under the Randolph-Sheppard Act.</p>
+      </div>
+      <div>
+        <h5>Program</h5>
+        <a href="#overview">Overview</a>
+        <a href="#lifecycle">Operator Lifecycle</a>
+        <a href="#facilities">Facilities</a>
+        <a href="#financial">Financials</a>
+      </div>
+      <div>
+        <h5>Operators</h5>
+        <a href="#vendor-portal">Vendor Portal</a>
+        <a href="#reporting">RSA-15 Reports</a>
+        <a href="#accessibility">Accessibility</a>
+        <a href="login.html">Sign In</a>
+      </div>
+      <div>
+        <h5>Contact</h5>
+        <a href="mailto:bep@gvra.georgia.gov">bep@gvra.georgia.gov</a>
+        <a href="tel:+18444452466">1-844-44-GVRA-G</a>
+        <a href="#">200 Piedmont Ave SE, Atlanta, GA</a>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>&copy; 2026 Georgia Vocational Rehabilitation Agency &mdash; Business Enterprise Program</span>
+      <span>WCAG 2.1 AA &middot; Section 508 &middot; Randolph-Sheppard Act</span>
+    </div>
+  </footer>
+
+  <script>
+    // Smooth nav active-state on scroll
+    const links = document.querySelectorAll('.nav-links a[href^="#"]');
+    const sections = [...links].map(a => document.querySelector(a.getAttribute('href'))).filter(Boolean);
+    const onScroll = () => {
+      const y = window.scrollY + 120;
+      let current = sections[0];
+      sections.forEach(s => { if (s && s.offsetTop <= y) current = s; });
+      links.forEach(a => a.classList.toggle('active', a.getAttribute('href') === '#' + (current && current.id)));
+    };
+    window.addEventListener('scroll', onScroll, { passive: true });
+
+    // Facility filter chips
+    document.querySelectorAll('.facility-toolbar .chip').forEach(c => {
+      c.addEventListener('click', () => {
+        document.querySelectorAll('.facility-toolbar .chip').forEach(x => x.classList.remove('active'));
+        c.classList.add('active');
+        const filter = c.dataset.filter;
+        document.querySelectorAll('#facility-rows tr').forEach(row => {
+          const matches = filter === 'all'
+            || row.dataset.type === filter
+            || row.dataset.status === filter;
+          row.style.display = matches ? '' : 'none';
+        });
+      });
+    });
+
+    // Monthly KPI drill-down
+    const monthData = {
+      Jul: { period: '(Jul FY26)', rev: '$498K',  revD: { up: true,  txt: '\u2191 5.1% vs Jun' },  sa: '$16,600',  saD: { up: true,  txt: '\u2191 4.2%' },  net: '$168K', netD: { up: true,  txt: '\u2191 3.4%' },  rpt: '5', rptD: { up: false, txt: '4 pending' } },
+      Aug: { period: '(Aug FY26)', rev: '$562K',  revD: { up: true,  txt: '\u2191 12.9% vs Jul' }, sa: '$18,740', saD: { up: true,  txt: '\u2191 12.9%' }, net: '$192K', netD: { up: true,  txt: '\u2191 14.3%' }, rpt: '3', rptD: { up: true,  txt: '2 reviewed' } },
+      Sep: { period: '(Sep FY26)', rev: '$441K',  revD: { up: false, txt: '\u2193 21.5% vs Aug' }, sa: '$14,700', saD: { up: false, txt: '\u2193 21.6%' }, net: '$148K', netD: { up: false, txt: '\u2193 22.9%' }, rpt: '6', rptD: { up: false, txt: '3 overdue' } },
+      Oct: { period: '(Oct FY26)', rev: '$624K',  revD: { up: true,  txt: '\u2191 41.5% vs Sep' }, sa: '$20,820', saD: { up: true,  txt: '\u2191 41.6%' }, net: '$214K', netD: { up: true,  txt: '\u2191 44.6%' }, rpt: '2', rptD: { up: true,  txt: 'On track' } },
+      Nov: { period: '(Nov FY26)', rev: '$656K',  revD: { up: true,  txt: '\u2191 5.1% vs Oct' },  sa: '$21,880', saD: { up: true,  txt: '\u2191 5.1%' },  net: '$228K', netD: { up: true,  txt: '\u2191 6.5%' },  rpt: '1', rptD: { up: true,  txt: 'On track' } },
+      Dec: { period: '(Dec FY26)', rev: '$592K',  revD: { up: false, txt: '\u2193 9.8% vs Nov' },  sa: '$19,740', saD: { up: false, txt: '\u2193 9.8%' },  net: '$201K', netD: { up: false, txt: '\u2193 11.8%' }, rpt: '4', rptD: { up: false, txt: '2 overdue' } },
+      Jan: { period: '(Jan FY26)', rev: '$704K',  revD: { up: true,  txt: '\u2191 18.9% vs Dec' }, sa: '$23,470', saD: { up: true,  txt: '\u2191 18.9%' }, net: '$246K', netD: { up: true,  txt: '\u2191 22.4%' }, rpt: '2', rptD: { up: true,  txt: 'On track' } },
+      Feb: { period: '(Feb FY26)', rev: '$736K',  revD: { up: true,  txt: '\u2191 4.5% vs Jan' },  sa: '$24,520', saD: { up: true,  txt: '\u2191 4.5%' },  net: '$256K', netD: { up: true,  txt: '\u2191 4.1%' },  rpt: '1', rptD: { up: true,  txt: 'All current' } },
+      Mar: { period: '(Mar FY26)', rev: '$640K',  revD: { up: false, txt: '\u2193 13.0% vs Feb' }, sa: '$21,330', saD: { up: false, txt: '\u2193 13.0%' }, net: '$222K', netD: { up: false, txt: '\u2193 13.3%' }, rpt: '3', rptD: { up: false, txt: '1 overdue' } },
+      Apr: { period: '(Apr FY26)', rev: '$688K',  revD: { up: true,  txt: '\u2191 7.5% vs Mar' },  sa: '$22,910', saD: { up: true,  txt: '\u2191 7.4%' },  net: '$239K', netD: { up: true,  txt: '\u2191 7.7%' },  rpt: '2', rptD: { up: true,  txt: 'On track' } },
+      May: { period: '(May FY26)', rev: '$760K',  revD: { up: true,  txt: '\u2191 10.5% vs Apr' }, sa: '$25,310', saD: { up: true,  txt: '\u2191 10.5%' }, net: '$268K', netD: { up: true,  txt: '\u2191 12.1%' }, rpt: '1', rptD: { up: true,  txt: 'All current' } },
+      Jun: { period: '(Jun FY26)', rev: '$480K',  revD: { up: false, txt: '\u2193 36.8% vs May' }, sa: '$16,000', saD: { up: false, txt: '\u2193 36.8%' }, net: '$163K', netD: { up: false, txt: '\u2193 39.2%' }, rpt: '4', rptD: { up: false, txt: '2 overdue' } }
+    };
+
+    const defaults = {
+      period: '(YTD)',
+      rev: '$6.42M',  revD: { up: true,  txt: '\u2191 8.3% vs FY25' },
+      sa:  '$214,800', saD: { up: true,  txt: '\u2191 6.1%' },
+      net: '$2.18M', netD: { up: true,  txt: '\u2191 4.7%' },
+      rpt: '3',      rptD: { up: false, txt: '2 overdue' }
+    };
+
+    function applyKPI(d) {
+      document.getElementById('kpi-period').textContent = d.period;
+      document.getElementById('kpi-revenue').textContent = d.rev;
+      document.getElementById('kpi-setaside').textContent = d.sa;
+      document.getElementById('kpi-net').textContent = d.net;
+      document.getElementById('kpi-reports').textContent = d.rpt;
+      const setDelta = (id, info) => {
+        const el = document.getElementById(id);
+        el.textContent = info.txt;
+        el.classList.toggle('up', info.up);
+        el.classList.toggle('down', !info.up);
+      };
+      setDelta('kpi-revenue-delta', d.revD);
+      setDelta('kpi-setaside-delta', d.saD);
+      setDelta('kpi-net-delta', d.netD);
+      setDelta('kpi-reports-delta', d.rptD);
+    }
+
+    document.querySelectorAll('.bar-chart .bar').forEach(bar => {
+      bar.addEventListener('click', () => {
+        const month = bar.dataset.month;
+        const isActive = bar.classList.contains('active');
+        document.querySelectorAll('.bar-chart .bar').forEach(b => b.classList.remove('active'));
+        if (isActive) {
+          applyKPI(defaults);
+        } else {
+          bar.classList.add('active');
+          applyKPI(monthData[month]);
+        }
+      });
+    });
+  </script>
+</body>
+</html>

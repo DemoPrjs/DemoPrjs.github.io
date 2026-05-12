@@ -1,0 +1,1339 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Vocational Rehabilitation Payment Platform &mdash; Georgia Vocational Rehabilitation Agency</title>
+  <meta name="description" content="VR Fiscal Module for Georgia Vocational Rehabilitation Agency &mdash; authorization budget controls, end-to-end payment processing, external accounting integration, fiscal reporting, SSA Ticket to Work, real-time budget monitoring, and IPE case closure." />
+  <style>
+    /* ── Reset & Base ── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+      color: #1a1a1a;
+      background: #fff;
+      overflow-x: hidden;
+      line-height: 1.5;
+    }
+    a { color: inherit; }
+    img { display: block; max-width: 100%; }
+
+    /* ── Brand (GVRA-inspired) ── */
+    :root {
+      --gvra-blue:       #1a4480;
+      --gvra-blue-dark:  #0b2545;
+      --gvra-blue-light: #e7eef7;
+      --gvra-blue-mid:   #b9cae5;
+      --accent:          #c8a84b;
+      --accent-dark:     #a88d2f;
+      --green:           #2e7d32;
+      --green-light:     #e8f5e9;
+      --amber:           #b76e00;
+      --amber-light:     #fff4e0;
+      --red:             #b71c1c;
+      --red-light:       #fde2e2;
+      --charcoal:        #212121;
+      --gray:            #5a6470;
+      --gray-light:      #f4f6f9;
+      --white:           #ffffff;
+      --border:          #d9dde4;
+      --shadow-sm:       0 2px 8px rgba(11,37,69,.08);
+      --shadow-md:       0 6px 24px rgba(11,37,69,.10);
+      --shadow-lg:       0 16px 48px rgba(11,37,69,.16);
+      --radius:          10px;
+      --radius-lg:       18px;
+      --transition:      all .25s cubic-bezier(.4,0,.2,1);
+    }
+
+    /* ── Skip Link (a11y) ── */
+    .skip-link {
+      position: absolute; left: -9999px; top: 0;
+      background: var(--gvra-blue-dark); color: #fff;
+      padding: 10px 16px; z-index: 9999; font-weight: 700;
+      border-radius: 0 0 8px 0;
+    }
+    .skip-link:focus { left: 0; outline: 3px solid var(--accent); }
+    :focus-visible { outline: 3px solid var(--accent); outline-offset: 2px; border-radius: 4px; }
+
+    /* ── Nav ── */
+    nav.main-nav {
+      position: sticky; top: 0; z-index: 1000;
+      background: var(--white);
+      border-bottom: 3px solid var(--accent);
+      padding: 0 40px;
+      display: flex; align-items: center; justify-content: space-between;
+      height: 76px; box-shadow: var(--shadow-sm);
+    }
+    .nav-brand { display: flex; align-items: center; }
+    .nav-brand img.brand-logo { height: 52px; width: auto; display: block; }
+    .nav-links { display: flex; gap: 28px; align-items: center; }
+    .nav-links a {
+      font-size: 14px; font-weight: 600; color: var(--charcoal);
+      text-decoration: none; transition: var(--transition);
+      padding: 6px 0; position: relative;
+    }
+    .nav-links a:hover { color: var(--gvra-blue); }
+    .nav-links a.active { color: var(--gvra-blue); }
+    .nav-links a.active::after {
+      content: ''; position: absolute; left: 0; right: 0; bottom: -4px;
+      height: 2px; background: var(--accent);
+    }
+    .nav-cta {
+      background: var(--gvra-blue); color: #fff !important;
+      padding: 10px 20px; border-radius: 8px; font-weight: 700 !important;
+    }
+    .nav-cta:hover { background: var(--gvra-blue-dark); }
+
+    /* ── Hero ── */
+    .hero {
+      position: relative;
+      padding: 2.5rem 40px 3.5rem;
+      color: #ffffff;
+      background-color: #0f2e43;
+      background-image:
+        linear-gradient(135deg, rgba(11,37,69,.78) 0%, rgba(26,68,128,.62) 60%, rgba(26,68,128,.55) 100%),
+        url("Hero%20Banner.png");
+      background-position: center center;
+      background-repeat: no-repeat;
+      background-size: cover;
+      overflow: visible;
+      margin-bottom: 0;
+      clip-path: ellipse(90% 100% at 50% 0%);
+    }
+    .hero::before {
+      content: ''; position: absolute; inset: 0;
+      background: linear-gradient(180deg, rgba(11,37,69,.15) 0%, rgba(11,37,69,.35) 100%);
+      pointer-events: none;
+    }
+    .hero-inner { max-width: 1280px; margin: 0 auto; position: relative; z-index: 1; }
+    .hero-eyebrow {
+      display: inline-flex; align-items: center; gap: 10px;
+      background: rgba(255,255,255,.12);
+      border: 1px solid rgba(255,255,255,.28);
+      border-radius: 100px;
+      padding: 6px 16px;
+      font-size: 12px; font-weight: 700;
+      letter-spacing: .12em; text-transform: uppercase;
+      margin-bottom: 20px;
+    }
+    .hero-eyebrow-dot { width: 8px; height: 8px; background: var(--accent); border-radius: 50%; animation: pulse 2s infinite; }
+    @keyframes pulse { 0%,100% { opacity: 1; transform: scale(1); } 50% { opacity: .5; transform: scale(1.4); } }
+    .hero h1 {
+      font-size: clamp(34px, 4vw, 54px);
+      font-weight: 800; line-height: 1.08;
+      margin-bottom: 18px; letter-spacing: -.02em;
+      max-width: 820px;
+    }
+    .hero h1 em { font-style: normal; color: var(--accent); }
+    .hero-sub {
+      font-size: 17px; line-height: 1.65;
+      color: rgba(255,255,255,.9);
+      max-width: 720px; margin-bottom: 30px;
+    }
+    .hero-btns { display: flex; gap: 14px; flex-wrap: wrap; }
+    .btn-primary {
+      background: var(--accent); color: var(--gvra-blue-dark);
+      padding: 14px 28px; border-radius: 8px;
+      font-weight: 800; font-size: 15px; text-decoration: none;
+      transition: var(--transition); display: inline-flex; align-items: center; gap: 8px;
+      border: none; cursor: pointer;
+    }
+    .btn-primary:hover { background: #d6b860; transform: translateY(-2px); box-shadow: 0 8px 24px rgba(0,0,0,.2); }
+    .btn-secondary {
+      background: transparent; color: #fff;
+      padding: 14px 28px; border-radius: 8px;
+      font-weight: 700; font-size: 15px; text-decoration: none;
+      border: 2px solid rgba(255,255,255,.5);
+      transition: var(--transition);
+      display: inline-flex; align-items: center; gap: 8px;
+    }
+    .btn-secondary:hover { border-color: #fff; background: rgba(255,255,255,.1); }
+
+    /* ── Stats Bar ── */
+    .stats-bar { background: var(--charcoal); padding: 28px 40px; }
+    .stats-inner {
+      max-width: 1200px; margin: 0 auto;
+      display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px;
+    }
+    .stat-item { text-align: center; padding: 8px 0; border-right: 1px solid rgba(255,255,255,.1); }
+    .stat-item:last-child { border-right: none; }
+    .stat-value { font-size: 30px; font-weight: 800; color: var(--accent); line-height: 1; }
+    .stat-label { font-size: 12px; color: rgba(255,255,255,.65); margin-top: 6px; letter-spacing: .04em; text-transform: uppercase; }
+
+    /* ── Section Base ── */
+    section { padding: 72px 40px; }
+    section:nth-of-type(even) { background: var(--gray-light); }
+    .section-inner { max-width: 1200px; margin: 0 auto; }
+    .section-header { text-align: center; margin-bottom: 48px; }
+    .section-eyebrow {
+      display: inline-block;
+      background: var(--gvra-blue-light);
+      color: var(--gvra-blue-dark);
+      font-size: 12px; font-weight: 800;
+      letter-spacing: .12em; text-transform: uppercase;
+      padding: 6px 16px; border-radius: 100px;
+      margin-bottom: 14px;
+    }
+    .section-title {
+      font-size: clamp(26px, 3vw, 38px);
+      font-weight: 800; color: var(--charcoal);
+      line-height: 1.2; letter-spacing: -.02em;
+    }
+    .section-sub {
+      font-size: 17px; color: var(--gray);
+      max-width: 760px; margin: 14px auto 0; line-height: 1.65;
+    }
+
+    /* ── Overview cards ── */
+    .overview-grid {
+      display: grid; grid-template-columns: repeat(3, 1fr); gap: 22px;
+    }
+    .ov-card {
+      background: #fff; border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding: 28px; position: relative;
+      transition: var(--transition);
+    }
+    .ov-card:hover { box-shadow: var(--shadow-md); transform: translateY(-3px); border-color: var(--gvra-blue-mid); }
+    .ov-card h3 { font-size: 18px; font-weight: 800; margin-bottom: 8px; color: var(--charcoal); }
+    .ov-card p { font-size: 14px; color: var(--gray); line-height: 1.6; }
+    .ov-icon {
+      width: 48px; height: 48px;
+      background: var(--gvra-blue-light); color: var(--gvra-blue-dark);
+      border-radius: 10px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 22px; margin-bottom: 14px;
+    }
+
+    /* ── Two column ── */
+    .two-col {
+      display: grid; grid-template-columns: 1fr 1fr;
+      gap: 36px; align-items: start;
+    }
+    .panel {
+      background: #fff; border: 1px solid var(--border);
+      border-radius: var(--radius-lg); padding: 28px;
+    }
+    .panel h3 {
+      font-size: 18px; font-weight: 800; color: var(--charcoal);
+      margin-bottom: 14px; display: flex; align-items: center; gap: 10px;
+    }
+    .panel h3::before {
+      content: ''; width: 6px; height: 22px; background: var(--accent); border-radius: 3px;
+    }
+
+    /* ── Flow lists ── */
+    .flow-list { list-style: none; display: flex; flex-direction: column; gap: 12px; }
+    .flow-list li {
+      display: grid; grid-template-columns: 30px 1fr;
+      gap: 12px; align-items: start;
+      padding: 12px 14px;
+      background: var(--gray-light);
+      border-left: 3px solid var(--gvra-blue);
+      border-radius: 6px;
+    }
+    .flow-list li .step {
+      width: 26px; height: 26px;
+      background: var(--gvra-blue); color: #fff;
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 12px; font-weight: 800;
+    }
+    .flow-list li strong { display: block; font-size: 14px; color: var(--charcoal); margin-bottom: 2px; }
+    .flow-list li span { font-size: 13px; color: var(--gray); line-height: 1.5; }
+
+    /* ── Authorization budget breakdown ── */
+    .auth-card {
+      background: #fff; border: 1px solid var(--border);
+      border-radius: var(--radius-lg); padding: 28px;
+    }
+    .auth-header {
+      display: flex; flex-wrap: wrap; gap: 14px;
+      align-items: center; justify-content: space-between;
+      padding-bottom: 16px; border-bottom: 1px solid var(--border); margin-bottom: 18px;
+    }
+    .auth-id { font-size: 13px; color: var(--gray); font-weight: 700; letter-spacing: .04em; text-transform: uppercase; }
+    .auth-title { font-size: 20px; font-weight: 800; color: var(--charcoal); margin-top: 2px; }
+    .auth-meta { display: flex; gap: 18px; flex-wrap: wrap; font-size: 13px; color: var(--gray); }
+    .auth-meta strong { color: var(--charcoal); }
+    .budget-total {
+      background: linear-gradient(135deg, var(--gvra-blue) 0%, var(--gvra-blue-dark) 100%);
+      color: #fff; border-radius: 12px;
+      padding: 16px 18px;
+      display: flex; justify-content: space-between; align-items: center; gap: 12px;
+      margin-bottom: 16px;
+    }
+    .budget-total .lbl { font-size: 12px; opacity: .85; text-transform: uppercase; letter-spacing: .06em; font-weight: 700; }
+    .budget-total .val { font-size: 26px; font-weight: 800; color: var(--accent); }
+    .budget-bar {
+      height: 10px; border-radius: 100px;
+      background: rgba(255,255,255,.2);
+      overflow: hidden; margin-top: 10px;
+    }
+    .budget-bar .fill { height: 100%; background: var(--accent); border-radius: 100px; }
+    .budget-meta { font-size: 12px; opacity: .85; margin-top: 6px; }
+
+    /* ── Tables ── */
+    .table-wrap { background: #fff; border: 1px solid var(--border); border-radius: 12px; overflow: hidden; }
+    table.data { width: 100%; border-collapse: collapse; font-size: 14px; }
+    table.data caption { text-align: left; padding: 14px 18px; font-weight: 800; font-size: 16px; color: var(--charcoal); background: var(--gvra-blue-light); border-bottom: 1px solid var(--border); }
+    table.data thead th {
+      text-align: left; font-size: 12px; letter-spacing: .06em; text-transform: uppercase;
+      color: var(--gray); padding: 12px 14px; border-bottom: 1px solid var(--border);
+      background: var(--gray-light); font-weight: 800;
+    }
+    table.data tbody td { padding: 12px 14px; border-bottom: 1px solid var(--border); color: var(--charcoal); vertical-align: middle; }
+    table.data tbody tr:last-child td { border-bottom: none; }
+    table.data tbody tr:hover { background: var(--gvra-blue-light); }
+    table.data td.num { text-align: right; font-variant-numeric: tabular-nums; }
+    table.data th.num { text-align: right; }
+
+    .pill {
+      display: inline-block; font-size: 11px; font-weight: 800;
+      padding: 3px 10px; border-radius: 100px; letter-spacing: .04em; text-transform: uppercase;
+    }
+    .pill.active { background: var(--green-light); color: var(--green); }
+    .pill.pending { background: var(--amber-light); color: var(--amber); }
+    .pill.error   { background: var(--red-light);   color: var(--red); }
+    .pill.review  { background: var(--gvra-blue-light); color: var(--gvra-blue-dark); }
+    .pill.closed  { background: #ece9f1; color: #4a3b6b; }
+
+    /* ── Mini bar (in-table progress) ── */
+    .mini-bar { height: 8px; background: var(--gray-light); border-radius: 100px; overflow: hidden; margin-top: 4px; }
+    .mini-bar .fill { height: 100%; border-radius: 100px; background: var(--gvra-blue); }
+    .mini-bar .fill.warn { background: var(--amber); }
+    .mini-bar .fill.danger { background: var(--red); }
+    .mini-meta { font-size: 11px; color: var(--gray); margin-top: 3px; }
+
+    /* ── Approval queue (10.2) ── */
+    .queue {
+      background: #fff; border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+    }
+    .queue-head {
+      padding: 16px 20px; border-bottom: 1px solid var(--border);
+      display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 10px;
+    }
+    .queue-head h3 { font-size: 16px; font-weight: 800; color: var(--charcoal); }
+    .queue-head .meta { font-size: 12px; color: var(--gray); font-weight: 700; }
+    .queue-row {
+      display: grid;
+      grid-template-columns: 1.4fr 1fr 1fr 1fr auto;
+      gap: 14px; align-items: center;
+      padding: 14px 20px;
+      border-bottom: 1px solid var(--border);
+      font-size: 13px;
+    }
+    .queue-row:last-child { border-bottom: none; }
+    .queue-row .who strong { display: block; font-size: 14px; color: var(--charcoal); }
+    .queue-row .who small { font-size: 12px; color: var(--gray); }
+    .queue-row .amt { font-weight: 800; color: var(--charcoal); font-variant-numeric: tabular-nums; }
+    .queue-row .actions { display: flex; gap: 6px; }
+    .btn-sm {
+      font-size: 12px; font-weight: 800; padding: 7px 12px;
+      border-radius: 6px; border: 1px solid var(--gvra-blue);
+      background: #fff; color: var(--gvra-blue); cursor: pointer;
+    }
+    .btn-sm.primary { background: var(--gvra-blue); color: #fff; }
+    .btn-sm.primary:hover { background: var(--gvra-blue-dark); }
+    .btn-sm:hover { background: var(--gvra-blue-light); }
+    .btn-sm.danger { border-color: var(--red); color: var(--red); }
+    .btn-sm.danger:hover { background: var(--red-light); }
+
+    /* ── Validation panel ── */
+    .validation {
+      margin-top: 18px;
+      background: var(--gray-light);
+      border-radius: 12px; padding: 18px;
+    }
+    .validation h4 { font-size: 14px; font-weight: 800; color: var(--charcoal); margin-bottom: 12px; }
+    .check-list { list-style: none; display: flex; flex-direction: column; gap: 8px; }
+    .check-list li {
+      display: grid; grid-template-columns: 22px 1fr auto;
+      gap: 10px; align-items: center;
+      font-size: 13px; padding: 8px 10px;
+      background: #fff; border: 1px solid var(--border); border-radius: 8px;
+    }
+    .check-list .ic {
+      width: 20px; height: 20px; border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 12px; font-weight: 800;
+    }
+    .check-list .ic.ok   { background: var(--green-light); color: var(--green); }
+    .check-list .ic.warn { background: var(--amber-light); color: var(--amber); }
+    .check-list .ic.err  { background: var(--red-light);   color: var(--red); }
+    .check-list small { font-size: 12px; color: var(--gray); font-weight: 700; }
+
+    /* ── Integration diagram (10.3) ── */
+    .integ-diagram {
+      background: #fff; border: 1px solid var(--border);
+      border-radius: var(--radius-lg); padding: 28px;
+    }
+    .integ-grid {
+      display: grid; grid-template-columns: 1fr auto 1fr;
+      gap: 18px; align-items: stretch;
+    }
+    .integ-col { display: flex; flex-direction: column; gap: 12px; }
+    .integ-box {
+      background: var(--gvra-blue-light);
+      border: 1px solid var(--gvra-blue-mid);
+      border-radius: 12px; padding: 14px 16px;
+    }
+    .integ-box.alt { background: #e6f4ea; border-color: #c8e6c9; }
+    .integ-box strong { display: block; font-size: 14px; color: var(--charcoal); }
+    .integ-box small { font-size: 12px; color: var(--gray); }
+    .integ-mid {
+      display: flex; flex-direction: column; align-items: center; justify-content: center;
+      gap: 14px;
+    }
+    .integ-arrow {
+      background: var(--accent); color: var(--gvra-blue-dark);
+      padding: 8px 14px; border-radius: 100px;
+      font-size: 11px; font-weight: 800; letter-spacing: .06em; text-transform: uppercase;
+      white-space: nowrap;
+    }
+    .exchange-list {
+      margin-top: 22px; display: grid;
+      grid-template-columns: repeat(5, 1fr); gap: 10px;
+    }
+    .exchange-list .ex {
+      background: var(--gray-light); border: 1px solid var(--border);
+      border-radius: 10px; padding: 12px;
+      text-align: center; font-size: 13px; font-weight: 700; color: var(--charcoal);
+    }
+    .exchange-list .ex .ic { font-size: 20px; display: block; margin-bottom: 4px; }
+    .exchange-list .ex small { display: block; font-size: 11px; color: var(--gray); font-weight: 600; margin-top: 2px; }
+
+    /* ── Reconciliation (10.4) ── */
+    .recon-grid { display: grid; grid-template-columns: 1.05fr .95fr; gap: 36px; align-items: start; }
+    .kpi-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 14px; margin-bottom: 18px; }
+    .kpi { background: #fff; border: 1px solid var(--border); border-radius: 12px; padding: 16px; }
+    .kpi .label { font-size: 12px; color: var(--gray); text-transform: uppercase; letter-spacing: .06em; font-weight: 700; }
+    .kpi .value { font-size: 24px; font-weight: 800; color: var(--charcoal); margin-top: 4px; }
+    .kpi .delta { font-size: 12px; margin-top: 4px; font-weight: 700; }
+    .kpi .delta.up { color: var(--green); }
+    .kpi .delta.down { color: var(--red); }
+
+    /* ── SSA section (10.5) ── */
+    .ssa-grid {
+      display: grid; grid-template-columns: 1fr 1fr; gap: 22px;
+    }
+    .ssa-card {
+      background: #fff; border: 1px solid var(--border);
+      border-radius: var(--radius-lg); padding: 24px;
+    }
+    .ssa-card h3 { font-size: 16px; font-weight: 800; color: var(--charcoal); margin-bottom: 12px; display: flex; align-items: center; gap: 8px; }
+    .ssa-card .ic { width: 36px; height: 36px; border-radius: 8px; background: var(--gvra-blue-light); color: var(--gvra-blue-dark); display: inline-flex; align-items: center; justify-content: center; font-size: 18px; }
+    .ssa-card p { font-size: 13px; color: var(--gray); line-height: 1.6; margin-bottom: 12px; }
+    .file-strip {
+      display: grid; grid-template-columns: 32px 1fr auto;
+      gap: 12px; align-items: center;
+      background: var(--gray-light); border: 1px solid var(--border);
+      border-radius: 10px; padding: 10px 12px; margin-bottom: 8px;
+      font-size: 13px;
+    }
+    .file-strip .doc { font-size: 20px; }
+    .file-strip strong { display: block; color: var(--charcoal); font-size: 13px; }
+    .file-strip small { font-size: 11px; color: var(--gray); }
+    .file-strip .meta { font-size: 12px; color: var(--gvra-blue); font-weight: 700; }
+
+    /* ── Real-time monitor (10.5.6) ── */
+    .monitor {
+      background: linear-gradient(135deg, var(--gvra-blue) 0%, var(--gvra-blue-dark) 100%);
+      color: #fff;
+      border-radius: var(--radius-lg);
+      padding: 28px;
+    }
+    .monitor h3 { font-size: 18px; font-weight: 800; margin-bottom: 16px; }
+    .monitor-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; margin-bottom: 18px; }
+    .monitor-card {
+      background: rgba(255,255,255,.1);
+      border: 1px solid rgba(255,255,255,.2);
+      border-radius: 12px; padding: 16px;
+    }
+    .monitor-card .lbl { font-size: 11px; opacity: .85; text-transform: uppercase; letter-spacing: .06em; font-weight: 700; }
+    .monitor-card .val { font-size: 22px; font-weight: 800; margin-top: 4px; color: var(--accent); }
+    .monitor-card .sub { font-size: 12px; opacity: .85; margin-top: 4px; }
+    .alert-item {
+      display: grid; grid-template-columns: 32px 1fr auto;
+      gap: 12px; align-items: center;
+      background: rgba(255,255,255,.08);
+      border-left: 3px solid var(--accent);
+      border-radius: 8px; padding: 12px 14px; margin-bottom: 8px;
+      font-size: 13px;
+    }
+    .alert-item.danger { border-left-color: #ff6b6b; }
+    .alert-item .ic { width: 28px; height: 28px; border-radius: 50%; background: rgba(255,255,255,.15); display: inline-flex; align-items: center; justify-content: center; font-weight: 800; }
+    .alert-item strong { display: block; color: #fff; }
+    .alert-item small { font-size: 11px; opacity: .8; }
+    .alert-item .when { font-size: 11px; opacity: .75; }
+
+    /* ── Aggregate auth (10.5.7) ── */
+    .agg-card {
+      background: #fff; border: 1px solid var(--border);
+      border-radius: var(--radius-lg); padding: 28px;
+    }
+    .agg-head {
+      padding-bottom: 16px; border-bottom: 1px solid var(--border); margin-bottom: 16px;
+      display: flex; flex-wrap: wrap; gap: 14px; justify-content: space-between; align-items: center;
+    }
+    .agg-tag {
+      display: inline-block; background: var(--accent); color: var(--gvra-blue-dark);
+      font-size: 11px; font-weight: 800; letter-spacing: .06em;
+      padding: 3px 9px; border-radius: 4px; margin-right: 6px;
+    }
+
+    /* ── Closure (10.5.8) ── */
+    .closure-grid { display: grid; grid-template-columns: 1.05fr .95fr; gap: 36px; align-items: start; }
+    .closure-list { list-style: none; display: flex; flex-direction: column; gap: 10px; }
+    .closure-list li {
+      display: grid; grid-template-columns: 28px 1fr auto;
+      gap: 12px; align-items: center;
+      background: #fff; border: 1px solid var(--border);
+      border-radius: 10px; padding: 12px 14px;
+      font-size: 13px;
+    }
+    .closure-list .check {
+      width: 24px; height: 24px; border-radius: 50%;
+      background: var(--green-light); color: var(--green);
+      display: flex; align-items: center; justify-content: center; font-weight: 800;
+    }
+    .closure-list .check.pending { background: var(--gray-light); color: var(--gray); }
+    .closure-list strong { color: var(--charcoal); display: block; font-size: 13px; }
+    .closure-list small { font-size: 12px; color: var(--gray); }
+    .closure-card {
+      background: #fff; border: 1px solid var(--border); border-radius: var(--radius-lg);
+      padding: 22px; box-shadow: var(--shadow-sm);
+    }
+    .closure-card h4 { font-size: 16px; font-weight: 800; color: var(--charcoal); margin-bottom: 8px; }
+    .closure-card .case-meta { font-size: 13px; color: var(--gray); margin-bottom: 14px; }
+    .closure-actions { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 14px; }
+
+    /* ── CTA Banner ── */
+    .cta {
+      background: linear-gradient(135deg, var(--gvra-blue-dark) 0%, var(--gvra-blue) 100%);
+      color: #fff; padding: 56px 40px; text-align: center;
+    }
+    .cta h2 { font-size: clamp(24px, 3vw, 34px); font-weight: 800; margin-bottom: 12px; }
+    .cta p { font-size: 16px; opacity: .85; max-width: 640px; margin: 0 auto 22px; line-height: 1.6; }
+    .cta-btns { display: flex; gap: 14px; justify-content: center; flex-wrap: wrap; }
+
+    /* ── Footer ── */
+    footer {
+      background: var(--charcoal); color: rgba(255,255,255,.75);
+      padding: 40px; font-size: 13px;
+    }
+    .footer-inner {
+      max-width: 1200px; margin: 0 auto;
+      display: grid; grid-template-columns: 1.4fr 1fr 1fr 1fr; gap: 30px;
+    }
+    footer h5 { color: #fff; font-size: 13px; text-transform: uppercase; letter-spacing: .08em; margin-bottom: 12px; }
+    footer a { color: rgba(255,255,255,.7); text-decoration: none; display: block; padding: 4px 0; }
+    footer a:hover { color: var(--accent); }
+    .footer-bottom {
+      max-width: 1200px; margin: 30px auto 0; padding-top: 20px;
+      border-top: 1px solid rgba(255,255,255,.1);
+      display: flex; justify-content: space-between; flex-wrap: wrap; gap: 10px;
+      font-size: 12px; color: rgba(255,255,255,.55);
+    }
+
+    /* ── Responsive ── */
+    @media (max-width: 980px) {
+      .two-col, .recon-grid, .closure-grid, .ssa-grid { grid-template-columns: 1fr; }
+      .overview-grid { grid-template-columns: 1fr 1fr; }
+      .stats-inner { grid-template-columns: 1fr 1fr; }
+      .footer-inner { grid-template-columns: 1fr 1fr; }
+      .nav-links a:not(.nav-cta) { display: none; }
+      .integ-grid { grid-template-columns: 1fr; }
+      .integ-mid { flex-direction: row; }
+      .exchange-list { grid-template-columns: repeat(2, 1fr); }
+      .monitor-grid { grid-template-columns: 1fr; }
+      .queue-row { grid-template-columns: 1fr 1fr; }
+    }
+    @media (max-width: 620px) {
+      .overview-grid, .stats-inner, .footer-inner { grid-template-columns: 1fr; }
+      section { padding: 56px 22px; }
+      .hero, nav.main-nav, .stats-bar, footer, .cta { padding-left: 22px; padding-right: 22px; }
+    }
+  </style>
+</head>
+<body>
+  <a href="#main" class="skip-link">Skip to main content</a>
+
+  <!-- Main nav -->
+  <nav class="main-nav" aria-label="Primary">
+    <a href="#" class="nav-brand" aria-label="Georgia Vocational Rehabilitation Agency home">
+      <img class="brand-logo" src="GVRA.png" alt="Georgia Vocational Rehabilitation Agency" />
+    </a>
+    <div class="nav-links" role="navigation">
+      <a href="#overview" class="active">Overview</a>
+      <a href="#authorization">Authorization &amp; Budget</a>
+      <a href="#payment-process">Payment Process</a>
+      <a href="#integrations">Integrations</a>
+      <a href="#reconciliation">Reconciliation</a>
+      <a href="#ssa">Ticket to Work</a>
+      <a href="#monitoring" class="nav-cta">Live Monitor</a>
+    </div>
+  </nav>
+
+  <main id="main">
+
+  <!-- HERO -->
+  <header class="hero" aria-labelledby="hero-title">
+    <div class="hero-inner">
+      <div>
+        <div class="hero-eyebrow"><span class="hero-eyebrow-dot" aria-hidden="true"></span>Georgia Vocational Rehabilitation Agency</div>
+        <h1 id="hero-title">Vocational Rehabilitation <em>Payment</em> Platform</h1>
+        <p class="hero-sub">A unified VR fiscal module for authorization budgeting, end-to-end payment processing, external accounting integration, fiscal reconciliation, SSA Ticket to Work claims, and real-time IPE budget monitoring &mdash; secure, auditable, and counselor-friendly.</p>
+        <div class="hero-btns">
+          <a class="btn-primary" href="#payment-process">View Payment Workflow &rsaquo;</a>
+          <a class="btn-secondary" href="#overview">Explore Capabilities</a>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- Stats -->
+  <div class="stats-bar" aria-label="Fiscal program statistics">
+    <div class="stats-inner">
+      <div class="stat-item"><div class="stat-value">$48.6M</div><div class="stat-label">FY26 Authorizations Issued</div></div>
+      <div class="stat-item"><div class="stat-value">12,840</div><div class="stat-label">Payments Processed YTD</div></div>
+      <div class="stat-item"><div class="stat-value">99.6%</div><div class="stat-label">Validation Pass Rate</div></div>
+      <div class="stat-item"><div class="stat-value">3.2 days</div><div class="stat-label">Avg. Payment Cycle</div></div>
+    </div>
+  </div>
+
+  <!-- OVERVIEW -->
+  <section id="overview">
+    <div class="section-inner">
+      <div class="section-header">
+        <span class="section-eyebrow">Capabilities at a Glance</span>
+        <h2 class="section-title">A complete fiscal backbone for the VR program</h2>
+        <p class="section-sub">From authorization budgeting through external accounting hand-off, SSA reimbursements, and IPE closure &mdash; every fiscal action is validated, traceable, and reportable.</p>
+      </div>
+      <div class="overview-grid">
+        <article class="ov-card">
+          <div class="ov-icon" aria-hidden="true">&#128202;</div>
+          <h3>Authorization Budget Controls</h3>
+          <p>Break down each authorization into service-level line items with approval workflows, encumbrance tracking, and budget thresholds.</p>
+        </article>
+        <article class="ov-card">
+          <div class="ov-icon" aria-hidden="true">&#128179;</div>
+          <h3>End-to-End Payments</h3>
+          <p>Counselor request, fiscal review queue, automated validation against authorization, rates, and available budget &mdash; with built-in error correction.</p>
+        </article>
+        <article class="ov-card">
+          <div class="ov-icon" aria-hidden="true">&#128260;</div>
+          <h3>External Accounting Sync</h3>
+          <p>Bi-directional exchange of payments, obligations, voids, refunds, and reversals with the State accounting system and bank.</p>
+        </article>
+        <article class="ov-card">
+          <div class="ov-icon" aria-hidden="true">&#128221;</div>
+          <h3>Fiscal Reporting</h3>
+          <p>Reconciliation dashboards, error queues, and audit-ready reports tied to every payment, obligation, and adjustment.</p>
+        </article>
+        <article class="ov-card">
+          <div class="ov-icon" aria-hidden="true">&#127919;</div>
+          <h3>SSA Ticket to Work</h3>
+          <p>Wage data interface, Assignment / Un-assignment files, cost reimbursement submissions, and full claim status tracking.</p>
+        </article>
+        <article class="ov-card">
+          <div class="ov-icon" aria-hidden="true">&#128276;</div>
+          <h3>Real-Time IPE Monitoring</h3>
+          <p>Live budget consumption, cost projections, threshold alerts, aggregate authorization tracking, and guided case closure.</p>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <!-- AUTHORIZATION BUDGET BREAKDOWN -->
+  <section id="authorization">
+    <div class="section-inner">
+      <div class="section-header">
+        <span class="section-eyebrow">Authorization Budget</span>
+        <h2 class="section-title">Break down authorizations &mdash; with controls and workflow</h2>
+        <p class="section-sub">Every authorization is decomposed into approved service line items. Each line is encumbered, rate-validated, and routed through configurable approval workflows before any payment can be issued.</p>
+      </div>
+
+      <div class="auth-card">
+        <div class="auth-header">
+          <div>
+            <div class="auth-id">Authorization &middot; AUTH-2026-04812</div>
+            <div class="auth-title">Diagnostic, Training &amp; Job Placement Services</div>
+          </div>
+          <div class="auth-meta">
+            <span><strong>Consumer:</strong> J. Carter (CASE-78214)</span>
+            <span><strong>Counselor:</strong> R. Patel</span>
+            <span><strong>IPE Plan:</strong> IPE-2026-552</span>
+            <span><strong>Effective:</strong> Apr 01 &ndash; Sep 30, 2026</span>
+          </div>
+        </div>
+
+        <div class="budget-total">
+          <div>
+            <div class="lbl">Total Authorized Budget</div>
+            <div class="val">$18,450.00</div>
+            <div class="budget-meta">$11,212.40 encumbered &middot; $4,180.00 paid &middot; $3,057.60 available</div>
+          </div>
+          <div style="flex: 0 0 240px;">
+            <div class="lbl">Consumption</div>
+            <div class="budget-bar"><div class="fill" style="width: 60%"></div></div>
+            <div class="budget-meta">60% of authorization committed</div>
+          </div>
+        </div>
+
+        <div class="table-wrap" role="region" aria-label="Authorization line items">
+          <table class="data">
+            <caption>Service Line Items</caption>
+            <thead>
+              <tr>
+                <th>Service Code</th>
+                <th>Service / Vendor</th>
+                <th class="num">Approved Rate</th>
+                <th class="num">Units</th>
+                <th class="num">Encumbered</th>
+                <th class="num">Paid</th>
+                <th>Status</th>
+                <th>Approval</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>VR-310</strong></td>
+                <td>Vocational Evaluation &mdash; Atlanta Career Center</td>
+                <td class="num">$95.00 / hr</td>
+                <td class="num">12</td>
+                <td class="num">$1,140.00</td>
+                <td class="num">$1,140.00</td>
+                <td><span class="pill active">Paid</span></td>
+                <td>Counselor &rarr; Supervisor</td>
+              </tr>
+              <tr>
+                <td><strong>VR-415</strong></td>
+                <td>Job Coaching &mdash; Goodwill of North GA</td>
+                <td class="num">$58.00 / hr</td>
+                <td class="num">60</td>
+                <td class="num">$3,480.00</td>
+                <td class="num">$1,740.00</td>
+                <td><span class="pill pending">In Progress</span></td>
+                <td>Fiscal Tier 1</td>
+              </tr>
+              <tr>
+                <td><strong>VR-520</strong></td>
+                <td>Assistive Technology &mdash; AT Solutions LLC</td>
+                <td class="num">$2,450.00 ea</td>
+                <td class="num">1</td>
+                <td class="num">$2,450.00</td>
+                <td class="num">$0.00</td>
+                <td><span class="pill review">Awaiting Quote Match</span></td>
+                <td>Fiscal Tier 2 (&gt;$2K)</td>
+              </tr>
+              <tr>
+                <td><strong>VR-630</strong></td>
+                <td>Tuition &amp; Fees &mdash; Georgia State University</td>
+                <td class="num">Per term</td>
+                <td class="num">1</td>
+                <td class="num">$3,842.40</td>
+                <td class="num">$1,300.00</td>
+                <td><span class="pill pending">Partial</span></td>
+                <td>Counselor &rarr; Supervisor &rarr; Fiscal</td>
+              </tr>
+              <tr>
+                <td><strong>VR-710</strong></td>
+                <td>Transportation Stipend</td>
+                <td class="num">$25.00 / day</td>
+                <td class="num">12</td>
+                <td class="num">$300.00</td>
+                <td class="num">$0.00</td>
+                <td><span class="pill review">Held &mdash; Documentation</span></td>
+                <td>Counselor</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="validation" aria-label="Workflow controls">
+          <h4>Active Workflow Controls</h4>
+          <ul class="check-list">
+            <li><span class="ic ok" aria-hidden="true">&#10003;</span><span><strong>Rate ceiling enforcement</strong> &mdash; vendor invoices exceeding state-approved rate are blocked at intake.</span><small>Auto</small></li>
+            <li><span class="ic ok" aria-hidden="true">&#10003;</span><span><strong>Tiered approval routing</strong> &mdash; line items &gt; $2,000 require fiscal Tier 2 review.</span><small>Configurable</small></li>
+            <li><span class="ic warn" aria-hidden="true">!</span><span><strong>Documentation hold</strong> &mdash; one item awaiting receipt upload before authorization release.</span><small>Action needed</small></li>
+            <li><span class="ic ok" aria-hidden="true">&#10003;</span><span><strong>Encumbrance reservation</strong> &mdash; budget is reserved at authorization creation; freed on void or unused balance.</span><small>Auto</small></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- END-TO-END PAYMENT PROCESS -->
+  <section id="payment-process">
+    <div class="section-inner">
+      <div class="section-header">
+        <span class="section-eyebrow">Payment Workflow</span>
+        <h2 class="section-title">End-to-end VR payment process</h2>
+        <p class="section-sub">From counselor-initiated request through fiscal approval queues, automated validation against authorization, rates, and available budget &mdash; with explicit error and correction handling at every step.</p>
+      </div>
+
+      <div class="two-col">
+        <!-- Lifecycle steps -->
+        <div class="panel">
+          <h3>Payment Lifecycle</h3>
+          <ol class="flow-list">
+            <li><span class="step">1</span><div><strong>Request Initiation</strong><span>Counselor submits a payment request against an active authorization line item with vendor invoice or receipt attached.</span></div></li>
+            <li><span class="step">2</span><div><strong>Automated Validation</strong><span>System validates authorization status, approved service code, vendor rate, available budget, and supporting documentation.</span></div></li>
+            <li><span class="step">3</span><div><strong>Fiscal Approval Queue</strong><span>Routed by tier &mdash; Fiscal Tier 1 for routine, Tier 2 for high-value or exception items, with SLA timers visible to reviewers.</span></div></li>
+            <li><span class="step">4</span><div><strong>Error &amp; Correction Handling</strong><span>Failed validations return to counselor with itemized errors; corrections preserve audit history and re-enter the queue.</span></div></li>
+            <li><span class="step">5</span><div><strong>Disbursement</strong><span>Approved payments transmitted to State accounting / bank; payment status returns and posts to consumer ledger.</span></div></li>
+            <li><span class="step">6</span><div><strong>Post-Payment</strong><span>Voids, refunds, and reversals trigger automatic encumbrance restoration and ledger adjustments.</span></div></li>
+          </ol>
+        </div>
+
+        <!-- Approval queue + validation -->
+        <div>
+          <div class="queue" aria-label="Fiscal approval queue">
+            <div class="queue-head">
+              <div>
+                <h3>Fiscal Approval Queue &mdash; Tier 1</h3>
+                <span class="meta">8 items &middot; SLA target: 24h</span>
+              </div>
+              <span class="pill pending">3 due today</span>
+            </div>
+
+            <div class="queue-row">
+              <div class="who"><strong>PAY-2026-08821</strong><small>Goodwill of NGA &middot; Job Coaching</small></div>
+              <div class="amt">$870.00</div>
+              <div><span class="pill review">Validated</span></div>
+              <div><small>Submitted 2h ago</small></div>
+              <div class="actions">
+                <button class="btn-sm primary" type="button">Approve</button>
+                <button class="btn-sm" type="button">View</button>
+              </div>
+            </div>
+
+            <div class="queue-row">
+              <div class="who"><strong>PAY-2026-08822</strong><small>AT Solutions LLC &middot; Screen Reader</small></div>
+              <div class="amt">$2,450.00</div>
+              <div><span class="pill pending">Tier 2 escalation</span></div>
+              <div><small>Submitted 5h ago</small></div>
+              <div class="actions">
+                <button class="btn-sm" type="button">Escalate</button>
+                <button class="btn-sm" type="button">View</button>
+              </div>
+            </div>
+
+            <div class="queue-row">
+              <div class="who"><strong>PAY-2026-08823</strong><small>Atlanta Career Center &middot; Eval</small></div>
+              <div class="amt">$1,140.00</div>
+              <div><span class="pill error">Rate mismatch</span></div>
+              <div><small>Returned to counselor</small></div>
+              <div class="actions">
+                <button class="btn-sm danger" type="button">View Error</button>
+                <button class="btn-sm" type="button">Notes</button>
+              </div>
+            </div>
+
+            <div class="queue-row">
+              <div class="who"><strong>PAY-2026-08824</strong><small>Georgia State Univ. &middot; Tuition</small></div>
+              <div class="amt">$1,300.00</div>
+              <div><span class="pill active">Approved</span></div>
+              <div><small>Sent to ledger</small></div>
+              <div class="actions">
+                <button class="btn-sm" type="button">View</button>
+              </div>
+            </div>
+          </div>
+
+          <div class="validation">
+            <h4>Validation Checks &mdash; PAY-2026-08823</h4>
+            <ul class="check-list">
+              <li><span class="ic ok" aria-hidden="true">&#10003;</span><span>Authorization is active and within service period</span><small>Pass</small></li>
+              <li><span class="ic ok" aria-hidden="true">&#10003;</span><span>Service code <strong>VR-310</strong> matches authorization line</span><small>Pass</small></li>
+              <li><span class="ic err" aria-hidden="true">!</span><span>Invoice rate <strong>$110.00/hr</strong> exceeds approved rate of <strong>$95.00/hr</strong></span><small>Fail &mdash; correction</small></li>
+              <li><span class="ic ok" aria-hidden="true">&#10003;</span><span>Sufficient budget remains on authorization line</span><small>Pass</small></li>
+              <li><span class="ic warn" aria-hidden="true">!</span><span>Vendor W-9 expires in 30 days &mdash; reminder queued</span><small>Advisory</small></li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- EXTERNAL INTEGRATIONS -->
+  <section id="integrations">
+    <div class="section-inner">
+      <div class="section-header">
+        <span class="section-eyebrow">External Accounting Systems</span>
+        <h2 class="section-title">Two-way integration with State accounting &amp; bank</h2>
+        <p class="section-sub">Standardized data exchange of payments, obligations, voids, refunds, and reversals &mdash; with reconciliation keys and full audit trail on every record.</p>
+      </div>
+
+      <div class="integ-diagram">
+        <div class="integ-grid">
+          <div class="integ-col">
+            <div class="integ-box">
+              <strong>VR Payment Platform</strong>
+              <small>Authorization, approval, validation, ledger posting</small>
+            </div>
+            <div class="integ-box">
+              <strong>Consumer / IPE Ledger</strong>
+              <small>Per-case fiscal history with audit trail</small>
+            </div>
+            <div class="integ-box">
+              <strong>Vendor Master &amp; Rates</strong>
+              <small>Service codes, contracts, W-9, rate ceilings</small>
+            </div>
+          </div>
+
+          <div class="integ-mid">
+            <span class="integ-arrow">&rarr; Outbound</span>
+            <span class="integ-arrow">&larr; Inbound</span>
+            <span class="integ-arrow">&harr; Reconcile</span>
+          </div>
+
+          <div class="integ-col">
+            <div class="integ-box alt">
+              <strong>State Accounting System (TeamWorks / PeopleSoft)</strong>
+              <small>Obligations, vouchers, encumbrance updates</small>
+            </div>
+            <div class="integ-box alt">
+              <strong>Treasury / Bank ACH &amp; Check</strong>
+              <small>Disbursement file, paid status, returns</small>
+            </div>
+            <div class="integ-box alt">
+              <strong>Federal Draw Systems (G5 / PMS)</strong>
+              <small>Grant draw and matching reporting</small>
+            </div>
+          </div>
+        </div>
+
+        <div class="exchange-list" aria-label="Exchanged data types">
+          <div class="ex"><span class="ic" aria-hidden="true">&#128179;</span>Payments<small>Vouchers / ACH file</small></div>
+          <div class="ex"><span class="ic" aria-hidden="true">&#128203;</span>Obligations<small>Encumbrance create / release</small></div>
+          <div class="ex"><span class="ic" aria-hidden="true">&#128683;</span>Voids<small>Pre-disbursement cancel</small></div>
+          <div class="ex"><span class="ic" aria-hidden="true">&#128184;</span>Refunds<small>Vendor / consumer return</small></div>
+          <div class="ex"><span class="ic" aria-hidden="true">&#128257;</span>Reversals<small>Post-paid correction</small></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FISCAL RECONCILIATION & REPORTING -->
+  <section id="reconciliation">
+    <div class="section-inner">
+      <div class="section-header">
+        <span class="section-eyebrow">Fiscal Reporting</span>
+        <h2 class="section-title">Reconciliation, error resolution &amp; audit-ready reporting</h2>
+        <p class="section-sub">Daily reconciliation against the State accounting system with an actionable error queue, drill-down to source transactions, and standard fiscal reports.</p>
+      </div>
+
+      <div class="recon-grid">
+        <div>
+          <div class="kpi-grid">
+            <div class="kpi"><div class="label">Disbursed (MTD)</div><div class="value">$1.42M</div><div class="delta up">&uarr; 4.8% vs prior month</div></div>
+            <div class="kpi"><div class="label">In Approval Queue</div><div class="value">$184,720</div><div class="delta up">82 payments</div></div>
+            <div class="kpi"><div class="label">Recon Variance</div><div class="value">$1,240</div><div class="delta down">3 open items</div></div>
+            <div class="kpi"><div class="label">Error Queue</div><div class="value">7</div><div class="delta down">2 aged &gt; 5 days</div></div>
+          </div>
+
+          <div class="table-wrap" role="region" aria-label="Reconciliation error queue">
+            <table class="data">
+              <caption>Error &amp; Resolution Queue</caption>
+              <thead>
+                <tr><th>Txn ID</th><th>Type</th><th>Issue</th><th class="num">Amount</th><th>Status</th></tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td><strong>RX-1102</strong></td>
+                  <td>Payment</td>
+                  <td>Bank ACH return &mdash; closed account</td>
+                  <td class="num">$1,140.00</td>
+                  <td><span class="pill error">Action needed</span></td>
+                </tr>
+                <tr>
+                  <td><strong>RX-1118</strong></td>
+                  <td>Refund</td>
+                  <td>Refund posted in state ledger, no VR match</td>
+                  <td class="num">$320.00</td>
+                  <td><span class="pill pending">Match in progress</span></td>
+                </tr>
+                <tr>
+                  <td><strong>RX-1129</strong></td>
+                  <td>Reversal</td>
+                  <td>Counselor-requested reversal pending fiscal review</td>
+                  <td class="num">$2,450.00</td>
+                  <td><span class="pill review">Tier 2 review</span></td>
+                </tr>
+                <tr>
+                  <td><strong>RX-1135</strong></td>
+                  <td>Obligation</td>
+                  <td>Encumbrance amount mismatch &mdash; $40 variance</td>
+                  <td class="num">$40.00</td>
+                  <td><span class="pill pending">Auto-correcting</span></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <div class="panel">
+          <h3>Standard Fiscal Reports</h3>
+          <ul class="flow-list">
+            <li><span class="step">A</span><div><strong>Daily Reconciliation</strong><span>VR ledger vs. State accounting system &mdash; matched, unmatched, variance amounts.</span></div></li>
+            <li><span class="step">B</span><div><strong>Encumbrance &amp; Liquidation</strong><span>Open obligations by program, fund, grant, and counselor with aging buckets.</span></div></li>
+            <li><span class="step">C</span><div><strong>Federal Grant Draw</strong><span>Allowable expenditures by award with draw schedule and matching contribution.</span></div></li>
+            <li><span class="step">D</span><div><strong>Vendor 1099 / Spend</strong><span>Year-to-date vendor activity grouped by service code and TIN.</span></div></li>
+            <li><span class="step">E</span><div><strong>Audit Trail Export</strong><span>Full chain &mdash; request, validation, approver, payment, void/reversal &mdash; with timestamps and user IDs.</span></div></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SSA TICKET TO WORK -->
+  <section id="ssa">
+    <div class="section-inner">
+      <div class="section-header">
+        <span class="section-eyebrow">Social Security Administration</span>
+        <h2 class="section-title">Ticket to Work &mdash; wage interface, assignments &amp; cost reimbursement</h2>
+        <p class="section-sub">Native integration with SSA Ticket Tracker and the SSA Portal &mdash; wage data exchange, Assignment / Un-assignment files, and cost reimbursement claim files and reports formatted exactly to SSA upload specifications.</p>
+      </div>
+
+      <div class="ssa-grid">
+        <article class="ssa-card">
+          <h3><span class="ic" aria-hidden="true">&#128202;</span>Wage Interface to Ticket Tracker</h3>
+          <p>Scheduled, secure exchange of consumer earnings data between the VR module and the SSA Ticket Tracker software &mdash; supporting milestone, outcome, and payment determinations.</p>
+          <div class="file-strip">
+            <div class="doc" aria-hidden="true">&#128229;</div>
+            <div><strong>WAGE_VR_TT_2026-05.csv</strong><small>1,284 records &middot; quarter-to-date earnings</small></div>
+            <div class="meta">Ready</div>
+          </div>
+          <div class="file-strip">
+            <div class="doc" aria-hidden="true">&#128229;</div>
+            <div><strong>WAGE_VR_TT_2026-04.csv</strong><small>1,219 records &middot; transmitted Apr 30</small></div>
+            <div class="meta">Sent</div>
+          </div>
+        </article>
+
+        <article class="ssa-card">
+          <h3><span class="ic" aria-hidden="true">&#128221;</span>Assignment / Un-assignment Reports</h3>
+          <p>System-generated Assignment and Un-assignment reports formatted exactly to SSA Portal upload specifications &mdash; one-click validation, generation, and audit log.</p>
+          <div class="file-strip">
+            <div class="doc" aria-hidden="true">&#128196;</div>
+            <div><strong>SSA_ASSIGN_2026Q2.txt</strong><small>57 new ticket assignments</small></div>
+            <div class="meta">Generate</div>
+          </div>
+          <div class="file-strip">
+            <div class="doc" aria-hidden="true">&#128196;</div>
+            <div><strong>SSA_UNASSIGN_2026Q2.txt</strong><small>9 un-assignments &middot; closure-driven</small></div>
+            <div class="meta">Generate</div>
+          </div>
+        </article>
+
+        <article class="ssa-card">
+          <h3><span class="ic" aria-hidden="true">&#128190;</span>Cost Reimbursement Files</h3>
+          <p>Generates cost reimbursement claim files that meet SSA Portal upload format and edits &mdash; bundling allowable services, evidentiary documents, and claim metadata.</p>
+          <div class="file-strip">
+            <div class="doc" aria-hidden="true">&#128196;</div>
+            <div><strong>SSA_CR_BATCH_2026-05-A.xml</strong><small>32 claims &middot; $284,610 total</small></div>
+            <div class="meta">Validated</div>
+          </div>
+          <div class="file-strip">
+            <div class="doc" aria-hidden="true">&#128196;</div>
+            <div><strong>SSA_CR_BATCH_2026-04-B.xml</strong><small>28 claims &middot; uploaded Apr 22</small></div>
+            <div class="meta">Submitted</div>
+          </div>
+        </article>
+
+        <article class="ssa-card">
+          <h3><span class="ic" aria-hidden="true">&#128200;</span>Cost Reimbursement Reporting</h3>
+          <p>Comprehensive reports for all submitted claims showing claim status, payment amount, and payment date &mdash; with drill-down to consumer and submitted evidence.</p>
+          <div class="table-wrap" style="border-radius: 10px;">
+            <table class="data">
+              <thead>
+                <tr><th>Claim ID</th><th>Status</th><th class="num">Amount</th><th>Pay Date</th></tr>
+              </thead>
+              <tbody>
+                <tr><td>CR-2026-0188</td><td><span class="pill active">Paid</span></td><td class="num">$8,420</td><td>Apr 28, 2026</td></tr>
+                <tr><td>CR-2026-0202</td><td><span class="pill pending">Under Review</span></td><td class="num">$5,140</td><td>&mdash;</td></tr>
+                <tr><td>CR-2026-0211</td><td><span class="pill review">Submitted</span></td><td class="num">$11,280</td><td>&mdash;</td></tr>
+                <tr><td>CR-2026-0224</td><td><span class="pill error">Returned</span></td><td class="num">$3,960</td><td>&mdash;</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <!-- REAL-TIME MONITORING & ALERTS -->
+  <section id="monitoring">
+    <div class="section-inner">
+      <div class="section-header">
+        <span class="section-eyebrow">Live IPE Monitoring</span>
+        <h2 class="section-title">Real-time budget monitoring &amp; cost projections</h2>
+        <p class="section-sub">Counselors and supervisors see live consumption against an active IPE budget, projected spend through plan end, and proactive alerts when thresholds approach or exceed authorization limits.</p>
+      </div>
+
+      <div class="monitor" role="region" aria-label="Live IPE budget monitor">
+        <h3>IPE-2026-552 &middot; Consumer J. Carter &middot; Counselor R. Patel</h3>
+
+        <div class="monitor-grid">
+          <div class="monitor-card">
+            <div class="lbl">Total IPE Budget</div>
+            <div class="val">$24,800</div>
+            <div class="sub">Across 3 active authorizations</div>
+          </div>
+          <div class="monitor-card">
+            <div class="lbl">Consumed (live)</div>
+            <div class="val">$19,684</div>
+            <div class="sub">79% of plan budget</div>
+          </div>
+          <div class="monitor-card">
+            <div class="lbl">Projected at Plan End</div>
+            <div class="val">$26,150</div>
+            <div class="sub">Projected overrun: <strong>$1,350</strong></div>
+          </div>
+        </div>
+
+        <div class="alert-item danger">
+          <span class="ic" aria-hidden="true">&#9888;</span>
+          <div>
+            <strong>Authorization AUTH-2026-04812 has exceeded 95% of its limit</strong>
+            <small>Counselor &amp; supervisor notified &middot; further requests will require Tier 2 fiscal override</small>
+          </div>
+          <span class="when">Just now</span>
+        </div>
+        <div class="alert-item">
+          <span class="ic" aria-hidden="true">&#9888;</span>
+          <div>
+            <strong>Projected IPE spend exceeds plan budget by $1,350</strong>
+            <small>Recommendation: amend IPE or reduce remaining service units</small>
+          </div>
+          <span class="when">12 min ago</span>
+        </div>
+        <div class="alert-item">
+          <span class="ic" aria-hidden="true">&#128276;</span>
+          <div>
+            <strong>VR-630 Tuition line at 80% threshold</strong>
+            <small>Email + in-app notification sent to counselor R. Patel</small>
+          </div>
+          <span class="when">2h ago</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- AGGREGATE AUTHORIZATION MANAGEMENT -->
+  <section id="aggregate">
+    <div class="section-inner">
+      <div class="section-header">
+        <span class="section-eyebrow">Aggregate Authorization</span>
+        <h2 class="section-title">One budget. Many service codes. Full control.</h2>
+        <p class="section-sub">Group multiple service codes under a single authorized budget &mdash; track utilization across all codes with shared approval rules, encumbrance, and cap enforcement.</p>
+      </div>
+
+      <div class="agg-card">
+        <div class="agg-head">
+          <div>
+            <div class="auth-id">Aggregate Authorization &middot; AGG-2026-1140</div>
+            <div class="auth-title">Post-Secondary Training Bundle &mdash; Spring 2026 Term</div>
+          </div>
+          <div class="auth-meta">
+            <span><strong>Total Cap:</strong> $9,400.00</span>
+            <span><strong>Linked Codes:</strong> 4</span>
+            <span><strong>Vendor:</strong> Georgia State University</span>
+          </div>
+        </div>
+
+        <div class="budget-total">
+          <div>
+            <div class="lbl">Aggregate Cap Utilization</div>
+            <div class="val">$6,820 / $9,400</div>
+            <div class="budget-meta">$1,720 encumbered &middot; $5,100 paid &middot; $2,580 available</div>
+          </div>
+          <div style="flex: 0 0 240px;">
+            <div class="lbl">Total Consumption</div>
+            <div class="budget-bar"><div class="fill" style="width: 73%"></div></div>
+            <div class="budget-meta">73% &middot; cap alert at 85%</div>
+          </div>
+        </div>
+
+        <div class="table-wrap" role="region" aria-label="Linked service codes">
+          <table class="data">
+            <caption>Linked Service Codes &amp; Tracking</caption>
+            <thead>
+              <tr>
+                <th>Service Code</th>
+                <th>Description</th>
+                <th class="num">Encumbered</th>
+                <th class="num">Paid</th>
+                <th>Utilization</th>
+                <th>Approval Control</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><span class="agg-tag">Linked</span><strong>VR-630</strong></td>
+                <td>Tuition &amp; Fees</td>
+                <td class="num">$0</td>
+                <td class="num">$3,800.00</td>
+                <td>
+                  <div class="mini-bar"><div class="fill" style="width: 76%"></div></div>
+                  <div class="mini-meta">$3,800 of $5,000 line cap</div>
+                </td>
+                <td>Counselor &rarr; Supervisor</td>
+              </tr>
+              <tr>
+                <td><span class="agg-tag">Linked</span><strong>VR-632</strong></td>
+                <td>Books &amp; Required Materials</td>
+                <td class="num">$420.00</td>
+                <td class="num">$680.00</td>
+                <td>
+                  <div class="mini-bar"><div class="fill" style="width: 73%"></div></div>
+                  <div class="mini-meta">$1,100 of $1,500 line cap</div>
+                </td>
+                <td>Counselor</td>
+              </tr>
+              <tr>
+                <td><span class="agg-tag">Linked</span><strong>VR-635</strong></td>
+                <td>Lab / Course Fees</td>
+                <td class="num">$300.00</td>
+                <td class="num">$420.00</td>
+                <td>
+                  <div class="mini-bar"><div class="fill warn" style="width: 90%"></div></div>
+                  <div class="mini-meta">$720 of $800 line cap &mdash; threshold</div>
+                </td>
+                <td>Counselor</td>
+              </tr>
+              <tr>
+                <td><span class="agg-tag">Linked</span><strong>VR-710</strong></td>
+                <td>Transportation Stipend</td>
+                <td class="num">$1,000.00</td>
+                <td class="num">$200.00</td>
+                <td>
+                  <div class="mini-bar"><div class="fill" style="width: 60%"></div></div>
+                  <div class="mini-meta">$1,200 of $2,000 line cap</div>
+                </td>
+                <td>Counselor</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="validation">
+          <h4>Aggregate Controls</h4>
+          <ul class="check-list">
+            <li><span class="ic ok" aria-hidden="true">&#10003;</span><span><strong>Shared cap enforcement</strong> &mdash; spend across all linked codes cannot exceed the aggregate budget.</span><small>Auto</small></li>
+            <li><span class="ic warn" aria-hidden="true">!</span><span><strong>Line-level threshold</strong> &mdash; <strong>VR-635</strong> at 90% &mdash; supervisor notification sent.</span><small>Active</small></li>
+            <li><span class="ic ok" aria-hidden="true">&#10003;</span><span><strong>Inter-code reallocation</strong> &mdash; supervisor can shift remaining cap between linked codes with audit log.</span><small>Configurable</small></li>
+            <li><span class="ic ok" aria-hidden="true">&#10003;</span><span><strong>Single approval policy</strong> &mdash; one routing template applies to all linked service codes.</span><small>Standard</small></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CASE CLOSURE -->
+  <section id="closure">
+    <div class="section-inner">
+      <div class="section-header">
+        <span class="section-eyebrow">Case Closure</span>
+        <h2 class="section-title">Guided closure when GVRA criteria are met</h2>
+        <p class="section-sub">The system tracks closure criteria in real time and presents counselors with a guided closure workflow once all conditions are satisfied &mdash; with fiscal cleanup, SSA un-assignment, and audit-ready closure documentation.</p>
+      </div>
+
+      <div class="closure-grid">
+        <div class="closure-card">
+          <h4>Case CASE-78214 &mdash; J. Carter</h4>
+          <div class="case-meta">IPE-2026-552 &middot; Counselor R. Patel &middot; Plan opened Oct 2024</div>
+
+          <ul class="closure-list">
+            <li><span class="check" aria-hidden="true">&#10003;</span><div><strong>Employment outcome achieved</strong><small>Competitive integrated employment, 32 hr/wk &middot; verified May 02</small></div><small>Met</small></li>
+            <li><span class="check" aria-hidden="true">&#10003;</span><div><strong>Employment stability period (90 days)</strong><small>Day 92 of stability &mdash; pay stubs verified</small></div><small>Met</small></li>
+            <li><span class="check" aria-hidden="true">&#10003;</span><div><strong>Consumer &amp; counselor agreement on closure</strong><small>Closure conference logged Apr 28</small></div><small>Met</small></li>
+            <li><span class="check" aria-hidden="true">&#10003;</span><div><strong>All authorizations reconciled</strong><small>Open encumbrances released &middot; final payments posted</small></div><small>Met</small></li>
+            <li><span class="check pending" aria-hidden="true">&middot;</span><div><strong>Final SSA un-assignment file generated</strong><small>One-click action below &mdash; will queue for SSA Portal upload</small></div><small>Pending</small></li>
+          </ul>
+
+          <div class="closure-actions">
+            <button class="btn-sm primary" type="button">Generate SSA Un-assignment</button>
+            <button class="btn-sm" type="button">Preview Closure Packet</button>
+            <button class="btn-sm" type="button">Close Case</button>
+          </div>
+        </div>
+
+        <div class="panel">
+          <h3>What Closure Triggers</h3>
+          <ul class="flow-list">
+            <li><span class="step">1</span><div><strong>Final fiscal sweep</strong><span>All pending payments resolved; remaining encumbrances released back to fund.</span></div></li>
+            <li><span class="step">2</span><div><strong>SSA un-assignment file</strong><span>If consumer holds an SSA ticket, an un-assignment record is generated for upload to the SSA Portal.</span></div></li>
+            <li><span class="step">3</span><div><strong>Outcome reporting</strong><span>RSA and SSA outcome metrics updated; case contributes to performance dashboards.</span></div></li>
+            <li><span class="step">4</span><div><strong>Closure packet</strong><span>System assembles a closure packet (case summary, fiscal ledger, outcome evidence) for archive and audit.</span></div></li>
+            <li><span class="step">5</span><div><strong>Lock &amp; archive</strong><span>Case is set to read-only with full audit trail; counselor can re-open via supervisor approval if required.</span></div></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA -->
+  <section class="cta" aria-label="Call to action">
+    <h2>Ready to see the VR fiscal module in action?</h2>
+    <p>Walk through a live authorization, payment, SSA reimbursement, and case closure &mdash; tailored to your team's roles and existing accounting environment.</p>
+    <div class="cta-btns">
+      <a class="btn-primary" href="#payment-process">Replay Payment Workflow &rsaquo;</a>
+      <a class="btn-secondary" href="#monitoring">Open Live Monitor</a>
+    </div>
+  </section>
+
+  </main>
+
+  <!-- Footer -->
+  <footer aria-label="Site footer">
+    <div class="footer-inner">
+      <div>
+        <h5>Georgia Vocational Rehabilitation Agency</h5>
+        <p style="line-height:1.7;color:rgba(255,255,255,.7)">The VR Payment Platform delivers transparent, auditable, and counselor-friendly fiscal services that support Georgians with disabilities on their path to competitive integrated employment.</p>
+      </div>
+      <div>
+        <h5>Platform</h5>
+        <a href="#overview">Overview</a>
+        <a href="#authorization">Authorization &amp; Budget</a>
+        <a href="#payment-process">Payment Process</a>
+        <a href="#integrations">Integrations</a>
+      </div>
+      <div>
+        <h5>Reporting</h5>
+        <a href="#reconciliation">Reconciliation</a>
+        <a href="#ssa">Ticket to Work</a>
+        <a href="#monitoring">Live Monitor</a>
+        <a href="#closure">Case Closure</a>
+      </div>
+      <div>
+        <h5>Contact</h5>
+        <a href="mailto:fiscal@gvra.georgia.gov">fiscal@gvra.georgia.gov</a>
+        <a href="tel:+18444452466">1-844-44-GVRA-G</a>
+        <a href="#">200 Piedmont Ave SE, Atlanta, GA</a>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>&copy; 2026 Georgia Vocational Rehabilitation Agency &mdash; VR Payment Platform</span>
+      <span>WCAG 2.1 AA &middot; Section 508 &middot; Rehabilitation Act &middot; SSA Ticket to Work</span>
+    </div>
+  </footer>
+
+  <script>
+    // Smooth nav active-state on scroll
+    const links = document.querySelectorAll('.nav-links a[href^="#"]');
+    const sections = [...links].map(a => document.querySelector(a.getAttribute('href'))).filter(Boolean);
+    const onScroll = () => {
+      const y = window.scrollY + 120;
+      let current = sections[0];
+      sections.forEach(s => { if (s && s.offsetTop <= y) current = s; });
+      links.forEach(a => a.classList.toggle('active', a.getAttribute('href') === '#' + (current && current.id)));
+    };
+    window.addEventListener('scroll', onScroll, { passive: true });
+  </script>
+</body>
+</html>
