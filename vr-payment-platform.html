@@ -510,6 +510,259 @@
     .closure-card .case-meta { font-size: 13px; color: var(--gray); margin-bottom: 14px; }
     .closure-actions { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 14px; }
 
+    /* ── Vendor Portal (10.6) ── */
+    .portal-frame {
+      background: #fff; border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      box-shadow: var(--shadow-md);
+      overflow: hidden;
+    }
+    .portal-top {
+      background: var(--gvra-blue-dark); color: #fff;
+      padding: 14px 20px;
+      display: flex; align-items: center; justify-content: space-between; gap: 12px;
+      flex-wrap: wrap;
+    }
+    .portal-top strong { font-size: 15px; }
+    .portal-top .role-badge {
+      background: rgba(255,255,255,.12);
+      border: 1px solid rgba(255,255,255,.25);
+      padding: 4px 10px; font-size: 11px; border-radius: 100px;
+      font-weight: 800; letter-spacing: .06em; text-transform: uppercase;
+    }
+    .portal-body { padding: 24px; display: grid; grid-template-columns: 230px 1fr; gap: 22px; }
+    .portal-menu { display: flex; flex-direction: column; gap: 4px; }
+    .portal-menu a {
+      display: block; padding: 10px 12px; font-size: 14px; font-weight: 700;
+      color: var(--charcoal); border-radius: 8px; text-decoration: none;
+    }
+    .portal-menu a.active { background: var(--gvra-blue); color: #fff; }
+    .portal-menu a:hover:not(.active) { background: var(--gvra-blue-light); }
+    .portal-main h4 { font-size: 18px; font-weight: 800; margin-bottom: 12px; color: var(--charcoal); }
+    .portal-cards { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin-bottom: 18px; }
+    .portal-card {
+      border: 1px solid var(--border); border-radius: 10px; padding: 14px;
+      background: var(--gray-light);
+    }
+    .portal-card .lbl { font-size: 11px; color: var(--gray); font-weight: 700; text-transform: uppercase; letter-spacing: .06em; }
+    .portal-card .val { font-size: 20px; font-weight: 800; margin-top: 4px; color: var(--charcoal); }
+    .portal-card .sub { font-size: 11px; color: var(--gray); margin-top: 3px; }
+
+    /* Registration card (10.6.1) */
+    .reg-grid { display: grid; grid-template-columns: 1.05fr .95fr; gap: 28px; align-items: stretch; }
+    .reg-card {
+      background: #fff; border: 1px solid var(--border);
+      border-radius: var(--radius-lg); padding: 26px;
+    }
+    .reg-card h3 { font-size: 18px; font-weight: 800; color: var(--charcoal); margin-bottom: 14px; display: flex; align-items: center; gap: 10px; }
+    .reg-card h3::before { content: ''; width: 6px; height: 22px; background: var(--accent); border-radius: 3px; }
+    .reg-form { display: grid; gap: 12px; }
+    .reg-form .row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+    .reg-form label { display: block; font-size: 12px; font-weight: 800; color: var(--charcoal); margin-bottom: 4px; letter-spacing: .04em; text-transform: uppercase; }
+    .reg-form input, .reg-form select {
+      width: 100%; padding: 10px 12px; font-size: 14px;
+      border: 1px solid var(--border); border-radius: 8px;
+      background: #fff; color: var(--charcoal);
+    }
+    .reg-actions { display: flex; gap: 10px; margin-top: 6px; flex-wrap: wrap; }
+
+    .role-list { list-style: none; display: flex; flex-direction: column; gap: 10px; }
+    .role-list li {
+      display: grid; grid-template-columns: 36px 1fr auto;
+      gap: 12px; align-items: center;
+      background: var(--gray-light);
+      border: 1px solid var(--border); border-radius: 10px;
+      padding: 12px 14px;
+    }
+    .role-list .ic {
+      width: 32px; height: 32px; border-radius: 8px;
+      background: var(--gvra-blue-light); color: var(--gvra-blue-dark);
+      display: flex; align-items: center; justify-content: center; font-weight: 800;
+    }
+    .role-list strong { display: block; font-size: 14px; color: var(--charcoal); }
+    .role-list small { font-size: 12px; color: var(--gray); }
+
+    .a11y-badges {
+      margin-top: 14px;
+      display: flex; gap: 8px; flex-wrap: wrap;
+    }
+    .a11y-badge {
+      background: var(--green-light); color: var(--green);
+      font-size: 11px; font-weight: 800; padding: 5px 10px; border-radius: 100px;
+      letter-spacing: .04em; text-transform: uppercase;
+    }
+
+    /* Provider workflow (10.6.2) */
+    .pw-flow {
+      display: grid; grid-template-columns: repeat(5, 1fr);
+      gap: 10px; margin-top: 8px;
+    }
+    .pw-step {
+      background: #fff; border: 1px solid var(--border);
+      border-radius: 12px; padding: 14px 12px;
+      text-align: center; position: relative;
+    }
+    .pw-step .num {
+      width: 26px; height: 26px; margin: 0 auto 8px;
+      border-radius: 50%; background: var(--gvra-blue); color: #fff;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 12px; font-weight: 800;
+    }
+    .pw-step strong { display: block; font-size: 13px; color: var(--charcoal); margin-bottom: 4px; }
+    .pw-step span { font-size: 12px; color: var(--gray); line-height: 1.5; }
+
+    /* Authorization visibility (10.6.3) */
+    .auth-tabs { display: flex; gap: 6px; margin-bottom: 12px; flex-wrap: wrap; }
+    .auth-tabs .chip {
+      font-size: 12px; font-weight: 700;
+      padding: 6px 12px;
+      border: 1px solid var(--border);
+      border-radius: 100px;
+      background: #fff; color: var(--charcoal);
+      cursor: default;
+    }
+    .auth-tabs .chip.active { background: var(--gvra-blue); color: #fff; border-color: var(--gvra-blue); }
+
+    .notif-list { display: flex; flex-direction: column; gap: 8px; margin-top: 14px; }
+    .notif-list .n {
+      display: grid; grid-template-columns: 28px 1fr auto;
+      gap: 10px; align-items: center;
+      padding: 10px 12px; font-size: 13px;
+      background: var(--gvra-blue-light); border-left: 3px solid var(--gvra-blue);
+      border-radius: 8px;
+    }
+    .notif-list .n.amend { background: #fff4e0; border-left-color: var(--amber); }
+    .notif-list .n.cancel { background: var(--red-light); border-left-color: var(--red); }
+    .notif-list .n.paid { background: var(--green-light); border-left-color: var(--green); }
+    .notif-list .n .ic {
+      width: 22px; height: 22px; border-radius: 50%;
+      background: rgba(255,255,255,.6);
+      display: flex; align-items: center; justify-content: center; font-weight: 800; font-size: 12px;
+    }
+    .notif-list .n strong { font-size: 13px; color: var(--charcoal); display: block; }
+    .notif-list .n small { font-size: 11px; color: var(--gray); }
+    .notif-list .n .when { font-size: 11px; color: var(--gray); white-space: nowrap; }
+
+    /* Invoice upload (10.6.4) */
+    .upload-zone {
+      border: 2px dashed var(--gvra-blue); background: var(--gvra-blue-light);
+      border-radius: 12px; padding: 22px; text-align: center;
+    }
+    .upload-zone .icon { font-size: 30px; }
+    .upload-zone strong { display: block; margin-top: 6px; font-size: 15px; color: var(--charcoal); }
+    .upload-zone span { font-size: 13px; color: var(--gray); }
+    .upload-zone button {
+      margin-top: 12px; background: var(--gvra-blue); color: #fff;
+      border: none; padding: 10px 18px; font-weight: 800; border-radius: 8px;
+      cursor: pointer; font-size: 14px;
+    }
+    .invoice-pkg {
+      margin-top: 16px;
+      background: #fff; border: 1px solid var(--border);
+      border-radius: 12px; overflow: hidden;
+    }
+    .invoice-pkg .hd {
+      padding: 12px 16px; background: var(--gray-light);
+      font-weight: 800; font-size: 13px; color: var(--charcoal);
+      border-bottom: 1px solid var(--border);
+      display: flex; justify-content: space-between; align-items: center;
+    }
+    .invoice-pkg .doc-row {
+      display: grid; grid-template-columns: 28px 1fr auto auto;
+      gap: 12px; align-items: center;
+      padding: 10px 16px; border-bottom: 1px solid var(--border);
+      font-size: 13px;
+    }
+    .invoice-pkg .doc-row:last-child { border-bottom: none; }
+    .invoice-pkg .doc-row .doc { font-size: 18px; }
+    .invoice-pkg .doc-row strong { display: block; color: var(--charcoal); font-size: 13px; }
+    .invoice-pkg .doc-row small { font-size: 11px; color: var(--gray); }
+
+    /* Group payment (10.6.5) */
+    .pay-mode {
+      display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 14px;
+    }
+    .pay-mode .mode {
+      background: #fff; border: 1px solid var(--border);
+      border-radius: 12px; padding: 16px;
+      cursor: default;
+    }
+    .pay-mode .mode.active { border-color: var(--gvra-blue); box-shadow: 0 0 0 2px rgba(26,68,128,.12); }
+    .pay-mode .mode strong { display: block; font-size: 14px; color: var(--charcoal); margin-bottom: 4px; }
+    .pay-mode .mode small { font-size: 12px; color: var(--gray); }
+
+    /* Contracts (10.6.6) */
+    .contract-card {
+      background: #fff; border: 1px solid var(--border);
+      border-radius: var(--radius-lg); padding: 26px;
+    }
+    .contract-head {
+      display: flex; flex-wrap: wrap; gap: 12px;
+      align-items: center; justify-content: space-between;
+      padding-bottom: 14px; border-bottom: 1px solid var(--border); margin-bottom: 16px;
+    }
+    .contract-head h4 { font-size: 16px; font-weight: 800; color: var(--charcoal); }
+    .contract-meta { font-size: 12px; color: var(--gray); }
+    .contract-meta strong { color: var(--charcoal); }
+    .contract-bar {
+      background: var(--gray-light); border-radius: 12px;
+      padding: 14px 16px; display: grid;
+      grid-template-columns: 1fr 1fr 1fr 1fr; gap: 14px;
+      margin-bottom: 14px;
+    }
+    .contract-bar .item .lbl { font-size: 11px; color: var(--gray); text-transform: uppercase; letter-spacing: .06em; font-weight: 700; }
+    .contract-bar .item .val { font-size: 16px; font-weight: 800; color: var(--charcoal); margin-top: 2px; font-variant-numeric: tabular-nums; }
+    .contract-routing {
+      display: grid; grid-template-columns: repeat(5, 1fr);
+      gap: 8px; margin-top: 14px;
+    }
+    .contract-routing .stage {
+      background: var(--gvra-blue-light); border: 1px solid var(--gvra-blue-mid);
+      border-radius: 10px; padding: 10px; text-align: center;
+      font-size: 12px; color: var(--gvra-blue-dark); font-weight: 700;
+    }
+    .contract-routing .stage.done { background: var(--green-light); border-color: #c8e6c9; color: var(--green); }
+    .contract-routing .stage.current { background: var(--accent); border-color: var(--accent-dark); color: var(--gvra-blue-dark); }
+    .contract-routing .stage small { display: block; font-size: 10px; opacity: .85; margin-top: 2px; font-weight: 700; }
+
+    /* Provider directory (10.6.7) */
+    .dir-toolbar {
+      background: #fff; border: 1px solid var(--border);
+      border-radius: 12px; padding: 14px 18px; margin-bottom: 14px;
+      display: flex; flex-wrap: wrap; gap: 10px; align-items: center; justify-content: space-between;
+    }
+    .dir-toolbar input[type="search"] {
+      flex: 1; min-width: 200px;
+      padding: 10px 12px; border-radius: 8px; border: 1px solid var(--border);
+      font-size: 14px;
+    }
+    .dir-toolbar .filters { display: flex; gap: 6px; flex-wrap: wrap; }
+    .dir-toolbar .chip {
+      font-size: 12px; font-weight: 700;
+      padding: 6px 12px; border: 1px solid var(--border);
+      border-radius: 100px; background: #fff; color: var(--charcoal); cursor: default;
+    }
+    .dir-toolbar .chip.active { background: var(--gvra-blue); color: #fff; border-color: var(--gvra-blue); }
+    .dir-grid {
+      display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px;
+    }
+    .dir-card {
+      background: #fff; border: 1px solid var(--border);
+      border-radius: 12px; padding: 16px;
+      transition: var(--transition);
+    }
+    .dir-card:hover { box-shadow: var(--shadow-sm); border-color: var(--gvra-blue-mid); }
+    .dir-card h5 { font-size: 14px; font-weight: 800; color: var(--charcoal); margin-bottom: 4px; }
+    .dir-card .loc { font-size: 12px; color: var(--gray); margin-bottom: 10px; }
+    .dir-card .tags { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 10px; }
+    .dir-card .tags span {
+      background: var(--gvra-blue-light); color: var(--gvra-blue-dark);
+      font-size: 10px; font-weight: 800; padding: 3px 8px; border-radius: 100px;
+      letter-spacing: .04em; text-transform: uppercase;
+    }
+    .dir-card .meta { font-size: 12px; color: var(--gray); display: flex; justify-content: space-between; }
+    .dir-card .meta strong { color: var(--charcoal); }
+
     /* ── CTA Banner ── */
     .cta {
       background: linear-gradient(135deg, var(--gvra-blue-dark) 0%, var(--gvra-blue) 100%);
@@ -550,11 +803,19 @@
       .exchange-list { grid-template-columns: repeat(2, 1fr); }
       .monitor-grid { grid-template-columns: 1fr; }
       .queue-row { grid-template-columns: 1fr 1fr; }
+      .reg-grid { grid-template-columns: 1fr; }
+      .pw-flow { grid-template-columns: 1fr 1fr; }
+      .portal-body { grid-template-columns: 1fr; }
+      .portal-cards { grid-template-columns: 1fr 1fr; }
+      .dir-grid { grid-template-columns: 1fr 1fr; }
+      .contract-bar { grid-template-columns: 1fr 1fr; }
+      .contract-routing { grid-template-columns: repeat(2, 1fr); }
     }
     @media (max-width: 620px) {
       .overview-grid, .stats-inner, .footer-inner { grid-template-columns: 1fr; }
       section { padding: 56px 22px; }
       .hero, nav.main-nav, .stats-bar, footer, .cta { padding-left: 22px; padding-right: 22px; }
+      .pw-flow, .portal-cards, .dir-grid, .contract-bar, .contract-routing { grid-template-columns: 1fr; }
     }
   </style>
 </head>
@@ -573,7 +834,8 @@
       <a href="#integrations">Integrations</a>
       <a href="#reconciliation">Reconciliation</a>
       <a href="#ssa">Ticket to Work</a>
-      <a href="#monitoring" class="nav-cta">Live Monitor</a>
+      <a href="#monitoring">Live Monitor</a>
+      <a href="#vendor-portal">Vendor Portal</a>
     </div>
   </nav>
 
@@ -1277,6 +1539,438 @@
     </div>
   </section>
 
+  <!-- VENDOR PORTAL -->
+  <section id="vendor-portal">
+    <div class="section-inner">
+      <div class="section-header">
+        <span class="section-eyebrow">Vendor Portal</span>
+        <h2 class="section-title">A self-service portal for VR service providers</h2>
+        <p class="section-sub">External providers register, manage roles, view active authorizations and contracts, deliver services, submit invoices, and stay in compliance &mdash; all from one accessible portal.</p>
+      </div>
+
+      <!-- Registration & roles & accessibility -->
+      <div class="reg-grid">
+        <div class="reg-card">
+          <h3>Provider Registration</h3>
+          <p style="font-size:13px;color:var(--gray);margin-bottom:14px;line-height:1.6">New providers self-register with organization details, tax ID, and primary contact. GVRA staff verify credentials and activate the account. Existing providers add additional users under their organization.</p>
+          <form class="reg-form" onsubmit="event.preventDefault();">
+            <div class="row">
+              <div><label for="org">Organization Name</label><input id="org" type="text" value="Pathways Career Services LLC" /></div>
+              <div><label for="tin">Federal Tax ID</label><input id="tin" type="text" value="XX-XXXXXXX" /></div>
+            </div>
+            <div class="row">
+              <div><label for="email">Primary Contact Email</label><input id="email" type="email" value="admin@pathwayscareer.org" /></div>
+              <div><label for="phone">Phone</label><input id="phone" type="tel" value="(404) 555-0142" /></div>
+            </div>
+            <div class="row">
+              <div>
+                <label for="svc">Services Offered</label>
+                <select id="svc">
+                  <option>Job Coaching &amp; Placement</option>
+                  <option>Vocational Evaluation</option>
+                  <option>Assistive Technology</option>
+                  <option>Post-Secondary Training</option>
+                </select>
+              </div>
+              <div>
+                <label for="role">Requested Role</label>
+                <select id="role">
+                  <option>Provider Administrator</option>
+                  <option>Service Coordinator</option>
+                  <option>Billing &amp; Invoicing</option>
+                  <option>Read-Only Reporting</option>
+                </select>
+              </div>
+            </div>
+            <div class="reg-actions">
+              <button class="btn-sm primary" type="submit">Submit for GVRA Review</button>
+              <button class="btn-sm" type="button">Save Draft</button>
+            </div>
+          </form>
+          <div class="a11y-badges" aria-label="Accessibility commitments">
+            <span class="a11y-badge">WCAG 2.1 AA</span>
+            <span class="a11y-badge">Screen Reader Ready</span>
+            <span class="a11y-badge">Keyboard Navigable</span>
+            <span class="a11y-badge">High Contrast Mode</span>
+            <span class="a11y-badge">Section 508</span>
+          </div>
+        </div>
+
+        <div class="reg-card">
+          <h3>Role-Based Access</h3>
+          <p style="font-size:13px;color:var(--gray);margin-bottom:14px;line-height:1.6">Each provider organization manages its own users with granular roles. Permissions follow least-privilege and are auditable.</p>
+          <ul class="role-list">
+            <li>
+              <span class="ic" aria-hidden="true">A</span>
+              <div><strong>Provider Administrator</strong><small>User management, contracts, organizational settings</small></div>
+              <span class="pill review">Full</span>
+            </li>
+            <li>
+              <span class="ic" aria-hidden="true">S</span>
+              <div><strong>Service Coordinator</strong><small>View authorizations, log service delivery, upload documents</small></div>
+              <span class="pill review">Service</span>
+            </li>
+            <li>
+              <span class="ic" aria-hidden="true">B</span>
+              <div><strong>Billing &amp; Invoicing</strong><small>Submit invoices, group payments, view payment status</small></div>
+              <span class="pill review">Fiscal</span>
+            </li>
+            <li>
+              <span class="ic" aria-hidden="true">R</span>
+              <div><strong>Read-Only Reporting</strong><small>View dashboards, reports, and notifications</small></div>
+              <span class="pill review">View</span>
+            </li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- Provider workflow with GVRA -->
+      <div style="margin-top: 32px;">
+        <div class="panel">
+          <h3>How Providers Work With GVRA</h3>
+          <p style="font-size:13px;color:var(--gray);margin: 0 0 14px;line-height:1.6">From authorization request through invoicing, communication, and fiscal compliance &mdash; the portal supports the full provider lifecycle.</p>
+          <div class="pw-flow">
+            <div class="pw-step"><div class="num">1</div><strong>Authorization Request</strong><span>Counselor or provider initiates an authorization for approved services.</span></div>
+            <div class="pw-step"><div class="num">2</div><strong>Service Delivery</strong><span>Provider logs sessions, milestones, and outcomes against the authorization.</span></div>
+            <div class="pw-step"><div class="num">3</div><strong>Invoicing</strong><span>Submit invoices with supporting documentation; auto-validation against authorized terms.</span></div>
+            <div class="pw-step"><div class="num">4</div><strong>Communication</strong><span>Secure messaging, status updates, and document exchange with GVRA staff.</span></div>
+            <div class="pw-step"><div class="num">5</div><strong>Fiscal Compliance</strong><span>Built-in controls for rates, units, period of performance, and allowable services.</span></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Authorization visibility & notifications -->
+      <div style="margin-top: 32px;">
+        <div class="auth-card">
+          <div class="auth-header">
+            <div>
+              <div class="auth-id">Provider View &middot; Pathways Career Services LLC</div>
+              <div class="auth-title">My Active Service Authorizations</div>
+            </div>
+            <div class="auth-tabs" role="tablist">
+              <span class="chip active">Active (12)</span>
+              <span class="chip">Amended (3)</span>
+              <span class="chip">Expiring &lt; 30d (2)</span>
+              <span class="chip">Closed (28)</span>
+            </div>
+          </div>
+
+          <div class="table-wrap" role="region" aria-label="Active authorizations">
+            <table class="data">
+              <thead>
+                <tr>
+                  <th>Auth ID</th>
+                  <th>Consumer</th>
+                  <th>Service</th>
+                  <th class="num">Rate</th>
+                  <th class="num">Units</th>
+                  <th>Period of Performance</th>
+                  <th class="num">Authorized</th>
+                  <th class="num">Remaining</th>
+                  <th>Status</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td><strong>AUTH-2026-04812</strong></td>
+                  <td>J. Carter</td>
+                  <td>Job Coaching</td>
+                  <td class="num">$58.00 / hr</td>
+                  <td class="num">60</td>
+                  <td>Apr 01 &ndash; Sep 30, 2026</td>
+                  <td class="num">$3,480.00</td>
+                  <td class="num">$1,740.00</td>
+                  <td><span class="pill active">Active</span></td>
+                </tr>
+                <tr>
+                  <td><strong>AUTH-2026-05221</strong></td>
+                  <td>M. Lin</td>
+                  <td>Vocational Evaluation</td>
+                  <td class="num">$95.00 / hr</td>
+                  <td class="num">10</td>
+                  <td>May 01 &ndash; Jul 31, 2026</td>
+                  <td class="num">$950.00</td>
+                  <td class="num">$475.00</td>
+                  <td><span class="pill active">Active</span></td>
+                </tr>
+                <tr>
+                  <td><strong>AUTH-2026-04955</strong></td>
+                  <td>D. Brooks</td>
+                  <td>Job Placement</td>
+                  <td class="num">$1,800.00 ea</td>
+                  <td class="num">1</td>
+                  <td>Mar 15 &ndash; Jun 15, 2026</td>
+                  <td class="num">$1,800.00</td>
+                  <td class="num">$0.00</td>
+                  <td><span class="pill pending">Expiring 30d</span></td>
+                </tr>
+                <tr>
+                  <td><strong>AUTH-2026-03719</strong></td>
+                  <td>S. Reyes</td>
+                  <td>Job Coaching</td>
+                  <td class="num">$58.00 / hr</td>
+                  <td class="num">40</td>
+                  <td>Jan 10 &ndash; Apr 30, 2026</td>
+                  <td class="num">$2,320.00</td>
+                  <td class="num">&mdash;</td>
+                  <td><span class="pill closed">Closed</span></td>
+                </tr>
+                <tr>
+                  <td><strong>AUTH-2026-04702</strong></td>
+                  <td>K. Nguyen</td>
+                  <td>Job Coaching (Amended)</td>
+                  <td class="num">$58.00 / hr</td>
+                  <td class="num">75</td>
+                  <td>Feb 01 &ndash; Aug 31, 2026</td>
+                  <td class="num">$4,350.00</td>
+                  <td class="num">$2,610.00</td>
+                  <td><span class="pill review">Amended</span></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <div class="notif-list" aria-label="Authorization notifications">
+            <div class="n">
+              <span class="ic" aria-hidden="true">i</span>
+              <div><strong>Authorization AUTH-2026-05221 issued</strong><small>Vocational Evaluation &middot; M. Lin &middot; $950.00</small></div>
+              <span class="when">Just now</span>
+            </div>
+            <div class="n amend">
+              <span class="ic" aria-hidden="true">~</span>
+              <div><strong>Authorization AUTH-2026-04702 amended</strong><small>Units increased from 50 to 75 by counselor R. Patel</small></div>
+              <span class="when">2h ago</span>
+            </div>
+            <div class="n paid">
+              <span class="ic" aria-hidden="true">$</span>
+              <div><strong>Payment posted &mdash; PAY-2026-08824</strong><small>Tuition &middot; $1,300.00 disbursed via ACH</small></div>
+              <span class="when">Yesterday</span>
+            </div>
+            <div class="n cancel">
+              <span class="ic" aria-hidden="true">x</span>
+              <div><strong>Authorization AUTH-2026-04201 cancelled</strong><small>Reason: consumer withdrew &middot; encumbrance released</small></div>
+              <span class="when">2 days ago</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Service delivery upload + invoice package -->
+      <div style="margin-top: 32px;">
+        <div class="two-col">
+          <div class="panel">
+            <h3>Service Delivery &amp; Invoice Package</h3>
+            <p style="font-size:13px;color:var(--gray);margin: 0 0 14px;line-height:1.6">Upload invoices together with proof of service delivery &mdash; session logs, attendance sheets, milestone evidence, receipts &mdash; in one bundled submission.</p>
+            <div class="upload-zone" role="group" aria-label="Upload invoice package">
+              <div class="icon" aria-hidden="true">&#128194;</div>
+              <strong>Drop invoice package or browse files</strong>
+              <span>PDF, XLSX, CSV, JPG, PNG up to 25&nbsp;MB total. Screen-reader status announced during upload.</span>
+              <button type="button">Choose Files</button>
+            </div>
+            <div class="invoice-pkg" aria-label="Current invoice package">
+              <div class="hd"><span>Invoice Package &mdash; INV-2026-0741 (AUTH-2026-04812)</span><span class="pill active">Ready to Submit</span></div>
+              <div class="doc-row">
+                <span class="doc" aria-hidden="true">&#128196;</span>
+                <div><strong>Invoice_April_JCarter.pdf</strong><small>Itemized invoice &middot; 2 pages</small></div>
+                <small>184 KB</small>
+                <span class="pill review">Required</span>
+              </div>
+              <div class="doc-row">
+                <span class="doc" aria-hidden="true">&#128196;</span>
+                <div><strong>SessionLog_April.xlsx</strong><small>30 coaching sessions logged</small></div>
+                <small>42 KB</small>
+                <span class="pill review">Service Log</span>
+              </div>
+              <div class="doc-row">
+                <span class="doc" aria-hidden="true">&#128196;</span>
+                <div><strong>AttendanceSheets_April.pdf</strong><small>Signed by consumer and coach</small></div>
+                <small>320 KB</small>
+                <span class="pill review">Evidence</span>
+              </div>
+              <div class="doc-row">
+                <span class="doc" aria-hidden="true">&#128196;</span>
+                <div><strong>MilestoneSummary_April.pdf</strong><small>Outcomes against IPE goals</small></div>
+                <small>76 KB</small>
+                <span class="pill review">Outcomes</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="panel">
+            <h3>Submit Payment Requests</h3>
+            <div class="pay-mode">
+              <div class="mode active">
+                <strong>Individual Payment Request</strong>
+                <small>Single invoice tied to one authorization line item.</small>
+              </div>
+              <div class="mode">
+                <strong>Group Payment Request</strong>
+                <small>Bundle multiple invoices across consumers in one submission &mdash; ideal for monthly billing.</small>
+              </div>
+            </div>
+            <p style="font-size:13px;color:var(--gray);margin: 0 0 12px;line-height:1.6">Each request runs through automated validation before reaching the GVRA fiscal queue.</p>
+            <ul class="check-list">
+              <li><span class="ic ok" aria-hidden="true">&#10003;</span><span>Authorized service codes match the invoice line items</span><small>Pass</small></li>
+              <li><span class="ic ok" aria-hidden="true">&#10003;</span><span>Billed rate is within approved rate ceiling</span><small>Pass</small></li>
+              <li><span class="ic ok" aria-hidden="true">&#10003;</span><span>Total units billed do not exceed authorized units</span><small>Pass</small></li>
+              <li><span class="ic ok" aria-hidden="true">&#10003;</span><span>Invoice line costs within per-line and aggregate cost caps</span><small>Pass</small></li>
+              <li><span class="ic err" aria-hidden="true">!</span><span>Service date <strong>10/02/2026</strong> falls outside period of performance &mdash; blocked</span><small>Hard stop</small></li>
+              <li><span class="ic err" aria-hidden="true">!</span><span>Service code <strong>VR-820</strong> not on this authorization &mdash; non-allowable</span><small>Hard stop</small></li>
+            </ul>
+            <div class="reg-actions" style="margin-top:14px;">
+              <button class="btn-sm primary" type="button">Submit Payment Request</button>
+              <button class="btn-sm" type="button">Validate Only</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Contracts -->
+      <div style="margin-top: 32px;">
+        <div class="contract-card">
+          <div class="contract-head">
+            <div>
+              <h4>Provider Contract Management</h4>
+              <div class="contract-meta">Providers upload contracts directly. Authorizations and payments draw against the contract balance with full routing &amp; approval workflow.</div>
+            </div>
+            <div class="contract-meta"><span class="auth-id">CTR-2026-0188</span> &middot; <strong>Pathways Career Services LLC</strong></div>
+          </div>
+
+          <div class="contract-bar">
+            <div class="item"><div class="lbl">Contract Value</div><div class="val">$240,000.00</div></div>
+            <div class="item"><div class="lbl">Authorizations Issued</div><div class="val">$148,200.00</div></div>
+            <div class="item"><div class="lbl">Paid to Date</div><div class="val">$96,420.00</div></div>
+            <div class="item"><div class="lbl">Remaining</div><div class="val">$91,800.00</div></div>
+          </div>
+
+          <div class="invoice-pkg">
+            <div class="hd"><span>Uploaded Contract Documents</span><span class="pill active">Executed</span></div>
+            <div class="doc-row">
+              <span class="doc" aria-hidden="true">&#128196;</span>
+              <div><strong>MasterContract_2026.pdf</strong><small>Term: Jul 01, 2025 &ndash; Jun 30, 2027</small></div>
+              <small>1.2 MB</small>
+              <span class="pill active">Active</span>
+            </div>
+            <div class="doc-row">
+              <span class="doc" aria-hidden="true">&#128196;</span>
+              <div><strong>RateSchedule_FY26.xlsx</strong><small>22 service codes &middot; rate ceilings</small></div>
+              <small>88 KB</small>
+              <span class="pill active">Active</span>
+            </div>
+            <div class="doc-row">
+              <span class="doc" aria-hidden="true">&#128196;</span>
+              <div><strong>Amendment_01_AddedServices.pdf</strong><small>Adds VR-635 Lab Fees</small></div>
+              <small>240 KB</small>
+              <span class="pill review">In Review</span>
+            </div>
+          </div>
+
+          <div style="margin-top:18px;">
+            <div style="font-size:13px;font-weight:800;color:var(--charcoal);margin-bottom:8px;">Contract Routing &amp; Approval</div>
+            <div class="contract-routing">
+              <div class="stage done">Provider Upload<small>May 02</small></div>
+              <div class="stage done">Procurement Review<small>May 04</small></div>
+              <div class="stage current">Legal Review<small>In Progress</small></div>
+              <div class="stage">Fiscal Approval<small>Pending</small></div>
+              <div class="stage">Executive Sign-Off<small>Pending</small></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Provider Directory -->
+      <div style="margin-top: 32px;">
+        <div class="dir-toolbar" role="search">
+          <input type="search" placeholder="Search providers by name, service, or city" aria-label="Search providers" />
+          <div class="filters">
+            <span class="chip active">All</span>
+            <span class="chip">Job Coaching</span>
+            <span class="chip">Vocational Eval</span>
+            <span class="chip">Assistive Tech</span>
+            <span class="chip">Training</span>
+            <span class="chip">Atlanta Region</span>
+          </div>
+        </div>
+        <div class="dir-grid">
+          <article class="dir-card">
+            <h5>Pathways Career Services LLC</h5>
+            <div class="loc">Atlanta, GA &middot; 4.8 &#9733;</div>
+            <div class="tags"><span>Job Coaching</span><span>Placement</span></div>
+            <div class="meta"><span>Active Authorizations</span><strong>12</strong></div>
+          </article>
+          <article class="dir-card">
+            <h5>Atlanta Career Center</h5>
+            <div class="loc">Atlanta, GA &middot; 4.6 &#9733;</div>
+            <div class="tags"><span>Vocational Eval</span><span>Assessment</span></div>
+            <div class="meta"><span>Active Authorizations</span><strong>8</strong></div>
+          </article>
+          <article class="dir-card">
+            <h5>AT Solutions LLC</h5>
+            <div class="loc">Marietta, GA &middot; 4.9 &#9733;</div>
+            <div class="tags"><span>Assistive Tech</span><span>Training</span></div>
+            <div class="meta"><span>Active Authorizations</span><strong>5</strong></div>
+          </article>
+          <article class="dir-card">
+            <h5>Goodwill of North Georgia</h5>
+            <div class="loc">Decatur, GA &middot; 4.7 &#9733;</div>
+            <div class="tags"><span>Job Coaching</span><span>Placement</span></div>
+            <div class="meta"><span>Active Authorizations</span><strong>21</strong></div>
+          </article>
+          <article class="dir-card">
+            <h5>Georgia State University</h5>
+            <div class="loc">Atlanta, GA &middot; 4.5 &#9733;</div>
+            <div class="tags"><span>Training</span><span>Tuition</span></div>
+            <div class="meta"><span>Active Authorizations</span><strong>14</strong></div>
+          </article>
+          <article class="dir-card">
+            <h5>Briggs &amp; Associates</h5>
+            <div class="loc">Augusta, GA &middot; 4.4 &#9733;</div>
+            <div class="tags"><span>Job Coaching</span><span>Eval</span></div>
+            <div class="meta"><span>Active Authorizations</span><strong>9</strong></div>
+          </article>
+        </div>
+        <p style="font-size:12px;color:var(--gray);margin-top:14px;text-align:center;">Showing 6 of 184 active providers &middot; directory available to counselors, consumers, and partner agencies.</p>
+      </div>
+
+      <!-- Portal preview frame -->
+      <div style="margin-top: 32px;">
+        <div class="portal-frame">
+          <div class="portal-top">
+            <strong>VR Vendor Portal &mdash; Pathways Career Services LLC</strong>
+            <span class="role-badge"><span aria-hidden="true">&#9856;</span> Screen Reader Ready</span>
+          </div>
+          <div class="portal-body">
+            <nav class="portal-menu" aria-label="Vendor portal sections">
+              <a href="#" class="active">Dashboard</a>
+              <a href="#">Authorizations</a>
+              <a href="#">Service Delivery</a>
+              <a href="#">Invoices &amp; Payments</a>
+              <a href="#">Contracts</a>
+              <a href="#">Messages</a>
+              <a href="#">Users &amp; Roles</a>
+              <a href="#">Reports</a>
+            </nav>
+            <div class="portal-main">
+              <h4>Provider Dashboard</h4>
+              <div class="portal-cards">
+                <div class="portal-card"><div class="lbl">Active Authorizations</div><div class="val">12</div><div class="sub">3 amended this month</div></div>
+                <div class="portal-card"><div class="lbl">Pending Invoices</div><div class="val">$18,420</div><div class="sub">4 awaiting fiscal review</div></div>
+                <div class="portal-card"><div class="lbl">Paid (MTD)</div><div class="val">$24,860</div><div class="sub">11 payments via ACH</div></div>
+                <div class="portal-card"><div class="lbl">Contract Remaining</div><div class="val">$91,800</div><div class="sub">CTR-2026-0188</div></div>
+              </div>
+              <div class="upload-zone" role="group" aria-label="Quick invoice upload">
+                <div class="icon" aria-hidden="true">&#128190;</div>
+                <strong>Submit a New Invoice Package</strong>
+                <span>Bundle invoice + service delivery evidence in one upload &mdash; system validates before submission.</span>
+                <button type="button">Start New Invoice</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
   <!-- CTA -->
   <section class="cta" aria-label="Call to action">
     <h2>Ready to see the VR fiscal module in action?</h2>
@@ -1308,6 +2002,7 @@
         <a href="#reconciliation">Reconciliation</a>
         <a href="#ssa">Ticket to Work</a>
         <a href="#monitoring">Live Monitor</a>
+        <a href="#vendor-portal">Vendor Portal</a>
         <a href="#closure">Case Closure</a>
       </div>
       <div>
