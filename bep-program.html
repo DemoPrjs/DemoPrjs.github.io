@@ -540,7 +540,7 @@
     .btn-sm:hover { background: var(--gvra-blue-light); }
 
     /* ── 12.8 QuickBooks integration ── */
-    .qb-grid { display: grid; grid-template-columns: 1.05fr .95fr; gap: 36px; align-items: center; }
+    .qb-grid { display: grid; grid-template-columns: 1.05fr .95fr; gap: 36px; align-items: start; }
     .qb-diagram {
       background: #fff; border: 1px solid var(--border); border-radius: var(--radius-lg);
       padding: 28px;
@@ -1182,13 +1182,13 @@
   <section id="integration" aria-labelledby="qb-title">
     <div class="section-inner">
       <div class="section-header">
-        <div class="section-eyebrow">QuickBooks &amp; Financial Tooling</div>
-        <h2 class="section-title" id="qb-title">Integrated with QuickBooks for payroll, tax &amp; set-aside</h2>
-        <p class="section-sub">Two-way sync with QuickBooks (or equivalent) supports vendor payroll, 1099 / tax processing, and automated set-aside payment workflows from operators to GVRA.</p>
+        <div class="section-eyebrow">Financial &amp; Telemetry Integrations</div>
+        <h2 class="section-title" id="qb-title">Integrated with QuickBooks &amp; Seed Live</h2>
+        <p class="section-sub">Two-way sync with QuickBooks supports vendor payroll, 1099 / tax processing, and automated set-aside payment workflows. A native Seed Live interface ingests telemetry-driven sales from vending devices &mdash; sorting and tracking sales by location and by operator across multiple facilities.</p>
       </div>
 
       <div class="qb-grid">
-        <div class="qb-diagram" aria-label="QuickBooks integration diagram">
+        <div class="qb-diagram" aria-label="Financial and telemetry integration diagram">
           <div class="row">
             <div class="qb-box"><strong>BEP Platform</strong><small>Operator revenue &amp; deductions</small></div>
             <div class="qb-arrow" aria-hidden="true">&harr;</div>
@@ -1204,8 +1204,13 @@
             <div class="qb-arrow" aria-hidden="true">&rarr;</div>
             <div class="qb-box alt"><strong>Tax e-filing</strong><small>IRS &amp; GA DOR</small></div>
           </div>
+          <div class="row">
+            <div class="qb-box"><strong>Seed Live (Cloud DMS)</strong><small>Vending telemetry &middot; device sales</small></div>
+            <div class="qb-arrow" aria-hidden="true">&rarr;</div>
+            <div class="qb-box alt"><strong>BEP Sales Ledger</strong><small>Sorted by location &amp; operator</small></div>
+          </div>
           <div class="qb-sync">
-            <span><span class="dot" aria-hidden="true"></span><strong>Connection healthy</strong> &mdash; Last sync 12 min ago</span>
+            <span><span class="dot" aria-hidden="true"></span><strong>Connection healthy</strong> &mdash; QuickBooks 12 min ago &middot; Seed Live 4 min ago</span>
             <button class="btn-sm" type="button">Sync now</button>
           </div>
         </div>
@@ -1215,7 +1220,9 @@
             <li><span class="check" aria-hidden="true">&#10003;</span><div><strong>Vendor payroll</strong><span>Run payroll for operator&rsquo;s employees through QuickBooks with hours and earnings imported from the BEP platform.</span></div></li>
             <li><span class="check" aria-hidden="true">&#10003;</span><div><strong>Tax processing</strong><span>Federal &amp; state withholdings, 1099 generation, and year-end tax forms aligned to BEP earnings records.</span></div></li>
             <li><span class="check" aria-hidden="true">&#10003;</span><div><strong>Set-aside payments</strong><span>Calculated automatically from gross revenue and remitted to GVRA via ACH on a scheduled cadence.</span></div></li>
-            <li><span class="check" aria-hidden="true">&#10003;</span><div><strong>Reconciliation</strong><span>Bank deposits, invoices, and journal entries reconciled back to facility &amp; operator records.</span></div></li>
+            <li><span class="check" aria-hidden="true">&#10003;</span><div><strong>Seed Live telemetry</strong><span>Cloud-based device management feed of vending sales, ingested in near real time and sorted by facility location and by operator &mdash; including operators with multiple sites.</span></div></li>
+            <li><span class="check" aria-hidden="true">&#10003;</span><div><strong>Multi-location roll-up</strong><span>Operators see consolidated sales across all assigned facilities; GVRA reports drill from operator &rarr; facility &rarr; device.</span></div></li>
+            <li><span class="check" aria-hidden="true">&#10003;</span><div><strong>Reconciliation</strong><span>Telemetry sales, bank deposits, invoices, and journal entries reconciled back to facility &amp; operator records.</span></div></li>
           </ul>
         </div>
       </div>
