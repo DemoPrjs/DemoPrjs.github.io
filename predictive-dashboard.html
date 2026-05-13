@@ -1,0 +1,1307 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Predictive Analytics Dashboard &mdash; Georgia Vocational Rehabilitation Agency</title>
+  <meta name="description" content="Salesforce-style predictive analytics dashboard for GVRA &mdash; predictive expenditure forecasts on active plans, AI-driven budget forecasting, client disengagement risk, and caseload performance trends." />
+  <style>
+    /* ── Reset & Base ── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: 'Salesforce Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+      color: #181818;
+      background: #f3f3f3;
+      line-height: 1.45;
+      font-size: 13px;
+    }
+    a { color: inherit; text-decoration: none; }
+    button { font-family: inherit; cursor: pointer; }
+    input, select { font-family: inherit; }
+
+    /* ── Salesforce-inspired tokens ── */
+    :root {
+      --sf-blue:        #0176d3;
+      --sf-blue-dark:   #014486;
+      --sf-blue-deep:   #032d60;
+      --sf-blue-light:  #eaf5fe;
+      --sf-blue-mid:    #cfe5f9;
+      --sf-cyan:        #2e7eaf;
+      --sf-purple:      #5867e8;
+      --sf-purple-light:#eef0ff;
+      --sf-green:       #2e844a;
+      --sf-green-light: #d4f0dc;
+      --sf-amber:       #b76e00;
+      --sf-amber-light: #fef1d3;
+      --sf-red:         #ba0517;
+      --sf-red-light:   #fde2e2;
+      --sf-magenta:     #b315a4;
+      --sf-charcoal:    #181818;
+      --sf-gray-1:      #fafaf9;
+      --sf-gray-2:      #f3f3f3;
+      --sf-gray-3:      #ecebea;
+      --sf-gray-4:      #c9c9c9;
+      --sf-gray-5:      #706e6b;
+      --sf-gray-6:      #444444;
+      --sf-border:      #dddbda;
+      --gvra-gold:      #c8a84b;
+      --shadow-card:    0 2px 6px rgba(0,0,0,.06), 0 1px 2px rgba(0,0,0,.04);
+      --shadow-hover:   0 4px 14px rgba(0,0,0,.10);
+      --radius:         6px;
+      --radius-lg:      10px;
+    }
+
+    /* ── Top Header (Salesforce-like global header) ── */
+    .global-header {
+      background: #fff;
+      border-bottom: 1px solid var(--sf-border);
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 8px 20px;
+      height: 56px;
+      position: sticky; top: 0; z-index: 100;
+    }
+    .gh-left { display: flex; align-items: center; gap: 18px; }
+    .gh-brand { display: flex; align-items: center; gap: 10px; }
+    .gh-brand img { height: 32px; }
+    .gh-cloud {
+      display: inline-flex; align-items: center; gap: 8px;
+      background: var(--sf-blue-deep); color: #fff;
+      padding: 5px 12px 5px 10px; border-radius: 6px;
+      font-size: 13px; font-weight: 700;
+    }
+    .gh-cloud .ic {
+      width: 18px; height: 18px; border-radius: 4px;
+      background: var(--sf-blue); display: inline-flex; align-items: center; justify-content: center;
+      font-size: 11px;
+    }
+    .gh-search {
+      flex: 1; max-width: 520px; position: relative;
+    }
+    .gh-search input {
+      width: 100%; padding: 7px 12px 7px 34px;
+      border: 1px solid var(--sf-border); border-radius: 6px;
+      background: var(--sf-gray-1); font-size: 13px;
+    }
+    .gh-search input:focus { outline: 2px solid var(--sf-blue); background: #fff; }
+    .gh-search::before {
+      content: '\\1F50D'; position: absolute; left: 11px; top: 50%; transform: translateY(-50%);
+      font-size: 13px; color: var(--sf-gray-5);
+    }
+    .gh-right { display: flex; align-items: center; gap: 12px; color: var(--sf-gray-6); }
+    .gh-icon-btn {
+      width: 32px; height: 32px; border-radius: 50%;
+      background: var(--sf-gray-2); border: none;
+      display: inline-flex; align-items: center; justify-content: center;
+      font-size: 14px;
+    }
+    .gh-icon-btn:hover { background: var(--sf-gray-3); }
+    .gh-avatar {
+      width: 32px; height: 32px; border-radius: 50%;
+      background: linear-gradient(135deg, var(--sf-blue) 0%, var(--sf-purple) 100%);
+      color: #fff; display: flex; align-items: center; justify-content: center;
+      font-weight: 700; font-size: 12px;
+    }
+
+    /* ── App switcher / object tabs ── */
+    .app-bar {
+      background: #fff;
+      border-bottom: 1px solid var(--sf-border);
+      padding: 0 20px;
+      display: flex; align-items: center; gap: 2px;
+      height: 44px;
+    }
+    .app-name {
+      display: inline-flex; align-items: center; gap: 6px;
+      font-weight: 700; color: var(--sf-charcoal);
+      font-size: 14px;
+      padding-right: 14px; margin-right: 6px;
+      border-right: 1px solid var(--sf-border);
+      height: 100%;
+    }
+    .app-name::before {
+      content: ''; width: 22px; height: 22px;
+      background: linear-gradient(135deg, var(--sf-blue) 0%, var(--sf-purple) 100%);
+      border-radius: 4px; margin-right: 8px;
+    }
+    .app-tabs { display: flex; gap: 2px; height: 100%; }
+    .app-tab {
+      padding: 0 14px; display: inline-flex; align-items: center;
+      font-size: 13px; color: var(--sf-gray-6);
+      border-bottom: 3px solid transparent;
+      height: 100%;
+    }
+    .app-tab:hover { background: var(--sf-gray-2); }
+    .app-tab.active { color: var(--sf-blue); border-bottom-color: var(--sf-blue); font-weight: 700; background: var(--sf-blue-light); }
+
+    /* ── Dashboard top strip ── */
+    .dash-bar {
+      background: #fff;
+      border-bottom: 1px solid var(--sf-border);
+      padding: 14px 20px;
+      display: flex; align-items: center; justify-content: space-between; gap: 16px; flex-wrap: wrap;
+    }
+    .dash-title h1 {
+      font-size: 18px; font-weight: 700; color: var(--sf-charcoal);
+      display: inline-flex; align-items: center; gap: 8px;
+    }
+    .dash-title .star { color: var(--gvra-gold); font-size: 16px; }
+    .dash-title .meta { font-size: 12px; color: var(--sf-gray-5); margin-top: 2px; }
+    .dash-actions { display: flex; gap: 8px; flex-wrap: wrap; }
+    .btn {
+      font-size: 13px; font-weight: 600;
+      padding: 6px 12px; border-radius: 6px;
+      border: 1px solid var(--sf-border);
+      background: #fff; color: var(--sf-blue);
+      display: inline-flex; align-items: center; gap: 6px;
+    }
+    .btn:hover { background: var(--sf-blue-light); }
+    .btn.primary { background: var(--sf-blue); color: #fff; border-color: var(--sf-blue); }
+    .btn.primary:hover { background: var(--sf-blue-dark); }
+    .btn.ghost { color: var(--sf-gray-6); }
+
+    /* ── Filter bar (Salesforce dashboard filters) ── */
+    .filter-bar {
+      background: var(--sf-gray-1);
+      border-bottom: 1px solid var(--sf-border);
+      padding: 10px 20px;
+      display: flex; gap: 10px; flex-wrap: wrap; align-items: center;
+    }
+    .filter-bar .lbl {
+      font-size: 11px; font-weight: 700;
+      color: var(--sf-gray-5); text-transform: uppercase;
+      letter-spacing: .04em; margin-right: 4px;
+    }
+    .filter {
+      display: inline-flex; align-items: center; gap: 6px;
+      background: #fff; border: 1px solid var(--sf-border); border-radius: 100px;
+      padding: 5px 12px; font-size: 12px; font-weight: 600; color: var(--sf-charcoal);
+      cursor: default;
+    }
+    .filter:hover { background: var(--sf-blue-light); border-color: var(--sf-blue-mid); }
+    .filter.active { background: var(--sf-blue-light); border-color: var(--sf-blue); color: var(--sf-blue-dark); }
+    .filter .ic { font-size: 10px; color: var(--sf-gray-5); }
+    .filter .x { font-size: 12px; color: var(--sf-gray-5); margin-left: 2px; }
+    .filter-spacer { flex: 1; }
+
+    /* Region filter dropdown */
+    .filter-dd { position: relative; cursor: pointer; }
+    .filter-menu {
+      display: none; position: absolute; top: calc(100% + 6px); left: 0; z-index: 60;
+      min-width: 220px; background: #fff; border: 1px solid var(--sf-border);
+      border-radius: 6px; box-shadow: 0 4px 14px rgba(0,0,0,0.12);
+      padding: 6px 0; font-size: 13px; font-weight: 400; color: var(--sf-charcoal);
+      cursor: default;
+    }
+    .filter-dd.open .filter-menu { display: block; }
+    .filter-menu .fm-head {
+      padding: 6px 14px 8px; font-size: 11px; font-weight: 700;
+      text-transform: uppercase; letter-spacing: 0.04em;
+      color: var(--sf-gray-5); border-bottom: 1px solid var(--sf-border); margin-bottom: 4px;
+    }
+    .filter-menu .fm-item {
+      display: flex; align-items: center; gap: 10px;
+      padding: 7px 14px; cursor: pointer;
+    }
+    .filter-menu .fm-item:hover { background: var(--sf-blue-light); }
+    .filter-menu .fm-item .check {
+      width: 14px; height: 14px; display: inline-flex; align-items: center; justify-content: center;
+      color: var(--sf-blue); font-weight: 700; font-size: 13px;
+    }
+    .filter-menu .fm-item.selected { color: var(--sf-blue-dark); font-weight: 600; }
+    .filter-menu .fm-divider { height: 1px; background: var(--sf-border); margin: 4px 0; }
+    .range-toggle {
+      display: inline-flex; gap: 1px; background: var(--sf-border); border-radius: 6px; padding: 1px;
+    }
+    .range-toggle button {
+      border: none; background: #fff; padding: 5px 10px; font-size: 12px; font-weight: 600;
+      color: var(--sf-gray-6); border-radius: 5px;
+    }
+    .range-toggle button.active { background: var(--sf-blue); color: #fff; }
+
+    /* ── Layout ── */
+    .dashboard {
+      padding: 16px 20px 40px;
+      max-width: 1600px; margin: 0 auto;
+    }
+    .grid {
+      display: grid; gap: 14px;
+    }
+
+    /* ── Component card ── */
+    .comp {
+      background: #fff;
+      border: 1px solid var(--sf-border);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow-card);
+      display: flex; flex-direction: column;
+      overflow: hidden;
+    }
+    .comp:hover { box-shadow: var(--shadow-hover); }
+    .comp-head {
+      padding: 10px 14px;
+      border-bottom: 1px solid var(--sf-border);
+      display: flex; align-items: center; justify-content: space-between; gap: 8px;
+    }
+    .comp-head h3 {
+      font-size: 13px; font-weight: 700; color: var(--sf-charcoal);
+      display: inline-flex; align-items: center; gap: 8px;
+    }
+    .comp-head .badge-ai {
+      background: linear-gradient(135deg, var(--sf-purple) 0%, var(--sf-magenta) 100%);
+      color: #fff; font-size: 9px; font-weight: 800;
+      padding: 2px 7px; border-radius: 100px; letter-spacing: .06em; text-transform: uppercase;
+      display: inline-flex; align-items: center; gap: 3px;
+    }
+    .comp-head .badge-ai::before { content: '\u2728'; font-size: 9px; }
+    .comp-head .actions { display: flex; gap: 4px; color: var(--sf-gray-5); }
+    .comp-head .actions button {
+      background: none; border: none; width: 24px; height: 24px; border-radius: 4px; color: inherit;
+      font-size: 14px;
+    }
+    .comp-head .actions button:hover { background: var(--sf-gray-2); color: var(--sf-charcoal); }
+    .comp-body { padding: 14px; flex: 1; }
+
+    /* ── KPI tiles ── */
+    .kpi-row { display: grid; grid-template-columns: repeat(5, 1fr); gap: 14px; }
+    .kpi {
+      background: #fff;
+      border: 1px solid var(--sf-border);
+      border-radius: var(--radius);
+      padding: 14px 16px;
+      box-shadow: var(--shadow-card);
+    }
+    .kpi .label {
+      font-size: 11px; color: var(--sf-gray-5); text-transform: uppercase;
+      letter-spacing: .06em; font-weight: 700;
+    }
+    .kpi .label .badge-ai {
+      background: linear-gradient(135deg, var(--sf-purple) 0%, var(--sf-magenta) 100%);
+      color: #fff; font-size: 9px; font-weight: 800;
+      padding: 2px 6px; border-radius: 100px; letter-spacing: .06em;
+      margin-left: 6px; vertical-align: middle;
+    }
+    .kpi .value {
+      font-size: 26px; font-weight: 700; color: var(--sf-charcoal);
+      margin-top: 4px; font-variant-numeric: tabular-nums;
+    }
+    .kpi .sub { font-size: 12px; color: var(--sf-gray-5); margin-top: 2px; }
+    .kpi .delta {
+      font-size: 12px; font-weight: 700; margin-top: 6px;
+      display: inline-flex; align-items: center; gap: 4px;
+    }
+    .kpi .delta.up { color: var(--sf-green); }
+    .kpi .delta.down { color: var(--sf-red); }
+    .kpi .delta.warn { color: var(--sf-amber); }
+    .kpi-bar { height: 4px; background: var(--sf-gray-3); border-radius: 100px; margin-top: 10px; overflow: hidden; }
+    .kpi-bar .fill { height: 100%; background: var(--sf-blue); border-radius: 100px; }
+    .kpi-bar .fill.warn { background: var(--sf-amber); }
+    .kpi-bar .fill.danger { background: var(--sf-red); }
+
+    /* ── Chart row ── */
+    .row-2 { display: grid; grid-template-columns: 2fr 1fr; gap: 14px; }
+    .row-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; }
+    .row-12-23 { display: grid; grid-template-columns: 1.4fr 1.6fr; gap: 14px; }
+
+    /* ── Line chart (SVG) ── */
+    .chart-wrap { position: relative; }
+    .chart-wrap svg { width: 100%; height: auto; display: block; }
+    .legend {
+      display: flex; gap: 14px; flex-wrap: wrap;
+      font-size: 11px; color: var(--sf-gray-6); margin-top: 8px;
+    }
+    .legend span { display: inline-flex; align-items: center; gap: 6px; font-weight: 600; }
+    .legend .dot {
+      width: 10px; height: 10px; border-radius: 50%;
+    }
+    .legend .dot.actual    { background: var(--sf-blue); }
+    .legend .dot.forecast  { background: var(--sf-purple); border: 2px dashed var(--sf-purple); }
+    .legend .dot.budget    { background: var(--sf-amber); }
+    .legend .dot.band      { background: rgba(88,103,232,.15); border: 1px solid var(--sf-purple); }
+
+    /* ── Bar list (horizontal) ── */
+    .bar-list { display: flex; flex-direction: column; gap: 10px; }
+    .bl-row { font-size: 12px; }
+    .bl-row .top {
+      display: flex; justify-content: space-between; align-items: center; margin-bottom: 4px;
+    }
+    .bl-row .name { color: var(--sf-charcoal); font-weight: 600; }
+    .bl-row .val { color: var(--sf-gray-6); font-variant-numeric: tabular-nums; }
+    .bl-bar {
+      height: 8px; background: var(--sf-gray-2); border-radius: 100px; overflow: hidden;
+      position: relative;
+    }
+    .bl-bar .fill { height: 100%; border-radius: 100px; }
+    .bl-bar .fill.b1 { background: var(--sf-blue); }
+    .bl-bar .fill.b2 { background: var(--sf-purple); }
+    .bl-bar .fill.b3 { background: var(--sf-green); }
+    .bl-bar .fill.b4 { background: var(--sf-amber); }
+    .bl-bar .fill.b5 { background: var(--sf-red); }
+
+    /* ── Donut ── */
+    .donut-wrap {
+      display: flex; align-items: center; gap: 14px;
+    }
+    .donut { position: relative; width: 150px; height: 150px; flex: 0 0 auto; }
+    .donut svg { width: 100%; height: 100%; transform: rotate(-90deg); }
+    .donut .center {
+      position: absolute; inset: 0;
+      display: flex; flex-direction: column; align-items: center; justify-content: center;
+    }
+    .donut .center .v { font-size: 22px; font-weight: 700; color: var(--sf-charcoal); }
+    .donut .center .l { font-size: 10px; color: var(--sf-gray-5); text-transform: uppercase; letter-spacing: .06em; font-weight: 700; }
+    .donut-legend { display: flex; flex-direction: column; gap: 6px; flex: 1; font-size: 12px; }
+    .donut-legend .item { display: flex; align-items: center; gap: 8px; }
+    .donut-legend .dot { width: 10px; height: 10px; border-radius: 2px; }
+    .donut-legend .name { flex: 1; color: var(--sf-charcoal); }
+    .donut-legend .val { font-weight: 700; color: var(--sf-gray-6); font-variant-numeric: tabular-nums; }
+
+    /* ── Risk table ── */
+    .table-wrap { overflow: auto; }
+    table.tbl {
+      width: 100%; border-collapse: collapse; font-size: 12px;
+    }
+    table.tbl thead th {
+      text-align: left; font-size: 11px; color: var(--sf-gray-5);
+      text-transform: uppercase; letter-spacing: .04em; font-weight: 700;
+      padding: 8px 12px; border-bottom: 1px solid var(--sf-border); background: var(--sf-gray-1);
+      position: sticky; top: 0;
+    }
+    table.tbl tbody td {
+      padding: 9px 12px; border-bottom: 1px solid var(--sf-border); color: var(--sf-charcoal);
+      vertical-align: middle;
+    }
+    table.tbl tbody tr:hover { background: var(--sf-blue-light); cursor: pointer; }
+    table.tbl tbody tr:last-child td { border-bottom: none; }
+    table.tbl td.num, table.tbl th.num { text-align: right; font-variant-numeric: tabular-nums; }
+    .name-cell { display: flex; align-items: center; gap: 8px; }
+    .avatar-sm {
+      width: 24px; height: 24px; border-radius: 50%;
+      background: var(--sf-blue-light); color: var(--sf-blue-dark);
+      display: inline-flex; align-items: center; justify-content: center;
+      font-size: 10px; font-weight: 700; flex: 0 0 auto;
+    }
+    .avatar-sm.p { background: #f1eaff; color: var(--sf-purple); }
+    .avatar-sm.g { background: var(--sf-green-light); color: var(--sf-green); }
+    .avatar-sm.a { background: var(--sf-amber-light); color: var(--sf-amber); }
+
+    /* ── Risk score gauge ── */
+    .risk-meter {
+      display: inline-flex; align-items: center; gap: 8px;
+    }
+    .risk-meter .bar {
+      width: 70px; height: 6px; background: var(--sf-gray-2); border-radius: 100px; overflow: hidden;
+    }
+    .risk-meter .bar .fill { height: 100%; border-radius: 100px; }
+    .risk-meter .lbl { font-size: 11px; font-weight: 700; }
+    .risk-lbl.high { color: var(--sf-red); }
+    .risk-lbl.med  { color: var(--sf-amber); }
+    .risk-lbl.low  { color: var(--sf-green); }
+
+    /* ── Badges / pills ── */
+    .pill {
+      display: inline-block; font-size: 10px; font-weight: 700;
+      padding: 2px 8px; border-radius: 100px; letter-spacing: .04em; text-transform: uppercase;
+    }
+    .pill.blue { background: var(--sf-blue-light); color: var(--sf-blue-dark); }
+    .pill.green { background: var(--sf-green-light); color: var(--sf-green); }
+    .pill.amber { background: var(--sf-amber-light); color: var(--sf-amber); }
+    .pill.red { background: var(--sf-red-light); color: var(--sf-red); }
+    .pill.purple { background: var(--sf-purple-light); color: var(--sf-purple); }
+    .pill.gray { background: var(--sf-gray-2); color: var(--sf-gray-6); }
+
+    /* ── Einstein-style insight card ── */
+    .insight-card {
+      background: linear-gradient(135deg, #032d60 0%, #0176d3 60%, #5867e8 100%);
+      color: #fff;
+      border-radius: var(--radius);
+      padding: 16px 18px;
+      box-shadow: var(--shadow-card);
+      position: relative;
+      overflow: hidden;
+    }
+    .insight-card::after {
+      content: ''; position: absolute; right: -40px; bottom: -40px;
+      width: 180px; height: 180px; border-radius: 50%;
+      background: radial-gradient(circle, rgba(255,255,255,.15) 0%, transparent 70%);
+    }
+    .insight-card h3 {
+      font-size: 14px; font-weight: 700; margin-bottom: 6px;
+      display: inline-flex; align-items: center; gap: 8px;
+    }
+    .insight-card .ei {
+      display: inline-flex; align-items: center; gap: 6px;
+      background: rgba(255,255,255,.15); border: 1px solid rgba(255,255,255,.25);
+      padding: 3px 10px; border-radius: 100px;
+      font-size: 10px; font-weight: 700; letter-spacing: .06em; text-transform: uppercase;
+    }
+    .insight-list { list-style: none; display: flex; flex-direction: column; gap: 10px; margin-top: 10px; position: relative; z-index: 1; }
+    .insight-list li {
+      display: grid; grid-template-columns: 22px 1fr auto;
+      gap: 10px; align-items: start;
+      background: rgba(255,255,255,.08);
+      border: 1px solid rgba(255,255,255,.18);
+      border-radius: 6px;
+      padding: 9px 12px;
+      font-size: 12.5px;
+    }
+    .insight-list li .ic {
+      width: 20px; height: 20px; border-radius: 50%;
+      background: rgba(255,255,255,.18); display: flex; align-items: center; justify-content: center;
+      font-weight: 800; font-size: 11px;
+    }
+    .insight-list li strong { display: block; color: #fff; font-size: 12.5px; }
+    .insight-list li small { font-size: 11px; color: rgba(255,255,255,.78); display: block; margin-top: 2px; }
+    .insight-list li .conf {
+      font-size: 10px; color: rgba(255,255,255,.85); white-space: nowrap;
+      background: rgba(255,255,255,.12); border-radius: 100px; padding: 2px 8px; font-weight: 700;
+    }
+
+    /* ── Plan card (predictive expenditure on active plan) ── */
+    .plan-summary {
+      display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px;
+      margin-bottom: 14px;
+    }
+    .ps-item {
+      background: var(--sf-gray-1); border: 1px solid var(--sf-border);
+      border-radius: 6px; padding: 10px 12px;
+    }
+    .ps-item .l { font-size: 10px; color: var(--sf-gray-5); text-transform: uppercase; letter-spacing: .06em; font-weight: 700; }
+    .ps-item .v { font-size: 16px; font-weight: 700; color: var(--sf-charcoal); margin-top: 2px; font-variant-numeric: tabular-nums; }
+
+    /* ── Caseload heatmap ── */
+    .heat-grid {
+      display: grid; grid-template-columns: 140px repeat(12, 1fr); gap: 3px;
+      font-size: 11px;
+    }
+    .heat-grid .hd { color: var(--sf-gray-5); font-weight: 700; text-align: center; padding-bottom: 4px; }
+    .heat-grid .row-lbl {
+      color: var(--sf-charcoal); padding: 6px 8px; font-weight: 600;
+      display: flex; align-items: center;
+    }
+    .heat-cell {
+      aspect-ratio: 1.6 / 1;
+      border-radius: 3px;
+      display: flex; align-items: center; justify-content: center;
+      color: rgba(0,0,0,.6); font-size: 10px; font-weight: 700;
+      cursor: default;
+    }
+    .heat-cell:hover { outline: 2px solid var(--sf-blue); outline-offset: -2px; }
+    .heat-legend { display: flex; align-items: center; gap: 6px; font-size: 11px; color: var(--sf-gray-5); margin-top: 8px; }
+    .heat-legend .scale { display: flex; gap: 2px; }
+    .heat-legend .scale span { width: 18px; height: 12px; border-radius: 2px; }
+
+    /* ── Footer (Salesforce-like) ── */
+    .footer-bar {
+      text-align: center; font-size: 11px; color: var(--sf-gray-5);
+      padding: 14px 20px 24px;
+    }
+
+    /* ── Responsive ── */
+    @media (max-width: 1200px) {
+      .kpi-row { grid-template-columns: repeat(3, 1fr); }
+      .row-2, .row-12-23 { grid-template-columns: 1fr; }
+      .row-3 { grid-template-columns: 1fr 1fr; }
+      .heat-grid { grid-template-columns: 110px repeat(12, 1fr); }
+    }
+    @media (max-width: 760px) {
+      .kpi-row, .row-3 { grid-template-columns: 1fr 1fr; }
+      .plan-summary { grid-template-columns: 1fr 1fr; }
+      .donut-wrap { flex-direction: column; align-items: stretch; }
+      .donut { margin: 0 auto; }
+
+      .heat-grid { grid-template-columns: 90px repeat(12, 1fr); font-size: 9px; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Global Header -->
+  <header class="global-header" aria-label="Global header">
+    <div class="gh-left">
+      <a href="#" class="gh-brand" aria-label="GVRA home">
+        <img src="GVRA.png" alt="Georgia Vocational Rehabilitation Agency" />
+      </a>
+    </div>
+    <div class="gh-right">
+      <button class="gh-icon-btn" aria-label="Help">?</button>
+      <button class="gh-icon-btn" aria-label="Setup">&#9881;</button>
+      <button class="gh-icon-btn" aria-label="Notifications">&#128276;</button>
+      <span class="gh-avatar" aria-label="User">RP</span>
+    </div>
+  </header>
+
+  <!-- App switcher / object tabs -->
+  <div class="app-bar" role="navigation" aria-label="App tabs">
+    <span class="app-name">GVRA Case Insights</span>
+    <div class="app-tabs">
+      <a href="#" class="app-tab">Home</a>
+      <a href="#" class="app-tab">Consumers</a>
+      <a href="#" class="app-tab">Plans (IPE)</a>
+      <a href="#" class="app-tab">Authorizations</a>
+      <a href="#" class="app-tab">Reports</a>
+      <a href="#" class="app-tab active">Dashboards</a>
+      <a href="#" class="app-tab">Forecasts</a>
+    </div>
+  </div>
+
+  <!-- Dashboard top strip -->
+  <div class="dash-bar">
+    <div class="dash-title">
+      <h1><span class="star" aria-hidden="true">&#9733;</span> Predictive Case &amp; Expenditure Analytics</h1>
+      <div class="meta">Folder: GVRA Executive &middot; Last refreshed May 12, 2026 at 9:42 AM &middot; Refreshes every 4 hours</div>
+    </div>
+    <div class="dash-actions">
+      <button class="btn ghost"><span aria-hidden="true">&#11118;</span> Subscribe</button>
+      <button class="btn ghost"><span aria-hidden="true">&#128190;</span> Save As</button>
+      <button class="btn"><span aria-hidden="true">&#8635;</span> Refresh</button>
+      <button class="btn primary"><span aria-hidden="true">&#9881;</span> Edit Dashboard</button>
+    </div>
+  </div>
+
+  <!-- Filters -->
+  <div class="filter-bar" aria-label="Dashboard filters">
+    <span class="lbl">Filters</span>
+    <span class="filter active filter-dd" id="regionFilter" tabindex="0" role="button" aria-haspopup="listbox" aria-expanded="false">Region: <strong style="margin-left:4px;" id="regionFilterValue">All Regions</strong> <span class="ic" aria-hidden="true">&#9662;</span>
+      <div class="filter-menu" role="listbox" aria-label="Region">
+        <div class="fm-head">Region</div>
+        <div class="fm-item selected" role="option" data-value="All Regions"><span class="check">&#10003;</span>All Regions</div>
+        <div class="fm-divider"></div>
+        <div class="fm-item" role="option" data-value="Metro Atlanta"><span class="check"></span>Metro Atlanta</div>
+        <div class="fm-item" role="option" data-value="North GA"><span class="check"></span>North GA</div>
+        <div class="fm-item" role="option" data-value="South GA"><span class="check"></span>South GA</div>
+        <div class="fm-item" role="option" data-value="Central"><span class="check"></span>Central</div>
+        <div class="fm-item" role="option" data-value="Coastal"><span class="check"></span>Coastal</div>
+        <div class="fm-item" role="option" data-value="West GA"><span class="check"></span>West GA</div>
+      </div>
+    </span>
+    <span class="filter">Counselor: <strong style="margin-left:4px;">All</strong> <span class="ic" aria-hidden="true">&#9662;</span></span>
+    <span class="filter">Service Category: <strong style="margin-left:4px;">All</strong> <span class="ic" aria-hidden="true">&#9662;</span></span>
+    <span class="filter">Plan Status: <strong style="margin-left:4px;">Active</strong> <span class="ic" aria-hidden="true">&#9662;</span></span>
+    <span class="filter">Funding Source: <strong style="margin-left:4px;">All</strong> <span class="ic" aria-hidden="true">&#9662;</span></span>
+    <span class="filter active">Consumer Type: <strong style="margin-left:4px;">Blind / Low Vision</strong> <span class="x" aria-hidden="true">&times;</span></span>
+    <span class="filter">Disability Cohort: <strong style="margin-left:4px;">All</strong> <span class="ic" aria-hidden="true">&#9662;</span></span>
+    <span class="filter">+ Add Filter</span>
+    <span class="filter-spacer"></span>
+    <div class="range-toggle" role="group" aria-label="Time range">
+      <button>30D</button>
+      <button>QTD</button>
+      <button class="active">FYTD</button>
+      <button>12M</button>
+      <button>Forecast 6M</button>
+    </div>
+  </div>
+
+  <!-- Dashboard body -->
+  <main class="dashboard">
+
+    <!-- KPI row -->
+    <div class="kpi-row" style="margin-bottom: 14px;">
+      <div class="kpi">
+        <div class="label">Active IPE Plans</div>
+        <div class="value" data-kpi="plansValue">3,184</div>
+        <div class="sub" data-kpi="plansSub">Across 9 GVRA regions</div>
+        <div class="delta up" data-kpi="plansDelta">&uarr; 4.2% vs prior period</div>
+      </div>
+      <div class="kpi">
+        <div class="label">FY26 Authorized Budget</div>
+        <div class="value" data-kpi="budgetValue">$48.6M</div>
+        <div class="sub" data-kpi="budgetSub">$31.4M committed &middot; $11.2M paid</div>
+        <div class="kpi-bar"><div class="fill" data-kpi="budgetBar" style="width: 65%"></div></div>
+      </div>
+      <div class="kpi">
+        <div class="label">Predicted FY-End Spend <span class="badge-ai">Einstein</span></div>
+        <div class="value" data-kpi="predictValue">$50.3M</div>
+        <div class="sub" data-kpi="predictSub">Confidence: 92% &middot; 95% CI $48.9M&ndash;$51.7M</div>
+        <div class="delta warn" data-kpi="predictDelta">&uarr; $1.7M over authorized</div>
+      </div>
+      <div class="kpi">
+        <div class="label">Disengagement Risk <span class="badge-ai">AI</span></div>
+        <div class="value" data-kpi="riskValue">147</div>
+        <div class="sub" data-kpi="riskSub">Consumers flagged this week</div>
+        <div class="delta down" data-kpi="riskDelta">&darr; 11% with outreach playbook</div>
+      </div>
+      <div class="kpi">
+        <div class="label">Successful Closures (Goal)</div>
+        <div class="value" data-kpi="closureValue">68.4%</div>
+        <div class="sub" data-kpi="closureSub">Target: 72% &middot; Trend: improving</div>
+        <div class="kpi-bar"><div class="fill warn" data-kpi="closureBar" style="width: 68%"></div></div>
+      </div>
+    </div>
+
+    <!-- Row: Predictive expenditure chart + Einstein insights -->
+    <div class="row-2" style="margin-bottom: 14px;">
+      <!-- Predictive expenditure chart -->
+      <section class="comp">
+        <header class="comp-head">
+          <h3>Predictive Expenditure on Active Plans <span class="badge-ai">Forecast</span></h3>
+          <div class="actions">
+            <button aria-label="Filter">&#9776;</button>
+            <button aria-label="Expand">&#9974;</button>
+            <button aria-label="More">&#8942;</button>
+          </div>
+        </header>
+        <div class="comp-body chart-wrap">
+          <svg viewBox="0 0 760 300" role="img" aria-label="Predictive expenditure line chart showing actual spend vs forecast vs budget">
+            <!-- gridlines -->
+            <g stroke="#ecebea" stroke-width="1">
+              <line x1="50" y1="40"  x2="740" y2="40"/>
+              <line x1="50" y1="100" x2="740" y2="100"/>
+              <line x1="50" y1="160" x2="740" y2="160"/>
+              <line x1="50" y1="220" x2="740" y2="220"/>
+              <line x1="50" y1="280" x2="740" y2="280"/>
+            </g>
+            <!-- y-axis labels -->
+            <g fill="#706e6b" font-size="10" font-family="inherit">
+              <text x="40" y="44"  text-anchor="end">$5.5M</text>
+              <text x="40" y="104" text-anchor="end">$4.5M</text>
+              <text x="40" y="164" text-anchor="end">$3.5M</text>
+              <text x="40" y="224" text-anchor="end">$2.5M</text>
+              <text x="40" y="284" text-anchor="end">$1.5M</text>
+            </g>
+            <!-- x-axis labels (months) -->
+            <g fill="#706e6b" font-size="10" font-family="inherit" text-anchor="middle">
+              <text x="80"  y="296">Jul</text>
+              <text x="140" y="296">Aug</text>
+              <text x="200" y="296">Sep</text>
+              <text x="260" y="296">Oct</text>
+              <text x="320" y="296">Nov</text>
+              <text x="380" y="296">Dec</text>
+              <text x="440" y="296">Jan</text>
+              <text x="500" y="296">Feb</text>
+              <text x="560" y="296">Mar</text>
+              <text x="620" y="296">Apr</text>
+              <text x="680" y="296">May</text>
+              <text x="740" y="296">Jun</text>
+            </g>
+            <!-- forecast confidence band -->
+            <path d="M 440 168 L 500 152 L 560 138 L 620 124 L 680 110 L 740 96 L 740 138 L 680 152 L 620 166 L 560 180 L 500 196 L 440 208 Z"
+                  fill="rgba(88,103,232,.12)" stroke="rgba(88,103,232,.4)" stroke-dasharray="3 3"/>
+            <!-- budget line (target) -->
+            <line x1="50" y1="120" x2="740" y2="120" stroke="#b76e00" stroke-width="2" stroke-dasharray="6 4"/>
+            <text x="730" y="114" fill="#b76e00" font-size="10" font-weight="700" text-anchor="end" font-family="inherit">Authorized Budget Plan</text>
+            <!-- actuals line -->
+            <polyline fill="none" stroke="#0176d3" stroke-width="2.5"
+                      points="80,240 140,228 200,232 260,206 320,196 380,184 440,188"/>
+            <!-- actuals area -->
+            <path d="M 80 240 L 140 228 L 200 232 L 260 206 L 320 196 L 380 184 L 440 188 L 440 280 L 80 280 Z"
+                  fill="rgba(1,118,211,.08)"/>
+            <!-- forecast line (dashed) -->
+            <polyline fill="none" stroke="#5867e8" stroke-width="2.5" stroke-dasharray="5 4"
+                      points="440,188 500,174 560,159 620,145 680,131 740,117"/>
+            <!-- data points actuals -->
+            <g fill="#0176d3">
+              <circle cx="80"  cy="240" r="3.5"/>
+              <circle cx="140" cy="228" r="3.5"/>
+              <circle cx="200" cy="232" r="3.5"/>
+              <circle cx="260" cy="206" r="3.5"/>
+              <circle cx="320" cy="196" r="3.5"/>
+              <circle cx="380" cy="184" r="3.5"/>
+              <circle cx="440" cy="188" r="4.5" stroke="#fff" stroke-width="2"/>
+            </g>
+            <!-- data points forecast -->
+            <g fill="#5867e8">
+              <circle cx="500" cy="174" r="3.5"/>
+              <circle cx="560" cy="159" r="3.5"/>
+              <circle cx="620" cy="145" r="3.5"/>
+              <circle cx="680" cy="131" r="3.5"/>
+              <circle cx="740" cy="117" r="4" stroke="#fff" stroke-width="2"/>
+            </g>
+            <!-- forecast end label -->
+            <g>
+              <rect x="640" y="76" width="100" height="32" rx="4" fill="#5867e8"/>
+              <text x="690" y="91"  fill="#fff" font-size="10" text-anchor="middle" font-family="inherit">Projected Jun</text>
+              <text x="690" y="103" fill="#fff" font-size="12" font-weight="700" text-anchor="middle" font-family="inherit">$5.20M</text>
+            </g>
+            <!-- "Today" marker -->
+            <line x1="440" y1="40" x2="440" y2="280" stroke="#706e6b" stroke-width="1" stroke-dasharray="2 3"/>
+            <text x="444" y="52" fill="#706e6b" font-size="10" font-family="inherit">Today</text>
+          </svg>
+          <div class="legend">
+            <span><span class="dot actual"></span> Actual cumulative spend</span>
+            <span><span class="dot forecast"></span> Einstein 6-month forecast</span>
+            <span><span class="dot band"></span> 95% confidence interval</span>
+            <span><span class="dot budget"></span> Authorized budget plan</span>
+          </div>
+        </div>
+      </section>
+
+      <!-- Einstein insights -->
+      <aside class="insight-card" role="region" aria-label="Einstein AI insights">
+        <h3><span class="ei">Einstein Insights</span></h3>
+        <div style="font-size: 12px; opacity: .9; margin-top: 8px;">Auto-generated from the last 4-hour analytics refresh.</div>
+        <ul class="insight-list">
+          <li>
+            <span class="ic">!</span>
+            <div>
+              <strong>FYTD spend trending $1.7M above plan</strong>
+              <small>Driven by job coaching (+18%) and assistive tech (+12%). Recommend amending IPEs in West &amp; South regions.</small>
+            </div>
+            <span class="conf">92%</span>
+          </li>
+          <li>
+            <span class="ic">&#9888;</span>
+            <div>
+              <strong>147 consumers at high disengagement risk</strong>
+              <small>Common signals: no contact 21+ days, missed authorizations, low session attendance.</small>
+            </div>
+            <span class="conf">88%</span>
+          </li>
+          <li>
+            <span class="ic">&#9650;</span>
+            <div>
+              <strong>Counselor caseload variance widening</strong>
+              <small>4 counselors above 1.4x median load &mdash; closure rates 11% lower. Suggest case rebalancing.</small>
+            </div>
+            <span class="conf">85%</span>
+          </li>
+          <li>
+            <span class="ic">&#10003;</span>
+            <div>
+              <strong>BEP route to employment outperforming</strong>
+              <small>Blind / low-vision consumers placed via BEP show 23% higher 90-day stability than peers.</small>
+            </div>
+            <span class="conf">94%</span>
+          </li>
+        </ul>
+      </aside>
+    </div>
+
+    <!-- Row: Plan-level forecast + Predicted spend by category + Disengagement risk -->
+    <div class="row-3" style="margin-bottom: 14px;">
+
+      <!-- Active plan forecast -->
+      <section class="comp">
+        <header class="comp-head">
+          <h3>Active Plan Forecast &mdash; IPE-2026-552 <span class="badge-ai">Predictive</span></h3>
+          <div class="actions">
+            <button aria-label="More">&#8942;</button>
+          </div>
+        </header>
+        <div class="comp-body">
+          <div style="font-size:12px;color:var(--sf-gray-5);margin-bottom:8px;">Consumer J. Carter &middot; Counselor R. Patel &middot; Plan opened Oct 2024</div>
+          <div class="plan-summary">
+            <div class="ps-item"><div class="l">Plan Budget</div><div class="v">$24,800</div></div>
+            <div class="ps-item"><div class="l">Spent</div><div class="v">$19,684</div></div>
+            <div class="ps-item"><div class="l">Predicted End</div><div class="v" style="color:var(--sf-amber);">$26,150</div></div>
+            <div class="ps-item"><div class="l">Variance</div><div class="v" style="color:var(--sf-red);">+$1,350</div></div>
+          </div>
+          <!-- mini chart -->
+          <svg viewBox="0 0 380 160" style="width:100%;height:auto;" role="img" aria-label="Plan-level predictive expenditure curve">
+            <g stroke="#ecebea"><line x1="0" y1="40" x2="380" y2="40"/><line x1="0" y1="80" x2="380" y2="80"/><line x1="0" y1="120" x2="380" y2="120"/></g>
+            <!-- budget line -->
+            <line x1="0" y1="55" x2="380" y2="55" stroke="#b76e00" stroke-width="1.5" stroke-dasharray="4 4"/>
+            <text x="372" y="50" fill="#b76e00" font-size="9" text-anchor="end" font-weight="700" font-family="inherit">$24.8K cap</text>
+            <!-- actual cumulative -->
+            <path d="M 0 140 L 40 132 L 80 122 L 120 110 L 160 96 L 200 84 L 240 70 L 280 62"
+                  fill="none" stroke="#0176d3" stroke-width="2.5"/>
+            <path d="M 0 140 L 40 132 L 80 122 L 120 110 L 160 96 L 200 84 L 240 70 L 280 62 L 280 160 L 0 160 Z" fill="rgba(1,118,211,.08)"/>
+            <!-- forecast -->
+            <path d="M 280 62 L 320 50 L 360 38" fill="none" stroke="#5867e8" stroke-width="2.5" stroke-dasharray="4 4"/>
+            <!-- band -->
+            <path d="M 280 62 L 320 56 L 360 44 L 360 32 L 320 44 L 280 62 Z" fill="rgba(88,103,232,.15)"/>
+            <!-- today marker -->
+            <line x1="280" y1="20" x2="280" y2="140" stroke="#706e6b" stroke-dasharray="2 3"/>
+            <text x="284" y="28" font-size="9" fill="#706e6b" font-family="inherit">Today</text>
+            <!-- end marker -->
+            <circle cx="360" cy="38" r="4" fill="#5867e8" stroke="#fff" stroke-width="2"/>
+            <text x="354" y="30" font-size="9" fill="#5867e8" font-weight="700" text-anchor="end" font-family="inherit">Plan End</text>
+          </svg>
+          <div class="legend"><span><span class="dot actual"></span> Actual</span><span><span class="dot forecast"></span> Predicted</span><span><span class="dot band"></span> 95% CI</span><span><span class="dot budget"></span> Plan cap</span></div>
+        </div>
+      </section>
+
+      <!-- Predicted spend by service category -->
+      <section class="comp">
+        <header class="comp-head">
+          <h3>Predicted Spend by Service Category</h3>
+          <div class="actions"><button aria-label="More">&#8942;</button></div>
+        </header>
+        <div class="comp-body">
+          <div class="bar-list">
+            <div class="bl-row">
+              <div class="top"><span class="name">Job Coaching &amp; Placement</span><span class="val">$12.4M <span class="pill amber">+18%</span></span></div>
+              <div class="bl-bar"><div class="fill b1" style="width: 88%"></div></div>
+            </div>
+            <div class="bl-row">
+              <div class="top"><span class="name">Assistive Technology</span><span class="val">$8.9M <span class="pill amber">+12%</span></span></div>
+              <div class="bl-bar"><div class="fill b2" style="width: 72%"></div></div>
+            </div>
+            <div class="bl-row">
+              <div class="top"><span class="name">Post-Secondary Training</span><span class="val">$10.2M <span class="pill green">on plan</span></span></div>
+              <div class="bl-bar"><div class="fill b3" style="width: 80%"></div></div>
+            </div>
+            <div class="bl-row">
+              <div class="top"><span class="name">Vocational Evaluation</span><span class="val">$3.6M <span class="pill green">-4%</span></span></div>
+              <div class="bl-bar"><div class="fill b4" style="width: 32%"></div></div>
+            </div>
+            <div class="bl-row">
+              <div class="top"><span class="name">BEP Operator Training</span><span class="val">$5.1M <span class="pill blue">on plan</span></span></div>
+              <div class="bl-bar"><div class="fill b5" style="width: 44%"></div></div>
+            </div>
+            <div class="bl-row">
+              <div class="top"><span class="name">Transportation Stipends</span><span class="val">$2.4M <span class="pill amber">+9%</span></span></div>
+              <div class="bl-bar"><div class="fill b1" style="width: 22%"></div></div>
+            </div>
+            <div class="bl-row">
+              <div class="top"><span class="name">Other Services</span><span class="val">$7.7M <span class="pill gray">flat</span></span></div>
+              <div class="bl-bar"><div class="fill b2" style="width: 56%"></div></div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Disengagement risk donut -->
+      <section class="comp">
+        <header class="comp-head">
+          <h3>Disengagement Risk Distribution <span class="badge-ai">AI</span></h3>
+          <div class="actions"><button aria-label="More">&#8942;</button></div>
+        </header>
+        <div class="comp-body">
+          <div class="donut-wrap">
+            <div class="donut" aria-label="Risk distribution donut chart">
+              <svg viewBox="0 0 36 36">
+                <!-- full ring background -->
+                <circle cx="18" cy="18" r="15.9" fill="none" stroke="#ecebea" stroke-width="4"/>
+                <!-- low risk (green) 62% -->
+                <circle cx="18" cy="18" r="15.9" fill="none" stroke="#2e844a" stroke-width="4"
+                        stroke-dasharray="62 38" stroke-dashoffset="25"/>
+                <!-- medium risk (amber) 28% -->
+                <circle cx="18" cy="18" r="15.9" fill="none" stroke="#b76e00" stroke-width="4"
+                        stroke-dasharray="28 72" stroke-dashoffset="-37"/>
+                <!-- high risk (red) 10% -->
+                <circle cx="18" cy="18" r="15.9" fill="none" stroke="#ba0517" stroke-width="4"
+                        stroke-dasharray="10 90" stroke-dashoffset="-65"/>
+              </svg>
+              <div class="center">
+                <div class="v">3,184</div>
+                <div class="l">Consumers</div>
+              </div>
+            </div>
+            <div class="donut-legend">
+              <div class="item"><span class="dot" style="background:#2e844a"></span><span class="name">Low risk (62%)</span><span class="val">1,974</span></div>
+              <div class="item"><span class="dot" style="background:#b76e00"></span><span class="name">Medium risk (28%)</span><span class="val">891</span></div>
+              <div class="item"><span class="dot" style="background:#ba0517"></span><span class="name">High risk (10%)</span><span class="val">319</span></div>
+              <div style="margin-top:8px; font-size:11px; color:var(--sf-gray-5);">Model: GVRA Disengagement v3.2 &middot; Updated daily &middot; AUC 0.87</div>
+            </div>
+          </div>
+        </div>
+      </section>
+    </div>
+
+    <!-- Row: Top at-risk consumers + Caseload trends -->
+    <div class="row-12-23" style="margin-bottom: 14px;">
+
+      <!-- Counselor caseload trends -->
+      <section class="comp">
+        <header class="comp-head">
+          <h3>Caseload Performance Trends</h3>
+          <div class="actions"><button aria-label="More">&#8942;</button></div>
+        </header>
+        <div class="comp-body">
+          <div style="font-size:12px;color:var(--sf-gray-5);margin-bottom:10px;">Successful closure rate by counselor (rolling 6 months)</div>
+          <table class="tbl">
+            <thead>
+              <tr>
+                <th>Counselor</th>
+                <th>Region</th>
+                <th class="num">Active Cases</th>
+                <th class="num">Closure %</th>
+                <th>Trend</th>
+                <th>Risk</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><span class="name-cell"><span class="avatar-sm">RP</span> R. Patel</span></td>
+                <td>Metro Atlanta</td>
+                <td class="num">42</td>
+                <td class="num">74.1%</td>
+                <td>
+                  <svg width="80" height="20" viewBox="0 0 80 20"><polyline fill="none" stroke="#2e844a" stroke-width="1.5" points="0,14 12,11 24,12 36,8 48,10 60,6 72,4"/></svg>
+                </td>
+                <td><span class="pill green">Strong</span></td>
+              </tr>
+              <tr>
+                <td><span class="name-cell"><span class="avatar-sm p">MJ</span> M. Johnson</span></td>
+                <td>South GA</td>
+                <td class="num">58</td>
+                <td class="num">61.2%</td>
+                <td>
+                  <svg width="80" height="20" viewBox="0 0 80 20"><polyline fill="none" stroke="#b76e00" stroke-width="1.5" points="0,8 12,10 24,9 36,11 48,12 60,13 72,14"/></svg>
+                </td>
+                <td><span class="pill amber">Overloaded</span></td>
+              </tr>
+              <tr>
+                <td><span class="name-cell"><span class="avatar-sm g">SL</span> S. Lin</span></td>
+                <td>North GA</td>
+                <td class="num">39</td>
+                <td class="num">71.5%</td>
+                <td>
+                  <svg width="80" height="20" viewBox="0 0 80 20"><polyline fill="none" stroke="#2e844a" stroke-width="1.5" points="0,16 12,12 24,11 36,9 48,8 60,7 72,5"/></svg>
+                </td>
+                <td><span class="pill green">Strong</span></td>
+              </tr>
+              <tr>
+                <td><span class="name-cell"><span class="avatar-sm a">DB</span> D. Brooks</span></td>
+                <td>Central</td>
+                <td class="num">61</td>
+                <td class="num">57.8%</td>
+                <td>
+                  <svg width="80" height="20" viewBox="0 0 80 20"><polyline fill="none" stroke="#ba0517" stroke-width="1.5" points="0,6 12,8 24,10 36,12 48,11 60,13 72,15"/></svg>
+                </td>
+                <td><span class="pill red">At risk</span></td>
+              </tr>
+              <tr>
+                <td><span class="name-cell"><span class="avatar-sm p">KN</span> K. Nguyen</span></td>
+                <td>Coastal</td>
+                <td class="num">36</td>
+                <td class="num">76.4%</td>
+                <td>
+                  <svg width="80" height="20" viewBox="0 0 80 20"><polyline fill="none" stroke="#2e844a" stroke-width="1.5" points="0,14 12,13 24,10 36,9 48,8 60,5 72,3"/></svg>
+                </td>
+                <td><span class="pill green">Strong</span></td>
+              </tr>
+              <tr>
+                <td><span class="name-cell"><span class="avatar-sm a">TC</span> T. Cole</span></td>
+                <td>West GA</td>
+                <td class="num">55</td>
+                <td class="num">63.7%</td>
+                <td>
+                  <svg width="80" height="20" viewBox="0 0 80 20"><polyline fill="none" stroke="#b76e00" stroke-width="1.5" points="0,12 12,11 24,12 36,10 48,11 60,10 72,9"/></svg>
+                </td>
+                <td><span class="pill amber">Watch</span></td>
+              </tr>
+              <tr>
+                <td><span class="name-cell"><span class="avatar-sm">JW</span> J. Walker</span></td>
+                <td>Metro Atlanta</td>
+                <td class="num">44</td>
+                <td class="num">69.3%</td>
+                <td>
+                  <svg width="80" height="20" viewBox="0 0 80 20"><polyline fill="none" stroke="#2e844a" stroke-width="1.5" points="0,12 12,11 24,9 36,9 48,8 60,7 72,6"/></svg>
+                </td>
+                <td><span class="pill blue">Stable</span></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- At-risk consumers -->
+      <section class="comp">
+        <header class="comp-head">
+          <h3>Top Consumers Flagged for Disengagement <span class="badge-ai">Predictive</span></h3>
+          <div class="actions"><button aria-label="More">&#8942;</button></div>
+        </header>
+        <div class="comp-body">
+          <table class="tbl">
+            <thead>
+              <tr>
+                <th>Consumer</th>
+                <th>Counselor</th>
+                <th>Plan Stage</th>
+                <th>Top Risk Driver</th>
+                <th>Risk Score</th>
+                <th>Recommended Action</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><span class="name-cell"><span class="avatar-sm">JC</span> J. Carter</span></td>
+                <td>R. Patel</td>
+                <td>Job Search</td>
+                <td>No contact 24 days</td>
+                <td><span class="risk-meter"><span class="bar"><span class="fill" style="width:86%;background:var(--sf-red);"></span></span><span class="lbl risk-lbl high">86</span></span></td>
+                <td><span class="pill purple">Outreach call</span></td>
+              </tr>
+              <tr>
+                <td><span class="name-cell"><span class="avatar-sm p">ML</span> M. Lin</span></td>
+                <td>S. Lin</td>
+                <td>Training</td>
+                <td>Missed 3 sessions</td>
+                <td><span class="risk-meter"><span class="bar"><span class="fill" style="width:79%;background:var(--sf-red);"></span></span><span class="lbl risk-lbl high">79</span></span></td>
+                <td><span class="pill purple">Transport check</span></td>
+              </tr>
+              <tr>
+                <td><span class="name-cell"><span class="avatar-sm g">DB</span> D. Brooks</span></td>
+                <td>D. Brooks</td>
+                <td>Eval Complete</td>
+                <td>Auth expiring &lt; 14 days</td>
+                <td><span class="risk-meter"><span class="bar"><span class="fill" style="width:73%;background:var(--sf-amber);"></span></span><span class="lbl risk-lbl med">73</span></span></td>
+                <td><span class="pill purple">Renew auth</span></td>
+              </tr>
+              <tr>
+                <td><span class="name-cell"><span class="avatar-sm a">SR</span> S. Reyes</span></td>
+                <td>M. Johnson</td>
+                <td>Plan Develop</td>
+                <td>Low session attendance</td>
+                <td><span class="risk-meter"><span class="bar"><span class="fill" style="width:71%;background:var(--sf-amber);"></span></span><span class="lbl risk-lbl med">71</span></span></td>
+                <td><span class="pill purple">Reschedule</span></td>
+              </tr>
+              <tr>
+                <td><span class="name-cell"><span class="avatar-sm">KN</span> K. Nguyen</span></td>
+                <td>K. Nguyen</td>
+                <td>Job Search</td>
+                <td>BEP placement delayed</td>
+                <td><span class="risk-meter"><span class="bar"><span class="fill" style="width:68%;background:var(--sf-amber);"></span></span><span class="lbl risk-lbl med">68</span></span></td>
+                <td><span class="pill purple">Match facility</span></td>
+              </tr>
+              <tr>
+                <td><span class="name-cell"><span class="avatar-sm g">AB</span> A. Burke</span></td>
+                <td>T. Cole</td>
+                <td>Stability</td>
+                <td>Wage drop reported</td>
+                <td><span class="risk-meter"><span class="bar"><span class="fill" style="width:64%;background:var(--sf-amber);"></span></span><span class="lbl risk-lbl med">64</span></span></td>
+                <td><span class="pill purple">Employer touch</span></td>
+              </tr>
+              <tr>
+                <td><span class="name-cell"><span class="avatar-sm p">EM</span> E. Morales</span></td>
+                <td>R. Patel</td>
+                <td>Eval</td>
+                <td>No assistive tech delivery</td>
+                <td><span class="risk-meter"><span class="bar"><span class="fill" style="width:58%;background:var(--sf-amber);"></span></span><span class="lbl risk-lbl med">58</span></span></td>
+                <td><span class="pill purple">Vendor follow-up</span></td>
+              </tr>
+            </tbody>
+          </table>
+          <div style="margin-top: 10px; font-size: 11px; color: var(--sf-gray-5);">Showing 7 of 147 flagged consumers &middot; Model: GVRA Disengagement v3.2</div>
+        </div>
+      </section>
+    </div>
+
+    <!-- Row: heatmap (placements) + drivers -->
+    <div class="row-2">
+
+      <!-- Placement heatmap -->
+      <section class="comp">
+        <header class="comp-head">
+          <h3>Placement Activity Heatmap by Region</h3>
+          <div class="actions"><button aria-label="More">&#8942;</button></div>
+        </header>
+        <div class="comp-body">
+          <div class="heat-grid" role="img" aria-label="Monthly placement counts by region">
+            <span></span>
+            <span class="hd">Jul</span><span class="hd">Aug</span><span class="hd">Sep</span><span class="hd">Oct</span><span class="hd">Nov</span><span class="hd">Dec</span><span class="hd">Jan</span><span class="hd">Feb</span><span class="hd">Mar</span><span class="hd">Apr</span><span class="hd">May</span><span class="hd">Jun</span>
+
+            <span class="row-lbl">Metro Atlanta</span>
+            <span class="heat-cell" style="background:#cfe5f9">22</span><span class="heat-cell" style="background:#a3d0f5">31</span><span class="heat-cell" style="background:#7eb9ee">38</span><span class="heat-cell" style="background:#56a2e6">45</span><span class="heat-cell" style="background:#369ada">52</span><span class="heat-cell" style="background:#1d8bd0;color:#fff">61</span><span class="heat-cell" style="background:#0176d3;color:#fff">68</span><span class="heat-cell" style="background:#0176d3;color:#fff">72</span><span class="heat-cell" style="background:#0163b6;color:#fff">78</span><span class="heat-cell" style="background:#014486;color:#fff">84</span><span class="heat-cell" style="background:#014486;color:#fff">81</span><span class="heat-cell" style="background:#0163b6;color:#fff">76</span>
+
+            <span class="row-lbl">North GA</span>
+            <span class="heat-cell" style="background:#eaf5fe">10</span><span class="heat-cell" style="background:#dceefb">14</span><span class="heat-cell" style="background:#cfe5f9">18</span><span class="heat-cell" style="background:#a3d0f5">23</span><span class="heat-cell" style="background:#7eb9ee">28</span><span class="heat-cell" style="background:#56a2e6">33</span><span class="heat-cell" style="background:#369ada">36</span><span class="heat-cell" style="background:#1d8bd0;color:#fff">40</span><span class="heat-cell" style="background:#0176d3;color:#fff">44</span><span class="heat-cell" style="background:#0163b6;color:#fff">48</span><span class="heat-cell" style="background:#0163b6;color:#fff">46</span><span class="heat-cell" style="background:#014486;color:#fff">42</span>
+
+            <span class="row-lbl">South GA</span>
+            <span class="heat-cell" style="background:#eaf5fe">8</span><span class="heat-cell" style="background:#dceefb">12</span><span class="heat-cell" style="background:#cfe5f9">15</span><span class="heat-cell" style="background:#a3d0f5">19</span><span class="heat-cell" style="background:#7eb9ee">22</span><span class="heat-cell" style="background:#56a2e6">26</span><span class="heat-cell" style="background:#369ada">28</span><span class="heat-cell" style="background:#1d8bd0;color:#fff">31</span><span class="heat-cell" style="background:#0176d3;color:#fff">34</span><span class="heat-cell" style="background:#0176d3;color:#fff">35</span><span class="heat-cell" style="background:#0163b6;color:#fff">37</span><span class="heat-cell" style="background:#0163b6;color:#fff">36</span>
+
+            <span class="row-lbl">Central</span>
+            <span class="heat-cell" style="background:#eaf5fe">9</span><span class="heat-cell" style="background:#dceefb">13</span><span class="heat-cell" style="background:#cfe5f9">16</span><span class="heat-cell" style="background:#a3d0f5">20</span><span class="heat-cell" style="background:#7eb9ee">23</span><span class="heat-cell" style="background:#56a2e6">27</span><span class="heat-cell" style="background:#369ada">29</span><span class="heat-cell" style="background:#1d8bd0;color:#fff">32</span><span class="heat-cell" style="background:#1d8bd0;color:#fff">33</span><span class="heat-cell" style="background:#0176d3;color:#fff">35</span><span class="heat-cell" style="background:#0176d3;color:#fff">34</span><span class="heat-cell" style="background:#0163b6;color:#fff">36</span>
+
+            <span class="row-lbl">Coastal</span>
+            <span class="heat-cell" style="background:#eaf5fe">6</span><span class="heat-cell" style="background:#dceefb">9</span><span class="heat-cell" style="background:#cfe5f9">12</span><span class="heat-cell" style="background:#a3d0f5">15</span><span class="heat-cell" style="background:#7eb9ee">18</span><span class="heat-cell" style="background:#56a2e6">21</span><span class="heat-cell" style="background:#369ada">23</span><span class="heat-cell" style="background:#369ada">24</span><span class="heat-cell" style="background:#1d8bd0;color:#fff">27</span><span class="heat-cell" style="background:#0176d3;color:#fff">29</span><span class="heat-cell" style="background:#0176d3;color:#fff">30</span><span class="heat-cell" style="background:#0163b6;color:#fff">32</span>
+
+            <span class="row-lbl">West GA</span>
+            <span class="heat-cell" style="background:#eaf5fe">7</span><span class="heat-cell" style="background:#dceefb">10</span><span class="heat-cell" style="background:#cfe5f9">13</span><span class="heat-cell" style="background:#a3d0f5">16</span><span class="heat-cell" style="background:#7eb9ee">19</span><span class="heat-cell" style="background:#56a2e6">22</span><span class="heat-cell" style="background:#369ada">24</span><span class="heat-cell" style="background:#1d8bd0;color:#fff">26</span><span class="heat-cell" style="background:#0176d3;color:#fff">28</span><span class="heat-cell" style="background:#0176d3;color:#fff">29</span><span class="heat-cell" style="background:#0163b6;color:#fff">31</span><span class="heat-cell" style="background:#0163b6;color:#fff">30</span>
+          </div>
+          <div class="heat-legend">
+            Less
+            <span class="scale">
+              <span style="background:#eaf5fe"></span>
+              <span style="background:#cfe5f9"></span>
+              <span style="background:#7eb9ee"></span>
+              <span style="background:#369ada"></span>
+              <span style="background:#0176d3"></span>
+              <span style="background:#014486"></span>
+            </span>
+            More &middot; values are monthly successful placements
+          </div>
+        </div>
+      </section>
+
+      <!-- Forecast drivers -->
+      <section class="comp">
+        <header class="comp-head">
+          <h3>What's Driving the Forecast <span class="badge-ai">Explainable AI</span></h3>
+          <div class="actions"><button aria-label="More">&#8942;</button></div>
+        </header>
+        <div class="comp-body">
+          <div style="font-size:12px;color:var(--sf-gray-5);margin-bottom:10px;">Top features influencing the FY26 expenditure forecast &mdash; SHAP contribution</div>
+          <div class="bar-list">
+            <div class="bl-row">
+              <div class="top"><span class="name">Job coaching utilization (rising)</span><span class="val">+$820K</span></div>
+              <div class="bl-bar"><div class="fill b5" style="width:82%"></div></div>
+            </div>
+            <div class="bl-row">
+              <div class="top"><span class="name">Assistive tech unit cost trend</span><span class="val">+$540K</span></div>
+              <div class="bl-bar"><div class="fill b4" style="width:60%"></div></div>
+            </div>
+            <div class="bl-row">
+              <div class="top"><span class="name">Higher consumer intake (West GA)</span><span class="val">+$310K</span></div>
+              <div class="bl-bar"><div class="fill b4" style="width:38%"></div></div>
+            </div>
+            <div class="bl-row">
+              <div class="top"><span class="name">Tuition rate increases (Spring)</span><span class="val">+$220K</span></div>
+              <div class="bl-bar"><div class="fill b1" style="width:28%"></div></div>
+            </div>
+            <div class="bl-row">
+              <div class="top"><span class="name">BEP route placements (cost-offset)</span><span class="val">-$190K</span></div>
+              <div class="bl-bar"><div class="fill b3" style="width:24%"></div></div>
+            </div>
+            <div class="bl-row">
+              <div class="top"><span class="name">Vocational eval volume (declining)</span><span class="val">-$140K</span></div>
+              <div class="bl-bar"><div class="fill b3" style="width:18%"></div></div>
+            </div>
+          </div>
+          <div style="margin-top:12px;font-size:11px;color:var(--sf-gray-5);line-height:1.5">
+            Net forecast lift: <strong style="color:var(--sf-amber)">+$1.56M</strong> vs authorized budget plan.
+            Model: GVRA Expenditure v2.4 &middot; Last trained May 06, 2026 &middot; MAPE 4.1%.
+          </div>
+        </div>
+      </section>
+    </div>
+
+    </div>
+
+  </main>
+
+  <footer class="footer-bar">
+    &copy; 2026 Georgia Vocational Rehabilitation Agency &middot; Analytics Cloud &middot; Predictive models powered by Einstein AI &middot; All data shown is illustrative.
+  </footer>
+
+  <script>
+    // Time range toggle
+    document.querySelectorAll('.range-toggle button').forEach(btn => {
+      btn.addEventListener('click', () => {
+        document.querySelectorAll('.range-toggle button').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+      });
+    });
+
+    // Region filter dropdown
+    (function () {
+      const dd = document.getElementById('regionFilter');
+      if (!dd) return;
+      const valueEl = document.getElementById('regionFilterValue');
+      const menu = dd.querySelector('.filter-menu');
+      const items = dd.querySelectorAll('.fm-item');
+
+      // Per-region KPI dataset
+      const REGION_KPIS = {
+        'All Regions': {
+          plansValue: '3,184', plansSub: 'Across 9 GVRA regions', plansDelta: '&uarr; 4.2% vs prior period', plansDeltaCls: 'delta up',
+          budgetValue: '$48.6M', budgetSub: '$31.4M committed &middot; $11.2M paid', budgetBar: '65%',
+          predictValue: '$50.3M', predictSub: 'Confidence: 92% &middot; 95% CI $48.9M&ndash;$51.7M', predictDelta: '&uarr; $1.7M over authorized', predictDeltaCls: 'delta warn',
+          riskValue: '147', riskSub: 'Consumers flagged this week', riskDelta: '&darr; 11% with outreach playbook', riskDeltaCls: 'delta down',
+          closureValue: '68.4%', closureSub: 'Target: 72% &middot; Trend: improving', closureBar: '68%', closureBarCls: 'fill warn'
+        },
+        'Metro Atlanta': {
+          plansValue: '1,024', plansSub: 'Fulton, DeKalb, Cobb, Gwinnett, Clayton', plansDelta: '&uarr; 5.8% vs prior period', plansDeltaCls: 'delta up',
+          budgetValue: '$15.6M', budgetSub: '$10.4M committed &middot; $3.9M paid', budgetBar: '72%',
+          predictValue: '$16.2M', predictSub: 'Confidence: 93% &middot; 95% CI $15.7M&ndash;$16.8M', predictDelta: '&uarr; $0.6M over authorized', predictDeltaCls: 'delta warn',
+          riskValue: '52', riskSub: 'Consumers flagged this week', riskDelta: '&darr; 14% with outreach playbook', riskDeltaCls: 'delta down',
+          closureValue: '71.2%', closureSub: 'Target: 72% &middot; Trend: improving', closureBar: '71%', closureBarCls: 'fill'
+        },
+        'North GA': {
+          plansValue: '552', plansSub: 'Hall, Forsyth, Cherokee, Pickens & 11 more', plansDelta: '&uarr; 3.1% vs prior period', plansDeltaCls: 'delta up',
+          budgetValue: '$8.4M', budgetSub: '$5.5M committed &middot; $1.9M paid', budgetBar: '65%',
+          predictValue: '$8.6M', predictSub: 'Confidence: 91% &middot; 95% CI $8.3M&ndash;$8.9M', predictDelta: '&uarr; $0.2M over authorized', predictDeltaCls: 'delta warn',
+          riskValue: '24', riskSub: 'Consumers flagged this week', riskDelta: '&darr; 9% with outreach playbook', riskDeltaCls: 'delta down',
+          closureValue: '67.8%', closureSub: 'Target: 72% &middot; Trend: stable', closureBar: '67%', closureBarCls: 'fill warn'
+        },
+        'South GA': {
+          plansValue: '438', plansSub: 'Lowndes, Thomas, Tift, Colquitt & 18 more', plansDelta: '&uarr; 2.4% vs prior period', plansDeltaCls: 'delta up',
+          budgetValue: '$6.7M', budgetSub: '$4.1M committed &middot; $1.5M paid', budgetBar: '60%',
+          predictValue: '$6.9M', predictSub: 'Confidence: 90% &middot; 95% CI $6.6M&ndash;$7.2M', predictDelta: '&uarr; $0.2M over authorized', predictDeltaCls: 'delta warn',
+          riskValue: '19', riskSub: 'Consumers flagged this week', riskDelta: '&darr; 7% with outreach playbook', riskDeltaCls: 'delta down',
+          closureValue: '65.4%', closureSub: 'Target: 72% &middot; Trend: improving', closureBar: '65%', closureBarCls: 'fill warn'
+        },
+        'Central': {
+          plansValue: '444', plansSub: 'Bibb, Houston, Baldwin, Laurens & 12 more', plansDelta: '&uarr; 4.7% vs prior period', plansDeltaCls: 'delta up',
+          budgetValue: '$6.8M', budgetSub: '$4.4M committed &middot; $1.6M paid', budgetBar: '64%',
+          predictValue: '$7.0M', predictSub: 'Confidence: 92% &middot; 95% CI $6.7M&ndash;$7.3M', predictDelta: '&uarr; $0.2M over authorized', predictDeltaCls: 'delta warn',
+          riskValue: '20', riskSub: 'Consumers flagged this week', riskDelta: '&darr; 12% with outreach playbook', riskDeltaCls: 'delta down',
+          closureValue: '69.1%', closureSub: 'Target: 72% &middot; Trend: improving', closureBar: '69%', closureBarCls: 'fill warn'
+        },
+        'Coastal': {
+          plansValue: '356', plansSub: 'Chatham, Glynn, Liberty, Camden & 8 more', plansDelta: '&uarr; 3.9% vs prior period', plansDeltaCls: 'delta up',
+          budgetValue: '$5.4M', budgetSub: '$3.4M committed &middot; $1.2M paid', budgetBar: '63%',
+          predictValue: '$5.5M', predictSub: 'Confidence: 91% &middot; 95% CI $5.3M&ndash;$5.7M', predictDelta: '&uarr; $0.1M over authorized', predictDeltaCls: 'delta warn',
+          riskValue: '15', riskSub: 'Consumers flagged this week', riskDelta: '&darr; 10% with outreach playbook', riskDeltaCls: 'delta down',
+          closureValue: '70.5%', closureSub: 'Target: 72% &middot; Trend: improving', closureBar: '70%', closureBarCls: 'fill warn'
+        },
+        'West GA': {
+          plansValue: '370', plansSub: 'Muscogee, Troup, Carroll, Coweta & 10 more', plansDelta: '&uarr; 2.8% vs prior period', plansDeltaCls: 'delta up',
+          budgetValue: '$5.7M', budgetSub: '$3.7M committed &middot; $1.3M paid', budgetBar: '62%',
+          predictValue: '$5.9M', predictSub: 'Confidence: 90% &middot; 95% CI $5.6M&ndash;$6.2M', predictDelta: '&uarr; $0.2M over authorized', predictDeltaCls: 'delta warn',
+          riskValue: '17', riskSub: 'Consumers flagged this week', riskDelta: '&darr; 8% with outreach playbook', riskDeltaCls: 'delta down',
+          closureValue: '66.3%', closureSub: 'Target: 72% &middot; Trend: stable', closureBar: '66%', closureBarCls: 'fill warn'
+        }
+      };
+
+      function applyRegion(name) {
+        const data = REGION_KPIS[name];
+        if (!data) return;
+        document.querySelectorAll('[data-kpi]').forEach(el => {
+          const key = el.getAttribute('data-kpi');
+          if (!(key in data)) return;
+          if (key.endsWith('Bar')) {
+            el.style.width = data[key];
+          } else {
+            el.innerHTML = data[key];
+          }
+        });
+        // Apply class swaps for delta + bar where present
+        const map = [
+          ['plansDelta', 'plansDeltaCls'],
+          ['predictDelta', 'predictDeltaCls'],
+          ['riskDelta', 'riskDeltaCls'],
+          ['closureBar', 'closureBarCls']
+        ];
+        map.forEach(([elKey, clsKey]) => {
+          if (!data[clsKey]) return;
+          const el = document.querySelector('[data-kpi="' + elKey + '"]');
+          if (el) el.className = data[clsKey];
+        });
+      }
+
+      function closeMenu() {
+        dd.classList.remove('open');
+        dd.setAttribute('aria-expanded', 'false');
+      }
+      function openMenu() {
+        dd.classList.add('open');
+        dd.setAttribute('aria-expanded', 'true');
+      }
+
+      dd.addEventListener('click', (e) => {
+        // Toggle when clicking the chip itself (not a menu item)
+        if (e.target.closest('.fm-item')) return;
+        if (dd.classList.contains('open')) closeMenu(); else openMenu();
+      });
+
+      items.forEach(item => {
+        item.addEventListener('click', (e) => {
+          e.stopPropagation();
+          items.forEach(i => {
+            i.classList.remove('selected');
+            const c = i.querySelector('.check');
+            if (c) c.innerHTML = '';
+          });
+          item.classList.add('selected');
+          const c = item.querySelector('.check');
+          if (c) c.innerHTML = '&#10003;';
+          const value = item.getAttribute('data-value');
+          valueEl.textContent = value;
+          applyRegion(value);
+          closeMenu();
+        });
+      });
+
+      document.addEventListener('click', (e) => {
+        if (!dd.contains(e.target)) closeMenu();
+      });
+      document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape') closeMenu();
+      });
+    })();
+  </script>
+</body>
+</html>
