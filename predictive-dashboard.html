@@ -580,7 +580,6 @@
     <span class="filter">Plan Status: <strong style="margin-left:4px;">Active</strong> <span class="ic" aria-hidden="true">&#9662;</span></span>
     <span class="filter">Funding Source: <strong style="margin-left:4px;">All</strong> <span class="ic" aria-hidden="true">&#9662;</span></span>
     <span class="filter active">Consumer Type: <strong style="margin-left:4px;">Blind / Low Vision</strong> <span class="x" aria-hidden="true">&times;</span></span>
-    <span class="filter">Disability Cohort: <strong style="margin-left:4px;">All</strong> <span class="ic" aria-hidden="true">&#9662;</span></span>
     <span class="filter">+ Add Filter</span>
     <span class="filter-spacer"></span>
     <div class="range-toggle" role="group" aria-label="Time range">
@@ -613,7 +612,6 @@
         <div class="label">Predicted FY-End Spend <span class="badge-ai">Einstein</span></div>
         <div class="value" data-kpi="predictValue">$50.3M</div>
         <div class="sub" data-kpi="predictSub">Confidence: 92% &middot; 95% CI $48.9M&ndash;$51.7M</div>
-        <div class="delta warn" data-kpi="predictDelta">&uarr; $1.7M over authorized</div>
       </div>
       <div class="kpi">
         <div class="label">Disengagement Risk <span class="badge-ai">AI</span></div>
@@ -642,7 +640,7 @@
           </div>
         </header>
         <div class="comp-body chart-wrap">
-          <svg viewBox="0 0 760 300" role="img" aria-label="Predictive expenditure line chart showing actual spend vs forecast vs budget">
+          <svg id="expChart" viewBox="0 0 760 300" role="img" aria-label="Predictive expenditure line chart showing actual spend vs forecast vs budget">
             <!-- gridlines -->
             <g stroke="#ecebea" stroke-width="1">
               <line x1="50" y1="40"  x2="740" y2="40"/>
@@ -773,7 +771,7 @@
       <!-- Active plan forecast -->
       <section class="comp">
         <header class="comp-head">
-          <h3>Active Plan Forecast &mdash; IPE-2026-552 <span class="badge-ai">Predictive</span></h3>
+          <h3>Active Plan Forecast &mdash; IPE-2026-552</h3>
           <div class="actions">
             <button aria-label="More">&#8942;</button>
           </div>
@@ -854,7 +852,7 @@
       <!-- Disengagement risk donut -->
       <section class="comp">
         <header class="comp-head">
-          <h3>Disengagement Risk Distribution <span class="badge-ai">AI</span></h3>
+          <h3>Disengagement Risk Distribution</h3>
           <div class="actions"><button aria-label="More">&#8942;</button></div>
         </header>
         <div class="comp-body">
@@ -990,7 +988,7 @@
       <!-- At-risk consumers -->
       <section class="comp">
         <header class="comp-head">
-          <h3>Top Consumers Flagged for Disengagement <span class="badge-ai">Predictive</span></h3>
+          <h3>Top Consumers Flagged for Disengagement</h3>
           <div class="actions"><button aria-label="More">&#8942;</button></div>
         </header>
         <div class="comp-body">
@@ -1119,7 +1117,7 @@
       <!-- Forecast drivers -->
       <section class="comp">
         <header class="comp-head">
-          <h3>What's Driving the Forecast <span class="badge-ai">Explainable AI</span></h3>
+          <h3>What's Driving the Forecast</h3>
           <div class="actions"><button aria-label="More">&#8942;</button></div>
         </header>
         <div class="comp-body">
@@ -1188,49 +1186,49 @@
         'All Regions': {
           plansValue: '3,184', plansSub: 'Across 9 GVRA regions', plansDelta: '&uarr; 4.2% vs prior period', plansDeltaCls: 'delta up',
           budgetValue: '$48.6M', budgetSub: '$31.4M committed &middot; $11.2M paid', budgetBar: '65%',
-          predictValue: '$50.3M', predictSub: 'Confidence: 92% &middot; 95% CI $48.9M&ndash;$51.7M', predictDelta: '&uarr; $1.7M over authorized', predictDeltaCls: 'delta warn',
+          predictValue: '$50.3M', predictSub: 'Confidence: 92% &middot; 95% CI $48.9M&ndash;$51.7M',
           riskValue: '147', riskSub: 'Consumers flagged this week', riskDelta: '&darr; 11% with outreach playbook', riskDeltaCls: 'delta down',
           closureValue: '68.4%', closureSub: 'Target: 72% &middot; Trend: improving', closureBar: '68%', closureBarCls: 'fill warn'
         },
         'Metro Atlanta': {
           plansValue: '1,024', plansSub: 'Fulton, DeKalb, Cobb, Gwinnett, Clayton', plansDelta: '&uarr; 5.8% vs prior period', plansDeltaCls: 'delta up',
           budgetValue: '$15.6M', budgetSub: '$10.4M committed &middot; $3.9M paid', budgetBar: '72%',
-          predictValue: '$16.2M', predictSub: 'Confidence: 93% &middot; 95% CI $15.7M&ndash;$16.8M', predictDelta: '&uarr; $0.6M over authorized', predictDeltaCls: 'delta warn',
+          predictValue: '$16.2M', predictSub: 'Confidence: 93% &middot; 95% CI $15.7M&ndash;$16.8M',
           riskValue: '52', riskSub: 'Consumers flagged this week', riskDelta: '&darr; 14% with outreach playbook', riskDeltaCls: 'delta down',
           closureValue: '71.2%', closureSub: 'Target: 72% &middot; Trend: improving', closureBar: '71%', closureBarCls: 'fill'
         },
         'North GA': {
           plansValue: '552', plansSub: 'Hall, Forsyth, Cherokee, Pickens & 11 more', plansDelta: '&uarr; 3.1% vs prior period', plansDeltaCls: 'delta up',
           budgetValue: '$8.4M', budgetSub: '$5.5M committed &middot; $1.9M paid', budgetBar: '65%',
-          predictValue: '$8.6M', predictSub: 'Confidence: 91% &middot; 95% CI $8.3M&ndash;$8.9M', predictDelta: '&uarr; $0.2M over authorized', predictDeltaCls: 'delta warn',
+          predictValue: '$8.6M', predictSub: 'Confidence: 91% &middot; 95% CI $8.3M&ndash;$8.9M',
           riskValue: '24', riskSub: 'Consumers flagged this week', riskDelta: '&darr; 9% with outreach playbook', riskDeltaCls: 'delta down',
           closureValue: '67.8%', closureSub: 'Target: 72% &middot; Trend: stable', closureBar: '67%', closureBarCls: 'fill warn'
         },
         'South GA': {
           plansValue: '438', plansSub: 'Lowndes, Thomas, Tift, Colquitt & 18 more', plansDelta: '&uarr; 2.4% vs prior period', plansDeltaCls: 'delta up',
           budgetValue: '$6.7M', budgetSub: '$4.1M committed &middot; $1.5M paid', budgetBar: '60%',
-          predictValue: '$6.9M', predictSub: 'Confidence: 90% &middot; 95% CI $6.6M&ndash;$7.2M', predictDelta: '&uarr; $0.2M over authorized', predictDeltaCls: 'delta warn',
+          predictValue: '$6.9M', predictSub: 'Confidence: 90% &middot; 95% CI $6.6M&ndash;$7.2M',
           riskValue: '19', riskSub: 'Consumers flagged this week', riskDelta: '&darr; 7% with outreach playbook', riskDeltaCls: 'delta down',
           closureValue: '65.4%', closureSub: 'Target: 72% &middot; Trend: improving', closureBar: '65%', closureBarCls: 'fill warn'
         },
         'Central': {
           plansValue: '444', plansSub: 'Bibb, Houston, Baldwin, Laurens & 12 more', plansDelta: '&uarr; 4.7% vs prior period', plansDeltaCls: 'delta up',
           budgetValue: '$6.8M', budgetSub: '$4.4M committed &middot; $1.6M paid', budgetBar: '64%',
-          predictValue: '$7.0M', predictSub: 'Confidence: 92% &middot; 95% CI $6.7M&ndash;$7.3M', predictDelta: '&uarr; $0.2M over authorized', predictDeltaCls: 'delta warn',
+          predictValue: '$7.0M', predictSub: 'Confidence: 92% &middot; 95% CI $6.7M&ndash;$7.3M',
           riskValue: '20', riskSub: 'Consumers flagged this week', riskDelta: '&darr; 12% with outreach playbook', riskDeltaCls: 'delta down',
           closureValue: '69.1%', closureSub: 'Target: 72% &middot; Trend: improving', closureBar: '69%', closureBarCls: 'fill warn'
         },
         'Coastal': {
           plansValue: '356', plansSub: 'Chatham, Glynn, Liberty, Camden & 8 more', plansDelta: '&uarr; 3.9% vs prior period', plansDeltaCls: 'delta up',
           budgetValue: '$5.4M', budgetSub: '$3.4M committed &middot; $1.2M paid', budgetBar: '63%',
-          predictValue: '$5.5M', predictSub: 'Confidence: 91% &middot; 95% CI $5.3M&ndash;$5.7M', predictDelta: '&uarr; $0.1M over authorized', predictDeltaCls: 'delta warn',
+          predictValue: '$5.5M', predictSub: 'Confidence: 91% &middot; 95% CI $5.3M&ndash;$5.7M',
           riskValue: '15', riskSub: 'Consumers flagged this week', riskDelta: '&darr; 10% with outreach playbook', riskDeltaCls: 'delta down',
           closureValue: '70.5%', closureSub: 'Target: 72% &middot; Trend: improving', closureBar: '70%', closureBarCls: 'fill warn'
         },
         'West GA': {
           plansValue: '370', plansSub: 'Muscogee, Troup, Carroll, Coweta & 10 more', plansDelta: '&uarr; 2.8% vs prior period', plansDeltaCls: 'delta up',
           budgetValue: '$5.7M', budgetSub: '$3.7M committed &middot; $1.3M paid', budgetBar: '62%',
-          predictValue: '$5.9M', predictSub: 'Confidence: 90% &middot; 95% CI $5.6M&ndash;$6.2M', predictDelta: '&uarr; $0.2M over authorized', predictDeltaCls: 'delta warn',
+          predictValue: '$5.9M', predictSub: 'Confidence: 90% &middot; 95% CI $5.6M&ndash;$6.2M',
           riskValue: '17', riskSub: 'Consumers flagged this week', riskDelta: '&darr; 8% with outreach playbook', riskDeltaCls: 'delta down',
           closureValue: '66.3%', closureSub: 'Target: 72% &middot; Trend: stable', closureBar: '66%', closureBarCls: 'fill warn'
         }
@@ -1260,7 +1258,113 @@
           const el = document.querySelector('[data-kpi="' + elKey + '"]');
           if (el) el.className = data[clsKey];
         });
+        renderExpenditureChart(name);
       }
+
+      // ── Predictive Expenditure chart per region ──
+      // Cumulative monthly spend $M for Jul..Jun (index 6 = Jan = "today" anchor).
+      // Anchored so months[6] ≈ KPI "committed", months[11] = KPI "Predicted FY-End Spend",
+      // budget = KPI "FY26 Authorized Budget".
+      const REGION_CHART = {
+        'All Regions':    { months: [4.5, 9.2, 14.0, 19.0, 24.2, 28.8, 31.4, 35.0, 39.0, 43.0, 47.0, 50.3], budget: 48.6, projLabel: '$50.3M' },
+        'Metro Atlanta':  { months: [1.5, 3.0, 4.6, 6.2, 7.9,  9.4,  10.4, 11.6, 12.9, 14.2, 15.4, 16.2], budget: 15.6, projLabel: '$16.2M' },
+        'North GA':       { months: [0.8, 1.6, 2.5, 3.4, 4.3,  5.0,  5.5,  6.1,  6.8,  7.4,  8.1,  8.6 ], budget: 8.4,  projLabel: '$8.6M'  },
+        'South GA':       { months: [0.6, 1.2, 1.9, 2.5, 3.2,  3.7,  4.1,  4.6,  5.2,  5.7,  6.4,  6.9 ], budget: 6.7,  projLabel: '$6.9M'  },
+        'Central':        { months: [0.6, 1.3, 2.0, 2.7, 3.4,  4.0,  4.4,  4.9,  5.5,  6.0,  6.5,  7.0 ], budget: 6.8,  projLabel: '$7.0M'  },
+        'Coastal':        { months: [0.5, 1.0, 1.5, 2.1, 2.6,  3.1,  3.4,  3.8,  4.3,  4.7,  5.1,  5.5 ], budget: 5.4,  projLabel: '$5.5M'  },
+        'West GA':        { months: [0.5, 1.1, 1.7, 2.3, 2.9,  3.4,  3.7,  4.2,  4.6,  5.1,  5.5,  5.9 ], budget: 5.7,  projLabel: '$5.9M'  }
+      };
+      const CHART_X = [80,140,200,260,320,380,440,500,560,620,680,740];
+      // Pick a "nice" axis maximum and step (round up to next multiple)
+      function niceStep(maxValue) {
+        const targetSteps = 5;
+        const raw = maxValue / targetSteps;
+        const pow10 = Math.pow(10, Math.floor(Math.log10(raw)));
+        const candidates = [1, 2, 2.5, 5, 10].map(c => c * pow10);
+        return candidates.find(c => c >= raw) || pow10 * 10;
+      }
+      function buildAxis(cfg) {
+        const peak = Math.max(cfg.budget, ...cfg.months) * 1.12;
+        const step = niceStep(peak);
+        const yMax = Math.ceil(peak / step) * step;
+        return { yMin: 0, yMax, step };
+      }
+      function fmtMoney(v) {
+        if (v >= 10) return '$' + v.toFixed(0) + 'M';
+        return '$' + v.toFixed(1) + 'M';
+      }
+      function makeValToY(axis) {
+        return (v) => 280 - ((v - axis.yMin) / (axis.yMax - axis.yMin)) * 240;
+      }
+      function renderExpenditureChart(name) {
+        const cfg = REGION_CHART[name] || REGION_CHART['All Regions'];
+        const svg = document.getElementById('expChart');
+        if (!svg) return;
+
+        const axis = buildAxis(cfg);
+        const valToY = makeValToY(axis);
+        const ys = cfg.months.map(valToY);
+        const budgetY = valToY(cfg.budget);
+
+        // Build y-axis labels at each step
+        const labels = [];
+        for (let v = axis.yMin; v <= axis.yMax + 0.001; v += axis.step) {
+          labels.push({ v, y: valToY(v) });
+        }
+
+        const actualsPts = ys.slice(0, 7).map((y, i) => `${CHART_X[i]},${y}`).join(' ');
+        const forecastPts = ys.slice(6).map((y, i) => `${CHART_X[i + 6]},${y}`).join(' ');
+        // Confidence band ±8% widening to ±14%
+        const bandTop = []; const bandBot = [];
+        for (let i = 6; i < 12; i++) {
+          const spread = 0.08 + (i - 6) * 0.012;
+          bandTop.push(`${CHART_X[i]} ${valToY(cfg.months[i] * (1 + spread))}`);
+          bandBot.push(`${CHART_X[i]} ${valToY(cfg.months[i] * (1 - spread))}`);
+        }
+        const bandPath = 'M ' + bandTop.join(' L ') + ' L ' + bandBot.reverse().join(' L ') + ' Z';
+        const areaPath = 'M ' + ys.slice(0, 7).map((y, i) => `${CHART_X[i]} ${y}`).join(' L ')
+          + ` L ${CHART_X[6]} 280 L ${CHART_X[0]} 280 Z`;
+        const endY = ys[11];
+        const labelY = Math.max(56, Math.min(endY - 22, 240));
+
+        const gridLines = labels.map(l => `<line x1="50" y1="${l.y}" x2="740" y2="${l.y}"/>`).join('');
+        const axisLabels = labels.map(l => `<text x="40" y="${l.y + 4}" text-anchor="end">${fmtMoney(l.v)}</text>`).join('');
+
+        svg.innerHTML = `
+          <g stroke="#ecebea" stroke-width="1">${gridLines}</g>
+          <g fill="#706e6b" font-size="10" font-family="inherit">${axisLabels}</g>
+          <g fill="#706e6b" font-size="10" font-family="inherit" text-anchor="middle">
+            <text x="80"  y="296">Jul</text><text x="140" y="296">Aug</text><text x="200" y="296">Sep</text>
+            <text x="260" y="296">Oct</text><text x="320" y="296">Nov</text><text x="380" y="296">Dec</text>
+            <text x="440" y="296">Jan</text><text x="500" y="296">Feb</text><text x="560" y="296">Mar</text>
+            <text x="620" y="296">Apr</text><text x="680" y="296">May</text><text x="740" y="296">Jun</text>
+          </g>
+          <path d="${bandPath}" fill="rgba(88,103,232,.12)" stroke="rgba(88,103,232,.4)" stroke-dasharray="3 3"/>
+          <line x1="50" y1="${budgetY}" x2="740" y2="${budgetY}" stroke="#b76e00" stroke-width="2" stroke-dasharray="6 4"/>
+          <text x="730" y="${budgetY - 6}" fill="#b76e00" font-size="10" font-weight="700" text-anchor="end" font-family="inherit">Authorized Budget Plan ${fmtMoney(cfg.budget)}</text>
+          <path d="${areaPath}" fill="rgba(1,118,211,.08)"/>
+          <polyline fill="none" stroke="#0176d3" stroke-width="2.5" points="${actualsPts}"/>
+          <polyline fill="none" stroke="#5867e8" stroke-width="2.5" stroke-dasharray="5 4" points="${forecastPts}"/>
+          <g fill="#0176d3">
+            ${ys.slice(0, 6).map((y, i) => `<circle cx="${CHART_X[i]}" cy="${y}" r="3.5"/>`).join('')}
+            <circle cx="${CHART_X[6]}" cy="${ys[6]}" r="4.5" stroke="#fff" stroke-width="2"/>
+          </g>
+          <g fill="#5867e8">
+            ${ys.slice(7, 11).map((y, i) => `<circle cx="${CHART_X[i + 7]}" cy="${y}" r="3.5"/>`).join('')}
+            <circle cx="${CHART_X[11]}" cy="${ys[11]}" r="4" stroke="#fff" stroke-width="2"/>
+          </g>
+          <g>
+            <rect x="640" y="${labelY}" width="100" height="32" rx="4" fill="#5867e8"/>
+            <text x="690" y="${labelY + 15}" fill="#fff" font-size="10" text-anchor="middle" font-family="inherit">Projected Jun</text>
+            <text x="690" y="${labelY + 27}" fill="#fff" font-size="12" font-weight="700" text-anchor="middle" font-family="inherit">${cfg.projLabel}</text>
+          </g>
+          <line x1="440" y1="40" x2="440" y2="280" stroke="#706e6b" stroke-width="1" stroke-dasharray="2 3"/>
+          <text x="444" y="52" fill="#706e6b" font-size="10" font-family="inherit">Today</text>
+        `;
+      }
+
+      // Render initial state (All Regions)
+      renderExpenditureChart('All Regions');
 
       function closeMenu() {
         dd.classList.remove('open');
