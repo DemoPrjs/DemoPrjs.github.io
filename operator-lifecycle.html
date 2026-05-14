@@ -1,0 +1,908 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Operator Case — BEP-1042 Marcus Allen | GVRA</title>
+  <meta name="description" content="Salesforce-style operator case lifecycle for the GVRA Business Enterprise Program — certification & training history, VR-origin case behavior, and VR/BEP funds coordination." />
+  <style>
+    /* ── Salesforce-style tokens ── */
+    :root {
+      --sf-blue:        #0176d3;
+      --sf-blue-mid:    #1b96ff;
+      --sf-blue-deep:   #032d60;
+      --sf-blue-light:  #eaf5fe;
+      --sf-purple:      #5867e8;
+      --sf-green:       #2e844a;
+      --sf-green-light: #ddf3e4;
+      --sf-amber:       #b76e00;
+      --sf-amber-light: #fef0c3;
+      --sf-red:         #ba0517;
+      --sf-red-light:   #feded8;
+      --sf-gray-1:      #f3f3f3;
+      --sf-gray-2:      #ecebea;
+      --sf-gray-3:      #c9c7c5;
+      --sf-gray-5:      #706e6b;
+      --sf-gray-6:      #444241;
+      --sf-charcoal:    #181818;
+      --sf-border:      #dddbda;
+      --sf-bg:          #f3f2f2;
+      --sf-card:        #ffffff;
+      --sf-shadow-sm:   0 1px 3px rgba(0,0,0,0.04);
+      --sf-shadow-md:   0 2px 6px rgba(0,0,0,0.08);
+    }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: 'Salesforce Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Arial, sans-serif;
+      color: var(--sf-charcoal);
+      background: var(--sf-bg);
+      font-size: 13px;
+      line-height: 1.45;
+    }
+    a { color: var(--sf-blue); text-decoration: none; }
+    a:hover { text-decoration: underline; }
+    button { font-family: inherit; cursor: pointer; }
+
+    /* ── Global Header ── */
+    .global-header {
+      background: #fff;
+      border-bottom: 1px solid var(--sf-border);
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 10px 20px;
+      height: 64px;
+      position: sticky; top: 0; z-index: 100;
+    }
+    .gh-brand { display: flex; align-items: center; gap: 10px; }
+    .gh-brand img { height: 44px; width: auto; display: block; }
+    .gh-right { display: flex; align-items: center; gap: 12px; }
+    .gh-icon {
+      width: 32px; height: 32px; border-radius: 4px; border: none;
+      background: transparent; color: var(--sf-gray-6);
+      display: inline-flex; align-items: center; justify-content: center;
+      font-size: 16px;
+    }
+    .gh-icon:hover { background: var(--sf-gray-1); }
+    .gh-avatar {
+      width: 32px; height: 32px; border-radius: 50%;
+      background: var(--sf-blue-deep); color: #fff;
+      display: inline-flex; align-items: center; justify-content: center;
+      font-size: 12px; font-weight: 700;
+    }
+
+    /* ── App bar (object tabs) ── */
+    .app-bar {
+      background: #fff; border-bottom: 1px solid var(--sf-border);
+      padding: 0 20px;
+      display: flex; align-items: stretch; gap: 0;
+      overflow-x: auto;
+    }
+    .app-bar .app-name {
+      display: inline-flex; align-items: center; gap: 8px;
+      padding: 10px 16px 10px 0; margin-right: 14px;
+      font-weight: 700; color: var(--sf-blue-deep); font-size: 14px;
+      border-right: 1px solid var(--sf-border);
+    }
+    .app-bar .app-name::before {
+      content: '';
+      width: 18px; height: 18px; border-radius: 4px;
+      background: var(--sf-blue); display: inline-block;
+    }
+    .app-tab {
+      padding: 12px 14px; font-size: 13px; font-weight: 600;
+      color: var(--sf-gray-6); white-space: nowrap;
+      border-bottom: 3px solid transparent;
+    }
+    .app-tab:hover { color: var(--sf-blue); text-decoration: none; }
+    .app-tab.active {
+      color: var(--sf-blue); border-bottom-color: var(--sf-blue);
+    }
+
+    /* ── Highlights bar (record header) ── */
+    .highlights {
+      background: #fff;
+      border-bottom: 1px solid var(--sf-border);
+      padding: 14px 20px 0;
+    }
+    .hl-top {
+      display: flex; align-items: flex-start; justify-content: space-between;
+      gap: 16px; margin-bottom: 14px;
+    }
+    .hl-icon {
+      width: 44px; height: 44px; border-radius: 6px;
+      background: var(--sf-blue); color: #fff;
+      display: inline-flex; align-items: center; justify-content: center;
+      font-size: 22px; flex-shrink: 0;
+    }
+    .hl-id {
+      font-size: 12px; color: var(--sf-gray-5); font-weight: 600;
+      text-transform: uppercase; letter-spacing: 0.04em;
+    }
+    .hl-title {
+      font-size: 18px; font-weight: 700; color: var(--sf-charcoal);
+      margin-top: 2px;
+    }
+    .hl-actions { display: flex; gap: 8px; flex-wrap: wrap; }
+    .btn {
+      padding: 6px 14px; border-radius: 4px; font-size: 13px; font-weight: 600;
+      border: 1px solid var(--sf-border); background: #fff; color: var(--sf-charcoal);
+    }
+    .btn:hover { background: var(--sf-gray-1); }
+    .btn.primary { background: var(--sf-blue); color: #fff; border-color: var(--sf-blue); }
+    .btn.primary:hover { background: #014486; border-color: #014486; }
+    .hl-fields {
+      display: grid; grid-template-columns: repeat(6, 1fr); gap: 16px;
+      padding: 8px 0 16px;
+    }
+    .hl-field .lbl { font-size: 11px; color: var(--sf-gray-5); font-weight: 600; }
+    .hl-field .val { font-size: 13px; color: var(--sf-charcoal); margin-top: 2px; font-weight: 500; }
+    .hl-field .val a { color: var(--sf-blue); }
+
+    /* ── Path / chevron flow ── */
+    .path-wrap {
+      background: #fff;
+      border-bottom: 1px solid var(--sf-border);
+      padding: 14px 20px;
+    }
+    .path {
+      display: flex; align-items: center; gap: 0;
+      background: var(--sf-gray-2);
+      border-radius: 4px;
+      overflow: hidden;
+      flex-wrap: nowrap;
+    }
+    .path-step {
+      flex: 1;
+      position: relative;
+      padding: 10px 18px 10px 30px;
+      background: var(--sf-gray-2);
+      color: var(--sf-gray-6);
+      font-size: 13px; font-weight: 600;
+      text-align: center;
+      clip-path: polygon(0 0, calc(100% - 14px) 0, 100% 50%, calc(100% - 14px) 100%, 0 100%, 14px 50%);
+      margin-right: -10px;
+      white-space: nowrap;
+    }
+    .path-step:first-child {
+      clip-path: polygon(0 0, calc(100% - 14px) 0, 100% 50%, calc(100% - 14px) 100%, 0 100%);
+      padding-left: 18px;
+    }
+    .path-step:last-child {
+      clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%, 14px 50%);
+      margin-right: 0;
+    }
+    .path-step.complete {
+      background: #c9e8d4;
+      color: var(--sf-green);
+    }
+    .path-step.current {
+      background: var(--sf-blue-deep);
+      color: #fff;
+    }
+    .path-step .check { margin-right: 6px; font-size: 12px; }
+    .path-actions { display: flex; align-items: center; gap: 10px; margin-top: 10px; }
+    .path-key {
+      font-size: 12px; color: var(--sf-gray-5); display: inline-flex; align-items: center; gap: 6px;
+    }
+    .path-key .dot { width: 8px; height: 8px; border-radius: 50%; display: inline-block; }
+    .key-complete .dot { background: #c9e8d4; }
+    .key-current  .dot { background: var(--sf-blue-deep); }
+    .key-upcoming .dot { background: var(--sf-gray-2); }
+
+    /* ── Two-column body ── */
+    .body {
+      display: grid; grid-template-columns: 1fr 360px;
+      gap: 16px; padding: 16px 20px 40px;
+    }
+    @media (max-width: 1100px) {
+      .body { grid-template-columns: 1fr; }
+      .hl-fields { grid-template-columns: repeat(3, 1fr); }
+    }
+
+    /* ── Card ── */
+    .card {
+      background: #fff;
+      border: 1px solid var(--sf-border);
+      border-radius: 4px;
+      box-shadow: var(--sf-shadow-sm);
+      margin-bottom: 16px;
+    }
+    .card-head {
+      padding: 12px 16px;
+      display: flex; align-items: center; justify-content: space-between;
+      border-bottom: 1px solid var(--sf-border);
+    }
+    .card-head h3 {
+      font-size: 14px; font-weight: 700; color: var(--sf-charcoal);
+      display: inline-flex; align-items: center; gap: 8px;
+    }
+    .card-head .badge {
+      display: inline-flex; align-items: center; gap: 4px;
+      background: var(--sf-blue-light); color: var(--sf-blue-deep);
+      padding: 2px 8px; border-radius: 100px;
+      font-size: 11px; font-weight: 600;
+    }
+    .card-head .actions { display: flex; gap: 6px; }
+    .card-head button {
+      width: 28px; height: 28px; border: none; background: transparent;
+      border-radius: 4px; color: var(--sf-gray-6); font-size: 14px;
+    }
+    .card-head button:hover { background: var(--sf-gray-1); }
+    .card-body { padding: 16px; }
+
+    /* ── Tab strip inside card ── */
+    .tab-strip {
+      display: flex; gap: 0; border-bottom: 1px solid var(--sf-border);
+      padding: 0 16px; overflow-x: auto;
+    }
+    .tab-strip a {
+      padding: 12px 14px; font-size: 13px; font-weight: 600;
+      color: var(--sf-gray-6); white-space: nowrap;
+      border-bottom: 3px solid transparent;
+    }
+    .tab-strip a:hover { text-decoration: none; color: var(--sf-blue); }
+    .tab-strip a.active { color: var(--sf-blue); border-bottom-color: var(--sf-blue); }
+
+    /* ── AI summary card ── */
+    .ai-card {
+      background: linear-gradient(135deg, #eaf5fe 0%, #f0eafe 100%);
+      border: 1px solid #d4e6f8;
+      border-radius: 4px;
+      padding: 14px 16px;
+      margin-bottom: 16px;
+    }
+    .ai-card .ai-head {
+      display: flex; align-items: center; gap: 8px;
+      font-size: 14px; font-weight: 700; color: var(--sf-blue-deep);
+      margin-bottom: 8px;
+    }
+    .ai-card .ai-head .sparkle { color: var(--sf-purple); font-size: 16px; }
+    .ai-card p { font-size: 13px; color: var(--sf-gray-6); line-height: 1.55; }
+    .ai-card .ai-meta {
+      display: flex; align-items: center; gap: 10px; margin-top: 8px;
+      font-size: 11px; color: var(--sf-gray-5);
+    }
+    .ai-card .ai-meta .conf {
+      background: rgba(88,103,232,0.12); color: var(--sf-purple);
+      padding: 2px 8px; border-radius: 100px; font-weight: 700;
+    }
+
+    /* ── Field grid ── */
+    .field-grid {
+      display: grid; grid-template-columns: 1fr 1fr; gap: 14px 24px;
+    }
+    .field {
+      border-bottom: 1px solid var(--sf-gray-2);
+      padding-bottom: 10px;
+    }
+    .field .lbl {
+      font-size: 11px; color: var(--sf-gray-5); font-weight: 700;
+      text-transform: uppercase; letter-spacing: 0.04em; margin-bottom: 4px;
+    }
+    .field .val { font-size: 13px; color: var(--sf-charcoal); }
+    .field .val.link { color: var(--sf-blue); }
+    .field .val .pill {
+      display: inline-flex; align-items: center; gap: 4px;
+      padding: 2px 8px; border-radius: 100px; font-size: 11px; font-weight: 600;
+    }
+    .field .val .pill.green { background: var(--sf-green-light); color: var(--sf-green); }
+    .field .val .pill.amber { background: var(--sf-amber-light); color: var(--sf-amber); }
+    .field .val .pill.blue  { background: var(--sf-blue-light);  color: var(--sf-blue-deep); }
+
+    /* ── Section header inside card ── */
+    .section-h {
+      font-size: 13px; font-weight: 700; color: var(--sf-blue-deep);
+      padding: 10px 0; margin-bottom: 8px;
+      border-bottom: 1px solid var(--sf-gray-2);
+      display: flex; align-items: center; gap: 8px;
+    }
+    .section-h .ic { color: var(--sf-blue); }
+
+    /* ── Data table ── */
+    table.data {
+      width: 100%; border-collapse: collapse; font-size: 13px;
+    }
+    table.data th, table.data td {
+      text-align: left; padding: 8px 10px; border-bottom: 1px solid var(--sf-gray-2);
+      vertical-align: top;
+    }
+    table.data th {
+      font-size: 11px; color: var(--sf-gray-5); font-weight: 700;
+      text-transform: uppercase; letter-spacing: 0.04em;
+      background: #fafaf9;
+    }
+    table.data tbody tr:hover { background: var(--sf-gray-1); }
+    .pill {
+      display: inline-flex; align-items: center; gap: 4px;
+      padding: 2px 8px; border-radius: 100px; font-size: 11px; font-weight: 600;
+    }
+    .pill.green { background: var(--sf-green-light); color: var(--sf-green); }
+    .pill.amber { background: var(--sf-amber-light); color: var(--sf-amber); }
+    .pill.blue  { background: var(--sf-blue-light);  color: var(--sf-blue-deep); }
+    .pill.gray  { background: var(--sf-gray-2);      color: var(--sf-gray-6); }
+    .pill.red   { background: var(--sf-red-light);   color: var(--sf-red); }
+
+    /* ── VR / BEP funds flow ── */
+    .funds-flow {
+      display: flex; align-items: stretch; gap: 0; flex-wrap: wrap;
+      margin: 8px 0 14px;
+    }
+    .funds-box {
+      flex: 1; min-width: 180px;
+      background: #fff; border: 1px solid var(--sf-border);
+      border-radius: 4px; padding: 12px 14px;
+      display: flex; flex-direction: column; gap: 4px;
+    }
+    .funds-box.vr { border-left: 4px solid var(--sf-blue); }
+    .funds-box.bep { border-left: 4px solid var(--sf-purple); }
+    .funds-box.coord { border-left: 4px solid var(--sf-green); }
+    .funds-box .lbl { font-size: 11px; color: var(--sf-gray-5); font-weight: 700; text-transform: uppercase; letter-spacing: 0.04em; }
+    .funds-box .ttl { font-size: 14px; font-weight: 700; color: var(--sf-charcoal); }
+    .funds-box .sub { font-size: 12px; color: var(--sf-gray-6); }
+    .funds-arrow {
+      display: flex; align-items: center; justify-content: center;
+      padding: 0 8px; color: var(--sf-gray-5); font-size: 18px;
+    }
+
+    /* ── Right column ── */
+    .right-col .card { margin-bottom: 12px; }
+    .files-list { display: flex; flex-direction: column; gap: 10px; }
+    .file-row {
+      display: flex; align-items: center; gap: 10px;
+      padding: 8px 0; border-bottom: 1px solid var(--sf-gray-2);
+    }
+    .file-row:last-child { border-bottom: none; }
+    .file-thumb {
+      width: 36px; height: 36px; border-radius: 4px;
+      background: var(--sf-blue-light); color: var(--sf-blue);
+      display: inline-flex; align-items: center; justify-content: center;
+      font-size: 16px; flex-shrink: 0;
+    }
+    .file-info { flex: 1; min-width: 0; }
+    .file-info .name { font-size: 13px; font-weight: 600; color: var(--sf-blue); }
+    .file-info .meta { font-size: 11px; color: var(--sf-gray-5); }
+    .view-all {
+      display: block; text-align: center;
+      padding: 10px; color: var(--sf-blue); font-size: 13px; font-weight: 600;
+      border-top: 1px solid var(--sf-gray-2); margin-top: 8px;
+    }
+    .activity-item {
+      display: flex; gap: 10px; padding: 10px 0;
+      border-bottom: 1px solid var(--sf-gray-2);
+    }
+    .activity-item:last-child { border-bottom: none; }
+    .activity-icon {
+      width: 28px; height: 28px; border-radius: 50%;
+      display: inline-flex; align-items: center; justify-content: center;
+      font-size: 12px; flex-shrink: 0; color: #fff;
+    }
+    .activity-icon.training  { background: var(--sf-purple); }
+    .activity-icon.cert      { background: var(--sf-green); }
+    .activity-icon.fund      { background: var(--sf-amber); }
+    .activity-icon.assignment{ background: var(--sf-blue); }
+    .activity-icon.review    { background: var(--sf-gray-6); }
+    .activity-info .ttl { font-size: 13px; font-weight: 600; color: var(--sf-charcoal); }
+    .activity-info .meta { font-size: 11px; color: var(--sf-gray-5); margin-top: 2px; }
+
+    /* ── Capacity checklist ── */
+    .check-list { list-style: none; padding: 0; margin: 6px 0 0; }
+    .check-list li {
+      display: flex; align-items: center; gap: 8px;
+      padding: 6px 0; font-size: 13px; color: var(--sf-charcoal);
+    }
+    .check-list li::before {
+      content: '\2713'; color: var(--sf-green); font-weight: 700; font-size: 14px;
+    }
+
+    /* ── Status banner ── */
+    .vr-banner {
+      display: flex; align-items: center; gap: 10px;
+      background: var(--sf-blue-light); border: 1px solid #d4e6f8;
+      border-radius: 4px; padding: 10px 14px;
+      font-size: 13px; color: var(--sf-blue-deep);
+      margin-bottom: 14px;
+    }
+    .vr-banner .ic { font-size: 16px; color: var(--sf-blue); }
+    .vr-banner strong { color: var(--sf-blue-deep); }
+
+    /* ── Footer ── */
+    .footer-bar {
+      text-align: center;
+      padding: 16px 20px;
+      font-size: 12px; color: var(--sf-gray-5);
+      background: #fff; border-top: 1px solid var(--sf-border);
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Global Header -->
+  <header class="global-header" aria-label="Global header">
+    <a href="bep-program.html" class="gh-brand" aria-label="GVRA home">
+      <img src="GVRA.png" alt="Georgia Vocational Rehabilitation Agency" />
+    </a>
+    <div class="gh-right">
+      <button class="gh-icon" aria-label="Help">?</button>
+      <button class="gh-icon" aria-label="Setup">&#9881;</button>
+      <button class="gh-icon" aria-label="Notifications">&#128276;</button>
+      <span class="gh-avatar" aria-label="Renee Patel">RP</span>
+    </div>
+  </header>
+
+  <!-- App bar -->
+  <nav class="app-bar" aria-label="BEP application tabs">
+    <span class="app-name">BEP Operator Console</span>
+    <a href="#" class="app-tab">Home</a>
+    <a href="#" class="app-tab">Operators</a>
+    <a href="#" class="app-tab active">Cases</a>
+    <a href="#" class="app-tab">Facilities</a>
+    <a href="#" class="app-tab">Training</a>
+    <a href="#" class="app-tab">Set-Aside</a>
+    <a href="#" class="app-tab">Reports</a>
+    <a href="#" class="app-tab">Dashboards</a>
+  </nav>
+
+  <!-- Highlights / record header -->
+  <section class="highlights" aria-label="Operator case highlights">
+    <div class="hl-top">
+      <div style="display:flex; gap:14px; align-items:flex-start;">
+        <div class="hl-icon" aria-hidden="true">&#128100;</div>
+        <div>
+          <div class="hl-id">Operator Case &middot; CASE-2026-04812</div>
+          <div class="hl-title">Marcus Allen &mdash; BEP-1042</div>
+        </div>
+      </div>
+      <div class="hl-actions">
+        <button class="btn">Follow</button>
+        <button class="btn">Edit</button>
+        <button class="btn">Reassign Facility</button>
+        <button class="btn primary">+ New Activity</button>
+      </div>
+    </div>
+    <div class="hl-fields">
+      <div class="hl-field"><div class="lbl">Operator</div><div class="val"><a href="#">Marcus Allen</a></div></div>
+      <div class="hl-field"><div class="lbl">Status</div><div class="val">Active &mdash; Assigned</div></div>
+      <div class="hl-field"><div class="lbl">License #</div><div class="val">BEP-1042 &middot; FY26</div></div>
+      <div class="hl-field"><div class="lbl">Assigned Facility</div><div class="val"><a href="#">Atlanta Federal Center &mdash; Cafeteria</a></div></div>
+      <div class="hl-field"><div class="lbl">Case Origin</div><div class="val">VR Transfer</div></div>
+      <div class="hl-field"><div class="lbl">Coordinator</div><div class="val"><a href="#">Renee Patel</a></div></div>
+    </div>
+  </section>
+
+  <!-- Path / chevron flow -->
+  <section class="path-wrap" aria-label="Operator lifecycle path">
+    <div class="path" role="list">
+      <div class="path-step complete" role="listitem"><span class="check" aria-hidden="true">&#10003;</span>Intake &amp; Eligibility</div>
+      <div class="path-step complete" role="listitem"><span class="check" aria-hidden="true">&#10003;</span>Pre-Licensure Training</div>
+      <div class="path-step complete" role="listitem"><span class="check" aria-hidden="true">&#10003;</span>Certification &amp; Licensure</div>
+      <div class="path-step complete" role="listitem"><span class="check" aria-hidden="true">&#10003;</span>Operator Agreements</div>
+      <div class="path-step current" role="listitem">Assignment &amp; Operation</div>
+      <div class="path-step" role="listitem">Performance Review</div>
+      <div class="path-step" role="listitem">Reassignment</div>
+      <div class="path-step" role="listitem">Exit / Retirement</div>
+    </div>
+    <div class="path-actions">
+      <span class="path-key key-complete"><span class="dot"></span>Complete</span>
+      <span class="path-key key-current"><span class="dot"></span>Current Stage</span>
+      <span class="path-key key-upcoming"><span class="dot"></span>Upcoming</span>
+      <div style="flex:1;"></div>
+      <button class="btn primary">&#10003; Mark Status as Complete</button>
+    </div>
+  </section>
+
+  <!-- Body -->
+  <div class="body">
+    <main>
+
+      <!-- VR origin banner -->
+      <div class="vr-banner" role="status">
+        <span class="ic" aria-hidden="true">&#128257;</span>
+        <div>
+          This operator originally entered through <strong>Vocational Rehabilitation (VR-2023-018844)</strong>. VR case history is preserved and visible to BEP, and funds may be coordinated across VR and BEP for allowable purchases &mdash; subject to approval workflow.
+          <a href="#funds" style="margin-left:6px;">View funds coordination &rarr;</a>
+        </div>
+      </div>
+
+      <!-- Einstein AI summary -->
+      <div class="ai-card" role="region" aria-label="Einstein case summary">
+        <div class="ai-head"><span class="sparkle" aria-hidden="true">&#10024;</span> Einstein Case Summary</div>
+        <p>Marcus Allen (BEP-1042) is a fully certified operator currently assigned to the Atlanta Federal Center cafeteria. Originally a VR consumer, he completed pre-licensure training in 2024 with strong evaluation scores, holds 14 of 20 required FY26 CEU hours, and has filed every monthly financial report on time for 11 consecutive months. Set-aside collections are current. One assistive-technology purchase is pending VR/BEP funds-coordination approval.</p>
+        <div class="ai-meta">Generated from case record, training history, and financial activity &middot; <span class="conf">Confidence 94%</span></div>
+      </div>
+
+      <!-- Tabs -->
+      <div class="card" style="margin-bottom: 16px;">
+        <div class="tab-strip" role="tablist">
+          <a href="#certification" class="active" role="tab" aria-selected="true">Certification &amp; Training</a>
+          <a href="#vr-origin" role="tab">VR Origin &amp; History</a>
+          <a href="#funds" role="tab">VR/BEP Funds Coordination</a>
+          <a href="#assignments" role="tab">Facility Assignments</a>
+          <a href="#performance" role="tab">Performance &amp; Reviews</a>
+          <a href="#documents" role="tab">Documents</a>
+        </div>
+        <div class="card-body">
+
+          <!-- ── Certification & Training History ── -->
+          <section id="certification" aria-labelledby="cert-title">
+            <h4 class="section-h" id="cert-title"><span class="ic" aria-hidden="true">&#127891;</span> Certification &amp; Training History</h4>
+
+            <div class="field-grid" style="margin-bottom: 14px;">
+              <div class="field"><div class="lbl">License Number</div><div class="val">BEP-1042</div></div>
+              <div class="field"><div class="lbl">License Status</div><div class="val"><span class="pill green">Active</span></div></div>
+              <div class="field"><div class="lbl">Initial Issue</div><div class="val">Sep 12, 2024</div></div>
+              <div class="field"><div class="lbl">Current Term</div><div class="val">FY26 (Jul 1, 2025 &mdash; Jun 30, 2026)</div></div>
+              <div class="field"><div class="lbl">Renewal Due</div><div class="val">Jun 30, 2026 &middot; <span class="pill amber">48 days</span></div></div>
+              <div class="field"><div class="lbl">CEU Progress (FY26)</div><div class="val">14 of 20 hours &middot; <span class="pill blue">on track</span></div></div>
+            </div>
+
+            <table class="data" aria-label="Training and certification events">
+              <caption style="caption-side:top; text-align:left; font-size:12px; color:var(--sf-gray-5); padding-bottom:6px;">Pre-licensure training, certifications, and continuing education</caption>
+              <thead>
+                <tr>
+                  <th>Date</th>
+                  <th>Event</th>
+                  <th>Type</th>
+                  <th>Hours</th>
+                  <th>Score</th>
+                  <th>Status</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>Mar 04, 2024</td>
+                  <td><a href="#">BEP Pre-Licensure Curriculum &mdash; Module 1: Operator Fundamentals</a></td>
+                  <td>Training</td>
+                  <td>40</td>
+                  <td>92%</td>
+                  <td><span class="pill green">Passed</span></td>
+                </tr>
+                <tr>
+                  <td>May 18, 2024</td>
+                  <td><a href="#">BEP Pre-Licensure Curriculum &mdash; Module 2: Food Safety &amp; ServSafe</a></td>
+                  <td>Training</td>
+                  <td>32</td>
+                  <td>88%</td>
+                  <td><span class="pill green">Passed</span></td>
+                </tr>
+                <tr>
+                  <td>Jul 22, 2024</td>
+                  <td><a href="#">BEP Pre-Licensure Curriculum &mdash; Module 3: Financial Operations</a></td>
+                  <td>Training</td>
+                  <td>28</td>
+                  <td>95%</td>
+                  <td><span class="pill green">Passed</span></td>
+                </tr>
+                <tr>
+                  <td>Sep 12, 2024</td>
+                  <td><a href="#">BEP Operator License Examination</a></td>
+                  <td>Certification</td>
+                  <td>&mdash;</td>
+                  <td>91%</td>
+                  <td><span class="pill green">Licensed</span></td>
+                </tr>
+                <tr>
+                  <td>Feb 14, 2025</td>
+                  <td><a href="#">CEU: Cafeteria P&amp;L &amp; Cost Controls</a></td>
+                  <td>CEU</td>
+                  <td>4</td>
+                  <td>&mdash;</td>
+                  <td><span class="pill green">Completed</span></td>
+                </tr>
+                <tr>
+                  <td>Jun 03, 2025</td>
+                  <td><a href="#">CEU: Adaptive Technology in Vending Operations</a></td>
+                  <td>CEU</td>
+                  <td>6</td>
+                  <td>&mdash;</td>
+                  <td><span class="pill green">Completed</span></td>
+                </tr>
+                <tr>
+                  <td>Nov 11, 2025</td>
+                  <td><a href="#">CEU: Customer Service &amp; Conflict Resolution</a></td>
+                  <td>CEU</td>
+                  <td>4</td>
+                  <td>&mdash;</td>
+                  <td><span class="pill green">Completed</span></td>
+                </tr>
+                <tr>
+                  <td>Apr 05, 2026</td>
+                  <td><a href="#">Annual License Refresher &amp; Randolph-Sheppard Update</a></td>
+                  <td>CEU</td>
+                  <td>&mdash;</td>
+                  <td>&mdash;</td>
+                  <td><span class="pill amber">Scheduled</span></td>
+                </tr>
+              </tbody>
+            </table>
+          </section>
+
+          <!-- ── VR Origin & History ── -->
+          <section id="vr-origin" style="margin-top: 24px;">
+            <h4 class="section-h"><span class="ic" aria-hidden="true">&#128257;</span> VR Origin &amp; Case History</h4>
+            <p style="font-size:13px; color:var(--sf-gray-6); margin-bottom:12px;">
+              When an operator originally entered through Vocational Rehabilitation, their full VR case record is preserved and accessible from this BEP case &mdash; including eligibility determination, IPE history, services received, and counselor notes. Funds and services that crossed the VR/BEP boundary are tagged for audit.
+            </p>
+
+            <div class="field-grid" style="margin-bottom: 14px;">
+              <div class="field"><div class="lbl">Original VR Case</div><div class="val link"><a href="#">VR-2023-018844</a></div></div>
+              <div class="field"><div class="lbl">VR Eligibility Date</div><div class="val">Aug 14, 2023</div></div>
+              <div class="field"><div class="lbl">VR Counselor (at transfer)</div><div class="val"><a href="#">Sarah Lin</a></div></div>
+              <div class="field"><div class="lbl">VR &rarr; BEP Transition Date</div><div class="val">Feb 28, 2024</div></div>
+              <div class="field"><div class="lbl">Initial IPE Service Outcome</div><div class="val">Self-employment / BEP</div></div>
+              <div class="field"><div class="lbl">VR Case Status</div><div class="val"><span class="pill blue">Closed &mdash; Transitioned</span></div></div>
+            </div>
+
+            <table class="data" aria-label="VR services delivered prior to BEP transition">
+              <caption style="caption-side:top; text-align:left; font-size:12px; color:var(--sf-gray-5); padding-bottom:6px;">VR services delivered prior to BEP transition (read-only history)</caption>
+              <thead>
+                <tr>
+                  <th>Date Range</th>
+                  <th>Service</th>
+                  <th>Provider</th>
+                  <th>VR Funds</th>
+                  <th>Status</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>Sep 2023 &mdash; Jan 2024</td>
+                  <td><a href="#">Vocational evaluation &amp; orientation</a></td>
+                  <td>GVRA Columbus Office</td>
+                  <td>$2,140</td>
+                  <td><span class="pill green">Completed</span></td>
+                </tr>
+                <tr>
+                  <td>Oct 2023</td>
+                  <td><a href="#">Assistive technology assessment (low-vision)</a></td>
+                  <td>GVRA AT Lab</td>
+                  <td>$640</td>
+                  <td><span class="pill green">Completed</span></td>
+                </tr>
+                <tr>
+                  <td>Nov 2023 &mdash; Feb 2024</td>
+                  <td><a href="#">BEP career counseling &amp; pre-screening</a></td>
+                  <td>Sarah Lin (Counselor)</td>
+                  <td>$1,820</td>
+                  <td><span class="pill green">Completed</span></td>
+                </tr>
+                <tr>
+                  <td>Feb 2024</td>
+                  <td><a href="#">VR &rarr; BEP transition packet &amp; warm handoff</a></td>
+                  <td>VR Columbus &mdash; BEP Atlanta</td>
+                  <td>&mdash;</td>
+                  <td><span class="pill blue">Transitioned</span></td>
+                </tr>
+              </tbody>
+            </table>
+          </section>
+
+          <!-- ── VR/BEP Funds Coordination ── -->
+          <section id="funds" style="margin-top: 24px;">
+            <h4 class="section-h"><span class="ic" aria-hidden="true">&#128176;</span> VR/BEP Funds Coordination</h4>
+            <p style="font-size:13px; color:var(--sf-gray-6); margin-bottom:12px;">
+              When an operator originally entered through VR, allowable purchases (e.g., adaptive technology, training tools, accessibility upgrades) may be funded across both VR and BEP budgets. Each request follows an approval workflow with full audit trail.
+            </p>
+
+            <div class="funds-flow" aria-label="Funds coordination flow">
+              <div class="funds-box vr">
+                <span class="lbl">VR Budget</span>
+                <span class="ttl">VR-2023-018844</span>
+                <span class="sub">FY26 Authorized: $4,200<br>Used: $1,840 &middot; Remaining: $2,360</span>
+              </div>
+              <div class="funds-arrow" aria-hidden="true">&rarr;</div>
+              <div class="funds-box coord">
+                <span class="lbl">Coordination &amp; Approval</span>
+                <span class="ttl">Joint Review</span>
+                <span class="sub">VR Counselor + BEP Director sign-off; allowable use verified.</span>
+              </div>
+              <div class="funds-arrow" aria-hidden="true">&rarr;</div>
+              <div class="funds-box bep">
+                <span class="lbl">BEP Budget</span>
+                <span class="ttl">BEP-1042 Operator Account</span>
+                <span class="sub">FY26 Authorized: $6,500<br>Used: $2,310 &middot; Remaining: $4,190</span>
+              </div>
+            </div>
+
+            <table class="data" aria-label="Cross-program fund requests">
+              <caption style="caption-side:top; text-align:left; font-size:12px; color:var(--sf-gray-5); padding-bottom:6px;">Cross-program fund requests &mdash; allowable BEP purchases sourced from either or both budgets</caption>
+              <thead>
+                <tr>
+                  <th>Request #</th>
+                  <th>Item</th>
+                  <th>Category</th>
+                  <th>VR Funds</th>
+                  <th>BEP Funds</th>
+                  <th>Total</th>
+                  <th>Status</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td><a href="#">FR-2025-0214</a></td>
+                  <td>Talking POS terminal &amp; refresh</td>
+                  <td>Adaptive Tech</td>
+                  <td>$1,200</td>
+                  <td>$2,310</td>
+                  <td>$3,510</td>
+                  <td><span class="pill green">Approved &amp; Paid</span></td>
+                </tr>
+                <tr>
+                  <td><a href="#">FR-2025-0598</a></td>
+                  <td>Cash counter w/ audio output</td>
+                  <td>Adaptive Tech</td>
+                  <td>$640</td>
+                  <td>$0</td>
+                  <td>$640</td>
+                  <td><span class="pill green">Approved &amp; Paid</span></td>
+                </tr>
+                <tr>
+                  <td><a href="#">FR-2026-0031</a></td>
+                  <td>JAWS license renewal &mdash; FY26</td>
+                  <td>Software / AT</td>
+                  <td>$0</td>
+                  <td>$1,420</td>
+                  <td>$1,420</td>
+                  <td><span class="pill green">Approved &amp; Paid</span></td>
+                </tr>
+                <tr>
+                  <td><a href="#">FR-2026-0107</a></td>
+                  <td>Braille label printer for inventory</td>
+                  <td>Adaptive Tech</td>
+                  <td>$420</td>
+                  <td>$380</td>
+                  <td>$800</td>
+                  <td><span class="pill amber">Pending Joint Approval</span></td>
+                </tr>
+                <tr>
+                  <td><a href="#">FR-2026-0142</a></td>
+                  <td>CEU: Advanced cafeteria management course</td>
+                  <td>Training</td>
+                  <td>$0</td>
+                  <td>$650</td>
+                  <td>$650</td>
+                  <td><span class="pill blue">Awaiting Receipt</span></td>
+                </tr>
+              </tbody>
+            </table>
+
+            <div style="margin-top:14px; display:flex; gap:8px;">
+              <button class="btn primary">+ New Fund Request</button>
+              <button class="btn">View Approval Workflow</button>
+              <button class="btn">Export Coordination Audit Trail</button>
+            </div>
+          </section>
+
+        </div>
+      </div>
+
+    </main>
+
+    <!-- Right column -->
+    <aside class="right-col" aria-label="Related lists">
+
+      <!-- Functional capacities -->
+      <div class="card">
+        <div class="card-head">
+          <h3>Functional Capacities</h3>
+          <div class="actions"><button aria-label="More">&#8942;</button></div>
+        </div>
+        <div class="card-body" style="padding-top: 8px;">
+          <ul class="check-list">
+            <li>Cognition</li>
+            <li>Self-care</li>
+            <li>Communication</li>
+            <li>Mobility</li>
+            <li>Self-direction</li>
+            <li>Work skills</li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- Files -->
+      <div class="card">
+        <div class="card-head">
+          <h3>Files (5)</h3>
+          <div class="actions"><button aria-label="Upload">&#8682;</button><button aria-label="More">&#8942;</button></div>
+        </div>
+        <div class="card-body" style="padding-top: 8px;">
+          <div class="files-list">
+            <div class="file-row">
+              <span class="file-thumb" aria-hidden="true">&#128196;</span>
+              <div class="file-info">
+                <a href="#" class="name">BEP-1042-License.pdf</a>
+                <div class="meta">Sep 12, 2024 &middot; 312 KB</div>
+              </div>
+            </div>
+            <div class="file-row">
+              <span class="file-thumb" aria-hidden="true">&#128196;</span>
+              <div class="file-info">
+                <a href="#" class="name">VR-Transition-Packet.pdf</a>
+                <div class="meta">Feb 28, 2024 &middot; 1.4 MB</div>
+              </div>
+            </div>
+            <div class="file-row">
+              <span class="file-thumb" aria-hidden="true">&#128196;</span>
+              <div class="file-info">
+                <a href="#" class="name">Pre-Licensure-Curriculum-Transcript.pdf</a>
+                <div class="meta">Sep 18, 2024 &middot; 526 KB</div>
+              </div>
+            </div>
+            <div class="file-row">
+              <span class="file-thumb" aria-hidden="true">&#128196;</span>
+              <div class="file-info">
+                <a href="#" class="name">Operator-Agreement-Atlanta-Fed-Center.pdf</a>
+                <div class="meta">Oct 04, 2024 &middot; 218 KB</div>
+              </div>
+            </div>
+            <div class="file-row">
+              <span class="file-thumb" aria-hidden="true">&#128196;</span>
+              <div class="file-info">
+                <a href="#" class="name">May-2026-Income-Statement.pdf</a>
+                <div class="meta">May 12, 2026 &middot; 216 KB</div>
+              </div>
+            </div>
+          </div>
+          <a class="view-all" href="#">View All</a>
+        </div>
+      </div>
+
+      <!-- Activity timeline -->
+      <div class="card">
+        <div class="card-head">
+          <h3>Activity Timeline</h3>
+          <div class="actions"><button aria-label="More">&#8942;</button></div>
+        </div>
+        <div class="card-body" style="padding-top: 8px;">
+          <div class="activity-item">
+            <span class="activity-icon fund" aria-hidden="true">$</span>
+            <div class="activity-info">
+              <div class="ttl">FR-2026-0107 submitted &mdash; Braille label printer</div>
+              <div class="meta">Today &middot; 9:42 AM &middot; Marcus Allen</div>
+            </div>
+          </div>
+          <div class="activity-item">
+            <span class="activity-icon training" aria-hidden="true">&#127891;</span>
+            <div class="activity-info">
+              <div class="ttl">CEU registration: Annual License Refresher</div>
+              <div class="meta">May 12, 2026 &middot; Renee Patel</div>
+            </div>
+          </div>
+          <div class="activity-item">
+            <span class="activity-icon review" aria-hidden="true">&#9998;</span>
+            <div class="activity-info">
+              <div class="ttl">Quarterly performance review submitted</div>
+              <div class="meta">Apr 30, 2026 &middot; Renee Patel</div>
+            </div>
+          </div>
+          <div class="activity-item">
+            <span class="activity-icon cert" aria-hidden="true">&#10003;</span>
+            <div class="activity-info">
+              <div class="ttl">CEU completed: Customer Service &amp; Conflict Resolution</div>
+              <div class="meta">Nov 11, 2025</div>
+            </div>
+          </div>
+          <div class="activity-item">
+            <span class="activity-icon assignment" aria-hidden="true">&#127970;</span>
+            <div class="activity-info">
+              <div class="ttl">Assigned to Atlanta Federal Center cafeteria</div>
+              <div class="meta">Oct 04, 2024</div>
+            </div>
+          </div>
+          <div class="activity-item">
+            <span class="activity-icon cert" aria-hidden="true">&#10003;</span>
+            <div class="activity-info">
+              <div class="ttl">Operator license issued (BEP-1042)</div>
+              <div class="meta">Sep 12, 2024</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </aside>
+  </div>
+
+  <footer class="footer-bar">
+    &copy; 2026 Georgia Vocational Rehabilitation Agency &middot; BEP Operator Console &middot; All data shown is illustrative.
+  </footer>
+
+</body>
+</html>

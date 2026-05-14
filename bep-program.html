@@ -287,6 +287,9 @@
     }
     .ov-card h3 { font-size: 18px; font-weight: 800; margin-bottom: 8px; color: var(--charcoal); }
     .ov-card p { font-size: 14px; color: var(--gray); line-height: 1.6; }
+    .ov-card-link { text-decoration: none; color: inherit; display: block; }
+    .ov-card-link:hover .ov-card { box-shadow: var(--shadow-md); transform: translateY(-3px); border-color: var(--gvra-blue-mid); }
+    .ov-card-link:focus-visible { outline: 3px solid var(--accent); outline-offset: 4px; border-radius: var(--radius-lg); }
     .ov-icon {
       width: 48px; height: 48px;
       background: var(--gvra-blue-light); color: var(--gvra-blue-dark);
@@ -720,24 +723,30 @@
       </div>
 
       <div class="overview-grid">
-        <article class="ov-card">
-          <div class="num" aria-hidden="true">01</div>
-          <div class="ov-icon" aria-hidden="true">&#128100;</div>
-          <h3>Operator Lifecycle</h3>
-          <p>Recruitment, intake, certification, licensure, assignment, performance reviews, reassignment, and exit &mdash; all on one record.</p>
-        </article>
-        <article class="ov-card">
-          <div class="num" aria-hidden="true">02</div>
-          <div class="ov-icon" aria-hidden="true">&#127970;</div>
-          <h3>Facility Management</h3>
-          <p>Create and maintain vending sites, cafeterias, and snack bars. Track location attributes, leases, and operator assignment history.</p>
-        </article>
-        <article class="ov-card">
-          <div class="num" aria-hidden="true">03</div>
-          <div class="ov-icon" aria-hidden="true">&#128176;</div>
-          <h3>Financial Reporting</h3>
-          <p>Monthly operator revenue, set-aside collections, fees, expenses, and facility P&amp;L &mdash; aggregated for RSA-15 and ad hoc reports.</p>
-        </article>
+        <a class="ov-card-link" href="operator-lifecycle.html" target="_blank" rel="noopener" aria-label="Open operator lifecycle case detail in a new tab">
+          <article class="ov-card">
+            <div class="num" aria-hidden="true">01</div>
+            <div class="ov-icon" aria-hidden="true">&#128100;</div>
+            <h3>Operator Lifecycle</h3>
+            <p>Recruitment, intake, certification, licensure, assignment, performance reviews, reassignment, and exit &mdash; all on one record.</p>
+          </article>
+        </a>
+        <a class="ov-card-link" href="facility-management.html" target="_blank" rel="noopener" aria-label="Open facility management workspace in a new tab">
+          <article class="ov-card">
+            <div class="num" aria-hidden="true">02</div>
+            <div class="ov-icon" aria-hidden="true">&#127970;</div>
+            <h3>Facility Management</h3>
+            <p>Create and maintain vending sites, cafeterias, and snack bars. Track location attributes, leases, and operator assignment history.</p>
+          </article>
+        </a>
+        <a class="ov-card-link" href="financial-reporting.html" target="_blank" rel="noopener">
+          <article class="ov-card">
+            <div class="num" aria-hidden="true">03</div>
+            <div class="ov-icon" aria-hidden="true">&#128176;</div>
+            <h3>Financial Reporting</h3>
+            <p>Monthly operator revenue, set-aside collections, fees, expenses, and facility P&amp;L &mdash; aggregated for RSA-15 and ad hoc reports.</p>
+          </article>
+        </a>
         <article class="ov-card">
           <div class="num" aria-hidden="true">04</div>
           <div class="ov-icon" aria-hidden="true">&#128295;</div>

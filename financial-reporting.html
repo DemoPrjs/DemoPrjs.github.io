@@ -1,0 +1,666 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Financial Reporting — BEP Operator Console | GVRA</title>
+  <meta name="description" content="Salesforce-style financial dashboards for the GVRA Business Enterprise Program — operator revenue, facility P&amp;L, fees and set-aside collections." />
+  <style>
+    /* ── Salesforce-style tokens ── */
+    :root {
+      --sf-blue:        #0176d3;
+      --sf-blue-mid:    #1b96ff;
+      --sf-blue-deep:   #032d60;
+      --sf-blue-light:  #eaf5fe;
+      --sf-purple:      #5867e8;
+      --sf-green:       #2e844a;
+      --sf-green-light: #ddf3e4;
+      --sf-amber:       #b76e00;
+      --sf-amber-light: #fef0c3;
+      --sf-red:         #ba0517;
+      --sf-red-light:   #feded8;
+      --sf-gray-1:      #f3f3f3;
+      --sf-gray-2:      #ecebea;
+      --sf-gray-3:      #c9c7c5;
+      --sf-gray-5:      #706e6b;
+      --sf-gray-6:      #444241;
+      --sf-charcoal:    #181818;
+      --sf-border:      #dddbda;
+      --sf-bg:          #f3f2f2;
+      --sf-card:        #ffffff;
+      --sf-shadow-sm:   0 1px 3px rgba(0,0,0,0.04);
+      --sf-shadow-md:   0 2px 6px rgba(0,0,0,0.08);
+    }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: 'Salesforce Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Arial, sans-serif;
+      color: var(--sf-charcoal);
+      background: var(--sf-bg);
+      font-size: 13px;
+      line-height: 1.45;
+    }
+    a { color: var(--sf-blue); text-decoration: none; }
+    a:hover { text-decoration: underline; }
+    button { font-family: inherit; cursor: pointer; }
+
+    /* ── Global Header (matches operator-lifecycle.html) ── */
+    .global-header {
+      background: #fff; border-bottom: 1px solid var(--sf-border);
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 10px 20px; height: 64px;
+      position: sticky; top: 0; z-index: 100;
+    }
+    .gh-brand { display: flex; align-items: center; gap: 10px; }
+    .gh-brand img { height: 44px; width: auto; display: block; }
+    .gh-right { display: flex; align-items: center; gap: 12px; }
+    .gh-icon {
+      width: 32px; height: 32px; border-radius: 4px; border: none;
+      background: transparent; color: var(--sf-gray-6);
+      display: inline-flex; align-items: center; justify-content: center; font-size: 16px;
+    }
+    .gh-icon:hover { background: var(--sf-gray-1); }
+    .gh-avatar {
+      width: 32px; height: 32px; border-radius: 50%;
+      background: var(--sf-blue-deep); color: #fff;
+      display: inline-flex; align-items: center; justify-content: center;
+      font-size: 12px; font-weight: 700;
+    }
+
+    /* ── App bar ── */
+    .app-bar {
+      background: #fff; border-bottom: 1px solid var(--sf-border);
+      padding: 0 20px;
+      display: flex; align-items: stretch; gap: 0; overflow-x: auto;
+    }
+    .app-bar .app-name {
+      display: inline-flex; align-items: center; gap: 8px;
+      padding: 10px 16px 10px 0; margin-right: 14px;
+      font-weight: 700; color: var(--sf-blue-deep); font-size: 14px;
+      border-right: 1px solid var(--sf-border);
+    }
+    .app-bar .app-name::before {
+      content: ''; width: 18px; height: 18px; border-radius: 4px;
+      background: var(--sf-blue); display: inline-block;
+    }
+    .app-tab {
+      padding: 12px 14px; font-size: 13px; font-weight: 600;
+      color: var(--sf-gray-6); white-space: nowrap;
+      border-bottom: 3px solid transparent;
+    }
+    .app-tab:hover { color: var(--sf-blue); text-decoration: none; }
+    .app-tab.active { color: var(--sf-blue); border-bottom-color: var(--sf-blue); }
+
+    /* ── Page header ── */
+    .page-head {
+      background: #fff; border-bottom: 1px solid var(--sf-border);
+      padding: 16px 20px;
+      display: flex; align-items: center; justify-content: space-between;
+      gap: 16px; flex-wrap: wrap;
+    }
+    .page-head .crumbs { font-size: 12px; color: var(--sf-gray-5); margin-bottom: 4px; }
+    .page-head h1 {
+      font-size: 20px; font-weight: 700; color: var(--sf-charcoal);
+      display: inline-flex; align-items: center; gap: 10px;
+    }
+    .page-head .h-icon {
+      width: 36px; height: 36px; border-radius: 6px;
+      background: var(--sf-blue); color: #fff;
+      display: inline-flex; align-items: center; justify-content: center; font-size: 18px;
+    }
+    .page-head .meta { font-size: 12px; color: var(--sf-gray-5); margin-top: 4px; }
+    .head-actions { display: flex; gap: 8px; flex-wrap: wrap; }
+    .btn {
+      padding: 6px 14px; border-radius: 4px; font-size: 13px; font-weight: 600;
+      border: 1px solid var(--sf-border); background: #fff; color: var(--sf-charcoal);
+    }
+    .btn:hover { background: var(--sf-gray-1); }
+    .btn.primary { background: var(--sf-blue); color: #fff; border-color: var(--sf-blue); }
+    .btn.primary:hover { background: #014486; border-color: #014486; }
+
+    /* ── Filter bar ── */
+    .filter-bar {
+      background: #fff; border-bottom: 1px solid var(--sf-border);
+      padding: 10px 20px;
+      display: flex; gap: 8px; flex-wrap: wrap; align-items: center;
+    }
+    .filter-bar .lbl { font-size: 11px; color: var(--sf-gray-5); font-weight: 700; text-transform: uppercase; letter-spacing: 0.04em; margin-right: 4px; }
+    .chip {
+      display: inline-flex; align-items: center; gap: 6px;
+      background: #fff; border: 1px solid var(--sf-border); border-radius: 100px;
+      padding: 5px 14px; font-size: 12px; font-weight: 600; color: var(--sf-gray-6);
+    }
+    .chip:hover { background: var(--sf-blue-light); border-color: var(--sf-blue-mid); }
+    .chip.active { background: var(--sf-blue-deep); border-color: var(--sf-blue-deep); color: #fff; }
+
+    /* ── KPI strip ── */
+    .kpi-strip {
+      display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px;
+      padding: 16px 20px 0;
+    }
+    @media (max-width: 1100px) { .kpi-strip { grid-template-columns: repeat(2, 1fr); } }
+    .kpi {
+      background: #fff; border: 1px solid var(--sf-border); border-radius: 4px;
+      box-shadow: var(--sf-shadow-sm); padding: 12px 14px;
+    }
+    .kpi .lbl { font-size: 11px; color: var(--sf-gray-5); font-weight: 700; text-transform: uppercase; letter-spacing: 0.04em; }
+    .kpi .val { font-size: 22px; font-weight: 700; color: var(--sf-charcoal); margin-top: 4px; }
+    .kpi .sub { font-size: 11px; color: var(--sf-gray-5); margin-top: 2px; }
+    .kpi .delta { font-size: 11px; font-weight: 700; margin-top: 4px; }
+    .kpi .delta.up   { color: var(--sf-green); }
+    .kpi .delta.warn { color: var(--sf-amber); }
+    .kpi .delta.down { color: var(--sf-red); }
+
+    /* ── Dashboard grid ── */
+    .dash-grid {
+      display: grid; grid-template-columns: 2fr 1fr; gap: 16px;
+      padding: 16px 20px;
+    }
+    @media (max-width: 1100px) { .dash-grid { grid-template-columns: 1fr; } }
+    .panel {
+      background: #fff; border: 1px solid var(--sf-border); border-radius: 4px;
+      box-shadow: var(--sf-shadow-sm);
+      display: flex; flex-direction: column; min-width: 0;
+    }
+    .panel-head {
+      padding: 12px 16px; border-bottom: 1px solid var(--sf-border);
+      display: flex; align-items: center; justify-content: space-between;
+      gap: 10px; flex-wrap: wrap; background: #fafaf9;
+    }
+    .panel-head h3 {
+      font-size: 14px; font-weight: 700; color: var(--sf-charcoal);
+      display: inline-flex; align-items: center; gap: 8px;
+    }
+    .panel-head .meta { font-size: 11px; color: var(--sf-gray-5); }
+    .panel-body { padding: 16px; }
+
+    /* ── Bar chart (monthly revenue & set-aside) ── */
+    .chart-wrap { padding: 8px 16px 14px; }
+    .chart-legend {
+      display: flex; gap: 14px; padding: 0 16px 8px; font-size: 11px; color: var(--sf-gray-6);
+    }
+    .chart-legend span { display: inline-flex; align-items: center; gap: 6px; }
+    .chart-legend i {
+      width: 10px; height: 10px; border-radius: 2px; display: inline-block;
+    }
+    .legend-rev { background: linear-gradient(180deg, #1b4480 0%, #032d60 100%); }
+    .legend-sa  { background: var(--sf-amber); }
+    .bars {
+      display: grid; grid-template-columns: repeat(12, 1fr);
+      gap: 8px; align-items: end;
+      height: 240px; padding: 6px 0;
+    }
+    .bar-col {
+      display: flex; flex-direction: column; align-items: center; justify-content: flex-end;
+      height: 100%;
+      cursor: pointer;
+      position: relative;
+    }
+    .bar-col .stack {
+      width: 100%; max-width: 56px;
+      display: flex; flex-direction: column; align-items: center; justify-content: flex-end;
+      height: calc(100% - 22px);
+      gap: 2px;
+    }
+    .bar-rev {
+      width: 100%;
+      background: linear-gradient(180deg, #1b4480 0%, #032d60 100%);
+      border-radius: 4px 4px 0 0;
+      transition: filter .15s;
+    }
+    .bar-sa {
+      width: 60%;
+      background: var(--sf-amber);
+      border-radius: 2px;
+      transition: filter .15s;
+    }
+    .bar-col:hover .bar-rev,
+    .bar-col:hover .bar-sa { filter: brightness(1.12); }
+    .bar-col .lbl-x {
+      font-size: 11px; color: var(--sf-gray-5); margin-top: 6px; font-weight: 600;
+    }
+    .bar-col .tip {
+      position: absolute; bottom: calc(100% - 6px); left: 50%; transform: translateX(-50%);
+      background: var(--sf-charcoal); color: #fff; font-size: 11px;
+      padding: 6px 8px; border-radius: 4px; white-space: nowrap;
+      opacity: 0; pointer-events: none; transition: opacity .15s;
+      z-index: 4;
+    }
+    .bar-col:hover .tip { opacity: 1; }
+
+    /* ── Donut (revenue by facility type) ── */
+    .donut-wrap { display: flex; align-items: center; gap: 18px; }
+    .donut {
+      width: 140px; height: 140px; border-radius: 50%;
+      background: conic-gradient(
+        #032d60 0 46%,
+        #1b96ff 46% 76%,
+        #b76e00 76% 92%,
+        #5867e8 92% 100%
+      );
+      position: relative; flex-shrink: 0;
+    }
+    .donut::after {
+      content: ''; position: absolute; inset: 22px;
+      background: #fff; border-radius: 50%;
+    }
+    .donut .center {
+      position: absolute; inset: 0; display: flex; flex-direction: column;
+      align-items: center; justify-content: center; z-index: 2;
+    }
+    .donut .center b { font-size: 18px; color: var(--sf-charcoal); }
+    .donut .center span { font-size: 10px; color: var(--sf-gray-5); text-transform: uppercase; letter-spacing: .04em; }
+    .legend-list { font-size: 12px; color: var(--sf-gray-6); }
+    .legend-list li {
+      list-style: none; display: flex; align-items: center; gap: 8px;
+      padding: 4px 0;
+    }
+    .legend-list i { width: 10px; height: 10px; border-radius: 2px; display: inline-block; }
+    .legend-list b { color: var(--sf-charcoal); margin-left: auto; padding-left: 14px; }
+
+    /* ── Tables ── */
+    .table-wrap { overflow-x: auto; }
+    table.data { width: 100%; border-collapse: collapse; font-size: 13px; min-width: 560px; }
+    table.data th, table.data td {
+      text-align: left; padding: 10px 14px; border-bottom: 1px solid var(--sf-gray-2);
+      vertical-align: middle;
+    }
+    table.data th {
+      font-size: 11px; color: var(--sf-gray-5); font-weight: 700;
+      text-transform: uppercase; letter-spacing: 0.04em; background: #fafaf9;
+    }
+    table.data tbody tr:hover { background: var(--sf-blue-light); }
+    table.data td.num { text-align: right; font-variant-numeric: tabular-nums; }
+    table.data th.num { text-align: right; }
+
+    .pill {
+      display: inline-flex; align-items: center; gap: 4px;
+      padding: 3px 10px; border-radius: 100px; font-size: 11px; font-weight: 700;
+      text-transform: uppercase; letter-spacing: 0.04em;
+    }
+    .pill.green { background: var(--sf-green-light); color: var(--sf-green); }
+    .pill.amber { background: var(--sf-amber-light); color: var(--sf-amber); }
+    .pill.red   { background: var(--sf-red-light);   color: var(--sf-red); }
+    .pill.blue  { background: var(--sf-blue-light);  color: var(--sf-blue-deep); }
+
+    /* ── Mini bar / sparkline cells ── */
+    .mini-bar {
+      display: inline-block; height: 8px; border-radius: 4px;
+      background: linear-gradient(90deg, #1b96ff, #032d60);
+      vertical-align: middle;
+    }
+
+    /* ── Two-up section ── */
+    .two-up {
+      display: grid; grid-template-columns: 1fr 1fr; gap: 16px;
+      padding: 0 20px 24px;
+    }
+    @media (max-width: 1100px) { .two-up { grid-template-columns: 1fr; } }
+
+    /* ── Reports library ── */
+    .report-list { padding: 0; }
+    .report-list li {
+      list-style: none;
+      display: flex; align-items: center; gap: 10px;
+      padding: 10px 16px; border-bottom: 1px solid var(--sf-gray-2);
+      font-size: 13px;
+    }
+    .report-list li:last-child { border-bottom: none; }
+    .report-list li:hover { background: var(--sf-blue-light); }
+    .report-list .r-icon {
+      width: 28px; height: 28px; border-radius: 4px;
+      background: var(--sf-blue-light); color: var(--sf-blue-deep);
+      display: inline-flex; align-items: center; justify-content: center; font-size: 13px; flex-shrink: 0;
+    }
+    .report-list .r-name { font-weight: 600; color: var(--sf-charcoal); }
+    .report-list .r-meta { font-size: 11px; color: var(--sf-gray-5); margin-left: auto; }
+
+    /* ── Footer ── */
+    .footer-bar {
+      text-align: center; padding: 16px 20px;
+      font-size: 12px; color: var(--sf-gray-5);
+      background: #fff; border-top: 1px solid var(--sf-border);
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Global Header (identical to operator-lifecycle.html) -->
+  <header class="global-header" aria-label="Global header">
+    <a href="bep-program.html" class="gh-brand" aria-label="GVRA home">
+      <img src="GVRA.png" alt="Georgia Vocational Rehabilitation Agency" />
+    </a>
+    <div class="gh-right">
+      <button class="gh-icon" aria-label="Help">?</button>
+      <button class="gh-icon" aria-label="Setup">&#9881;</button>
+      <button class="gh-icon" aria-label="Notifications">&#128276;</button>
+      <span class="gh-avatar" aria-label="Renee Patel">RP</span>
+    </div>
+  </header>
+
+  <!-- App bar -->
+  <nav class="app-bar" aria-label="BEP application tabs">
+    <span class="app-name">BEP Operator Console</span>
+    <a href="bep-program.html" class="app-tab">Home</a>
+    <a href="operator-lifecycle.html" class="app-tab">Operators</a>
+    <a href="#" class="app-tab">Cases</a>
+    <a href="facility-management.html" class="app-tab">Facilities</a>
+    <a href="#" class="app-tab">Training</a>
+    <a href="#" class="app-tab">Set-Aside</a>
+    <a href="#" class="app-tab active">Reports</a>
+    <a href="#" class="app-tab">Dashboards</a>
+  </nav>
+
+  <!-- Page header -->
+  <section class="page-head" aria-label="Financial reporting page header">
+    <div>
+      <div class="crumbs"><a href="bep-program.html">BEP Program</a> &nbsp;&rsaquo;&nbsp; <a href="#">Reports</a> &nbsp;&rsaquo;&nbsp; <a href="#">Financial Reporting</a></div>
+      <h1><span class="h-icon" aria-hidden="true">&#128176;</span> Financial Reporting</h1>
+      <div class="meta">Operator revenue, facility P&amp;L, fees &amp; set-aside collections &middot; FY26 to date &middot; Reconciled to QuickBooks May 13, 2026</div>
+    </div>
+    <div class="head-actions">
+      <button class="btn">Subscribe</button>
+      <button class="btn">Export to Excel</button>
+      <button class="btn">Schedule</button>
+      <button class="btn primary">+ New Report</button>
+    </div>
+  </section>
+
+  <!-- Filter bar -->
+  <div class="filter-bar" role="group" aria-label="Dashboard filters">
+    <span class="lbl">Period</span>
+    <button class="chip" type="button">FY26 YTD</button>
+    <button class="chip active" type="button">Last 12 Months</button>
+    <button class="chip" type="button">QTD</button>
+    <button class="chip" type="button">MTD</button>
+    <span class="lbl" style="margin-left:14px;">Region</span>
+    <button class="chip active" type="button">All District</button>
+    <button class="chip" type="button">Metro Atlanta</button>
+    <button class="chip" type="button">North GA</button>
+    <button class="chip" type="button">South GA</button>
+    <span class="lbl" style="margin-left:14px;">Facility Type</span>
+    <button class="chip active" type="button">All</button>
+    <button class="chip" type="button">Cafeteria</button>
+    <button class="chip" type="button">Vending</button>
+    <button class="chip" type="button">Snack Bar</button>
+  </div>
+
+  <!-- KPI strip -->
+  <div class="kpi-strip" aria-label="Financial KPIs">
+    <div class="kpi"><div class="lbl">Gross Revenue (YTD)</div><div class="val">$6.42M</div><div class="delta up">&uarr; 8.3% vs FY25</div></div>
+    <div class="kpi"><div class="lbl">Set-Aside Collected</div><div class="val">$214,800</div><div class="delta up">&uarr; 6.1%</div></div>
+    <div class="kpi"><div class="lbl">Operator Net Income</div><div class="val">$2.18M</div><div class="delta up">&uarr; 4.7%</div></div>
+    <div class="kpi"><div class="lbl">Outstanding Reports</div><div class="val">3</div><div class="delta down">2 overdue</div></div>
+  </div>
+
+  <!-- Main dashboard grid -->
+  <div class="dash-grid">
+
+    <!-- Monthly Revenue & Set-Aside Bar Chart -->
+    <section class="panel" aria-label="Monthly revenue and set-aside activity">
+      <header class="panel-head">
+        <h3>Monthly Revenue &amp; Set-Aside Activity &mdash; FY26 <span style="font-weight:400;color:var(--sf-gray-5);font-size:12px;">(click a month to drill in)</span></h3>
+        <span class="meta">Last refresh 10:18 AM</span>
+      </header>
+      <div class="chart-legend">
+        <span><i class="legend-rev"></i> Gross Revenue</span>
+        <span><i class="legend-sa"></i> Set-Aside Collected</span>
+      </div>
+      <div class="chart-wrap">
+        <div class="bars" id="monthBars">
+          <!-- 12 months Jul-Jun, FY26. Heights are % of chart area. -->
+          <div class="bar-col" data-month="Jul" data-rev="412" data-sa="14">
+            <div class="stack"><div class="bar-rev" style="height:46%;"></div><div class="bar-sa" style="height:7%;"></div></div>
+            <div class="lbl-x">Jul</div>
+            <div class="tip">Jul &middot; Rev $412K &middot; SA $14.0K</div>
+          </div>
+          <div class="bar-col" data-month="Aug" data-rev="468" data-sa="16">
+            <div class="stack"><div class="bar-rev" style="height:54%;"></div><div class="bar-sa" style="height:8%;"></div></div>
+            <div class="lbl-x">Aug</div>
+            <div class="tip">Aug &middot; Rev $468K &middot; SA $16.0K</div>
+          </div>
+          <div class="bar-col" data-month="Sep" data-rev="386" data-sa="13">
+            <div class="stack"><div class="bar-rev" style="height:42%;"></div><div class="bar-sa" style="height:6%;"></div></div>
+            <div class="lbl-x">Sep</div>
+            <div class="tip">Sep &middot; Rev $386K &middot; SA $13.2K</div>
+          </div>
+          <div class="bar-col" data-month="Oct" data-rev="546" data-sa="18">
+            <div class="stack"><div class="bar-rev" style="height:64%;"></div><div class="bar-sa" style="height:9%;"></div></div>
+            <div class="lbl-x">Oct</div>
+            <div class="tip">Oct &middot; Rev $546K &middot; SA $18.4K</div>
+          </div>
+          <div class="bar-col" data-month="Nov" data-rev="572" data-sa="19">
+            <div class="stack"><div class="bar-rev" style="height:68%;"></div><div class="bar-sa" style="height:9%;"></div></div>
+            <div class="lbl-x">Nov</div>
+            <div class="tip">Nov &middot; Rev $572K &middot; SA $19.1K</div>
+          </div>
+          <div class="bar-col" data-month="Dec" data-rev="514" data-sa="17">
+            <div class="stack"><div class="bar-rev" style="height:60%;"></div><div class="bar-sa" style="height:8%;"></div></div>
+            <div class="lbl-x">Dec</div>
+            <div class="tip">Dec &middot; Rev $514K &middot; SA $17.2K</div>
+          </div>
+          <div class="bar-col" data-month="Jan" data-rev="618" data-sa="20">
+            <div class="stack"><div class="bar-rev" style="height:74%;"></div><div class="bar-sa" style="height:10%;"></div></div>
+            <div class="lbl-x">Jan</div>
+            <div class="tip">Jan &middot; Rev $618K &middot; SA $20.6K</div>
+          </div>
+          <div class="bar-col" data-month="Feb" data-rev="642" data-sa="21">
+            <div class="stack"><div class="bar-rev" style="height:78%;"></div><div class="bar-sa" style="height:10%;"></div></div>
+            <div class="lbl-x">Feb</div>
+            <div class="tip">Feb &middot; Rev $642K &middot; SA $21.4K</div>
+          </div>
+          <div class="bar-col" data-month="Mar" data-rev="568" data-sa="19">
+            <div class="stack"><div class="bar-rev" style="height:66%;"></div><div class="bar-sa" style="height:9%;"></div></div>
+            <div class="lbl-x">Mar</div>
+            <div class="tip">Mar &middot; Rev $568K &middot; SA $19.0K</div>
+          </div>
+          <div class="bar-col" data-month="Apr" data-rev="604" data-sa="20">
+            <div class="stack"><div class="bar-rev" style="height:72%;"></div><div class="bar-sa" style="height:10%;"></div></div>
+            <div class="lbl-x">Apr</div>
+            <div class="tip">Apr &middot; Rev $604K &middot; SA $20.1K</div>
+          </div>
+          <div class="bar-col" data-month="May" data-rev="666" data-sa="22">
+            <div class="stack"><div class="bar-rev" style="height:82%;"></div><div class="bar-sa" style="height:11%;"></div></div>
+            <div class="lbl-x">May</div>
+            <div class="tip">May &middot; Rev $666K &middot; SA $22.2K</div>
+          </div>
+          <div class="bar-col" data-month="Jun" data-rev="424" data-sa="14">
+            <div class="stack"><div class="bar-rev" style="height:48%;"></div><div class="bar-sa" style="height:7%;"></div></div>
+            <div class="lbl-x">Jun</div>
+            <div class="tip">Jun &middot; partial &middot; Rev $424K</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Revenue Mix Donut -->
+    <section class="panel" aria-label="Revenue mix by facility type">
+      <header class="panel-head">
+        <h3>Revenue Mix by Facility Type</h3>
+        <span class="meta">FY26 YTD</span>
+      </header>
+      <div class="panel-body">
+        <div class="donut-wrap">
+          <div class="donut" role="img" aria-label="Donut chart of revenue mix">
+            <div class="center"><b>$6.42M</b><span>Total</span></div>
+          </div>
+          <ul class="legend-list" style="flex:1;">
+            <li><i style="background:#032d60;"></i> Cafeteria <b>46%</b></li>
+            <li><i style="background:#1b96ff;"></i> Vending <b>30%</b></li>
+            <li><i style="background:#b76e00;"></i> Snack Bar <b>16%</b></li>
+            <li><i style="background:#5867e8;"></i> Other / Concessions <b>8%</b></li>
+          </ul>
+        </div>
+        <div style="margin-top:18px; padding-top:14px; border-top:1px solid var(--sf-gray-2);">
+          <div style="font-size:11px;color:var(--sf-gray-5);font-weight:700;text-transform:uppercase;letter-spacing:.04em;margin-bottom:8px;">Set-Aside Reconciliation (May 2026)</div>
+          <div style="display:flex;justify-content:space-between;font-size:12px;padding:3px 0;"><span>Invoiced</span><b>$22,400</b></div>
+          <div style="display:flex;justify-content:space-between;font-size:12px;padding:3px 0;"><span>Collected</span><b style="color:var(--sf-green);">$22,200</b></div>
+          <div style="display:flex;justify-content:space-between;font-size:12px;padding:3px 0;"><span>Outstanding</span><b style="color:var(--sf-amber);">$200</b></div>
+          <div style="display:flex;justify-content:space-between;font-size:12px;padding:3px 0;border-top:1px solid var(--sf-gray-2);margin-top:6px;padding-top:8px;"><span>Bank Deposit Match</span><span class="pill green">Matched</span></div>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <!-- Two-up: Top operators + Facility P&L -->
+  <div class="two-up">
+
+    <section class="panel" aria-label="Top 10 operators by revenue">
+      <header class="panel-head">
+        <h3>Top Operators by Revenue &mdash; FY26 YTD</h3>
+        <span class="meta">10 of 94 &middot; sorted by Gross Revenue desc</span>
+      </header>
+      <div class="table-wrap">
+        <table class="data">
+          <thead>
+            <tr>
+              <th>Operator</th>
+              <th>Primary Facility</th>
+              <th class="num">Gross Revenue</th>
+              <th class="num">Net Income</th>
+              <th class="num">Set-Aside</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td><a href="operator-lifecycle.html">Marcus Allen</a></td><td>Atlanta Federal Center</td><td class="num">$486,200</td><td class="num">$172,400</td><td class="num">$16,210</td></tr>
+            <tr><td><a href="#">James Holloway</a></td><td>Fort Stewart Dining</td><td class="num">$441,800</td><td class="num">$158,200</td><td class="num">$14,720</td></tr>
+            <tr><td><a href="#">Devon Carter</a></td><td>Robins AFB Cafeteria</td><td class="num">$398,400</td><td class="num">$141,800</td><td class="num">$13,280</td></tr>
+            <tr><td><a href="#">Renee Whitaker</a></td><td>Sam Nunn Federal Cafe</td><td class="num">$354,600</td><td class="num">$128,700</td><td class="num">$11,820</td></tr>
+            <tr><td><a href="#">Tasha Booker</a></td><td>Macon VA Vending</td><td class="num">$268,200</td><td class="num">$96,400</td><td class="num">$8,940</td></tr>
+            <tr><td><a href="#">Andre Mitchell</a></td><td>Dobbins ARB Vending</td><td class="num">$214,500</td><td class="num">$78,900</td><td class="num">$7,150</td></tr>
+            <tr><td><a href="#">Priya Sharma</a></td><td>Albany SSA Vending</td><td class="num">$182,100</td><td class="num">$66,400</td><td class="num">$6,070</td></tr>
+            <tr><td><a href="#">Linda Reyes</a></td><td>Capitol Hill Snack Bar</td><td class="num">$148,800</td><td class="num">$52,200</td><td class="num">$4,960</td></tr>
+            <tr><td><a href="#">Brian Kowalski</a></td><td>GA DOT HQ Snack Bar</td><td class="num">$136,400</td><td class="num">$48,700</td><td class="num">$4,548</td></tr>
+            <tr><td><a href="#">Erica Daniels</a></td><td>Gainesville Court Snack</td><td class="num">$118,900</td><td class="num">$42,100</td><td class="num">$3,964</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <section class="panel" aria-label="Facility profit and loss summary">
+      <header class="panel-head">
+        <h3>Facility P&amp;L Summary</h3>
+        <span class="meta">FY26 YTD &middot; revenue minus expenses &amp; equipment costs</span>
+      </header>
+      <div class="table-wrap">
+        <table class="data">
+          <thead>
+            <tr>
+              <th>Facility</th>
+              <th class="num">Revenue</th>
+              <th class="num">Expenses</th>
+              <th class="num">Equip. Costs</th>
+              <th class="num">P&amp;L</th>
+              <th>Margin</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td>Atlanta Federal Center</td><td class="num">$486K</td><td class="num">$268K</td><td class="num">$22K</td><td class="num"><b>$196K</b></td><td><span class="mini-bar" style="width:74px;"></span> 40%</td></tr>
+            <tr><td>Fort Stewart Dining</td><td class="num">$442K</td><td class="num">$248K</td><td class="num">$18K</td><td class="num"><b>$176K</b></td><td><span class="mini-bar" style="width:70px;"></span> 40%</td></tr>
+            <tr><td>Robins AFB Cafeteria</td><td class="num">$398K</td><td class="num">$226K</td><td class="num">$16K</td><td class="num"><b>$156K</b></td><td><span class="mini-bar" style="width:66px;"></span> 39%</td></tr>
+            <tr><td>Sam Nunn Federal Cafe</td><td class="num">$355K</td><td class="num">$202K</td><td class="num">$14K</td><td class="num"><b>$139K</b></td><td><span class="mini-bar" style="width:64px;"></span> 39%</td></tr>
+            <tr><td>Macon VA Vending</td><td class="num">$268K</td><td class="num">$158K</td><td class="num">$10K</td><td class="num"><b>$100K</b></td><td><span class="mini-bar" style="width:54px;"></span> 37%</td></tr>
+            <tr><td>Dobbins ARB Vending</td><td class="num">$215K</td><td class="num">$128K</td><td class="num">$8K</td><td class="num"><b>$79K</b></td><td><span class="mini-bar" style="width:48px;"></span> 37%</td></tr>
+            <tr><td>Capitol Hill Snack Bar</td><td class="num">$149K</td><td class="num">$92K</td><td class="num">$5K</td><td class="num"><b>$52K</b></td><td><span class="mini-bar" style="width:38px;"></span> 35%</td></tr>
+            <tr><td>Columbus Courthouse Cafe</td><td class="num">$0</td><td class="num">$4K</td><td class="num">$0</td><td class="num"><b style="color:var(--sf-red);">-$4K</b></td><td><span class="pill red">Vacant</span></td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+  </div>
+
+  <!-- Two-up: Fees & Set-Aside Collections + Reports library -->
+  <div class="two-up">
+
+    <section class="panel" aria-label="Fees and set-aside collections ledger">
+      <header class="panel-head">
+        <h3>Fees &amp; Set-Aside Collections &mdash; Recent Activity</h3>
+        <span class="meta">Last 30 days &middot; reconciled to bank deposits</span>
+      </header>
+      <div class="table-wrap">
+        <table class="data">
+          <thead>
+            <tr>
+              <th>Date</th>
+              <th>Operator</th>
+              <th>Type</th>
+              <th class="num">Amount</th>
+              <th>Status</th>
+              <th>Reconciliation</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td>May 13, 2026</td><td><a href="operator-lifecycle.html">Marcus Allen</a></td><td>Set-Aside (Apr)</td><td class="num">$1,620</td><td><span class="pill green">Posted</span></td><td>Deposit #2026-0513-A</td></tr>
+            <tr><td>May 12, 2026</td><td>James Holloway</td><td>Set-Aside (Apr)</td><td class="num">$1,472</td><td><span class="pill green">Posted</span></td><td>Deposit #2026-0512-B</td></tr>
+            <tr><td>May 12, 2026</td><td>Devon Carter</td><td>Equipment Fee</td><td class="num">$340</td><td><span class="pill green">Posted</span></td><td>Deposit #2026-0512-B</td></tr>
+            <tr><td>May 10, 2026</td><td>Tasha Booker</td><td>Set-Aside (Apr)</td><td class="num">$894</td><td><span class="pill green">Posted</span></td><td>Deposit #2026-0510-C</td></tr>
+            <tr><td>May 09, 2026</td><td>Andre Mitchell</td><td>Set-Aside (Apr)</td><td class="num">$715</td><td><span class="pill amber">Pending</span></td><td>Awaiting deposit</td></tr>
+            <tr><td>May 08, 2026</td><td>Renee Whitaker</td><td>License Fee (Q1)</td><td class="num">$250</td><td><span class="pill green">Posted</span></td><td>Deposit #2026-0508-A</td></tr>
+            <tr><td>May 07, 2026</td><td>Linda Reyes</td><td>Set-Aside (Apr)</td><td class="num">$496</td><td><span class="pill amber">Pending</span></td><td>Awaiting deposit</td></tr>
+            <tr><td>May 05, 2026</td><td>Brian Kowalski</td><td>Set-Aside (Apr)</td><td class="num">$455</td><td><span class="pill green">Posted</span></td><td>Deposit #2026-0505-A</td></tr>
+            <tr><td>May 02, 2026</td><td>Carl Peterson</td><td>Set-Aside (Mar)</td><td class="num">$382</td><td><span class="pill red">Overdue</span></td><td>Reminder sent May 10</td></tr>
+            <tr><td>Apr 30, 2026</td><td>Priya Sharma</td><td>Set-Aside (Apr)</td><td class="num">$607</td><td><span class="pill green">Posted</span></td><td>Deposit #2026-0430-D</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <section class="panel" aria-label="Saved reports library">
+      <header class="panel-head">
+        <h3>Reports Library</h3>
+        <span class="meta">Saved &amp; scheduled reports</span>
+      </header>
+      <ul class="report-list">
+        <li><span class="r-icon">&#128202;</span><div><div class="r-name">RSA-15 Annual Report (Draft FY26)</div><div style="font-size:11px;color:var(--sf-gray-5);">Aggregated operator income, set-aside, equipment</div></div><span class="r-meta">Due Sep 30</span></li>
+        <li><span class="r-icon">&#128181;</span><div><div class="r-name">Operator Income &amp; Tax (1099 Prep)</div><div style="font-size:11px;color:var(--sf-gray-5);">Per-operator gross &amp; net income</div></div><span class="r-meta">Monthly</span></li>
+        <li><span class="r-icon">&#127970;</span><div><div class="r-name">Facility P&amp;L by Region</div><div style="font-size:11px;color:var(--sf-gray-5);">Revenue, expenses, depreciation by site</div></div><span class="r-meta">Weekly</span></li>
+        <li><span class="r-icon">&#128176;</span><div><div class="r-name">Set-Aside Aging &amp; Collections</div><div style="font-size:11px;color:var(--sf-gray-5);">0&ndash;30, 31&ndash;60, 60+ day buckets</div></div><span class="r-meta">Daily</span></li>
+        <li><span class="r-icon">&#128295;</span><div><div class="r-name">Equipment Cost &amp; Depreciation</div><div style="font-size:11px;color:var(--sf-gray-5);">Asset register tied to GL</div></div><span class="r-meta">Monthly</span></li>
+        <li><span class="r-icon">&#128179;</span><div><div class="r-name">Bank Deposit Reconciliation</div><div style="font-size:11px;color:var(--sf-gray-5);">QuickBooks &harr; Salesforce match log</div></div><span class="r-meta">Daily</span></li>
+        <li><span class="r-icon">&#128221;</span><div><div class="r-name">Vendor Agreement Fee Schedule</div><div style="font-size:11px;color:var(--sf-gray-5);">Per-contract fee accruals</div></div><span class="r-meta">Quarterly</span></li>
+        <li><span class="r-icon">&#128200;</span><div><div class="r-name">Year-over-Year Revenue Trend</div><div style="font-size:11px;color:var(--sf-gray-5);">FY22&ndash;FY26 by facility type</div></div><span class="r-meta">Annual</span></li>
+      </ul>
+    </section>
+  </div>
+
+  <footer class="footer-bar">
+    &copy; 2026 Georgia Vocational Rehabilitation Agency &middot; BEP Operator Console &middot; All financial figures shown are illustrative.
+  </footer>
+
+  <script>
+    // ── Filter chip toggle (within each group) ──
+    (function () {
+      document.querySelectorAll('.filter-bar').forEach(bar => {
+        const chips = bar.querySelectorAll('.chip');
+        let groups = []; let current = [];
+        // group chips by the preceding .lbl
+        bar.childNodes.forEach(n => {
+          if (n.nodeType === 1) {
+            if (n.classList.contains('lbl')) { if (current.length) groups.push(current); current = []; }
+            else if (n.classList.contains('chip')) current.push(n);
+          }
+        });
+        if (current.length) groups.push(current);
+        groups.forEach(g => {
+          g.forEach(c => c.addEventListener('click', () => {
+            g.forEach(x => x.classList.remove('active'));
+            c.classList.add('active');
+          }));
+        });
+      });
+    })();
+
+    // ── Bar drill-in (visual only) ──
+    (function () {
+      document.querySelectorAll('#monthBars .bar-col').forEach(col => {
+        col.addEventListener('click', () => {
+          const m = col.getAttribute('data-month');
+          const r = col.getAttribute('data-rev');
+          const s = col.getAttribute('data-sa');
+          alert(m + ' FY26\nGross Revenue: $' + r + 'K\nSet-Aside Collected: $' + s + 'K\n\n(Drill-in to facility-level detail would open here.)');
+        });
+      });
+    })();
+  </script>
+
+</body>
+</html>

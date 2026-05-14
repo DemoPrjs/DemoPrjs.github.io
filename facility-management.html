@@ -1,0 +1,581 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Facility Management — BEP Operator Console | GVRA</title>
+  <meta name="description" content="Salesforce-style case worker view for the GVRA Business Enterprise Program — manage vending sites, cafeterias, snack bars, and operator assignments." />
+  <style>
+    /* ── Salesforce-style tokens ── */
+    :root {
+      --sf-blue:        #0176d3;
+      --sf-blue-mid:    #1b96ff;
+      --sf-blue-deep:   #032d60;
+      --sf-blue-light:  #eaf5fe;
+      --sf-purple:      #5867e8;
+      --sf-green:       #2e844a;
+      --sf-green-light: #ddf3e4;
+      --sf-amber:       #b76e00;
+      --sf-amber-light: #fef0c3;
+      --sf-red:         #ba0517;
+      --sf-red-light:   #feded8;
+      --sf-gray-1:      #f3f3f3;
+      --sf-gray-2:      #ecebea;
+      --sf-gray-3:      #c9c7c5;
+      --sf-gray-5:      #706e6b;
+      --sf-gray-6:      #444241;
+      --sf-charcoal:    #181818;
+      --sf-border:      #dddbda;
+      --sf-bg:          #f3f2f2;
+      --sf-card:        #ffffff;
+      --sf-shadow-sm:   0 1px 3px rgba(0,0,0,0.04);
+      --sf-shadow-md:   0 2px 6px rgba(0,0,0,0.08);
+    }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: 'Salesforce Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Arial, sans-serif;
+      color: var(--sf-charcoal);
+      background: var(--sf-bg);
+      font-size: 13px;
+      line-height: 1.45;
+    }
+    a { color: var(--sf-blue); text-decoration: none; }
+    a:hover { text-decoration: underline; }
+    button { font-family: inherit; cursor: pointer; }
+
+    /* ── Global Header ── */
+    .global-header {
+      background: #fff;
+      border-bottom: 1px solid var(--sf-border);
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 10px 20px;
+      height: 64px;
+      position: sticky; top: 0; z-index: 100;
+    }
+    .gh-brand { display: flex; align-items: center; gap: 10px; }
+    .gh-brand img { height: 44px; width: auto; display: block; }
+    .gh-right { display: flex; align-items: center; gap: 12px; }
+    .gh-icon {
+      width: 32px; height: 32px; border-radius: 4px; border: none;
+      background: transparent; color: var(--sf-gray-6);
+      display: inline-flex; align-items: center; justify-content: center;
+      font-size: 16px;
+    }
+    .gh-icon:hover { background: var(--sf-gray-1); }
+    .gh-avatar {
+      width: 32px; height: 32px; border-radius: 50%;
+      background: var(--sf-blue-deep); color: #fff;
+      display: inline-flex; align-items: center; justify-content: center;
+      font-size: 12px; font-weight: 700;
+    }
+
+    /* ── App bar (object tabs) ── */
+    .app-bar {
+      background: #fff; border-bottom: 1px solid var(--sf-border);
+      padding: 0 20px;
+      display: flex; align-items: stretch; gap: 0;
+      overflow-x: auto;
+    }
+    .app-bar .app-name {
+      display: inline-flex; align-items: center; gap: 8px;
+      padding: 10px 16px 10px 0; margin-right: 14px;
+      font-weight: 700; color: var(--sf-blue-deep); font-size: 14px;
+      border-right: 1px solid var(--sf-border);
+    }
+    .app-bar .app-name::before {
+      content: '';
+      width: 18px; height: 18px; border-radius: 4px;
+      background: var(--sf-blue); display: inline-block;
+    }
+    .app-tab {
+      padding: 12px 14px; font-size: 13px; font-weight: 600;
+      color: var(--sf-gray-6); white-space: nowrap;
+      border-bottom: 3px solid transparent;
+    }
+    .app-tab:hover { color: var(--sf-blue); text-decoration: none; }
+    .app-tab.active {
+      color: var(--sf-blue); border-bottom-color: var(--sf-blue);
+    }
+
+    /* ── Page header ── */
+    .page-head {
+      background: #fff;
+      border-bottom: 1px solid var(--sf-border);
+      padding: 16px 20px;
+      display: flex; align-items: center; justify-content: space-between;
+      gap: 16px; flex-wrap: wrap;
+    }
+    .page-head .crumbs {
+      font-size: 12px; color: var(--sf-gray-5); margin-bottom: 4px;
+    }
+    .page-head h1 {
+      font-size: 20px; font-weight: 700; color: var(--sf-charcoal);
+      display: inline-flex; align-items: center; gap: 10px;
+    }
+    .page-head .h-icon {
+      width: 36px; height: 36px; border-radius: 6px;
+      background: var(--sf-blue); color: #fff;
+      display: inline-flex; align-items: center; justify-content: center;
+      font-size: 18px;
+    }
+    .page-head .meta {
+      font-size: 12px; color: var(--sf-gray-5); margin-top: 4px;
+    }
+    .head-actions { display: flex; gap: 8px; flex-wrap: wrap; }
+    .btn {
+      padding: 6px 14px; border-radius: 4px; font-size: 13px; font-weight: 600;
+      border: 1px solid var(--sf-border); background: #fff; color: var(--sf-charcoal);
+    }
+    .btn:hover { background: var(--sf-gray-1); }
+    .btn.primary { background: var(--sf-blue); color: #fff; border-color: var(--sf-blue); }
+    .btn.primary:hover { background: #014486; border-color: #014486; }
+
+    /* ── KPI strip ── */
+    .kpi-strip {
+      display: grid; grid-template-columns: repeat(5, 1fr); gap: 12px;
+      padding: 16px 20px 0;
+    }
+    @media (max-width: 1100px) {
+      .kpi-strip { grid-template-columns: repeat(2, 1fr); }
+    }
+    .kpi {
+      background: #fff;
+      border: 1px solid var(--sf-border);
+      border-radius: 4px;
+      box-shadow: var(--sf-shadow-sm);
+      padding: 12px 14px;
+    }
+    .kpi .lbl {
+      font-size: 11px; color: var(--sf-gray-5); font-weight: 700;
+      text-transform: uppercase; letter-spacing: 0.04em;
+    }
+    .kpi .val { font-size: 22px; font-weight: 700; color: var(--sf-charcoal); margin-top: 4px; }
+    .kpi .sub { font-size: 11px; color: var(--sf-gray-5); margin-top: 2px; }
+    .kpi .delta { font-size: 11px; font-weight: 700; margin-top: 4px; }
+    .kpi .delta.up { color: var(--sf-green); }
+    .kpi .delta.warn { color: var(--sf-amber); }
+
+    /* ── Toolbar ── */
+    .toolbar {
+      display: flex; align-items: center; justify-content: space-between;
+      gap: 12px; flex-wrap: wrap;
+      padding: 16px 20px 12px;
+    }
+    .chips { display: inline-flex; gap: 8px; flex-wrap: wrap; }
+    .chip {
+      display: inline-flex; align-items: center; gap: 6px;
+      background: #fff; border: 1px solid var(--sf-border); border-radius: 100px;
+      padding: 5px 14px; font-size: 12px; font-weight: 600; color: var(--sf-gray-6);
+    }
+    .chip:hover { background: var(--sf-blue-light); border-color: var(--sf-blue-mid); }
+    .chip.active { background: var(--sf-blue-deep); border-color: var(--sf-blue-deep); color: #fff; }
+    .chip .count {
+      background: rgba(255,255,255,0.18); color: inherit;
+      padding: 1px 6px; border-radius: 100px; font-size: 11px;
+    }
+    .chip:not(.active) .count { background: var(--sf-gray-2); color: var(--sf-gray-6); }
+
+    .search {
+      position: relative; flex: 1; max-width: 320px;
+    }
+    .search input {
+      width: 100%; padding: 7px 12px 7px 32px;
+      border: 1px solid var(--sf-border); border-radius: 4px;
+      font-size: 13px; background: #fff; color: var(--sf-charcoal);
+    }
+    .search input:focus { outline: 2px solid var(--sf-blue); outline-offset: -1px; }
+    .search::before {
+      content: '\1F50D'; position: absolute;
+      left: 10px; top: 50%; transform: translateY(-50%);
+      color: var(--sf-gray-5); font-size: 13px;
+    }
+
+    .toolbar-right { display: inline-flex; gap: 8px; align-items: center; }
+
+    /* ── Card / list view ── */
+    .list-card {
+      background: #fff;
+      border: 1px solid var(--sf-border);
+      border-radius: 4px;
+      box-shadow: var(--sf-shadow-sm);
+      margin: 0 20px 24px;
+      overflow: hidden;
+    }
+    .list-head {
+      padding: 12px 16px;
+      display: flex; align-items: center; justify-content: space-between;
+      gap: 12px; flex-wrap: wrap;
+      border-bottom: 1px solid var(--sf-border);
+      background: #fafaf9;
+    }
+    .list-head h3 {
+      font-size: 14px; font-weight: 700; color: var(--sf-charcoal);
+      display: inline-flex; align-items: center; gap: 8px;
+    }
+    .list-head .meta { font-size: 12px; color: var(--sf-gray-5); }
+    .list-head .actions { display: inline-flex; gap: 6px; }
+    .list-head .actions button {
+      width: 28px; height: 28px; border: 1px solid var(--sf-border);
+      background: #fff; border-radius: 4px; color: var(--sf-gray-6); font-size: 13px;
+    }
+    .list-head .actions button:hover { background: var(--sf-gray-1); }
+    .list-head .actions button.active { background: var(--sf-blue-deep); color: #fff; border-color: var(--sf-blue-deep); }
+
+    /* ── Data table ── */
+    .table-wrap { overflow-x: auto; }
+    table.data {
+      width: 100%; border-collapse: collapse; font-size: 13px;
+      min-width: 980px;
+    }
+    table.data th, table.data td {
+      text-align: left; padding: 10px 14px; border-bottom: 1px solid var(--sf-gray-2);
+      vertical-align: middle;
+    }
+    table.data th {
+      font-size: 11px; color: var(--sf-gray-5); font-weight: 700;
+      text-transform: uppercase; letter-spacing: 0.04em;
+      background: #fafaf9; position: sticky; top: 0;
+    }
+    table.data tbody tr:hover { background: var(--sf-blue-light); cursor: default; }
+    table.data tbody td .name { font-weight: 700; color: var(--sf-charcoal); }
+    table.data tbody td a { color: var(--sf-blue); }
+    .pill {
+      display: inline-flex; align-items: center; gap: 4px;
+      padding: 3px 10px; border-radius: 100px; font-size: 11px; font-weight: 700;
+      text-transform: uppercase; letter-spacing: 0.04em;
+    }
+    .pill.green { background: var(--sf-green-light); color: var(--sf-green); }
+    .pill.amber { background: var(--sf-amber-light); color: var(--sf-amber); }
+    .pill.red   { background: var(--sf-red-light);   color: var(--sf-red); }
+    .pill.blue  { background: var(--sf-blue-light);  color: var(--sf-blue-deep); }
+    .pill.gray  { background: var(--sf-gray-2);      color: var(--sf-gray-6); }
+
+    .check-cell { width: 28px; }
+    .check-cell input { width: 14px; height: 14px; }
+
+    /* ── Footer ── */
+    .footer-bar {
+      text-align: center;
+      padding: 16px 20px;
+      font-size: 12px; color: var(--sf-gray-5);
+      background: #fff; border-top: 1px solid var(--sf-border);
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Global Header (matches operator-lifecycle.html) -->
+  <header class="global-header" aria-label="Global header">
+    <a href="bep-program.html" class="gh-brand" aria-label="GVRA home">
+      <img src="GVRA.png" alt="Georgia Vocational Rehabilitation Agency" />
+    </a>
+    <div class="gh-right">
+      <button class="gh-icon" aria-label="Help">?</button>
+      <button class="gh-icon" aria-label="Setup">&#9881;</button>
+      <button class="gh-icon" aria-label="Notifications">&#128276;</button>
+      <span class="gh-avatar" aria-label="Renee Patel">RP</span>
+    </div>
+  </header>
+
+  <!-- App bar (matches operator-lifecycle.html) -->
+  <nav class="app-bar" aria-label="BEP application tabs">
+    <span class="app-name">BEP Operator Console</span>
+    <a href="#" class="app-tab">Home</a>
+    <a href="operator-lifecycle.html" class="app-tab">Operators</a>
+    <a href="#" class="app-tab">Cases</a>
+    <a href="#" class="app-tab active">Facilities</a>
+    <a href="#" class="app-tab">Training</a>
+    <a href="#" class="app-tab">Set-Aside</a>
+    <a href="#" class="app-tab">Reports</a>
+    <a href="#" class="app-tab">Dashboards</a>
+  </nav>
+
+  <!-- Page header -->
+  <section class="page-head" aria-label="Facility management page header">
+    <div>
+      <div class="crumbs"><a href="bep-program.html">BEP Program</a> &nbsp;&rsaquo;&nbsp; <a href="#">Facilities</a></div>
+      <h1><span class="h-icon" aria-hidden="true">&#127970;</span> Facility Management</h1>
+      <div class="meta">All vending sites, cafeterias, and snack bars across Georgia &middot; Last refreshed May 14, 2026 at 10:18 AM</div>
+    </div>
+    <div class="head-actions">
+      <button class="btn">Import</button>
+      <button class="btn">Export</button>
+      <button class="btn">Print</button>
+      <button class="btn primary">+ Add New Facility</button>
+    </div>
+  </section>
+
+  <!-- KPI strip -->
+  <div class="kpi-strip" aria-label="Facility KPIs">
+    <div class="kpi"><div class="lbl">Total Facilities</div><div class="val">118</div><div class="sub">Across 9 GVRA districts</div></div>
+    <div class="kpi"><div class="lbl">Active Sites</div><div class="val">94</div><div class="delta up">&uarr; 3 since last month</div></div>
+    <div class="kpi"><div class="lbl">Vacant</div><div class="val">7</div><div class="sub">3 ready for assignment</div></div>
+    <div class="kpi"><div class="lbl">Inspection Due</div><div class="val">11</div><div class="delta warn">&uarr; 4 within 14 days</div></div>
+    <div class="kpi"><div class="lbl">Pending Assignment</div><div class="val">6</div><div class="sub">Candidate review queue</div></div>
+  </div>
+
+  <!-- Toolbar -->
+  <div class="toolbar" role="group" aria-label="Filter and search facilities">
+    <div class="chips">
+      <button class="chip active" type="button" data-filter="all">All Sites <span class="count">118</span></button>
+      <button class="chip" type="button" data-filter="vending">Vending <span class="count">52</span></button>
+      <button class="chip" type="button" data-filter="cafeteria">Cafeteria <span class="count">38</span></button>
+      <button class="chip" type="button" data-filter="snack">Snack Bar <span class="count">28</span></button>
+      <button class="chip" type="button" data-filter="vacant">Vacant <span class="count">7</span></button>
+      <button class="chip" type="button" data-filter="review">Inspection Due <span class="count">11</span></button>
+    </div>
+    <div class="toolbar-right">
+      <div class="search"><input type="search" aria-label="Search facilities" placeholder="Search facilities, operators, locations…" /></div>
+      <button class="btn">District: All</button>
+      <button class="btn">Last Modified</button>
+    </div>
+  </div>
+
+  <!-- List view card -->
+  <section class="list-card" aria-label="Facilities and operator assignments list view">
+    <header class="list-head">
+      <div>
+        <h3>Facilities &amp; Operator Assignments</h3>
+        <div class="meta">18 of 118 records &middot; Sorted by Facility &middot; Updated a few seconds ago</div>
+      </div>
+      <div class="actions">
+        <button aria-label="List view" class="active">&#9776;</button>
+        <button aria-label="Kanban view">&#9783;</button>
+        <button aria-label="Table settings">&#9881;</button>
+        <button aria-label="Refresh">&#8635;</button>
+      </div>
+    </header>
+    <div class="table-wrap">
+      <table class="data" id="facility-table" aria-label="Facilities and operator assignments">
+        <thead>
+          <tr>
+            <th class="check-cell"><input type="checkbox" aria-label="Select all" /></th>
+            <th>Facility</th>
+            <th>Type</th>
+            <th>Location</th>
+            <th>Assigned Operator</th>
+            <th>Equipment</th>
+            <th>Status</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody id="facility-rows">
+          <!-- Cafeterias -->
+          <tr data-type="cafeteria" data-status="active">
+            <td class="check-cell"><input type="checkbox" aria-label="Select row" /></td>
+            <td><a href="#" class="name">Atlanta Federal Center</a></td>
+            <td>Cafeteria</td>
+            <td>Atlanta, GA</td>
+            <td><a href="operator-lifecycle.html">Marcus Allen (BEP-1042)</a></td>
+            <td>14 assets</td>
+            <td><span class="pill green">Active</span></td>
+            <td><a href="#">Manage</a></td>
+          </tr>
+          <tr data-type="cafeteria" data-status="review">
+            <td class="check-cell"><input type="checkbox" aria-label="Select row" /></td>
+            <td><a href="#" class="name">Robins AFB Cafeteria</a></td>
+            <td>Cafeteria</td>
+            <td>Warner Robins, GA</td>
+            <td><a href="#">Devon Carter (BEP-1019)</a></td>
+            <td>31 assets</td>
+            <td><span class="pill amber">Inspection Due</span></td>
+            <td><a href="#">Schedule Inspection</a></td>
+          </tr>
+          <tr data-type="cafeteria" data-status="active">
+            <td class="check-cell"><input type="checkbox" aria-label="Select row" /></td>
+            <td><a href="#" class="name">Sam Nunn Federal Cafeteria</a></td>
+            <td>Cafeteria</td>
+            <td>Atlanta, GA</td>
+            <td><a href="#">Renee Whitaker (BEP-1067)</a></td>
+            <td>26 assets</td>
+            <td><span class="pill green">Active</span></td>
+            <td><a href="#">Manage</a></td>
+          </tr>
+          <tr data-type="cafeteria" data-status="active">
+            <td class="check-cell"><input type="checkbox" aria-label="Select row" /></td>
+            <td><a href="#" class="name">Fort Stewart Dining Facility</a></td>
+            <td>Cafeteria</td>
+            <td>Hinesville, GA</td>
+            <td><a href="#">James Holloway (BEP-1023)</a></td>
+            <td>42 assets</td>
+            <td><span class="pill green">Active</span></td>
+            <td><a href="#">Manage</a></td>
+          </tr>
+          <tr data-type="cafeteria" data-status="vacant">
+            <td class="check-cell"><input type="checkbox" aria-label="Select row" /></td>
+            <td><a href="#" class="name">Columbus Courthouse Cafe</a></td>
+            <td>Cafeteria</td>
+            <td>Columbus, GA</td>
+            <td>&mdash;</td>
+            <td>18 assets</td>
+            <td><span class="pill red">Vacant</span></td>
+            <td><a href="#">Assign Operator</a></td>
+          </tr>
+          <tr data-type="cafeteria" data-status="pending">
+            <td class="check-cell"><input type="checkbox" aria-label="Select row" /></td>
+            <td><a href="#" class="name">Augusta VA Medical Cafe</a></td>
+            <td>Cafeteria</td>
+            <td>Augusta, GA</td>
+            <td>Pending assignment</td>
+            <td>22 assets</td>
+            <td><span class="pill amber">Pending</span></td>
+            <td><a href="#">Review Candidates</a></td>
+          </tr>
+
+          <!-- Vending -->
+          <tr data-type="vending" data-status="active">
+            <td class="check-cell"><input type="checkbox" aria-label="Select row" /></td>
+            <td><a href="#" class="name">Macon VA Vending Route</a></td>
+            <td>Vending</td>
+            <td>Macon, GA</td>
+            <td><a href="#">Tasha Booker (BEP-1085)</a></td>
+            <td>22 machines</td>
+            <td><span class="pill green">Active</span></td>
+            <td><a href="#">Manage</a></td>
+          </tr>
+          <tr data-type="vending" data-status="pending">
+            <td class="check-cell"><input type="checkbox" aria-label="Select row" /></td>
+            <td><a href="#" class="name">Athens DOL Vending</a></td>
+            <td>Vending</td>
+            <td>Athens, GA</td>
+            <td>Pending assignment</td>
+            <td>9 machines</td>
+            <td><span class="pill amber">Pending</span></td>
+            <td><a href="#">Review Candidates</a></td>
+          </tr>
+          <tr data-type="vending" data-status="active">
+            <td class="check-cell"><input type="checkbox" aria-label="Select row" /></td>
+            <td><a href="#" class="name">Dobbins ARB Vending Route</a></td>
+            <td>Vending</td>
+            <td>Marietta, GA</td>
+            <td><a href="#">Andre Mitchell (BEP-1051)</a></td>
+            <td>18 machines</td>
+            <td><span class="pill green">Active</span></td>
+            <td><a href="#">Manage</a></td>
+          </tr>
+          <tr data-type="vending" data-status="active">
+            <td class="check-cell"><input type="checkbox" aria-label="Select row" /></td>
+            <td><a href="#" class="name">Albany SSA Vending</a></td>
+            <td>Vending</td>
+            <td>Albany, GA</td>
+            <td><a href="#">Priya Sharma (BEP-1074)</a></td>
+            <td>12 machines</td>
+            <td><span class="pill green">Active</span></td>
+            <td><a href="#">Manage</a></td>
+          </tr>
+          <tr data-type="vending" data-status="review">
+            <td class="check-cell"><input type="checkbox" aria-label="Select row" /></td>
+            <td><a href="#" class="name">Rome Federal Building Vending</a></td>
+            <td>Vending</td>
+            <td>Rome, GA</td>
+            <td><a href="#">Carl Peterson (BEP-1036)</a></td>
+            <td>10 machines</td>
+            <td><span class="pill amber">Inspection Due</span></td>
+            <td><a href="#">Schedule Inspection</a></td>
+          </tr>
+          <tr data-type="vending" data-status="vacant">
+            <td class="check-cell"><input type="checkbox" aria-label="Select row" /></td>
+            <td><a href="#" class="name">Valdosta Post Office Vending</a></td>
+            <td>Vending</td>
+            <td>Valdosta, GA</td>
+            <td>&mdash;</td>
+            <td>7 machines</td>
+            <td><span class="pill red">Vacant</span></td>
+            <td><a href="#">Assign Operator</a></td>
+          </tr>
+
+          <!-- Snack Bars -->
+          <tr data-type="snack" data-status="vacant">
+            <td class="check-cell"><input type="checkbox" aria-label="Select row" /></td>
+            <td><a href="#" class="name">Savannah Courthouse Snack Bar</a></td>
+            <td>Snack Bar</td>
+            <td>Savannah, GA</td>
+            <td>&mdash;</td>
+            <td>6 assets</td>
+            <td><span class="pill red">Vacant</span></td>
+            <td><a href="#">Assign Operator</a></td>
+          </tr>
+          <tr data-type="snack" data-status="active">
+            <td class="check-cell"><input type="checkbox" aria-label="Select row" /></td>
+            <td><a href="#" class="name">Capitol Hill Snack Bar</a></td>
+            <td>Snack Bar</td>
+            <td>Atlanta, GA</td>
+            <td><a href="#">Linda Reyes (BEP-1058)</a></td>
+            <td>8 assets</td>
+            <td><span class="pill green">Active</span></td>
+            <td><a href="#">Manage</a></td>
+          </tr>
+          <tr data-type="snack" data-status="active">
+            <td class="check-cell"><input type="checkbox" aria-label="Select row" /></td>
+            <td><a href="#" class="name">GA DOT HQ Snack Bar</a></td>
+            <td>Snack Bar</td>
+            <td>Atlanta, GA</td>
+            <td><a href="#">Brian Kowalski (BEP-1029)</a></td>
+            <td>9 assets</td>
+            <td><span class="pill green">Active</span></td>
+            <td><a href="#">Manage</a></td>
+          </tr>
+          <tr data-type="snack" data-status="active">
+            <td class="check-cell"><input type="checkbox" aria-label="Select row" /></td>
+            <td><a href="#" class="name">Gainesville Court Snack Bar</a></td>
+            <td>Snack Bar</td>
+            <td>Gainesville, GA</td>
+            <td><a href="#">Erica Daniels (BEP-1063)</a></td>
+            <td>7 assets</td>
+            <td><span class="pill green">Active</span></td>
+            <td><a href="#">Manage</a></td>
+          </tr>
+          <tr data-type="snack" data-status="review">
+            <td class="check-cell"><input type="checkbox" aria-label="Select row" /></td>
+            <td><a href="#" class="name">Brunswick Federal Snack Bar</a></td>
+            <td>Snack Bar</td>
+            <td>Brunswick, GA</td>
+            <td><a href="#">Jonah Pierce (BEP-1047)</a></td>
+            <td>5 assets</td>
+            <td><span class="pill amber">Inspection Due</span></td>
+            <td><a href="#">Schedule Inspection</a></td>
+          </tr>
+          <tr data-type="snack" data-status="pending">
+            <td class="check-cell"><input type="checkbox" aria-label="Select row" /></td>
+            <td><a href="#" class="name">Decatur Courthouse Snack Bar</a></td>
+            <td>Snack Bar</td>
+            <td>Decatur, GA</td>
+            <td>Pending assignment</td>
+            <td>6 assets</td>
+            <td><span class="pill amber">Pending</span></td>
+            <td><a href="#">Review Candidates</a></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <footer class="footer-bar">
+    &copy; 2026 Georgia Vocational Rehabilitation Agency &middot; BEP Operator Console &middot; All data shown is illustrative.
+  </footer>
+
+  <script>
+    // ── Chip filter ──
+    (function () {
+      const chips = document.querySelectorAll('.chip');
+      const rows = document.querySelectorAll('#facility-rows tr');
+      chips.forEach(ch => {
+        ch.addEventListener('click', () => {
+          chips.forEach(c => c.classList.remove('active'));
+          ch.classList.add('active');
+          const f = ch.getAttribute('data-filter');
+          rows.forEach(r => {
+            if (f === 'all') { r.style.display = ''; return; }
+            if (f === 'vacant' || f === 'review' || f === 'pending') {
+              r.style.display = (r.getAttribute('data-status') === f) ? '' : 'none';
+            } else {
+              r.style.display = (r.getAttribute('data-type') === f) ? '' : 'none';
+            }
+          });
+        });
+      });
+    })();
+  </script>
+
+</body>
+</html>
