@@ -728,7 +728,7 @@
       <aside class="insight-card" role="region" aria-label="Einstein AI insights">
         <h3><span class="ei">Einstein Insights</span></h3>
         <div style="font-size: 12px; opacity: .9; margin-top: 8px;">Auto-generated from the last 4-hour analytics refresh.</div>
-        <ul class="insight-list">
+        <ul class="insight-list" id="einsteinInsights">
           <li>
             <span class="ic">!</span>
             <div>
@@ -816,35 +816,7 @@
           <div class="actions"><button aria-label="More">&#8942;</button></div>
         </header>
         <div class="comp-body">
-          <div class="bar-list">
-            <div class="bl-row">
-              <div class="top"><span class="name">Job Coaching &amp; Placement</span><span class="val">$12.4M <span class="pill amber">+18%</span></span></div>
-              <div class="bl-bar"><div class="fill b1" style="width: 88%"></div></div>
-            </div>
-            <div class="bl-row">
-              <div class="top"><span class="name">Assistive Technology</span><span class="val">$8.9M <span class="pill amber">+12%</span></span></div>
-              <div class="bl-bar"><div class="fill b2" style="width: 72%"></div></div>
-            </div>
-            <div class="bl-row">
-              <div class="top"><span class="name">Post-Secondary Training</span><span class="val">$10.2M <span class="pill green">on plan</span></span></div>
-              <div class="bl-bar"><div class="fill b3" style="width: 80%"></div></div>
-            </div>
-            <div class="bl-row">
-              <div class="top"><span class="name">Vocational Evaluation</span><span class="val">$3.6M <span class="pill green">-4%</span></span></div>
-              <div class="bl-bar"><div class="fill b4" style="width: 32%"></div></div>
-            </div>
-            <div class="bl-row">
-              <div class="top"><span class="name">BEP Operator Training</span><span class="val">$5.1M <span class="pill blue">on plan</span></span></div>
-              <div class="bl-bar"><div class="fill b5" style="width: 44%"></div></div>
-            </div>
-            <div class="bl-row">
-              <div class="top"><span class="name">Transportation Stipends</span><span class="val">$2.4M <span class="pill amber">+9%</span></span></div>
-              <div class="bl-bar"><div class="fill b1" style="width: 22%"></div></div>
-            </div>
-            <div class="bl-row">
-              <div class="top"><span class="name">Other Services</span><span class="val">$7.7M <span class="pill gray">flat</span></span></div>
-              <div class="bl-bar"><div class="fill b2" style="width: 56%"></div></div>
-            </div>
+          <div class="bar-list" id="categorySpendList">
           </div>
         </div>
       </section>
@@ -1259,6 +1231,155 @@
           if (el) el.className = data[clsKey];
         });
         renderExpenditureChart(name);
+        renderInsights(name);
+        renderCategorySpend(name);
+      }
+
+      // ── Einstein Insights per region ──
+      const REGION_INSIGHTS = {
+        'All Regions': [
+          { ic: '!', title: 'FYTD spend trending $1.7M above plan', body: 'Driven by job coaching (+18%) and assistive tech (+12%). Recommend amending IPEs in West &amp; South regions.', conf: '92%' },
+          { ic: '&#9888;', title: '147 consumers at high disengagement risk', body: 'Common signals: no contact 21+ days, missed authorizations, low session attendance.', conf: '88%' },
+          { ic: '&#9650;', title: 'Counselor caseload variance widening', body: '4 counselors above 1.4x median load &mdash; closure rates 11% lower. Suggest case rebalancing.', conf: '85%' },
+          { ic: '&#10003;', title: 'BEP route to employment outperforming', body: 'Blind / low-vision consumers placed via BEP show 23% higher 90-day stability than peers.', conf: '94%' }
+        ],
+        'Metro Atlanta': [
+          { ic: '!', title: 'Metro Atlanta projected $0.6M over budget', body: 'Tuition and assistive tech rising in DeKalb &amp; Gwinnett. Consider tighter pre-authorization review.', conf: '93%' },
+          { ic: '&#9888;', title: '52 consumers flagged for disengagement', body: 'Concentrated in Clayton (38%) &amp; South Fulton (24%). Recommend targeted outreach playbook.', conf: '90%' },
+          { ic: '&#10003;', title: 'Top placement velocity statewide', body: 'Avg time-to-placement 84 days vs. 102 day GVRA average. Document Atlanta employer partnership model.', conf: '95%' },
+          { ic: '&#9650;', title: 'BEP referrals up 22% YoY', body: 'Blind / low-vision pipeline strongest among all regions; BEP route closure rate 89%.', conf: '92%' }
+        ],
+        'North GA': [
+          { ic: '!', title: 'Forecast $0.2M above authorized', body: 'Driven by Hall &amp; Forsyth intake surge (+14%). Suggest Q4 budget amendment.', conf: '89%' },
+          { ic: '&#9888;', title: '24 consumers at disengagement risk', body: 'Rural counties (Pickens, Lumpkin) show longest contact gaps &mdash; expand telehealth check-ins.', conf: '86%' },
+          { ic: '&#9650;', title: 'Counselor load above target', body: 'North GA carries 1.3x state median caseload. Consider adding 1 FTE in Gainesville office.', conf: '84%' },
+          { ic: '&#10003;', title: 'Wage retention improving', body: '90-day wage retention up 6 points YoY; manufacturing placements driving the gain.', conf: '91%' }
+        ],
+        'South GA': [
+          { ic: '!', title: 'Closure rate trailing target', body: '65.4% vs. 72% goal &mdash; under-served counties (Tift, Colquitt) need additional employer outreach.', conf: '90%' },
+          { ic: '&#9888;', title: '19 consumers flagged for disengagement', body: 'Transportation barriers cited in 61% of cases. Recommend mileage assistance expansion.', conf: '87%' },
+          { ic: '&#9650;', title: 'M. Johnson overloaded (58 cases)', body: 'Closure rate has dropped 4 pts in 90 days. Rebalance with neighboring caseloads.', conf: '88%' },
+          { ic: '&#10003;', title: 'Agriculture sector placements rising', body: 'Lowndes &amp; Thomas seasonal placements up 18%; sustain employer engagement through Q3.', conf: '90%' }
+        ],
+        'Central': [
+          { ic: '!', title: 'Spend approaching cap in Bibb', body: 'Bibb sub-region at 78% of authorized; recommend reallocating from under-utilized Houston.', conf: '91%' },
+          { ic: '&#9888;', title: '20 consumers at disengagement risk', body: 'Spike correlates with recent counselor turnover in Macon office &mdash; reassign within 14 days.', conf: '85%' },
+          { ic: '&#10003;', title: 'Plan closure success climbing', body: 'Successful closures up 7 pts since Q1. Track which interventions correlate.', conf: '90%' },
+          { ic: '&#9650;', title: 'Vocational training utilization rising', body: 'Tech-college partnerships in Macon driving +22% credential attainment.', conf: '87%' }
+        ],
+        'Coastal': [
+          { ic: '&#10003;', title: 'Strongest closure rate of all regions', body: 'Coastal at 70.5% &mdash; closest to 72% target. K. Nguyen (Brunswick) leading at 76.4%.', conf: '95%' },
+          { ic: '&#9888;', title: '15 consumers flagged for disengagement', body: 'Camden / Glynn isolation patterns. Pilot mobile counseling unit suggested.', conf: '83%' },
+          { ic: '!', title: 'Hospitality cost-of-living adjustments', body: 'Savannah wage standards rising; verify IPE rate tables for FY27 planning.', conf: '88%' },
+          { ic: '&#9650;', title: 'Maritime / port sector hiring up', body: 'Chatham employer pipeline expanding; align job-coach capacity with Q4 surge.', conf: '89%' }
+        ],
+        'West GA': [
+          { ic: '!', title: 'West GA closure rate stalling at 66%', body: 'Stable trend &mdash; not declining, but not improving. Drill into Carroll &amp; Coweta counselor practices.', conf: '87%' },
+          { ic: '&#9888;', title: '17 consumers at disengagement risk', body: 'Troup &amp; Heard counties show longest follow-up gaps. Targeted outreach playbook recommended.', conf: '85%' },
+          { ic: '&#9650;', title: 'Higher consumer intake driving spend', body: 'New referral surge from Columbus medical centers contributing +$310K to forecast.', conf: '90%' },
+          { ic: '&#10003;', title: 'Assistive tech outcomes strong', body: 'Muscogee assistive tech recipients show 81% job retention at 6 months.', conf: '91%' }
+        ]
+      };
+      function renderInsights(name) {
+        const list = document.getElementById('einsteinInsights');
+        if (!list) return;
+        const items = REGION_INSIGHTS[name] || REGION_INSIGHTS['All Regions'];
+        list.innerHTML = items.map(it => `
+          <li>
+            <span class="ic">${it.ic}</span>
+            <div>
+              <strong>${it.title}</strong>
+              <small>${it.body}</small>
+            </div>
+            <span class="conf">${it.conf}</span>
+          </li>
+        `).join('');
+      }
+
+      // ── Predicted Spend by Service Category per region ──
+      // values in $M; each region's rows sum ≈ region's Predicted FY-End Spend KPI.
+      const REGION_CATEGORIES = {
+        'All Regions': [
+          { name: 'Job Coaching &amp; Placement', val: 12.4, pill: { cls: 'amber', text: '+18%' }, bar: 'b1' },
+          { name: 'Assistive Technology',         val: 8.9,  pill: { cls: 'amber', text: '+12%' }, bar: 'b2' },
+          { name: 'Post-Secondary Training',      val: 10.2, pill: { cls: 'green', text: 'on plan' }, bar: 'b3' },
+          { name: 'Vocational Evaluation',        val: 3.6,  pill: { cls: 'green', text: '-4%' }, bar: 'b4' },
+          { name: 'BEP Operator Training',        val: 5.1,  pill: { cls: 'blue',  text: 'on plan' }, bar: 'b5' },
+          { name: 'Transportation Stipends',      val: 2.4,  pill: { cls: 'amber', text: '+9%' }, bar: 'b1' },
+          { name: 'Other Services',               val: 7.7,  pill: { cls: 'gray',  text: 'flat' }, bar: 'b2' }
+        ],
+        'Metro Atlanta': [
+          { name: 'Job Coaching &amp; Placement', val: 4.2, pill: { cls: 'amber', text: '+22%' }, bar: 'b1' },
+          { name: 'Assistive Technology',         val: 3.0, pill: { cls: 'amber', text: '+15%' }, bar: 'b2' },
+          { name: 'Post-Secondary Training',      val: 3.4, pill: { cls: 'green', text: 'on plan' }, bar: 'b3' },
+          { name: 'Vocational Evaluation',        val: 1.1, pill: { cls: 'green', text: '-3%' }, bar: 'b4' },
+          { name: 'BEP Operator Training',        val: 1.8, pill: { cls: 'blue',  text: 'on plan' }, bar: 'b5' },
+          { name: 'Transportation Stipends',      val: 0.5, pill: { cls: 'amber', text: '+6%' }, bar: 'b1' },
+          { name: 'Other Services',               val: 2.2, pill: { cls: 'gray',  text: 'flat' }, bar: 'b2' }
+        ],
+        'North GA': [
+          { name: 'Job Coaching &amp; Placement', val: 2.1, pill: { cls: 'amber', text: '+16%' }, bar: 'b1' },
+          { name: 'Assistive Technology',         val: 1.5, pill: { cls: 'amber', text: '+11%' }, bar: 'b2' },
+          { name: 'Post-Secondary Training',      val: 1.7, pill: { cls: 'green', text: 'on plan' }, bar: 'b3' },
+          { name: 'Vocational Evaluation',        val: 0.6, pill: { cls: 'green', text: '-5%' }, bar: 'b4' },
+          { name: 'BEP Operator Training',        val: 0.9, pill: { cls: 'blue',  text: 'on plan' }, bar: 'b5' },
+          { name: 'Transportation Stipends',      val: 0.5, pill: { cls: 'amber', text: '+12%' }, bar: 'b1' },
+          { name: 'Other Services',               val: 1.3, pill: { cls: 'gray',  text: 'flat' }, bar: 'b2' }
+        ],
+        'South GA': [
+          { name: 'Job Coaching &amp; Placement', val: 1.6, pill: { cls: 'amber', text: '+14%' }, bar: 'b1' },
+          { name: 'Assistive Technology',         val: 1.2, pill: { cls: 'amber', text: '+9%' }, bar: 'b2' },
+          { name: 'Post-Secondary Training',      val: 1.4, pill: { cls: 'green', text: 'on plan' }, bar: 'b3' },
+          { name: 'Vocational Evaluation',        val: 0.5, pill: { cls: 'green', text: '-6%' }, bar: 'b4' },
+          { name: 'BEP Operator Training',        val: 0.7, pill: { cls: 'blue',  text: 'on plan' }, bar: 'b5' },
+          { name: 'Transportation Stipends',      val: 0.5, pill: { cls: 'amber', text: '+18%' }, bar: 'b1' },
+          { name: 'Other Services',               val: 1.0, pill: { cls: 'gray',  text: 'flat' }, bar: 'b2' }
+        ],
+        'Central': [
+          { name: 'Job Coaching &amp; Placement', val: 1.7, pill: { cls: 'amber', text: '+17%' }, bar: 'b1' },
+          { name: 'Assistive Technology',         val: 1.2, pill: { cls: 'amber', text: '+13%' }, bar: 'b2' },
+          { name: 'Post-Secondary Training',      val: 1.5, pill: { cls: 'green', text: 'on plan' }, bar: 'b3' },
+          { name: 'Vocational Evaluation',        val: 0.5, pill: { cls: 'green', text: '-4%' }, bar: 'b4' },
+          { name: 'BEP Operator Training',        val: 0.7, pill: { cls: 'blue',  text: 'on plan' }, bar: 'b5' },
+          { name: 'Transportation Stipends',      val: 0.4, pill: { cls: 'amber', text: '+8%' }, bar: 'b1' },
+          { name: 'Other Services',               val: 1.0, pill: { cls: 'gray',  text: 'flat' }, bar: 'b2' }
+        ],
+        'Coastal': [
+          { name: 'Job Coaching &amp; Placement', val: 1.3, pill: { cls: 'amber', text: '+13%' }, bar: 'b1' },
+          { name: 'Assistive Technology',         val: 1.0, pill: { cls: 'amber', text: '+10%' }, bar: 'b2' },
+          { name: 'Post-Secondary Training',      val: 1.1, pill: { cls: 'green', text: 'on plan' }, bar: 'b3' },
+          { name: 'Vocational Evaluation',        val: 0.4, pill: { cls: 'green', text: '-3%' }, bar: 'b4' },
+          { name: 'BEP Operator Training',        val: 0.6, pill: { cls: 'blue',  text: 'on plan' }, bar: 'b5' },
+          { name: 'Transportation Stipends',      val: 0.3, pill: { cls: 'amber', text: '+7%' }, bar: 'b1' },
+          { name: 'Other Services',               val: 0.8, pill: { cls: 'gray',  text: 'flat' }, bar: 'b2' }
+        ],
+        'West GA': [
+          { name: 'Job Coaching &amp; Placement', val: 1.5, pill: { cls: 'amber', text: '+15%' }, bar: 'b1' },
+          { name: 'Assistive Technology',         val: 1.1, pill: { cls: 'amber', text: '+11%' }, bar: 'b2' },
+          { name: 'Post-Secondary Training',      val: 1.2, pill: { cls: 'green', text: 'on plan' }, bar: 'b3' },
+          { name: 'Vocational Evaluation',        val: 0.4, pill: { cls: 'green', text: '-5%' }, bar: 'b4' },
+          { name: 'BEP Operator Training',        val: 0.6, pill: { cls: 'blue',  text: 'on plan' }, bar: 'b5' },
+          { name: 'Transportation Stipends',      val: 0.3, pill: { cls: 'amber', text: '+9%' }, bar: 'b1' },
+          { name: 'Other Services',               val: 0.8, pill: { cls: 'gray',  text: 'flat' }, bar: 'b2' }
+        ]
+      };
+      function fmtCatVal(v) {
+        return '$' + (v >= 10 ? v.toFixed(1) : v.toFixed(1)) + 'M';
+      }
+      function renderCategorySpend(name) {
+        const list = document.getElementById('categorySpendList');
+        if (!list) return;
+        const rows = REGION_CATEGORIES[name] || REGION_CATEGORIES['All Regions'];
+        const max = Math.max(...rows.map(r => r.val));
+        list.innerHTML = rows.map(r => {
+          const width = Math.max(8, Math.round((r.val / max) * 92));
+          return `
+            <div class="bl-row">
+              <div class="top"><span class="name">${r.name}</span><span class="val">${fmtCatVal(r.val)} <span class="pill ${r.pill.cls}">${r.pill.text}</span></span></div>
+              <div class="bl-bar"><div class="fill ${r.bar}" style="width: ${width}%"></div></div>
+            </div>
+          `;
+        }).join('');
       }
 
       // ── Predictive Expenditure chart per region ──
@@ -1365,6 +1486,8 @@
 
       // Render initial state (All Regions)
       renderExpenditureChart('All Regions');
+      renderInsights('All Regions');
+      renderCategorySpend('All Regions');
 
       function closeMenu() {
         dd.classList.remove('open');
