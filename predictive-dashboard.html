@@ -536,7 +536,7 @@
     <span class="app-name">GVRA Case Insights</span>
     <div class="app-tabs">
       <a href="#" class="app-tab">Home</a>
-      <a href="#" class="app-tab">Consumers</a>
+      <a href="#" class="app-tab">Clients</a>
       <a href="#" class="app-tab">Plans (IPE)</a>
       <a href="#" class="app-tab">Authorizations</a>
       <a href="#" class="app-tab">Reports</a>
@@ -575,11 +575,77 @@
         <div class="fm-item" role="option" data-value="West GA"><span class="check"></span>West GA</div>
       </div>
     </span>
-    <span class="filter">Counselor: <strong style="margin-left:4px;">All</strong> <span class="ic" aria-hidden="true">&#9662;</span></span>
-    <span class="filter">Service Category: <strong style="margin-left:4px;">All</strong> <span class="ic" aria-hidden="true">&#9662;</span></span>
+    <span class="filter filter-dd" id="officeFilter" tabindex="0" role="button" aria-haspopup="listbox" aria-expanded="false">Office: <strong style="margin-left:4px;" id="officeFilterValue">All Offices</strong> <span class="ic" aria-hidden="true">&#9662;</span>
+      <div class="filter-menu" role="listbox" aria-label="Office">
+        <div class="fm-head">Office</div>
+        <div class="fm-item selected" role="option" data-value="All Offices"><span class="check">&#10003;</span>All Offices</div>
+        <div class="fm-divider"></div>
+        <div class="fm-item" role="option" data-value="200 Piedmont"><span class="check"></span>200 Piedmont</div>
+        <div class="fm-item" role="option" data-value="Albany VR Office"><span class="check"></span>Albany VR Office</div>
+        <div class="fm-item" role="option" data-value="Athens VR Office"><span class="check"></span>Athens VR Office</div>
+        <div class="fm-item" role="option" data-value="Atlanta Regional Office"><span class="check"></span>Atlanta Regional Office</div>
+        <div class="fm-item" role="option" data-value="Atlanta VR Office - North"><span class="check"></span>Atlanta VR Office &mdash; North</div>
+        <div class="fm-item" role="option" data-value="Atlanta VR Office - South"><span class="check"></span>Atlanta VR Office &mdash; South</div>
+        <div class="fm-item" role="option" data-value="Atlanta VR Office - Midtown"><span class="check"></span>Atlanta VR Office &mdash; Midtown</div>
+        <div class="fm-item" role="option" data-value="Augusta Regional Office"><span class="check"></span>Augusta Regional Office</div>
+        <div class="fm-item" role="option" data-value="Augusta VR Office"><span class="check"></span>Augusta VR Office</div>
+        <div class="fm-item" role="option" data-value="Brunswick VR Office"><span class="check"></span>Brunswick VR Office</div>
+      </div>
+    </span>
+    <span class="filter filter-dd" id="counselorFilter" tabindex="0" role="button" aria-haspopup="listbox" aria-expanded="false">Counselor: <strong style="margin-left:4px;" id="counselorFilterValue">All</strong> <span class="ic" aria-hidden="true">&#9662;</span>
+      <div class="filter-menu" role="listbox" aria-label="Counselor">
+        <div class="fm-head">Counselor</div>
+        <div class="fm-item selected" role="option" data-value="All"><span class="check">&#10003;</span>All</div>
+        <div class="fm-divider"></div>
+        <div class="fm-item" role="option" data-value="R. Patel"><span class="check"></span>R. Patel</div>
+        <div class="fm-item" role="option" data-value="M. Johnson"><span class="check"></span>M. Johnson</div>
+        <div class="fm-item" role="option" data-value="S. Lin"><span class="check"></span>S. Lin</div>
+        <div class="fm-item" role="option" data-value="D. Brooks"><span class="check"></span>D. Brooks</div>
+        <div class="fm-item" role="option" data-value="K. Nguyen"><span class="check"></span>K. Nguyen</div>
+        <div class="fm-item" role="option" data-value="T. Cole"><span class="check"></span>T. Cole</div>
+        <div class="fm-item" role="option" data-value="J. Walker"><span class="check"></span>J. Walker</div>
+      </div>
+    </span>
+    <span class="filter filter-dd" id="programFilter" tabindex="0" role="button" aria-haspopup="listbox" aria-expanded="false">Service Programs: <strong style="margin-left:4px;" id="programFilterValue">All</strong> <span class="ic" aria-hidden="true">&#9662;</span>
+      <div class="filter-menu" role="listbox" aria-label="Service Programs">
+        <div class="fm-head">Service Programs</div>
+        <div class="fm-item selected" role="option" data-value="All"><span class="check">&#10003;</span>All</div>
+        <div class="fm-divider"></div>
+        <div class="fm-item" role="option" data-value="Pre-ETS: Job Exploration Counseling"><span class="check"></span>Pre-ETS: Job Exploration Counseling</div>
+        <div class="fm-item" role="option" data-value="Pre-ETS Counseling on Post-Secondary Education"><span class="check"></span>Pre-ETS Counseling on Post-Secondary Education</div>
+        <div class="fm-item" role="option" data-value="Pre-ETS: Instruction on Self-Advocacy"><span class="check"></span>Pre-ETS: Instruction on Self-Advocacy</div>
+        <div class="fm-item" role="option" data-value="Pre-ETS: Work Based Learning"><span class="check"></span>Pre-ETS: Work Based Learning</div>
+        <div class="fm-item" role="option" data-value="Pre-ETS: Workplace Readiness"><span class="check"></span>Pre-ETS: Workplace Readiness</div>
+        <div class="fm-item" role="option" data-value="Support Service"><span class="check"></span>Support Service</div>
+        <div class="fm-item" role="option" data-value="VR: Assistive technology"><span class="check"></span>VR: Assistive technology</div>
+        <div class="fm-item" role="option" data-value="VR: Job coaching and placement"><span class="check"></span>VR: Job coaching and placement</div>
+      </div>
+    </span>
     <span class="filter">Plan Status: <strong style="margin-left:4px;">Active</strong> <span class="ic" aria-hidden="true">&#9662;</span></span>
-    <span class="filter">Funding Source: <strong style="margin-left:4px;">All</strong> <span class="ic" aria-hidden="true">&#9662;</span></span>
-    <span class="filter active">Consumer Type: <strong style="margin-left:4px;">Blind / Low Vision</strong> <span class="x" aria-hidden="true">&times;</span></span>
+    <span class="filter filter-dd" id="fundingFilter" tabindex="0" role="button" aria-haspopup="listbox" aria-expanded="false">Funding Source: <strong style="margin-left:4px;" id="fundingFilterValue">All</strong> <span class="ic" aria-hidden="true">&#9662;</span>
+      <div class="filter-menu" role="listbox" aria-label="Funding Source">
+        <div class="fm-head">Funding Source</div>
+        <div class="fm-item selected" role="option" data-value="All"><span class="check">&#10003;</span>All</div>
+        <div class="fm-divider"></div>
+        <div class="fm-item" role="option" data-value="BEP Dollars"><span class="check"></span>BEP Dollars</div>
+        <div class="fm-item" role="option" data-value="General VR Services"><span class="check"></span>General VR Services</div>
+        <div class="fm-item" role="option" data-value="Pre-employment Services"><span class="check"></span>Pre-employment Services</div>
+        <div class="fm-item" role="option" data-value="State-wide budget"><span class="check"></span>State-wide budget</div>
+      </div>
+    </span>
+    <span class="filter active filter-dd" id="clientTypeFilter" tabindex="0" role="button" aria-haspopup="listbox" aria-expanded="false">Client Type: <strong style="margin-left:4px;" id="clientTypeFilterValue">Vision/Blindness</strong> <span class="ic" aria-hidden="true">&#9662;</span>
+      <div class="filter-menu" role="listbox" aria-label="Client Type">
+        <div class="fm-head">Client Type</div>
+        <div class="fm-item selected" role="option" data-value="Vision/Blindness"><span class="check">&#10003;</span>Vision/Blindness</div>
+        <div class="fm-item" role="option" data-value="Hearing/Deafness"><span class="check"></span>Hearing/Deafness</div>
+        <div class="fm-item" role="option" data-value="Cognitive/Learning Disability"><span class="check"></span>Cognitive/Learning Disability</div>
+        <div class="fm-item" role="option" data-value="Communicative"><span class="check"></span>Communicative</div>
+        <div class="fm-item" role="option" data-value="Psychosocial Disabilities"><span class="check"></span>Psychosocial Disabilities</div>
+        <div class="fm-item" role="option" data-value="Mobility/Orthopedic"><span class="check"></span>Mobility/Orthopedic</div>
+        <div class="fm-item" role="option" data-value="Other Health Impairment"><span class="check"></span>Other Health Impairment</div>
+        <div class="fm-item" role="option" data-value="No Impairment"><span class="check"></span>No Impairment</div>
+      </div>
+    </span>
     <span class="filter">+ Add Filter</span>
     <span class="filter-spacer"></span>
     <div class="range-toggle" role="group" aria-label="Time range">
@@ -616,7 +682,7 @@
       <div class="kpi">
         <div class="label">Disengagement Risk <span class="badge-ai">AI</span></div>
         <div class="value" data-kpi="riskValue">147</div>
-        <div class="sub" data-kpi="riskSub">Consumers flagged this week</div>
+        <div class="sub" data-kpi="riskSub">Clients flagged this week</div>
         <div class="delta down" data-kpi="riskDelta">&darr; 11% with outreach playbook</div>
       </div>
       <div class="kpi">
@@ -740,7 +806,7 @@
           <li>
             <span class="ic">&#9888;</span>
             <div>
-              <strong>147 consumers at high disengagement risk</strong>
+              <strong>147 clients at high disengagement risk</strong>
               <small>Common signals: no contact 21+ days, missed authorizations, low session attendance.</small>
             </div>
             <span class="conf">88%</span>
@@ -757,7 +823,7 @@
             <span class="ic">&#10003;</span>
             <div>
               <strong>BEP route to employment outperforming</strong>
-              <small>Blind / low-vision consumers placed via BEP show 23% higher 90-day stability than peers.</small>
+              <small>Blind / low-vision clients placed via BEP show 23% higher 90-day stability than peers.</small>
             </div>
             <span class="conf">94%</span>
           </li>
@@ -777,7 +843,7 @@
           </div>
         </header>
         <div class="comp-body">
-          <div style="font-size:12px;color:var(--sf-gray-5);margin-bottom:8px;">Consumer J. Carter &middot; Counselor R. Patel &middot; Plan opened Oct 2024</div>
+          <div style="font-size:12px;color:var(--sf-gray-5);margin-bottom:8px;">Client J. Carter &middot; Counselor R. Patel &middot; Plan opened Oct 2024</div>
           <div class="plan-summary">
             <div class="ps-item"><div class="l">Plan Budget</div><div class="v">$24,800</div></div>
             <div class="ps-item"><div class="l">Spent</div><div class="v">$19,684</div></div>
@@ -812,7 +878,7 @@
       <!-- Predicted spend by service category -->
       <section class="comp">
         <header class="comp-head">
-          <h3>Predicted Spend by Service Category</h3>
+          <h3 id="categorySpendTitle">Predicted Spend by Service Program</h3>
           <div class="actions"><button aria-label="More">&#8942;</button></div>
         </header>
         <div class="comp-body">
@@ -845,7 +911,7 @@
               </svg>
               <div class="center">
                 <div class="v">3,184</div>
-                <div class="l">Consumers</div>
+                <div class="l">Clients</div>
               </div>
             </div>
             <div class="donut-legend">
@@ -859,7 +925,7 @@
       </section>
     </div>
 
-    <!-- Row: Top at-risk consumers + Caseload trends -->
+    <!-- Row: Top at-risk clients + Caseload trends -->
     <div class="row-12-23" style="margin-bottom: 14px;">
 
       <!-- Counselor caseload trends -->
@@ -957,17 +1023,17 @@
         </div>
       </section>
 
-      <!-- At-risk consumers -->
+      <!-- At-risk clients -->
       <section class="comp">
         <header class="comp-head">
-          <h3>Top Consumers Flagged for Disengagement</h3>
+          <h3>Top Clients Flagged for Disengagement</h3>
           <div class="actions"><button aria-label="More">&#8942;</button></div>
         </header>
         <div class="comp-body">
           <table class="tbl">
             <thead>
               <tr>
-                <th>Consumer</th>
+                <th>Client</th>
                 <th>Counselor</th>
                 <th>Plan Stage</th>
                 <th>Top Risk Driver</th>
@@ -1034,7 +1100,7 @@
               </tr>
             </tbody>
           </table>
-          <div style="margin-top: 10px; font-size: 11px; color: var(--sf-gray-5);">Showing 7 of 147 flagged consumers &middot; Model: GVRA Disengagement v3.2</div>
+          <div style="margin-top: 10px; font-size: 11px; color: var(--sf-gray-5);">Showing 7 of 147 flagged clients &middot; Model: GVRA Disengagement v3.2</div>
         </div>
       </section>
     </div>
@@ -1104,7 +1170,7 @@
               <div class="bl-bar"><div class="fill b4" style="width:60%"></div></div>
             </div>
             <div class="bl-row">
-              <div class="top"><span class="name">Higher consumer intake (West GA)</span><span class="val">+$310K</span></div>
+              <div class="top"><span class="name">Higher client intake (West GA)</span><span class="val">+$310K</span></div>
               <div class="bl-bar"><div class="fill b4" style="width:38%"></div></div>
             </div>
             <div class="bl-row">
@@ -1159,49 +1225,49 @@
           plansValue: '3,184', plansSub: 'Across 9 GVRA regions', plansDelta: '&uarr; 4.2% vs prior period', plansDeltaCls: 'delta up',
           budgetValue: '$48.6M', budgetSub: '$31.4M committed &middot; $11.2M paid', budgetBar: '65%',
           predictValue: '$50.3M', predictSub: 'Confidence: 92% &middot; 95% CI $48.9M&ndash;$51.7M',
-          riskValue: '147', riskSub: 'Consumers flagged this week', riskDelta: '&darr; 11% with outreach playbook', riskDeltaCls: 'delta down',
+          riskValue: '147', riskSub: 'Clients flagged this week', riskDelta: '&darr; 11% with outreach playbook', riskDeltaCls: 'delta down',
           closureValue: '68.4%', closureSub: 'Target: 72% &middot; Trend: improving', closureBar: '68%', closureBarCls: 'fill warn'
         },
         'Metro Atlanta': {
           plansValue: '1,024', plansSub: 'Fulton, DeKalb, Cobb, Gwinnett, Clayton', plansDelta: '&uarr; 5.8% vs prior period', plansDeltaCls: 'delta up',
           budgetValue: '$15.6M', budgetSub: '$10.4M committed &middot; $3.9M paid', budgetBar: '72%',
           predictValue: '$16.2M', predictSub: 'Confidence: 93% &middot; 95% CI $15.7M&ndash;$16.8M',
-          riskValue: '52', riskSub: 'Consumers flagged this week', riskDelta: '&darr; 14% with outreach playbook', riskDeltaCls: 'delta down',
+          riskValue: '52', riskSub: 'Clients flagged this week', riskDelta: '&darr; 14% with outreach playbook', riskDeltaCls: 'delta down',
           closureValue: '71.2%', closureSub: 'Target: 72% &middot; Trend: improving', closureBar: '71%', closureBarCls: 'fill'
         },
         'North GA': {
           plansValue: '552', plansSub: 'Hall, Forsyth, Cherokee, Pickens & 11 more', plansDelta: '&uarr; 3.1% vs prior period', plansDeltaCls: 'delta up',
           budgetValue: '$8.4M', budgetSub: '$5.5M committed &middot; $1.9M paid', budgetBar: '65%',
           predictValue: '$8.6M', predictSub: 'Confidence: 91% &middot; 95% CI $8.3M&ndash;$8.9M',
-          riskValue: '24', riskSub: 'Consumers flagged this week', riskDelta: '&darr; 9% with outreach playbook', riskDeltaCls: 'delta down',
+          riskValue: '24', riskSub: 'Clients flagged this week', riskDelta: '&darr; 9% with outreach playbook', riskDeltaCls: 'delta down',
           closureValue: '67.8%', closureSub: 'Target: 72% &middot; Trend: stable', closureBar: '67%', closureBarCls: 'fill warn'
         },
         'South GA': {
           plansValue: '438', plansSub: 'Lowndes, Thomas, Tift, Colquitt & 18 more', plansDelta: '&uarr; 2.4% vs prior period', plansDeltaCls: 'delta up',
           budgetValue: '$6.7M', budgetSub: '$4.1M committed &middot; $1.5M paid', budgetBar: '60%',
           predictValue: '$6.9M', predictSub: 'Confidence: 90% &middot; 95% CI $6.6M&ndash;$7.2M',
-          riskValue: '19', riskSub: 'Consumers flagged this week', riskDelta: '&darr; 7% with outreach playbook', riskDeltaCls: 'delta down',
+          riskValue: '19', riskSub: 'Clients flagged this week', riskDelta: '&darr; 7% with outreach playbook', riskDeltaCls: 'delta down',
           closureValue: '65.4%', closureSub: 'Target: 72% &middot; Trend: improving', closureBar: '65%', closureBarCls: 'fill warn'
         },
         'Central': {
           plansValue: '444', plansSub: 'Bibb, Houston, Baldwin, Laurens & 12 more', plansDelta: '&uarr; 4.7% vs prior period', plansDeltaCls: 'delta up',
           budgetValue: '$6.8M', budgetSub: '$4.4M committed &middot; $1.6M paid', budgetBar: '64%',
           predictValue: '$7.0M', predictSub: 'Confidence: 92% &middot; 95% CI $6.7M&ndash;$7.3M',
-          riskValue: '20', riskSub: 'Consumers flagged this week', riskDelta: '&darr; 12% with outreach playbook', riskDeltaCls: 'delta down',
+          riskValue: '20', riskSub: 'Clients flagged this week', riskDelta: '&darr; 12% with outreach playbook', riskDeltaCls: 'delta down',
           closureValue: '69.1%', closureSub: 'Target: 72% &middot; Trend: improving', closureBar: '69%', closureBarCls: 'fill warn'
         },
         'Coastal': {
           plansValue: '356', plansSub: 'Chatham, Glynn, Liberty, Camden & 8 more', plansDelta: '&uarr; 3.9% vs prior period', plansDeltaCls: 'delta up',
           budgetValue: '$5.4M', budgetSub: '$3.4M committed &middot; $1.2M paid', budgetBar: '63%',
           predictValue: '$5.5M', predictSub: 'Confidence: 91% &middot; 95% CI $5.3M&ndash;$5.7M',
-          riskValue: '15', riskSub: 'Consumers flagged this week', riskDelta: '&darr; 10% with outreach playbook', riskDeltaCls: 'delta down',
+          riskValue: '15', riskSub: 'Clients flagged this week', riskDelta: '&darr; 10% with outreach playbook', riskDeltaCls: 'delta down',
           closureValue: '70.5%', closureSub: 'Target: 72% &middot; Trend: improving', closureBar: '70%', closureBarCls: 'fill warn'
         },
         'West GA': {
           plansValue: '370', plansSub: 'Muscogee, Troup, Carroll, Coweta & 10 more', plansDelta: '&uarr; 2.8% vs prior period', plansDeltaCls: 'delta up',
           budgetValue: '$5.7M', budgetSub: '$3.7M committed &middot; $1.3M paid', budgetBar: '62%',
           predictValue: '$5.9M', predictSub: 'Confidence: 90% &middot; 95% CI $5.6M&ndash;$6.2M',
-          riskValue: '17', riskSub: 'Consumers flagged this week', riskDelta: '&darr; 8% with outreach playbook', riskDeltaCls: 'delta down',
+          riskValue: '17', riskSub: 'Clients flagged this week', riskDelta: '&darr; 8% with outreach playbook', riskDeltaCls: 'delta down',
           closureValue: '66.3%', closureSub: 'Target: 72% &middot; Trend: stable', closureBar: '66%', closureBarCls: 'fill warn'
         }
       };
@@ -1239,44 +1305,44 @@
       const REGION_INSIGHTS = {
         'All Districts': [
           { ic: '!', title: 'FYTD spend trending $1.7M above plan', body: 'Driven by job coaching (+18%) and assistive tech (+12%). Recommend amending IPEs in West &amp; South regions.', conf: '92%' },
-          { ic: '&#9888;', title: '147 consumers at high disengagement risk', body: 'Common signals: no contact 21+ days, missed authorizations, low session attendance.', conf: '88%' },
+          { ic: '&#9888;', title: '147 clients at high disengagement risk', body: 'Common signals: no contact 21+ days, missed authorizations, low session attendance.', conf: '88%' },
           { ic: '&#9650;', title: 'Counselor caseload variance widening', body: '4 counselors above 1.4x median load &mdash; closure rates 11% lower. Suggest case rebalancing.', conf: '85%' },
-          { ic: '&#10003;', title: 'BEP route to employment outperforming', body: 'Blind / low-vision consumers placed via BEP show 23% higher 90-day stability than peers.', conf: '94%' }
+          { ic: '&#10003;', title: 'BEP route to employment outperforming', body: 'Blind / low-vision clients placed via BEP show 23% higher 90-day stability than peers.', conf: '94%' }
         ],
         'Metro Atlanta': [
           { ic: '!', title: 'Metro Atlanta projected $0.6M over budget', body: 'Tuition and assistive tech rising in DeKalb &amp; Gwinnett. Consider tighter pre-authorization review.', conf: '93%' },
-          { ic: '&#9888;', title: '52 consumers flagged for disengagement', body: 'Concentrated in Clayton (38%) &amp; South Fulton (24%). Recommend targeted outreach playbook.', conf: '90%' },
+          { ic: '&#9888;', title: '52 clients flagged for disengagement', body: 'Concentrated in Clayton (38%) &amp; South Fulton (24%). Recommend targeted outreach playbook.', conf: '90%' },
           { ic: '&#10003;', title: 'Top placement velocity statewide', body: 'Avg time-to-placement 84 days vs. 102 day GVRA average. Document Atlanta employer partnership model.', conf: '95%' },
           { ic: '&#9650;', title: 'BEP referrals up 22% YoY', body: 'Blind / low-vision pipeline strongest among all regions; BEP route closure rate 89%.', conf: '92%' }
         ],
         'North GA': [
           { ic: '!', title: 'Forecast $0.2M above authorized', body: 'Driven by Hall &amp; Forsyth intake surge (+14%). Suggest Q4 budget amendment.', conf: '89%' },
-          { ic: '&#9888;', title: '24 consumers at disengagement risk', body: 'Rural counties (Pickens, Lumpkin) show longest contact gaps &mdash; expand telehealth check-ins.', conf: '86%' },
+          { ic: '&#9888;', title: '24 clients at disengagement risk', body: 'Rural counties (Pickens, Lumpkin) show longest contact gaps &mdash; expand telehealth check-ins.', conf: '86%' },
           { ic: '&#9650;', title: 'Counselor load above target', body: 'North GA carries 1.3x state median caseload. Consider adding 1 FTE in Gainesville office.', conf: '84%' },
           { ic: '&#10003;', title: 'Wage retention improving', body: '90-day wage retention up 6 points YoY; manufacturing placements driving the gain.', conf: '91%' }
         ],
         'South GA': [
           { ic: '!', title: 'Closure rate trailing target', body: '65.4% vs. 72% goal &mdash; under-served counties (Tift, Colquitt) need additional employer outreach.', conf: '90%' },
-          { ic: '&#9888;', title: '19 consumers flagged for disengagement', body: 'Transportation barriers cited in 61% of cases. Recommend mileage assistance expansion.', conf: '87%' },
+          { ic: '&#9888;', title: '19 clients flagged for disengagement', body: 'Transportation barriers cited in 61% of cases. Recommend mileage assistance expansion.', conf: '87%' },
           { ic: '&#9650;', title: 'M. Johnson overloaded (58 cases)', body: 'Closure rate has dropped 4 pts in 90 days. Rebalance with neighboring caseloads.', conf: '88%' },
           { ic: '&#10003;', title: 'Agriculture sector placements rising', body: 'Lowndes &amp; Thomas seasonal placements up 18%; sustain employer engagement through Q3.', conf: '90%' }
         ],
         'Central': [
           { ic: '!', title: 'Spend approaching cap in Bibb', body: 'Bibb sub-region at 78% of authorized; recommend reallocating from under-utilized Houston.', conf: '91%' },
-          { ic: '&#9888;', title: '20 consumers at disengagement risk', body: 'Spike correlates with recent counselor turnover in Macon office &mdash; reassign within 14 days.', conf: '85%' },
+          { ic: '&#9888;', title: '20 clients at disengagement risk', body: 'Spike correlates with recent counselor turnover in Macon office &mdash; reassign within 14 days.', conf: '85%' },
           { ic: '&#10003;', title: 'Plan closure success climbing', body: 'Successful closures up 7 pts since Q1. Track which interventions correlate.', conf: '90%' },
           { ic: '&#9650;', title: 'Vocational training utilization rising', body: 'Tech-college partnerships in Macon driving +22% credential attainment.', conf: '87%' }
         ],
         'Coastal': [
           { ic: '&#10003;', title: 'Strongest closure rate of all regions', body: 'Coastal at 70.5% &mdash; closest to 72% target. K. Nguyen (Brunswick) leading at 76.4%.', conf: '95%' },
-          { ic: '&#9888;', title: '15 consumers flagged for disengagement', body: 'Camden / Glynn isolation patterns. Pilot mobile counseling unit suggested.', conf: '83%' },
+          { ic: '&#9888;', title: '15 clients flagged for disengagement', body: 'Camden / Glynn isolation patterns. Pilot mobile counseling unit suggested.', conf: '83%' },
           { ic: '!', title: 'Hospitality cost-of-living adjustments', body: 'Savannah wage standards rising; verify IPE rate tables for FY27 planning.', conf: '88%' },
           { ic: '&#9650;', title: 'Maritime / port sector hiring up', body: 'Chatham employer pipeline expanding; align job-coach capacity with Q4 surge.', conf: '89%' }
         ],
         'West GA': [
           { ic: '!', title: 'West GA closure rate stalling at 66%', body: 'Stable trend &mdash; not declining, but not improving. Drill into Carroll &amp; Coweta counselor practices.', conf: '87%' },
-          { ic: '&#9888;', title: '17 consumers at disengagement risk', body: 'Troup &amp; Heard counties show longest follow-up gaps. Targeted outreach playbook recommended.', conf: '85%' },
-          { ic: '&#9650;', title: 'Higher consumer intake driving spend', body: 'New referral surge from Columbus medical centers contributing +$310K to forecast.', conf: '90%' },
+          { ic: '&#9888;', title: '17 clients at disengagement risk', body: 'Troup &amp; Heard counties show longest follow-up gaps. Targeted outreach playbook recommended.', conf: '85%' },
+          { ic: '&#9650;', title: 'Higher client intake driving spend', body: 'New referral surge from Columbus medical centers contributing +$310K to forecast.', conf: '90%' },
           { ic: '&#10003;', title: 'Assistive tech outcomes strong', body: 'Muscogee assistive tech recipients show 81% job retention at 6 months.', conf: '91%' }
         ]
       };
@@ -1296,80 +1362,107 @@
         `).join('');
       }
 
-      // ── Predicted Spend by Service Category per region ──
-      // values in $M; each region's rows sum ≈ region's Predicted FY-End Spend KPI.
+      // ── Predicted Spend by Service Program per district ──
+      // Categories mirror the "Service Programs" filter exactly. Values in $M.
       const REGION_CATEGORIES = {
         'All Districts': [
-          { name: 'Job Coaching &amp; Placement', val: 12.4, pill: { cls: 'amber', text: '+18%' }, bar: 'b1' },
-          { name: 'Assistive Technology',         val: 8.9,  pill: { cls: 'amber', text: '+12%' }, bar: 'b2' },
-          { name: 'Post-Secondary Training',      val: 10.2, pill: { cls: 'green', text: 'on plan' }, bar: 'b3' },
-          { name: 'Vocational Evaluation',        val: 3.6,  pill: { cls: 'green', text: '-4%' }, bar: 'b4' },
-          { name: 'BEP Operator Training',        val: 5.1,  pill: { cls: 'blue',  text: 'on plan' }, bar: 'b5' },
-          { name: 'Transportation Stipends',      val: 2.4,  pill: { cls: 'amber', text: '+9%' }, bar: 'b1' },
-          { name: 'Other Services',               val: 7.7,  pill: { cls: 'gray',  text: 'flat' }, bar: 'b2' }
+          { name: 'Pre-ETS: Job Exploration Counseling',            val: 4.8,  pill: { cls: 'amber', text: '+11%' }, bar: 'b1' },
+          { name: 'Pre-ETS Counseling on Post-Secondary Education', val: 6.4,  pill: { cls: 'green', text: 'on plan' }, bar: 'b2' },
+          { name: 'Pre-ETS: Instruction on Self-Advocacy',          val: 2.7,  pill: { cls: 'green', text: '-3%' }, bar: 'b3' },
+          { name: 'Pre-ETS: Work Based Learning',                   val: 7.2,  pill: { cls: 'amber', text: '+19%' }, bar: 'b4' },
+          { name: 'Pre-ETS: Workplace Readiness',                   val: 3.4,  pill: { cls: 'green', text: 'on plan' }, bar: 'b5' },
+          { name: 'Support Service',                                val: 5.8,  pill: { cls: 'amber', text: '+8%' }, bar: 'b1' },
+          { name: 'VR: Assistive technology',                       val: 8.9,  pill: { cls: 'amber', text: '+12%' }, bar: 'b2' },
+          { name: 'VR: Job coaching and placement',                 val: 12.4, pill: { cls: 'amber', text: '+18%' }, bar: 'b3' }
         ],
         'Metro Atlanta': [
-          { name: 'Job Coaching &amp; Placement', val: 4.2, pill: { cls: 'amber', text: '+22%' }, bar: 'b1' },
-          { name: 'Assistive Technology',         val: 3.0, pill: { cls: 'amber', text: '+15%' }, bar: 'b2' },
-          { name: 'Post-Secondary Training',      val: 3.4, pill: { cls: 'green', text: 'on plan' }, bar: 'b3' },
-          { name: 'Vocational Evaluation',        val: 1.1, pill: { cls: 'green', text: '-3%' }, bar: 'b4' },
-          { name: 'BEP Operator Training',        val: 1.8, pill: { cls: 'blue',  text: 'on plan' }, bar: 'b5' },
-          { name: 'Transportation Stipends',      val: 0.5, pill: { cls: 'amber', text: '+6%' }, bar: 'b1' },
-          { name: 'Other Services',               val: 2.2, pill: { cls: 'gray',  text: 'flat' }, bar: 'b2' }
+          { name: 'Pre-ETS: Job Exploration Counseling',            val: 1.6, pill: { cls: 'amber', text: '+13%' }, bar: 'b1' },
+          { name: 'Pre-ETS Counseling on Post-Secondary Education', val: 2.1, pill: { cls: 'green', text: 'on plan' }, bar: 'b2' },
+          { name: 'Pre-ETS: Instruction on Self-Advocacy',          val: 0.9, pill: { cls: 'green', text: '-2%' }, bar: 'b3' },
+          { name: 'Pre-ETS: Work Based Learning',                   val: 2.4, pill: { cls: 'amber', text: '+22%' }, bar: 'b4' },
+          { name: 'Pre-ETS: Workplace Readiness',                   val: 1.1, pill: { cls: 'green', text: 'on plan' }, bar: 'b5' },
+          { name: 'Support Service',                                val: 1.9, pill: { cls: 'amber', text: '+9%' }, bar: 'b1' },
+          { name: 'VR: Assistive technology',                       val: 3.0, pill: { cls: 'amber', text: '+15%' }, bar: 'b2' },
+          { name: 'VR: Job coaching and placement',                 val: 4.2, pill: { cls: 'amber', text: '+22%' }, bar: 'b3' }
         ],
         'North GA': [
-          { name: 'Job Coaching &amp; Placement', val: 2.1, pill: { cls: 'amber', text: '+16%' }, bar: 'b1' },
-          { name: 'Assistive Technology',         val: 1.5, pill: { cls: 'amber', text: '+11%' }, bar: 'b2' },
-          { name: 'Post-Secondary Training',      val: 1.7, pill: { cls: 'green', text: 'on plan' }, bar: 'b3' },
-          { name: 'Vocational Evaluation',        val: 0.6, pill: { cls: 'green', text: '-5%' }, bar: 'b4' },
-          { name: 'BEP Operator Training',        val: 0.9, pill: { cls: 'blue',  text: 'on plan' }, bar: 'b5' },
-          { name: 'Transportation Stipends',      val: 0.5, pill: { cls: 'amber', text: '+12%' }, bar: 'b1' },
-          { name: 'Other Services',               val: 1.3, pill: { cls: 'gray',  text: 'flat' }, bar: 'b2' }
+          { name: 'Pre-ETS: Job Exploration Counseling',            val: 0.8, pill: { cls: 'amber', text: '+10%' }, bar: 'b1' },
+          { name: 'Pre-ETS Counseling on Post-Secondary Education', val: 1.1, pill: { cls: 'green', text: 'on plan' }, bar: 'b2' },
+          { name: 'Pre-ETS: Instruction on Self-Advocacy',          val: 0.5, pill: { cls: 'green', text: '-4%' }, bar: 'b3' },
+          { name: 'Pre-ETS: Work Based Learning',                   val: 1.2, pill: { cls: 'amber', text: '+18%' }, bar: 'b4' },
+          { name: 'Pre-ETS: Workplace Readiness',                   val: 0.6, pill: { cls: 'green', text: 'on plan' }, bar: 'b5' },
+          { name: 'Support Service',                                val: 1.0, pill: { cls: 'amber', text: '+12%' }, bar: 'b1' },
+          { name: 'VR: Assistive technology',                       val: 1.5, pill: { cls: 'amber', text: '+11%' }, bar: 'b2' },
+          { name: 'VR: Job coaching and placement',                 val: 2.1, pill: { cls: 'amber', text: '+16%' }, bar: 'b3' }
         ],
         'South GA': [
-          { name: 'Job Coaching &amp; Placement', val: 1.6, pill: { cls: 'amber', text: '+14%' }, bar: 'b1' },
-          { name: 'Assistive Technology',         val: 1.2, pill: { cls: 'amber', text: '+9%' }, bar: 'b2' },
-          { name: 'Post-Secondary Training',      val: 1.4, pill: { cls: 'green', text: 'on plan' }, bar: 'b3' },
-          { name: 'Vocational Evaluation',        val: 0.5, pill: { cls: 'green', text: '-6%' }, bar: 'b4' },
-          { name: 'BEP Operator Training',        val: 0.7, pill: { cls: 'blue',  text: 'on plan' }, bar: 'b5' },
-          { name: 'Transportation Stipends',      val: 0.5, pill: { cls: 'amber', text: '+18%' }, bar: 'b1' },
-          { name: 'Other Services',               val: 1.0, pill: { cls: 'gray',  text: 'flat' }, bar: 'b2' }
+          { name: 'Pre-ETS: Job Exploration Counseling',            val: 0.6, pill: { cls: 'amber', text: '+9%' }, bar: 'b1' },
+          { name: 'Pre-ETS Counseling on Post-Secondary Education', val: 0.9, pill: { cls: 'green', text: 'on plan' }, bar: 'b2' },
+          { name: 'Pre-ETS: Instruction on Self-Advocacy',          val: 0.4, pill: { cls: 'green', text: '-6%' }, bar: 'b3' },
+          { name: 'Pre-ETS: Work Based Learning',                   val: 1.0, pill: { cls: 'amber', text: '+16%' }, bar: 'b4' },
+          { name: 'Pre-ETS: Workplace Readiness',                   val: 0.5, pill: { cls: 'green', text: 'on plan' }, bar: 'b5' },
+          { name: 'Support Service',                                val: 0.9, pill: { cls: 'amber', text: '+18%' }, bar: 'b1' },
+          { name: 'VR: Assistive technology',                       val: 1.2, pill: { cls: 'amber', text: '+9%' }, bar: 'b2' },
+          { name: 'VR: Job coaching and placement',                 val: 1.6, pill: { cls: 'amber', text: '+14%' }, bar: 'b3' }
         ],
         'Central': [
-          { name: 'Job Coaching &amp; Placement', val: 1.7, pill: { cls: 'amber', text: '+17%' }, bar: 'b1' },
-          { name: 'Assistive Technology',         val: 1.2, pill: { cls: 'amber', text: '+13%' }, bar: 'b2' },
-          { name: 'Post-Secondary Training',      val: 1.5, pill: { cls: 'green', text: 'on plan' }, bar: 'b3' },
-          { name: 'Vocational Evaluation',        val: 0.5, pill: { cls: 'green', text: '-4%' }, bar: 'b4' },
-          { name: 'BEP Operator Training',        val: 0.7, pill: { cls: 'blue',  text: 'on plan' }, bar: 'b5' },
-          { name: 'Transportation Stipends',      val: 0.4, pill: { cls: 'amber', text: '+8%' }, bar: 'b1' },
-          { name: 'Other Services',               val: 1.0, pill: { cls: 'gray',  text: 'flat' }, bar: 'b2' }
+          { name: 'Pre-ETS: Job Exploration Counseling',            val: 0.7, pill: { cls: 'amber', text: '+11%' }, bar: 'b1' },
+          { name: 'Pre-ETS Counseling on Post-Secondary Education', val: 0.9, pill: { cls: 'green', text: 'on plan' }, bar: 'b2' },
+          { name: 'Pre-ETS: Instruction on Self-Advocacy',          val: 0.4, pill: { cls: 'green', text: '-4%' }, bar: 'b3' },
+          { name: 'Pre-ETS: Work Based Learning',                   val: 1.1, pill: { cls: 'amber', text: '+17%' }, bar: 'b4' },
+          { name: 'Pre-ETS: Workplace Readiness',                   val: 0.5, pill: { cls: 'green', text: 'on plan' }, bar: 'b5' },
+          { name: 'Support Service',                                val: 0.8, pill: { cls: 'amber', text: '+8%' }, bar: 'b1' },
+          { name: 'VR: Assistive technology',                       val: 1.2, pill: { cls: 'amber', text: '+13%' }, bar: 'b2' },
+          { name: 'VR: Job coaching and placement',                 val: 1.7, pill: { cls: 'amber', text: '+17%' }, bar: 'b3' }
         ],
         'Coastal': [
-          { name: 'Job Coaching &amp; Placement', val: 1.3, pill: { cls: 'amber', text: '+13%' }, bar: 'b1' },
-          { name: 'Assistive Technology',         val: 1.0, pill: { cls: 'amber', text: '+10%' }, bar: 'b2' },
-          { name: 'Post-Secondary Training',      val: 1.1, pill: { cls: 'green', text: 'on plan' }, bar: 'b3' },
-          { name: 'Vocational Evaluation',        val: 0.4, pill: { cls: 'green', text: '-3%' }, bar: 'b4' },
-          { name: 'BEP Operator Training',        val: 0.6, pill: { cls: 'blue',  text: 'on plan' }, bar: 'b5' },
-          { name: 'Transportation Stipends',      val: 0.3, pill: { cls: 'amber', text: '+7%' }, bar: 'b1' },
-          { name: 'Other Services',               val: 0.8, pill: { cls: 'gray',  text: 'flat' }, bar: 'b2' }
+          { name: 'Pre-ETS: Job Exploration Counseling',            val: 0.5, pill: { cls: 'amber', text: '+8%' }, bar: 'b1' },
+          { name: 'Pre-ETS Counseling on Post-Secondary Education', val: 0.7, pill: { cls: 'green', text: 'on plan' }, bar: 'b2' },
+          { name: 'Pre-ETS: Instruction on Self-Advocacy',          val: 0.3, pill: { cls: 'green', text: '-3%' }, bar: 'b3' },
+          { name: 'Pre-ETS: Work Based Learning',                   val: 0.8, pill: { cls: 'amber', text: '+15%' }, bar: 'b4' },
+          { name: 'Pre-ETS: Workplace Readiness',                   val: 0.4, pill: { cls: 'green', text: 'on plan' }, bar: 'b5' },
+          { name: 'Support Service',                                val: 0.7, pill: { cls: 'amber', text: '+7%' }, bar: 'b1' },
+          { name: 'VR: Assistive technology',                       val: 1.0, pill: { cls: 'amber', text: '+10%' }, bar: 'b2' },
+          { name: 'VR: Job coaching and placement',                 val: 1.3, pill: { cls: 'amber', text: '+13%' }, bar: 'b3' }
         ],
         'West GA': [
-          { name: 'Job Coaching &amp; Placement', val: 1.5, pill: { cls: 'amber', text: '+15%' }, bar: 'b1' },
-          { name: 'Assistive Technology',         val: 1.1, pill: { cls: 'amber', text: '+11%' }, bar: 'b2' },
-          { name: 'Post-Secondary Training',      val: 1.2, pill: { cls: 'green', text: 'on plan' }, bar: 'b3' },
-          { name: 'Vocational Evaluation',        val: 0.4, pill: { cls: 'green', text: '-5%' }, bar: 'b4' },
-          { name: 'BEP Operator Training',        val: 0.6, pill: { cls: 'blue',  text: 'on plan' }, bar: 'b5' },
-          { name: 'Transportation Stipends',      val: 0.3, pill: { cls: 'amber', text: '+9%' }, bar: 'b1' },
-          { name: 'Other Services',               val: 0.8, pill: { cls: 'gray',  text: 'flat' }, bar: 'b2' }
+          { name: 'Pre-ETS: Job Exploration Counseling',            val: 0.6, pill: { cls: 'amber', text: '+10%' }, bar: 'b1' },
+          { name: 'Pre-ETS Counseling on Post-Secondary Education', val: 0.7, pill: { cls: 'green', text: 'on plan' }, bar: 'b2' },
+          { name: 'Pre-ETS: Instruction on Self-Advocacy',          val: 0.3, pill: { cls: 'green', text: '-5%' }, bar: 'b3' },
+          { name: 'Pre-ETS: Work Based Learning',                   val: 0.9, pill: { cls: 'amber', text: '+16%' }, bar: 'b4' },
+          { name: 'Pre-ETS: Workplace Readiness',                   val: 0.5, pill: { cls: 'green', text: 'on plan' }, bar: 'b5' },
+          { name: 'Support Service',                                val: 0.7, pill: { cls: 'amber', text: '+9%' }, bar: 'b1' },
+          { name: 'VR: Assistive technology',                       val: 1.1, pill: { cls: 'amber', text: '+11%' }, bar: 'b2' },
+          { name: 'VR: Job coaching and placement',                 val: 1.5, pill: { cls: 'amber', text: '+15%' }, bar: 'b3' }
         ]
       };
       function fmtCatVal(v) {
-        return '$' + (v >= 10 ? v.toFixed(1) : v.toFixed(1)) + 'M';
+        return '$' + v.toFixed(1) + 'M';
       }
+
+      // Tracks the active program filter (set by the Service Programs dropdown)
+      let _activeProgram = 'All';
+      let _activeDistrict = 'All Districts';
+      function setActiveProgram(p) { _activeProgram = p; renderCategorySpend(_activeDistrict); }
+      window.__setActiveProgram = setActiveProgram;
+
       function renderCategorySpend(name) {
+        _activeDistrict = name;
         const list = document.getElementById('categorySpendList');
         if (!list) return;
-        const rows = REGION_CATEGORIES[name] || REGION_CATEGORIES['All Districts'];
+        const allRows = REGION_CATEGORIES[name] || REGION_CATEGORIES['All Districts'];
+        const rows = (_activeProgram && _activeProgram !== 'All')
+          ? allRows.filter(r => r.name === _activeProgram)
+          : allRows;
+
+        const titleEl = document.getElementById('categorySpendTitle');
+        if (titleEl) {
+          titleEl.textContent = (_activeProgram && _activeProgram !== 'All')
+            ? 'Predicted Spend \u2014 ' + _activeProgram
+            : 'Predicted Spend by Service Program';
+        }
+
+        if (!rows.length) { list.innerHTML = '<div style="padding:12px;font-size:12px;color:var(--sf-gray-5);">No data for this program.</div>'; return; }
         const max = Math.max(...rows.map(r => r.val));
         list.innerHTML = rows.map(r => {
           const width = Math.max(8, Math.round((r.val / max) * 92));
@@ -1528,6 +1621,153 @@
       document.addEventListener('keydown', (e) => {
         if (e.key === 'Escape') closeMenu();
       });
+    })();
+
+    // Service Programs filter dropdown
+    (function () {
+      const dd = document.getElementById('programFilter');
+      if (!dd) return;
+      const valueEl = document.getElementById('programFilterValue');
+      const items = dd.querySelectorAll('.fm-item');
+      function close() { dd.classList.remove('open'); dd.setAttribute('aria-expanded','false'); }
+      function open()  { dd.classList.add('open');    dd.setAttribute('aria-expanded','true');  }
+      dd.addEventListener('click', (e) => {
+        if (e.target.closest('.fm-item')) return;
+        if (dd.classList.contains('open')) close(); else open();
+      });
+      items.forEach(item => {
+        item.addEventListener('click', (e) => {
+          e.stopPropagation();
+          items.forEach(i => {
+            i.classList.remove('selected');
+            const c = i.querySelector('.check'); if (c) c.innerHTML = '';
+          });
+          item.classList.add('selected');
+          const c = item.querySelector('.check'); if (c) c.innerHTML = '&#10003;';
+          const value = item.getAttribute('data-value');
+          valueEl.textContent = value;
+          if (typeof window.__setActiveProgram === 'function') window.__setActiveProgram(value);
+          close();
+        });
+      });
+      document.addEventListener('click', (e) => { if (!dd.contains(e.target)) close(); });
+      document.addEventListener('keydown', (e) => { if (e.key === 'Escape') close(); });
+    })();
+
+    // Office filter dropdown
+    (function () {
+      const dd = document.getElementById('officeFilter');
+      if (!dd) return;
+      const valueEl = document.getElementById('officeFilterValue');
+      const items = dd.querySelectorAll('.fm-item');
+      function close() { dd.classList.remove('open'); dd.setAttribute('aria-expanded','false'); }
+      function open()  { dd.classList.add('open');    dd.setAttribute('aria-expanded','true');  }
+      dd.addEventListener('click', (e) => {
+        if (e.target.closest('.fm-item')) return;
+        if (dd.classList.contains('open')) close(); else open();
+      });
+      items.forEach(item => {
+        item.addEventListener('click', (e) => {
+          e.stopPropagation();
+          items.forEach(i => {
+            i.classList.remove('selected');
+            const c = i.querySelector('.check'); if (c) c.innerHTML = '';
+          });
+          item.classList.add('selected');
+          const c = item.querySelector('.check'); if (c) c.innerHTML = '&#10003;';
+          valueEl.textContent = item.getAttribute('data-value');
+          close();
+        });
+      });
+      document.addEventListener('click', (e) => { if (!dd.contains(e.target)) close(); });
+      document.addEventListener('keydown', (e) => { if (e.key === 'Escape') close(); });
+    })();
+
+    // Funding Source filter dropdown
+    (function () {
+      const dd = document.getElementById('fundingFilter');
+      if (!dd) return;
+      const valueEl = document.getElementById('fundingFilterValue');
+      const items = dd.querySelectorAll('.fm-item');
+      function close() { dd.classList.remove('open'); dd.setAttribute('aria-expanded','false'); }
+      function open()  { dd.classList.add('open');    dd.setAttribute('aria-expanded','true');  }
+      dd.addEventListener('click', (e) => {
+        if (e.target.closest('.fm-item')) return;
+        if (dd.classList.contains('open')) close(); else open();
+      });
+      items.forEach(item => {
+        item.addEventListener('click', (e) => {
+          e.stopPropagation();
+          items.forEach(i => {
+            i.classList.remove('selected');
+            const c = i.querySelector('.check'); if (c) c.innerHTML = '';
+          });
+          item.classList.add('selected');
+          const c = item.querySelector('.check'); if (c) c.innerHTML = '&#10003;';
+          valueEl.textContent = item.getAttribute('data-value');
+          close();
+        });
+      });
+      document.addEventListener('click', (e) => { if (!dd.contains(e.target)) close(); });
+      document.addEventListener('keydown', (e) => { if (e.key === 'Escape') close(); });
+    })();
+
+    // Client Type filter dropdown
+    (function () {
+      const dd = document.getElementById('clientTypeFilter');
+      if (!dd) return;
+      const valueEl = document.getElementById('clientTypeFilterValue');
+      const items = dd.querySelectorAll('.fm-item');
+      function close() { dd.classList.remove('open'); dd.setAttribute('aria-expanded','false'); }
+      function open()  { dd.classList.add('open');    dd.setAttribute('aria-expanded','true');  }
+      dd.addEventListener('click', (e) => {
+        if (e.target.closest('.fm-item')) return;
+        if (dd.classList.contains('open')) close(); else open();
+      });
+      items.forEach(item => {
+        item.addEventListener('click', (e) => {
+          e.stopPropagation();
+          items.forEach(i => {
+            i.classList.remove('selected');
+            const c = i.querySelector('.check'); if (c) c.innerHTML = '';
+          });
+          item.classList.add('selected');
+          const c = item.querySelector('.check'); if (c) c.innerHTML = '&#10003;';
+          valueEl.textContent = item.getAttribute('data-value');
+          close();
+        });
+      });
+      document.addEventListener('click', (e) => { if (!dd.contains(e.target)) close(); });
+      document.addEventListener('keydown', (e) => { if (e.key === 'Escape') close(); });
+    })();
+
+    // Counselor filter dropdown
+    (function () {
+      const dd = document.getElementById('counselorFilter');
+      if (!dd) return;
+      const valueEl = document.getElementById('counselorFilterValue');
+      const items = dd.querySelectorAll('.fm-item');
+      function close() { dd.classList.remove('open'); dd.setAttribute('aria-expanded','false'); }
+      function open()  { dd.classList.add('open');    dd.setAttribute('aria-expanded','true');  }
+      dd.addEventListener('click', (e) => {
+        if (e.target.closest('.fm-item')) return;
+        if (dd.classList.contains('open')) close(); else open();
+      });
+      items.forEach(item => {
+        item.addEventListener('click', (e) => {
+          e.stopPropagation();
+          items.forEach(i => {
+            i.classList.remove('selected');
+            const c = i.querySelector('.check'); if (c) c.innerHTML = '';
+          });
+          item.classList.add('selected');
+          const c = item.querySelector('.check'); if (c) c.innerHTML = '&#10003;';
+          valueEl.textContent = item.getAttribute('data-value');
+          close();
+        });
+      });
+      document.addEventListener('click', (e) => { if (!dd.contains(e.target)) close(); });
+      document.addEventListener('keydown', (e) => { if (e.key === 'Escape') close(); });
     })();
   </script>
 </body>
