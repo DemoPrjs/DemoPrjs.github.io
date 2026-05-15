@@ -562,10 +562,10 @@
   <!-- Filters -->
   <div class="filter-bar" aria-label="Dashboard filters">
     <span class="lbl">Filters</span>
-    <span class="filter active filter-dd" id="regionFilter" tabindex="0" role="button" aria-haspopup="listbox" aria-expanded="false">Region: <strong style="margin-left:4px;" id="regionFilterValue">All Regions</strong> <span class="ic" aria-hidden="true">&#9662;</span>
-      <div class="filter-menu" role="listbox" aria-label="Region">
-        <div class="fm-head">Region</div>
-        <div class="fm-item selected" role="option" data-value="All Regions"><span class="check">&#10003;</span>All Regions</div>
+    <span class="filter active filter-dd" id="regionFilter" tabindex="0" role="button" aria-haspopup="listbox" aria-expanded="false">District: <strong style="margin-left:4px;" id="regionFilterValue">All Districts</strong> <span class="ic" aria-hidden="true">&#9662;</span>
+      <div class="filter-menu" role="listbox" aria-label="District">
+        <div class="fm-head">District</div>
+        <div class="fm-item selected" role="option" data-value="All Districts"><span class="check">&#10003;</span>All Districts</div>
         <div class="fm-divider"></div>
         <div class="fm-item" role="option" data-value="Metro Atlanta"><span class="check"></span>Metro Atlanta</div>
         <div class="fm-item" role="option" data-value="North GA"><span class="check"></span>North GA</div>
@@ -874,7 +874,7 @@
             <thead>
               <tr>
                 <th>Counselor</th>
-                <th>Region</th>
+                <th>District</th>
                 <th class="num">Active Cases</th>
                 <th class="num">Closure %</th>
                 <th>Trend</th>
@@ -1155,7 +1155,7 @@
 
       // Per-region KPI dataset
       const REGION_KPIS = {
-        'All Regions': {
+        'All Districts': {
           plansValue: '3,184', plansSub: 'Across 9 GVRA regions', plansDelta: '&uarr; 4.2% vs prior period', plansDeltaCls: 'delta up',
           budgetValue: '$48.6M', budgetSub: '$31.4M committed &middot; $11.2M paid', budgetBar: '65%',
           predictValue: '$50.3M', predictSub: 'Confidence: 92% &middot; 95% CI $48.9M&ndash;$51.7M',
@@ -1237,7 +1237,7 @@
 
       // ── Einstein Insights per region ──
       const REGION_INSIGHTS = {
-        'All Regions': [
+        'All Districts': [
           { ic: '!', title: 'FYTD spend trending $1.7M above plan', body: 'Driven by job coaching (+18%) and assistive tech (+12%). Recommend amending IPEs in West &amp; South regions.', conf: '92%' },
           { ic: '&#9888;', title: '147 consumers at high disengagement risk', body: 'Common signals: no contact 21+ days, missed authorizations, low session attendance.', conf: '88%' },
           { ic: '&#9650;', title: 'Counselor caseload variance widening', body: '4 counselors above 1.4x median load &mdash; closure rates 11% lower. Suggest case rebalancing.', conf: '85%' },
@@ -1283,7 +1283,7 @@
       function renderInsights(name) {
         const list = document.getElementById('einsteinInsights');
         if (!list) return;
-        const items = REGION_INSIGHTS[name] || REGION_INSIGHTS['All Regions'];
+        const items = REGION_INSIGHTS[name] || REGION_INSIGHTS['All Districts'];
         list.innerHTML = items.map(it => `
           <li>
             <span class="ic">${it.ic}</span>
@@ -1299,7 +1299,7 @@
       // ── Predicted Spend by Service Category per region ──
       // values in $M; each region's rows sum ≈ region's Predicted FY-End Spend KPI.
       const REGION_CATEGORIES = {
-        'All Regions': [
+        'All Districts': [
           { name: 'Job Coaching &amp; Placement', val: 12.4, pill: { cls: 'amber', text: '+18%' }, bar: 'b1' },
           { name: 'Assistive Technology',         val: 8.9,  pill: { cls: 'amber', text: '+12%' }, bar: 'b2' },
           { name: 'Post-Secondary Training',      val: 10.2, pill: { cls: 'green', text: 'on plan' }, bar: 'b3' },
@@ -1369,7 +1369,7 @@
       function renderCategorySpend(name) {
         const list = document.getElementById('categorySpendList');
         if (!list) return;
-        const rows = REGION_CATEGORIES[name] || REGION_CATEGORIES['All Regions'];
+        const rows = REGION_CATEGORIES[name] || REGION_CATEGORIES['All Districts'];
         const max = Math.max(...rows.map(r => r.val));
         list.innerHTML = rows.map(r => {
           const width = Math.max(8, Math.round((r.val / max) * 92));
@@ -1387,7 +1387,7 @@
       // Anchored so months[6] ≈ KPI "committed", months[11] = KPI "Predicted FY-End Spend",
       // budget = KPI "FY26 Authorized Budget".
       const REGION_CHART = {
-        'All Regions':    { months: [4.5, 9.2, 14.0, 19.0, 24.2, 28.8, 31.4, 35.0, 39.0, 43.0, 47.0, 50.3], budget: 48.6, projLabel: '$50.3M' },
+        'All Districts':    { months: [4.5, 9.2, 14.0, 19.0, 24.2, 28.8, 31.4, 35.0, 39.0, 43.0, 47.0, 50.3], budget: 48.6, projLabel: '$50.3M' },
         'Metro Atlanta':  { months: [1.5, 3.0, 4.6, 6.2, 7.9,  9.4,  10.4, 11.6, 12.9, 14.2, 15.4, 16.2], budget: 15.6, projLabel: '$16.2M' },
         'North GA':       { months: [0.8, 1.6, 2.5, 3.4, 4.3,  5.0,  5.5,  6.1,  6.8,  7.4,  8.1,  8.6 ], budget: 8.4,  projLabel: '$8.6M'  },
         'South GA':       { months: [0.6, 1.2, 1.9, 2.5, 3.2,  3.7,  4.1,  4.6,  5.2,  5.7,  6.4,  6.9 ], budget: 6.7,  projLabel: '$6.9M'  },
@@ -1418,7 +1418,7 @@
         return (v) => 280 - ((v - axis.yMin) / (axis.yMax - axis.yMin)) * 240;
       }
       function renderExpenditureChart(name) {
-        const cfg = REGION_CHART[name] || REGION_CHART['All Regions'];
+        const cfg = REGION_CHART[name] || REGION_CHART['All Districts'];
         const svg = document.getElementById('expChart');
         if (!svg) return;
 
@@ -1484,10 +1484,10 @@
         `;
       }
 
-      // Render initial state (All Regions)
-      renderExpenditureChart('All Regions');
-      renderInsights('All Regions');
-      renderCategorySpend('All Regions');
+      // Render initial state (All Districts)
+      renderExpenditureChart('All Districts');
+      renderInsights('All Districts');
+      renderCategorySpend('All Districts');
 
       function closeMenu() {
         dd.classList.remove('open');
