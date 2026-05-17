@@ -1,0 +1,771 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>RSA-15 Report of Vending Facility Program — BEP Operator Console | GVRA</title>
+  <meta name="description" content="Salesforce-style RSA-15 annual Report of Vending Facility Program — earnings, employment, facilities, vendors, training, expenditures, and certification." />
+  <style>
+    /* ── Salesforce-style tokens (matches financial-reporting.html) ── */
+    :root {
+      --sf-blue:        #0176d3;
+      --sf-blue-mid:    #1b96ff;
+      --sf-blue-deep:   #032d60;
+      --sf-blue-light:  #eaf5fe;
+      --sf-purple:      #5867e8;
+      --sf-green:       #2e844a;
+      --sf-green-light: #ddf3e4;
+      --sf-amber:       #b76e00;
+      --sf-amber-light: #fef0c3;
+      --sf-red:         #ba0517;
+      --sf-red-light:   #feded8;
+      --sf-gray-1:      #f3f3f3;
+      --sf-gray-2:      #ecebea;
+      --sf-gray-3:      #c9c7c5;
+      --sf-gray-5:      #706e6b;
+      --sf-gray-6:      #444241;
+      --sf-charcoal:    #181818;
+      --sf-border:      #dddbda;
+      --sf-bg:          #f3f2f2;
+      --sf-card:        #ffffff;
+      --sf-shadow-sm:   0 1px 3px rgba(0,0,0,0.04);
+      --sf-shadow-md:   0 2px 6px rgba(0,0,0,0.08);
+    }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: 'Salesforce Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Arial, sans-serif;
+      color: var(--sf-charcoal);
+      background: var(--sf-bg);
+      font-size: 13px;
+      line-height: 1.45;
+    }
+    a { color: var(--sf-blue); text-decoration: none; }
+    a:hover { text-decoration: underline; }
+    button { font-family: inherit; cursor: pointer; }
+
+    /* ── Global Header (identical to financial-reporting.html) ── */
+    .global-header {
+      background: #fff; border-bottom: 1px solid var(--sf-border);
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 10px 20px; height: 64px;
+      position: sticky; top: 0; z-index: 100;
+    }
+    .gh-brand { display: flex; align-items: center; gap: 10px; }
+    .gh-brand img { height: 44px; width: auto; display: block; }
+    .gh-right { display: flex; align-items: center; gap: 12px; }
+    .gh-icon {
+      width: 32px; height: 32px; border-radius: 4px; border: none;
+      background: transparent; color: var(--sf-gray-6);
+      display: inline-flex; align-items: center; justify-content: center; font-size: 16px;
+    }
+    .gh-icon:hover { background: var(--sf-gray-1); }
+    .gh-avatar {
+      width: 32px; height: 32px; border-radius: 50%;
+      background: var(--sf-blue-deep); color: #fff;
+      display: inline-flex; align-items: center; justify-content: center;
+      font-size: 12px; font-weight: 700;
+    }
+
+    /* ── App bar ── */
+    .app-bar {
+      background: #fff; border-bottom: 1px solid var(--sf-border);
+      padding: 0 20px;
+      display: flex; align-items: stretch; gap: 0; overflow-x: auto;
+    }
+    .app-bar .app-name {
+      display: inline-flex; align-items: center; gap: 8px;
+      padding: 10px 16px 10px 0; margin-right: 14px;
+      font-weight: 700; color: var(--sf-blue-deep); font-size: 14px;
+      border-right: 1px solid var(--sf-border);
+    }
+    .app-bar .app-name::before {
+      content: ''; width: 18px; height: 18px; border-radius: 4px;
+      background: var(--sf-blue); display: inline-block;
+    }
+    .app-tab {
+      padding: 12px 14px; font-size: 13px; font-weight: 600;
+      color: var(--sf-gray-6); white-space: nowrap;
+      border-bottom: 3px solid transparent;
+    }
+    .app-tab:hover { color: var(--sf-blue); text-decoration: none; }
+    .app-tab.active { color: var(--sf-blue); border-bottom-color: var(--sf-blue); }
+
+    /* ── Page header ── */
+    .page-head {
+      background: #fff; border-bottom: 1px solid var(--sf-border);
+      padding: 16px 20px;
+      display: flex; align-items: center; justify-content: space-between;
+      gap: 16px; flex-wrap: wrap;
+    }
+    .page-head .crumbs { font-size: 12px; color: var(--sf-gray-5); margin-bottom: 4px; }
+    .page-head h1 {
+      font-size: 20px; font-weight: 700; color: var(--sf-charcoal);
+      display: inline-flex; align-items: center; gap: 10px;
+    }
+    .page-head .h-icon {
+      width: 36px; height: 36px; border-radius: 6px;
+      background: var(--sf-blue); color: #fff;
+      display: inline-flex; align-items: center; justify-content: center; font-size: 18px;
+    }
+    .page-head .meta { font-size: 12px; color: var(--sf-gray-5); margin-top: 4px; }
+    .head-actions { display: flex; gap: 8px; flex-wrap: wrap; }
+    .btn {
+      padding: 6px 14px; border-radius: 4px; font-size: 13px; font-weight: 600;
+      border: 1px solid var(--sf-border); background: #fff; color: var(--sf-charcoal);
+    }
+    .btn:hover { background: var(--sf-gray-1); }
+    .btn.primary { background: var(--sf-blue); color: #fff; border-color: var(--sf-blue); }
+    .btn.primary:hover { background: #014486; border-color: #014486; }
+
+    /* ── Highlights / record header ── */
+    .highlights {
+      background: #fff; border-bottom: 1px solid var(--sf-border);
+      padding: 14px 20px;
+      display: grid; grid-template-columns: repeat(6, 1fr); gap: 18px;
+    }
+    @media (max-width: 1100px) { .highlights { grid-template-columns: repeat(3, 1fr); } }
+    .hl { font-size: 12px; }
+    .hl .lbl { color: var(--sf-gray-5); font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.04em; }
+    .hl .val { color: var(--sf-charcoal); font-size: 14px; font-weight: 700; margin-top: 3px; }
+
+    /* ── Section tab strip ── */
+    .sec-tabs {
+      background: #fff; border-bottom: 1px solid var(--sf-border);
+      padding: 0 20px;
+      display: flex; gap: 0; overflow-x: auto; position: sticky; top: 64px; z-index: 50;
+    }
+    .sec-tab {
+      padding: 11px 14px; font-size: 12px; font-weight: 600;
+      color: var(--sf-gray-6); white-space: nowrap;
+      border-bottom: 3px solid transparent; cursor: pointer; background: none; border-left: none; border-right: none; border-top: none;
+    }
+    .sec-tab:hover { color: var(--sf-blue); }
+    .sec-tab.active { color: var(--sf-blue); border-bottom-color: var(--sf-blue); }
+
+    /* ── Section card ── */
+    .sec {
+      background: #fff; border: 1px solid var(--sf-border); border-radius: 4px;
+      box-shadow: var(--sf-shadow-sm);
+      margin: 16px 20px;
+      overflow: hidden;
+    }
+    .sec-head {
+      padding: 12px 16px; border-bottom: 1px solid var(--sf-border);
+      background: #fafaf9;
+      display: flex; align-items: center; justify-content: space-between;
+      gap: 10px; flex-wrap: wrap;
+    }
+    .sec-head h2 {
+      font-size: 14px; font-weight: 700; color: var(--sf-blue-deep);
+      display: inline-flex; align-items: center; gap: 8px;
+    }
+    .sec-head .num {
+      width: 22px; height: 22px; border-radius: 50%;
+      background: var(--sf-blue); color: #fff;
+      display: inline-flex; align-items: center; justify-content: center;
+      font-size: 11px; font-weight: 700;
+    }
+    .sec-head .meta { font-size: 11px; color: var(--sf-gray-5); }
+    .sec-body { padding: 14px 16px; }
+
+    /* ── Field grid (Salesforce record-detail look) ── */
+    .field-grid {
+      display: grid; grid-template-columns: repeat(2, 1fr); gap: 0;
+    }
+    @media (max-width: 800px) { .field-grid { grid-template-columns: 1fr; } }
+    .field {
+      padding: 8px 14px;
+      border-bottom: 1px solid var(--sf-gray-2);
+      display: grid; grid-template-columns: 1fr 1fr; gap: 12px; align-items: baseline;
+    }
+    .field .l {
+      font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.04em;
+      color: var(--sf-gray-5);
+    }
+    .field .v { color: var(--sf-charcoal); font-size: 13px; font-weight: 600; text-align: right; font-variant-numeric: tabular-nums; }
+    .field.calc { background: var(--sf-blue-light); }
+    .field.calc .l { color: var(--sf-blue-deep); }
+    .field.total { background: #fafaf9; }
+    .field.total .l, .field.total .v { color: var(--sf-blue-deep); font-weight: 800; }
+
+    /* ── Tables ── */
+    .table-wrap { overflow-x: auto; }
+    table.data { width: 100%; border-collapse: collapse; font-size: 12px; min-width: 720px; }
+    table.data th, table.data td {
+      text-align: left; padding: 8px 10px; border-bottom: 1px solid var(--sf-gray-2);
+      vertical-align: middle;
+    }
+    table.data th {
+      font-size: 11px; color: var(--sf-gray-5); font-weight: 700;
+      text-transform: uppercase; letter-spacing: 0.03em; background: #fafaf9;
+    }
+    table.data td.num, table.data th.num { text-align: right; font-variant-numeric: tabular-nums; }
+    table.data tfoot td { font-weight: 700; background: #fafaf9; color: var(--sf-blue-deep); }
+    table.data tbody tr:hover { background: var(--sf-blue-light); }
+    table.data .row-lbl { font-weight: 600; color: var(--sf-charcoal); }
+    table.data .sub-lbl { padding-left: 24px; color: var(--sf-gray-6); font-weight: 500; }
+
+    /* ── Pills ── */
+    .pill {
+      display: inline-flex; align-items: center; gap: 4px;
+      padding: 3px 10px; border-radius: 100px; font-size: 11px; font-weight: 700;
+      text-transform: uppercase; letter-spacing: 0.04em;
+    }
+    .pill.green { background: var(--sf-green-light); color: var(--sf-green); }
+    .pill.amber { background: var(--sf-amber-light); color: var(--sf-amber); }
+    .pill.red   { background: var(--sf-red-light);   color: var(--sf-red); }
+    .pill.blue  { background: var(--sf-blue-light);  color: var(--sf-blue-deep); }
+
+    /* ── Notes / certification ── */
+    .notes-box {
+      width: 100%; min-height: 80px; padding: 10px 12px;
+      border: 1px solid var(--sf-border); border-radius: 4px;
+      font-family: inherit; font-size: 13px; resize: vertical;
+      background: #fff; color: var(--sf-charcoal);
+    }
+    .cert-grid {
+      display: grid; grid-template-columns: repeat(2, 1fr); gap: 14px;
+    }
+    @media (max-width: 800px) { .cert-grid { grid-template-columns: 1fr; } }
+    .cert-field {
+      display: flex; flex-direction: column; gap: 4px;
+    }
+    .cert-field label { font-size: 11px; color: var(--sf-gray-5); font-weight: 700; text-transform: uppercase; letter-spacing: 0.04em; }
+    .cert-field input {
+      padding: 7px 10px; border: 1px solid var(--sf-border); border-radius: 4px;
+      font-size: 13px; background: #fff;
+    }
+
+    /* ── KPI strip (snapshot at top) ── */
+    .kpi-strip {
+      display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px;
+      padding: 16px 20px 0;
+    }
+    @media (max-width: 1100px) { .kpi-strip { grid-template-columns: repeat(2, 1fr); } }
+    .kpi {
+      background: #fff; border: 1px solid var(--sf-border); border-radius: 4px;
+      box-shadow: var(--sf-shadow-sm); padding: 12px 14px;
+    }
+    .kpi .lbl { font-size: 11px; color: var(--sf-gray-5); font-weight: 700; text-transform: uppercase; letter-spacing: 0.04em; }
+    .kpi .val { font-size: 22px; font-weight: 700; color: var(--sf-charcoal); margin-top: 4px; }
+    .kpi .sub { font-size: 11px; color: var(--sf-gray-5); margin-top: 2px; }
+
+    .footer-bar {
+      text-align: center; padding: 16px 20px;
+      font-size: 12px; color: var(--sf-gray-5);
+      background: #fff; border-top: 1px solid var(--sf-border);
+    }
+
+    /* OMB legal note */
+    .omb-note {
+      padding: 10px 16px; background: var(--sf-amber-light); color: var(--sf-amber);
+      border: 1px solid var(--sf-amber); border-radius: 4px;
+      font-size: 11px; margin: 16px 20px 0;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Global Header (identical to financial-reporting.html) -->
+  <header class="global-header" aria-label="Global header">
+    <a href="bep-program.html" class="gh-brand" aria-label="GVRA home">
+      <img src="GVRA.png" alt="Georgia Vocational Rehabilitation Agency" />
+    </a>
+    <div class="gh-right">
+      <button class="gh-icon" aria-label="Help">?</button>
+      <button class="gh-icon" aria-label="Setup">&#9881;</button>
+      <button class="gh-icon" aria-label="Notifications">&#128276;</button>
+      <span class="gh-avatar" aria-label="Renee Patel">RP</span>
+    </div>
+  </header>
+
+  <!-- App bar -->
+  <nav class="app-bar" aria-label="BEP application tabs">
+    <span class="app-name">BEP Operator Console</span>
+    <a href="bep-program.html" class="app-tab">Home</a>
+    <a href="operator-lifecycle.html" class="app-tab">Operators</a>
+    <a href="#" class="app-tab">Cases</a>
+    <a href="facility-management.html" class="app-tab">Facilities</a>
+    <a href="#" class="app-tab">Training</a>
+    <a href="#" class="app-tab">Set-Aside</a>
+    <a href="financial-reporting.html" class="app-tab">Reports</a>
+    <a href="#" class="app-tab active">Dashboards</a>
+  </nav>
+
+  <!-- Page header -->
+  <section class="page-head" aria-label="RSA-15 report header">
+    <div>
+      <div class="crumbs"><a href="bep-program.html">BEP Program</a> &nbsp;&rsaquo;&nbsp; <a href="#">Oversight Dashboards</a> &nbsp;&rsaquo;&nbsp; <a href="#">RSA-15</a></div>
+      <h1><span class="h-icon" aria-hidden="true">&#128202;</span> RSA-15 &mdash; Report of Vending Facility Program</h1>
+      <div class="meta">U.S. Department of Education &middot; Rehabilitation Services Administration &middot; Form RSA-15 &middot; OMB No. 1820-0009 &middot; Exp. 10/31/2026</div>
+    </div>
+    <div class="head-actions">
+      <a href="rsa-15-crma-dashboard.html" class="btn" style="display:inline-flex;align-items:center;gap:6px;text-decoration:none;">&#128202; CRMA Dashboard View</a>
+      <button class="btn">Save Draft</button>
+      <button class="btn">Validate</button>
+      <button class="btn">Export PDF</button>
+      <button class="btn primary">Submit to RSA</button>
+    </div>
+  </section>
+
+  <!-- Record highlights -->
+  <section class="highlights" aria-label="Report header fields">
+    <div class="hl"><div class="lbl">State</div><div class="val">Georgia</div></div>
+    <div class="hl"><div class="lbl">Agency</div><div class="val">Georgia Vocational Rehabilitation Agency</div></div>
+    <div class="hl"><div class="lbl">Reporting Period</div><div class="val">Oct 1, 2025 &ndash; Sep 30, 2026</div></div>
+    <div class="hl"><div class="lbl">Status</div><div class="val"><span class="pill amber">Draft &middot; FY26</span></div></div>
+    <div class="hl"><div class="lbl">Last Saved</div><div class="val">May 14, 2026 10:42 AM</div></div>
+    <div class="hl"><div class="lbl">Owner</div><div class="val">R. Patel (BEP Coordinator)</div></div>
+  </section>
+
+  <!-- KPI strip -->
+  <div class="kpi-strip" aria-label="Report KPI snapshot">
+    <div class="kpi"><div class="lbl">Vendor Earnings (YTD)</div><div class="val">$3.84M</div><div class="sub">Sum of net profit + fair minimum return</div></div>
+    <div class="kpi"><div class="lbl">Active Vendors (EOY est.)</div><div class="val">94</div><div class="sub">Federal: 36 &middot; Public: 47 &middot; Private: 11</div></div>
+    <div class="kpi"><div class="lbl">Set-Aside Collected</div><div class="val">$214,800</div><div class="sub">Levied funds available for redistribution</div></div>
+    <div class="kpi"><div class="lbl">Form Completeness</div><div class="val">87%</div><div class="sub">11 of 13 sections complete</div></div>
+  </div>
+
+  <!-- Section tabs -->
+  <nav class="sec-tabs" aria-label="RSA-15 sections">
+    <button class="sec-tab active" data-target="sec-1">1. Earnings &amp; Employment</button>
+    <button class="sec-tab" data-target="sec-2">2. Facilities</button>
+    <button class="sec-tab" data-target="sec-3">3. Federal Cafeteria Contracts</button>
+    <button class="sec-tab" data-target="sec-4">4. Vendors</button>
+    <button class="sec-tab" data-target="sec-5">5. Interstate Highway Locations</button>
+    <button class="sec-tab" data-target="sec-6">6. Expenditures by Source of Funds</button>
+    <button class="sec-tab" data-target="sec-7">7. Distribution of Vending &amp; Set-Aside</button>
+    <button class="sec-tab" data-target="sec-8">8. Sites Surveyed</button>
+    <button class="sec-tab" data-target="sec-9">9. Vendor Training</button>
+    <button class="sec-tab" data-target="sec-10">10. State &amp; Nominee Personnel</button>
+    <button class="sec-tab" data-target="sec-11">11. Notes</button>
+    <button class="sec-tab" data-target="sec-12">12. Certification</button>
+  </nav>
+
+  <div class="omb-note">
+    <strong>OMB Burden Notice:</strong> Public reporting burden for this collection is estimated to average 23.5 hours per response. The obligation to respond is required to obtain or retain benefit (20 U.S.C. 107a(6)(a) and 107b(4)). Do not return the completed RSA-15 to the OMB address.
+  </div>
+
+  <!-- ────────── Section 1: Earnings and Employment ────────── -->
+  <section class="sec" id="sec-1">
+    <header class="sec-head">
+      <h2><span class="num">1</span> Earnings and Employment</h2>
+      <span class="meta">Lines 1&ndash;19 &middot; All amounts in U.S. dollars unless noted</span>
+    </header>
+    <div class="sec-body">
+      <div class="field-grid">
+        <div class="field"><span class="l">1. Gross Sales</span><span class="v">$ 18,420,500</span></div>
+        <div class="field"><span class="l">2. Merchandise Purchases</span><span class="v">$ 9,612,300</span></div>
+        <div class="field calc"><span class="l">3. Gross Profit (line 1 &minus; line 2)</span><span class="v">$ 8,808,200</span></div>
+        <div class="field"><span class="l">4. Payroll Expenses</span><span class="v">$ 2,184,400</span></div>
+        <div class="field"><span class="l">5. Other Operating Expenses</span><span class="v">$ 1,946,800</span></div>
+        <div class="field calc"><span class="l">6. Total Expenses (line 4 + line 5)</span><span class="v">$ 4,131,200</span></div>
+        <div class="field calc"><span class="l">7. Operating Profit (line 3 &minus; line 6)</span><span class="v">$ 4,677,000</span></div>
+        <div class="field"><span class="l">8. Vending Machine and Other Income</span><span class="v">$ 412,600</span></div>
+        <div class="field"><span class="l">9. Retirement / Other Benefits Paid to/for Vendors</span><span class="v">$ 186,200</span></div>
+        <div class="field calc"><span class="l">10. Net Proceeds (lines 7 + 8 + 9)</span><span class="v">$ 5,275,800</span></div>
+        <div class="field"><span class="l">11. Levied Set-Aside Funds</span><span class="v">$ 214,800</span></div>
+        <div class="field calc"><span class="l">12. Net Profit to Vendors (line 10 &minus; line 11)</span><span class="v">$ 5,061,000</span></div>
+        <div class="field"><span class="l">13. Fair Minimum Return to Vendors</span><span class="v">$ 184,000</span></div>
+        <div class="field total"><span class="l">14. Vendor Earnings (lines 12 + 13)</span><span class="v">$ 5,245,000</span></div>
+        <div class="field"><span class="l">15. Vendor Person-Years of Employment</span><span class="v">94.0</span></div>
+        <div class="field calc"><span class="l">16. Average Vendor Earnings (line 14 &divide; line 15)</span><span class="v">$ 55,798</span></div>
+        <div class="field"><span class="l">17. Median Vendor Earnings in the State</span><span class="v">$ 52,140</span></div>
+        <div class="field"><span class="l">18. Other Persons with Disabilities Employed</span><span class="v">42</span></div>
+        <div class="field total"><span class="l">19. Total Number Employed in the Program</span><span class="v">136</span></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ────────── Section 2: Vending Facilities ────────── -->
+  <section class="sec" id="sec-2">
+    <header class="sec-head">
+      <h2><span class="num">2</span> Vending Facilities</h2>
+      <span class="meta">Beginning &middot; Established &middot; Closed &middot; End of year (by property class)</span>
+    </header>
+    <div class="sec-body">
+      <h3 style="font-size:13px;font-weight:700;color:var(--sf-blue-deep);margin:4px 0 8px;">Facilities on Federal Property</h3>
+      <div class="table-wrap">
+        <table class="data" aria-label="Federal facilities counts">
+          <thead><tr><th>Item</th><th class="num">Count</th></tr></thead>
+          <tbody>
+            <tr><td class="row-lbl">Number at Beginning of the Year</td><td class="num">38</td></tr>
+            <tr><td class="row-lbl">Number Established During the Year</td><td class="num">3</td></tr>
+            <tr><td class="row-lbl">Number Closed During the Year</td><td class="num">2</td></tr>
+            <tr><td class="row-lbl">Number at End of the Year</td><td class="num"><strong>39</strong></td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h3 style="font-size:13px;font-weight:700;color:var(--sf-blue-deep);margin:18px 0 8px;">Vending Facilities Located on Federal Property &mdash; End of Year</h3>
+      <div class="table-wrap">
+        <table class="data" aria-label="Federal property breakdown">
+          <thead><tr><th>Federal Agency</th><th class="num">Count</th></tr></thead>
+          <tbody>
+            <tr><td>1. General Services Administration</td><td class="num">8</td></tr>
+            <tr><td>2. U.S. Postal Service</td><td class="num">5</td></tr>
+            <tr><td>3. Department of Defense (3a + 3b)</td><td class="num"><strong>9</strong></td></tr>
+            <tr><td class="sub-lbl">3a. Military Dining Facility Contracts</td><td class="num">4</td></tr>
+            <tr><td class="sub-lbl">3b. Other DoD Vending Facilities</td><td class="num">5</td></tr>
+            <tr><td>4. Department of Homeland Security</td><td class="num">3</td></tr>
+            <tr><td>5. Department of Health and Human Services</td><td class="num">2</td></tr>
+            <tr><td>6. Veterans Administration</td><td class="num">6</td></tr>
+            <tr><td>7. Department of the Interior</td><td class="num">1</td></tr>
+            <tr><td>8. Vending Routes on Multiple Federal Locations</td><td class="num">3</td></tr>
+            <tr><td>9. Other Federal Agencies (Federal Courts &mdash; ND/SD GA)</td><td class="num">2</td></tr>
+          </tbody>
+          <tfoot><tr><td>Total (lines 1&ndash;9)</td><td class="num">39</td></tr></tfoot>
+        </table>
+      </div>
+
+      <h3 style="font-size:13px;font-weight:700;color:var(--sf-blue-deep);margin:18px 0 8px;">Facilities on Public Property (State, County, Municipal)</h3>
+      <div class="table-wrap">
+        <table class="data" aria-label="Public property facilities">
+          <thead><tr><th>Item</th><th class="num">Count</th></tr></thead>
+          <tbody>
+            <tr><td class="row-lbl">Number at Beginning of the Year</td><td class="num">46</td></tr>
+            <tr><td class="row-lbl">Number Established During the Year</td><td class="num">4</td></tr>
+            <tr><td class="row-lbl">Number Closed During the Year</td><td class="num">3</td></tr>
+            <tr><td class="row-lbl">Number at End of the Year</td><td class="num"><strong>47</strong></td></tr>
+            <tr><td>Vending Facilities on State Property (EOY)</td><td class="num">22</td></tr>
+            <tr><td>Vending Facilities on County Property (EOY)</td><td class="num">15</td></tr>
+            <tr><td>Vending Facilities on Municipal Property (EOY)</td><td class="num">10</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h3 style="font-size:13px;font-weight:700;color:var(--sf-blue-deep);margin:18px 0 8px;">Facilities on Private Property</h3>
+      <div class="table-wrap">
+        <table class="data" aria-label="Private property facilities">
+          <thead><tr><th>Item</th><th class="num">Count</th></tr></thead>
+          <tbody>
+            <tr><td class="row-lbl">Number at Beginning of the Year</td><td class="num">11</td></tr>
+            <tr><td class="row-lbl">Number Established During the Year</td><td class="num">1</td></tr>
+            <tr><td class="row-lbl">Number Closed During the Year</td><td class="num">0</td></tr>
+            <tr><td class="row-lbl">Number at End of the Year</td><td class="num"><strong>12</strong></td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <!-- ────────── Section 3: Cafeteria / Military Dining Contracts ────────── -->
+  <section class="sec" id="sec-3">
+    <header class="sec-head">
+      <h2><span class="num">3</span> Contracts for Operation of Cafeterias and Military Dining Facilities</h2>
+      <span class="meta">All federal cafeteria / military dining contracts active in the reporting year</span>
+    </header>
+    <div class="sec-body">
+      <div class="table-wrap">
+        <table class="data" aria-label="Cafeteria contracts">
+          <thead>
+            <tr>
+              <th>Awarding Agency / Branch</th>
+              <th>Military Installation</th>
+              <th>Begin Date</th>
+              <th>Anticipated Termination</th>
+              <th class="num">Gross Sales (Most Recent Option Year)</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td>U.S. Army</td><td>Fort Stewart, GA</td><td>10/01/2022</td><td>09/30/2027</td><td class="num">$ 3,184,200</td></tr>
+            <tr><td>U.S. Air Force</td><td>Robins AFB, GA</td><td>04/01/2023</td><td>03/31/2028</td><td class="num">$ 2,461,800</td></tr>
+            <tr><td>U.S. Air Force</td><td>Dobbins ARB, GA</td><td>07/01/2024</td><td>06/30/2029</td><td class="num">$ 1,012,400</td></tr>
+            <tr><td>U.S. Marine Corps</td><td>MCLB Albany, GA</td><td>01/01/2025</td><td>12/31/2029</td><td class="num">$ 884,600</td></tr>
+          </tbody>
+          <tfoot><tr><td colspan="4">Total Federal Cafeteria / Dining Contract Value</td><td class="num">$ 7,543,000</td></tr></tfoot>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <!-- ────────── Section 4: Vendors ────────── -->
+  <section class="sec" id="sec-4">
+    <header class="sec-head">
+      <h2><span class="num">4</span> Vendors by Property Class</h2>
+      <span class="meta">Beginning &middot; Entering &middot; Leaving &middot; End of year</span>
+    </header>
+    <div class="sec-body">
+      <div class="table-wrap">
+        <table class="data" aria-label="Vendor counts by property class">
+          <thead>
+            <tr>
+              <th>Property Class</th>
+              <th class="num">Beginning</th>
+              <th class="num">Entering</th>
+              <th class="num">Leaving</th>
+              <th class="num">End of Year</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td class="row-lbl">Vendors on Federal Property</td><td class="num">35</td><td class="num">4</td><td class="num">3</td><td class="num"><strong>36</strong></td></tr>
+            <tr><td class="row-lbl">Vendors on Public Property (State, County, Municipal)</td><td class="num">45</td><td class="num">5</td><td class="num">3</td><td class="num"><strong>47</strong></td></tr>
+            <tr><td class="row-lbl">Vendors on Private Property</td><td class="num">10</td><td class="num">2</td><td class="num">1</td><td class="num"><strong>11</strong></td></tr>
+          </tbody>
+          <tfoot><tr><td>Total Active Vendors (EOY)</td><td class="num">90</td><td class="num">11</td><td class="num">7</td><td class="num">94</td></tr></tfoot>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <!-- ────────── Section 5: Interstate Highway ────────── -->
+  <section class="sec" id="sec-5">
+    <header class="sec-head">
+      <h2><span class="num">5</span> Vending Locations Under the Interstate Highway Program</h2>
+      <span class="meta">Transportation Equity Act for the 21st Century (June 1998)</span>
+    </header>
+    <div class="sec-body">
+      <div class="table-wrap">
+        <table class="data" aria-label="Interstate highway program">
+          <thead><tr><th>Item</th><th class="num">Total Number (1)</th><th class="num">Total Vending Machine Receipts (2)</th></tr></thead>
+          <tbody>
+            <tr><td class="row-lbl">Total Number of Vending Locations</td><td class="num">28</td><td class="num">$ 612,400</td></tr>
+            <tr><td>&nbsp;&nbsp;Number of Locations Operated by Vendors</td><td class="num">12</td><td class="num">$ 268,300</td></tr>
+            <tr><td>&nbsp;&nbsp;Number of Locations Operated by Third-Party Contractors</td><td class="num">16</td><td class="num">$ 344,100</td></tr>
+            <tr><td class="row-lbl">Number of Vendors Operating Locations in the Highway Program</td><td class="num">9</td><td class="num">&mdash;</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <!-- ────────── Section 6: Program Expenditures by Source of Funds ────────── -->
+  <section class="sec" id="sec-6">
+    <header class="sec-head">
+      <h2><span class="num">6</span> Program Expenditures by Source of Funds</h2>
+      <span class="meta">Lines 1&ndash;12 &middot; All amounts in U.S. dollars</span>
+    </header>
+    <div class="sec-body">
+      <div class="table-wrap">
+        <table class="data" aria-label="Expenditures by source of funds">
+          <thead>
+            <tr>
+              <th>Item</th>
+              <th class="num">VM Income Federal (1)</th>
+              <th class="num">VM Income Non-Federal (2)</th>
+              <th class="num">Set-Aside (3)</th>
+              <th class="num">State Approp. (4)</th>
+              <th class="num">Federal Funds (5)</th>
+              <th class="num">Other (6)</th>
+              <th class="num">Total (7)</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td class="row-lbl">1. Purchase of New / Replacement Equipment</td><td class="num">$ 38,200</td><td class="num">$ 22,400</td><td class="num">$ 18,600</td><td class="num">$ 26,000</td><td class="num">$ 84,800</td><td class="num">$ 0</td><td class="num"><strong>$ 190,000</strong></td></tr>
+            <tr><td class="row-lbl">2. Maintenance of Equipment</td><td class="num">$ 14,800</td><td class="num">$ 9,400</td><td class="num">$ 6,200</td><td class="num">$ 11,400</td><td class="num">$ 18,200</td><td class="num">$ 0</td><td class="num"><strong>$ 60,000</strong></td></tr>
+            <tr><td class="row-lbl">3a. Refurbishment of Facilities</td><td class="num">$ 22,000</td><td class="num">$ 12,800</td><td class="num">$ 8,400</td><td class="num">$ 14,000</td><td class="num">$ 32,800</td><td class="num">$ 0</td><td class="num"><strong>$ 90,000</strong></td></tr>
+            <tr><td class="row-lbl">3b. Acquisition of Facilities</td><td class="num">$ 9,200</td><td class="num">$ 4,800</td><td class="num">$ 3,200</td><td class="num">$ 7,800</td><td class="num">$ 21,000</td><td class="num">$ 0</td><td class="num"><strong>$ 46,000</strong></td></tr>
+            <tr><td class="row-lbl">4. Management Services</td><td class="num">$ 18,400</td><td class="num">$ 11,200</td><td class="num">$ 9,800</td><td class="num">$ 22,400</td><td class="num">$ 38,200</td><td class="num">$ 0</td><td class="num"><strong>$ 100,000</strong></td></tr>
+            <tr><td class="row-lbl">5. Fair Minimum Return</td><td class="num">$ 32,000</td><td class="num">$ 18,200</td><td class="num">$ 12,800</td><td class="num">$ 38,000</td><td class="num">$ 83,000</td><td class="num">&mdash;</td><td class="num"><strong>$ 184,000</strong></td></tr>
+            <tr><td class="row-lbl">6. Retirement / Pension Programs</td><td class="num">$ 12,400</td><td class="num">$ 7,800</td><td class="num">$ 4,200</td><td class="num">$ 9,600</td><td class="num">$ 14,000</td><td class="num">&mdash;</td><td class="num"><strong>$ 48,000</strong></td></tr>
+            <tr><td class="row-lbl">7. Health Insurance Programs</td><td class="num">$ 14,800</td><td class="num">$ 9,200</td><td class="num">$ 5,000</td><td class="num">$ 11,400</td><td class="num">$ 16,600</td><td class="num">&mdash;</td><td class="num"><strong>$ 57,000</strong></td></tr>
+            <tr><td class="row-lbl">8. Paid Sick Leave / Vacation</td><td class="num">$ 6,200</td><td class="num">$ 3,800</td><td class="num">$ 2,400</td><td class="num">$ 4,800</td><td class="num">$ 7,800</td><td class="num">&mdash;</td><td class="num"><strong>$ 25,000</strong></td></tr>
+            <tr><td class="row-lbl">9. Initial Stock and Supplies</td><td class="num">$ 4,800</td><td class="num">$ 2,400</td><td class="num">$ 1,800</td><td class="num">$ 3,200</td><td class="num">$ 5,800</td><td class="num">&mdash;</td><td class="num"><strong>$ 18,000</strong></td></tr>
+            <tr><td class="row-lbl">10. Initial Operating Costs</td><td class="num">$ 3,400</td><td class="num">$ 1,800</td><td class="num">$ 1,400</td><td class="num">$ 2,400</td><td class="num">$ 4,000</td><td class="num">$ 0</td><td class="num"><strong>$ 13,000</strong></td></tr>
+            <tr><td class="row-lbl">11. All Other Expenditures</td><td class="num">$ 5,400</td><td class="num">$ 2,800</td><td class="num">$ 2,000</td><td class="num">$ 4,800</td><td class="num">&mdash;</td><td class="num">$ 0</td><td class="num"><strong>$ 15,000</strong></td></tr>
+          </tbody>
+          <tfoot>
+            <tr><td>12. TOTAL (lines 1&ndash;11)</td><td class="num">$ 181,600</td><td class="num">$ 106,600</td><td class="num">$ 75,800</td><td class="num">$ 155,800</td><td class="num">$ 326,200</td><td class="num">$ 0</td><td class="num">$ 846,000</td></tr>
+          </tfoot>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <!-- ────────── Section 7: Distribution of Vending Machine Income & Levied Set-Aside ────────── -->
+  <section class="sec" id="sec-7">
+    <header class="sec-head">
+      <h2><span class="num">7</span> Distribution and Expenditure of Program Funds from Vending Machine Income and Levied Set-Aside</h2>
+      <span class="meta">Lines 1&ndash;7 &middot; Reconciles to bank deposits and QuickBooks</span>
+    </header>
+    <div class="sec-body">
+      <div class="table-wrap">
+        <table class="data" aria-label="Distribution of vending and set-aside">
+          <thead>
+            <tr>
+              <th>Item</th>
+              <th class="num">VM Income Federal (1)</th>
+              <th class="num">VM Income Non-Federal (2)</th>
+              <th class="num">Levied Set-Aside (3)</th>
+              <th class="num">Total (4)</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td class="row-lbl">1. Amount at Beginning of the Year</td><td class="num">$ 124,800</td><td class="num">$ 88,400</td><td class="num">$ 42,600</td><td class="num"><strong>$ 255,800</strong></td></tr>
+            <tr><td class="row-lbl">2. Funds Added During the Year</td><td class="num">$ 248,200</td><td class="num">$ 164,400</td><td class="num">$ 214,800</td><td class="num"><strong>$ 627,400</strong></td></tr>
+            <tr><td class="row-lbl">3. Total Funds Available (lines 1 + 2)</td><td class="num">$ 373,000</td><td class="num">$ 252,800</td><td class="num">$ 257,400</td><td class="num"><strong>$ 883,200</strong></td></tr>
+            <tr><td class="row-lbl">4. Funds Distributed to Vendors</td><td class="num">$ 168,400</td><td class="num">$ 112,000</td><td class="num">$ 142,200</td><td class="num"><strong>$ 422,600</strong></td></tr>
+            <tr><td class="row-lbl">5. Other Funds Expended</td><td class="num">$ 76,800</td><td class="num">$ 48,400</td><td class="num">$ 62,800</td><td class="num"><strong>$ 188,000</strong></td></tr>
+            <tr><td class="row-lbl">6. Total Funds Distributed and Expended (lines 4 + 5)</td><td class="num">$ 245,200</td><td class="num">$ 160,400</td><td class="num">$ 205,000</td><td class="num"><strong>$ 610,600</strong></td></tr>
+          </tbody>
+          <tfoot><tr><td>7. Amount at the End of the Year (line 3 &minus; line 6)</td><td class="num">$ 127,800</td><td class="num">$ 92,400</td><td class="num">$ 52,400</td><td class="num">$ 272,600</td></tr></tfoot>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <!-- ────────── Section 8: Sites Surveyed ────────── -->
+  <section class="sec" id="sec-8">
+    <header class="sec-head">
+      <h2><span class="num">8</span> Number of Sites Surveyed</h2>
+      <span class="meta">Federal vs. Non-Federal property &middot; SLA acceptance disposition</span>
+    </header>
+    <div class="sec-body">
+      <div class="table-wrap">
+        <table class="data" aria-label="Sites surveyed">
+          <thead>
+            <tr>
+              <th>Item</th>
+              <th class="num">Federal Property (1)</th>
+              <th class="num">Non-Federal Property (2)</th>
+              <th class="num">Total (3)</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td class="row-lbl">1. Number of Sites Surveyed During the Reporting Year</td><td class="num">22</td><td class="num">31</td><td class="num"><strong>53</strong></td></tr>
+            <tr><td class="row-lbl">2. Number of Sites Accepted by the SLA (a + b + c + d)</td><td class="num">14</td><td class="num">21</td><td class="num"><strong>35</strong></td></tr>
+            <tr><td class="sub-lbl">a. Accepted Sites Added to Existing Vending Facilities</td><td class="num">5</td><td class="num">8</td><td class="num">13</td></tr>
+            <tr><td class="sub-lbl">b. Accepted Sites Used to Create New Vending Facilities</td><td class="num">4</td><td class="num">6</td><td class="num">10</td></tr>
+            <tr><td class="sub-lbl">c. Accepted Sites Pending Assignment to a Blind Vendor</td><td class="num">3</td><td class="num">4</td><td class="num">7</td></tr>
+            <tr><td class="sub-lbl">d. Accepted Sites Contracted to a Third-Party</td><td class="num">2</td><td class="num">3</td><td class="num">5</td></tr>
+            <tr><td class="row-lbl">3. Number of Sites Not Accepted by the SLA (a + b + c)</td><td class="num">5</td><td class="num">7</td><td class="num"><strong>12</strong></td></tr>
+            <tr><td class="sub-lbl">a. Due to Infeasibility of Site</td><td class="num">2</td><td class="num">3</td><td class="num">5</td></tr>
+            <tr><td class="sub-lbl">b. Due to Lack of Available SLA Funds</td><td class="num">2</td><td class="num">2</td><td class="num">4</td></tr>
+            <tr><td class="sub-lbl">c. Due to Lack of Qualified Vendors</td><td class="num">1</td><td class="num">2</td><td class="num">3</td></tr>
+            <tr><td class="row-lbl">4. Number of Sites Denied to the SLA by Property Management Officials</td><td class="num">2</td><td class="num">2</td><td class="num"><strong>4</strong></td></tr>
+            <tr><td class="row-lbl">5. Number of Surveyed Sites with a Decision Pending</td><td class="num">1</td><td class="num">1</td><td class="num"><strong>2</strong></td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <!-- ────────── Section 9: Vendor Training ────────── -->
+  <section class="sec" id="sec-9">
+    <header class="sec-head">
+      <h2><span class="num">9</span> Vendor Training</h2>
+      <span class="meta">Reporting-year training and certification activity</span>
+    </header>
+    <div class="sec-body">
+      <div class="field-grid">
+        <div class="field"><span class="l">Individuals Completing Training in the Reporting Year (a + b + c + d)</span><span class="v">18</span></div>
+        <div class="field"><span class="l">a. Number Licensed and Placed as Vendors</span><span class="v">9</span></div>
+        <div class="field"><span class="l">b. Number Certified Awaiting Placement as Vendors</span><span class="v">4</span></div>
+        <div class="field"><span class="l">c. Number Placed as Employees in the Vending Facility Program</span><span class="v">3</span></div>
+        <div class="field"><span class="l">d. Number Employed in Allied Food Service Occupations</span><span class="v">2</span></div>
+        <div class="field calc"><span class="l">Total Certified / Qualified Awaiting Placement as Vendors</span><span class="v">11</span></div>
+        <div class="field"><span class="l">Vendors Provided In-Service Training (incl. on-line)</span><span class="v">62</span></div>
+        <div class="field"><span class="l">Vendors Provided Upward Mobility Training (incl. on-line)</span><span class="v">24</span></div>
+        <div class="field"><span class="l">Vendors Participating in National Consumer-Driven Conferences</span><span class="v">12</span></div>
+        <div class="field"><span class="l">Vendors Receiving Food Safety Certification / Re-Certification</span><span class="v">71</span></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ────────── Section 10: State and Nominee Agency Personnel ────────── -->
+  <section class="sec" id="sec-10">
+    <header class="sec-head">
+      <h2><span class="num">10</span> State and Nominee Agency Personnel</h2>
+      <span class="meta">FTE staffing &middot; training participation</span>
+    </header>
+    <div class="sec-body">
+      <h3 style="font-size:13px;font-weight:700;color:var(--sf-blue-deep);margin:4px 0 8px;">Vending Facility Program Staff (FTE)</h3>
+      <div class="table-wrap">
+        <table class="data" aria-label="VFP staffing">
+          <thead>
+            <tr>
+              <th>Type of Personnel</th>
+              <th class="num">State Agency (1)</th>
+              <th class="num">Nominee Agency (2)</th>
+              <th class="num">Total (3)</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td class="row-lbl">a. Business Consultants / Counselors Staff (FTE)</td><td class="num">12.0</td><td class="num">3.0</td><td class="num"><strong>15.0</strong></td></tr>
+            <tr><td class="row-lbl">Total Vending Facility Program Staff (FTE)</td><td class="num">22.5</td><td class="num">6.0</td><td class="num"><strong>28.5</strong></td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h3 style="font-size:13px;font-weight:700;color:var(--sf-blue-deep);margin:18px 0 8px;">Training</h3>
+      <div class="table-wrap">
+        <table class="data" aria-label="Personnel training">
+          <thead>
+            <tr>
+              <th>Type of Training</th>
+              <th class="num">State Agency (1)</th>
+              <th class="num">Nominee Agency (2)</th>
+              <th class="num">Total (3)</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td>Number Who Received Training Related to Blindness, Business Management, or Aspects of the Randolph-Sheppard Vending Facility Program</td><td class="num">18</td><td class="num">5</td><td class="num"><strong>23</strong></td></tr>
+            <tr><td>Number Who Participated in National Consumer-Driven Conferences</td><td class="num">6</td><td class="num">2</td><td class="num"><strong>8</strong></td></tr>
+            <tr><td>Number Who Received Food Safety Certification or Re-Certification</td><td class="num">14</td><td class="num">4</td><td class="num"><strong>18</strong></td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <!-- ────────── Section 11: Notes ────────── -->
+  <section class="sec" id="sec-11">
+    <header class="sec-head">
+      <h2><span class="num">11</span> Notes or Explanations</h2>
+      <span class="meta">Free-text supporting context for any line item</span>
+    </header>
+    <div class="sec-body">
+      <textarea class="notes-box" aria-label="Notes or explanations" placeholder="Add notes or explanations for line items above (variances, methodology, late entries, etc.)…">FY26 Q3 saw a 22% increase in BEP referrals out of Metro Atlanta following the partnership with Columbus Medical Center. Set-aside funds collected exceed prior-year baseline by 6.1%; reconciliation log on file. Two vendor closures (Columbus Courthouse Cafe, Valdosta P.O.) are attributable to facility renovations, not vendor performance.</textarea>
+    </div>
+  </section>
+
+  <!-- ────────── Section 12: Certification ────────── -->
+  <section class="sec" id="sec-12">
+    <header class="sec-head">
+      <h2><span class="num">12</span> Certification</h2>
+      <span class="meta">Authorized official sign-off &middot; required prior to RSA submission</span>
+    </header>
+    <div class="sec-body">
+      <p style="font-size:13px;color:var(--sf-charcoal);margin-bottom:14px;">
+        I do hereby certify that, to the best of my knowledge, the information given in this report is complete and accurate.
+      </p>
+      <div class="cert-grid">
+        <div class="cert-field"><label>Name of Authorized Official</label><input type="text" value="Dr. Shawn M. Ryan" /></div>
+        <div class="cert-field"><label>Title</label><input type="text" value="Executive Director, GVRA" /></div>
+        <div class="cert-field"><label>Date Certified</label><input type="text" value="" placeholder="Pending submission" /></div>
+        <div class="cert-field"><label>Contact Person</label><input type="text" value="Renee Patel" /></div>
+        <div class="cert-field"><label>Telephone Number</label><input type="text" value="(404) 555-0142" /></div>
+        <div class="cert-field"><label>Email Address</label><input type="text" value="rpatel@gvs.georgia.gov" /></div>
+      </div>
+      <div style="margin-top: 16px; display: flex; gap: 8px; flex-wrap: wrap;">
+        <button class="btn">Save Draft</button>
+        <button class="btn">Validate Form</button>
+        <button class="btn primary">Certify &amp; Submit to RSA</button>
+      </div>
+    </div>
+  </section>
+
+  <footer class="footer-bar">
+    &copy; 2026 Georgia Vocational Rehabilitation Agency &middot; BEP Operator Console &middot; RSA-15 figures shown are illustrative draft values for FY26.
+  </footer>
+
+  <script>
+    // Smooth scroll + active tab highlight
+    (function () {
+      const tabs = document.querySelectorAll('.sec-tab');
+      tabs.forEach(t => {
+        t.addEventListener('click', () => {
+          tabs.forEach(x => x.classList.remove('active'));
+          t.classList.add('active');
+          const target = document.getElementById(t.getAttribute('data-target'));
+          if (target) {
+            const headerOffset = 64 + 48; // global header + sec-tabs
+            const y = target.getBoundingClientRect().top + window.pageYOffset - headerOffset;
+            window.scrollTo({ top: y, behavior: 'smooth' });
+          }
+        });
+      });
+    })();
+  </script>
+</body>
+</html>

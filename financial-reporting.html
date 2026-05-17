@@ -372,24 +372,24 @@
     <button class="chip active" type="button">Last 12 Months</button>
     <button class="chip" type="button">QTD</button>
     <button class="chip" type="button">MTD</button>
-    <span class="lbl" style="margin-left:14px;">Region</span>
-    <button class="chip active" type="button">All District</button>
-    <button class="chip" type="button">Metro Atlanta</button>
-    <button class="chip" type="button">North GA</button>
-    <button class="chip" type="button">South GA</button>
+    <span class="lbl" style="margin-left:14px;">District</span>
+    <button class="chip active" type="button" data-district="all">All Districts</button>
+    <button class="chip" type="button" data-district="metro">Metro Atlanta</button>
+    <button class="chip" type="button" data-district="north">North GA</button>
+    <button class="chip" type="button" data-district="south">South GA</button>
     <span class="lbl" style="margin-left:14px;">Facility Type</span>
-    <button class="chip active" type="button">All</button>
-    <button class="chip" type="button">Cafeteria</button>
-    <button class="chip" type="button">Vending</button>
-    <button class="chip" type="button">Snack Bar</button>
+    <button class="chip active" type="button" data-ftype="all">All</button>
+    <button class="chip" type="button" data-ftype="cafe">Cafeteria</button>
+    <button class="chip" type="button" data-ftype="vend">Vending</button>
+    <button class="chip" type="button" data-ftype="snack">Snack Bar</button>
   </div>
 
   <!-- KPI strip -->
   <div class="kpi-strip" aria-label="Financial KPIs">
-    <div class="kpi"><div class="lbl">Gross Revenue (YTD)</div><div class="val">$6.42M</div><div class="delta up">&uarr; 8.3% vs FY25</div></div>
-    <div class="kpi"><div class="lbl">Set-Aside Collected</div><div class="val">$214,800</div><div class="delta up">&uarr; 6.1%</div></div>
-    <div class="kpi"><div class="lbl">Operator Net Income</div><div class="val">$2.18M</div><div class="delta up">&uarr; 4.7%</div></div>
-    <div class="kpi"><div class="lbl">Outstanding Reports</div><div class="val">3</div><div class="delta down">2 overdue</div></div>
+    <div class="kpi"><div class="lbl">Gross Revenue (YTD)</div><div class="val" id="kpiRev">$6.42M</div><div class="delta up" id="kpiRevDelta">&uarr; 8.3% vs FY25</div></div>
+    <div class="kpi"><div class="lbl">Set-Aside Collected</div><div class="val" id="kpiSa">$214,800</div><div class="delta up" id="kpiSaDelta">&uarr; 6.1%</div></div>
+    <div class="kpi"><div class="lbl">Operator Net Income</div><div class="val" id="kpiNet">$2.18M</div><div class="delta up" id="kpiNetDelta">&uarr; 4.7%</div></div>
+    <div class="kpi"><div class="lbl" id="kpiCountLbl">Outstanding Reports</div><div class="val" id="kpiCount">3</div><div class="delta down" id="kpiCountDelta">2 overdue</div></div>
   </div>
 
   <!-- Main dashboard grid -->
@@ -480,10 +480,10 @@
       </header>
       <div class="panel-body">
         <div class="donut-wrap">
-          <div class="donut" role="img" aria-label="Donut chart of revenue mix">
-            <div class="center"><b>$6.42M</b><span>Total</span></div>
+          <div class="donut" id="revDonut" role="img" aria-label="Donut chart of revenue mix">
+            <div class="center"><b id="donutTotal">$6.42M</b><span id="donutScope">Total</span></div>
           </div>
-          <ul class="legend-list" style="flex:1;">
+          <ul class="legend-list" id="donutLegend" style="flex:1;">
             <li><i style="background:#032d60;"></i> Cafeteria <b>46%</b></li>
             <li><i style="background:#1b96ff;"></i> Vending <b>30%</b></li>
             <li><i style="background:#b76e00;"></i> Snack Bar <b>16%</b></li>
@@ -520,17 +520,17 @@
               <th class="num">Set-Aside</th>
             </tr>
           </thead>
-          <tbody>
-            <tr><td><a href="operator-lifecycle.html">Marcus Allen</a></td><td>Atlanta Federal Center</td><td class="num">$486,200</td><td class="num">$172,400</td><td class="num">$16,210</td></tr>
-            <tr><td><a href="#">James Holloway</a></td><td>Fort Stewart Dining</td><td class="num">$441,800</td><td class="num">$158,200</td><td class="num">$14,720</td></tr>
-            <tr><td><a href="#">Devon Carter</a></td><td>Robins AFB Cafeteria</td><td class="num">$398,400</td><td class="num">$141,800</td><td class="num">$13,280</td></tr>
-            <tr><td><a href="#">Renee Whitaker</a></td><td>Sam Nunn Federal Cafe</td><td class="num">$354,600</td><td class="num">$128,700</td><td class="num">$11,820</td></tr>
-            <tr><td><a href="#">Tasha Booker</a></td><td>Macon VA Vending</td><td class="num">$268,200</td><td class="num">$96,400</td><td class="num">$8,940</td></tr>
-            <tr><td><a href="#">Andre Mitchell</a></td><td>Dobbins ARB Vending</td><td class="num">$214,500</td><td class="num">$78,900</td><td class="num">$7,150</td></tr>
-            <tr><td><a href="#">Priya Sharma</a></td><td>Albany SSA Vending</td><td class="num">$182,100</td><td class="num">$66,400</td><td class="num">$6,070</td></tr>
-            <tr><td><a href="#">Linda Reyes</a></td><td>Capitol Hill Snack Bar</td><td class="num">$148,800</td><td class="num">$52,200</td><td class="num">$4,960</td></tr>
-            <tr><td><a href="#">Brian Kowalski</a></td><td>GA DOT HQ Snack Bar</td><td class="num">$136,400</td><td class="num">$48,700</td><td class="num">$4,548</td></tr>
-            <tr><td><a href="#">Erica Daniels</a></td><td>Gainesville Court Snack</td><td class="num">$118,900</td><td class="num">$42,100</td><td class="num">$3,964</td></tr>
+          <tbody id="topOpsBody">
+            <tr data-district="metro" data-ftype="cafe" data-rev="486200" data-net="172400" data-sa="16210"><td><a href="operator-lifecycle.html">Marcus Allen</a></td><td>Atlanta Federal Center</td><td class="num">$486,200</td><td class="num">$172,400</td><td class="num">$16,210</td></tr>
+            <tr data-district="south" data-ftype="cafe" data-rev="441800" data-net="158200" data-sa="14720"><td><a href="#">James Holloway</a></td><td>Fort Stewart Dining</td><td class="num">$441,800</td><td class="num">$158,200</td><td class="num">$14,720</td></tr>
+            <tr data-district="south" data-ftype="cafe" data-rev="398400" data-net="141800" data-sa="13280"><td><a href="#">Devon Carter</a></td><td>Robins AFB Cafeteria</td><td class="num">$398,400</td><td class="num">$141,800</td><td class="num">$13,280</td></tr>
+            <tr data-district="metro" data-ftype="cafe" data-rev="354600" data-net="128700" data-sa="11820"><td><a href="#">Renee Whitaker</a></td><td>Sam Nunn Federal Cafe</td><td class="num">$354,600</td><td class="num">$128,700</td><td class="num">$11,820</td></tr>
+            <tr data-district="south" data-ftype="vend" data-rev="268200" data-net="96400" data-sa="8940"><td><a href="#">Tasha Booker</a></td><td>Macon VA Vending</td><td class="num">$268,200</td><td class="num">$96,400</td><td class="num">$8,940</td></tr>
+            <tr data-district="metro" data-ftype="vend" data-rev="214500" data-net="78900" data-sa="7150"><td><a href="#">Andre Mitchell</a></td><td>Dobbins ARB Vending</td><td class="num">$214,500</td><td class="num">$78,900</td><td class="num">$7,150</td></tr>
+            <tr data-district="south" data-ftype="vend" data-rev="182100" data-net="66400" data-sa="6070"><td><a href="#">Priya Sharma</a></td><td>Albany SSA Vending</td><td class="num">$182,100</td><td class="num">$66,400</td><td class="num">$6,070</td></tr>
+            <tr data-district="metro" data-ftype="snack" data-rev="148800" data-net="52200" data-sa="4960"><td><a href="#">Linda Reyes</a></td><td>Capitol Hill Snack Bar</td><td class="num">$148,800</td><td class="num">$52,200</td><td class="num">$4,960</td></tr>
+            <tr data-district="metro" data-ftype="snack" data-rev="136400" data-net="48700" data-sa="4548"><td><a href="#">Brian Kowalski</a></td><td>GA DOT HQ Snack Bar</td><td class="num">$136,400</td><td class="num">$48,700</td><td class="num">$4,548</td></tr>
+            <tr data-district="north" data-ftype="snack" data-rev="118900" data-net="42100" data-sa="3964"><td><a href="#">Erica Daniels</a></td><td>Gainesville Court Snack</td><td class="num">$118,900</td><td class="num">$42,100</td><td class="num">$3,964</td></tr>
           </tbody>
         </table>
       </div>
@@ -553,15 +553,15 @@
               <th>Margin</th>
             </tr>
           </thead>
-          <tbody>
-            <tr><td>Atlanta Federal Center</td><td class="num">$486K</td><td class="num">$268K</td><td class="num">$22K</td><td class="num"><b>$196K</b></td><td><span class="mini-bar" style="width:74px;"></span> 40%</td></tr>
-            <tr><td>Fort Stewart Dining</td><td class="num">$442K</td><td class="num">$248K</td><td class="num">$18K</td><td class="num"><b>$176K</b></td><td><span class="mini-bar" style="width:70px;"></span> 40%</td></tr>
-            <tr><td>Robins AFB Cafeteria</td><td class="num">$398K</td><td class="num">$226K</td><td class="num">$16K</td><td class="num"><b>$156K</b></td><td><span class="mini-bar" style="width:66px;"></span> 39%</td></tr>
-            <tr><td>Sam Nunn Federal Cafe</td><td class="num">$355K</td><td class="num">$202K</td><td class="num">$14K</td><td class="num"><b>$139K</b></td><td><span class="mini-bar" style="width:64px;"></span> 39%</td></tr>
-            <tr><td>Macon VA Vending</td><td class="num">$268K</td><td class="num">$158K</td><td class="num">$10K</td><td class="num"><b>$100K</b></td><td><span class="mini-bar" style="width:54px;"></span> 37%</td></tr>
-            <tr><td>Dobbins ARB Vending</td><td class="num">$215K</td><td class="num">$128K</td><td class="num">$8K</td><td class="num"><b>$79K</b></td><td><span class="mini-bar" style="width:48px;"></span> 37%</td></tr>
-            <tr><td>Capitol Hill Snack Bar</td><td class="num">$149K</td><td class="num">$92K</td><td class="num">$5K</td><td class="num"><b>$52K</b></td><td><span class="mini-bar" style="width:38px;"></span> 35%</td></tr>
-            <tr><td>Columbus Courthouse Cafe</td><td class="num">$0</td><td class="num">$4K</td><td class="num">$0</td><td class="num"><b style="color:var(--sf-red);">-$4K</b></td><td><span class="pill red">Vacant</span></td></tr>
+          <tbody id="facPnlBody">
+            <tr data-district="metro" data-ftype="cafe"><td>Atlanta Federal Center</td><td class="num">$486K</td><td class="num">$268K</td><td class="num">$22K</td><td class="num"><b>$196K</b></td><td><span class="mini-bar" style="width:74px;"></span> 40%</td></tr>
+            <tr data-district="south" data-ftype="cafe"><td>Fort Stewart Dining</td><td class="num">$442K</td><td class="num">$248K</td><td class="num">$18K</td><td class="num"><b>$176K</b></td><td><span class="mini-bar" style="width:70px;"></span> 40%</td></tr>
+            <tr data-district="south" data-ftype="cafe"><td>Robins AFB Cafeteria</td><td class="num">$398K</td><td class="num">$226K</td><td class="num">$16K</td><td class="num"><b>$156K</b></td><td><span class="mini-bar" style="width:66px;"></span> 39%</td></tr>
+            <tr data-district="metro" data-ftype="cafe"><td>Sam Nunn Federal Cafe</td><td class="num">$355K</td><td class="num">$202K</td><td class="num">$14K</td><td class="num"><b>$139K</b></td><td><span class="mini-bar" style="width:64px;"></span> 39%</td></tr>
+            <tr data-district="south" data-ftype="vend"><td>Macon VA Vending</td><td class="num">$268K</td><td class="num">$158K</td><td class="num">$10K</td><td class="num"><b>$100K</b></td><td><span class="mini-bar" style="width:54px;"></span> 37%</td></tr>
+            <tr data-district="metro" data-ftype="vend"><td>Dobbins ARB Vending</td><td class="num">$215K</td><td class="num">$128K</td><td class="num">$8K</td><td class="num"><b>$79K</b></td><td><span class="mini-bar" style="width:48px;"></span> 37%</td></tr>
+            <tr data-district="metro" data-ftype="snack"><td>Capitol Hill Snack Bar</td><td class="num">$149K</td><td class="num">$92K</td><td class="num">$5K</td><td class="num"><b>$52K</b></td><td><span class="mini-bar" style="width:38px;"></span> 35%</td></tr>
+            <tr data-district="south" data-ftype="cafe"><td>Columbus Courthouse Cafe</td><td class="num">$0</td><td class="num">$4K</td><td class="num">$0</td><td class="num"><b style="color:var(--sf-red);">-$4K</b></td><td><span class="pill red">Vacant</span></td></tr>
           </tbody>
         </table>
       </div>
@@ -630,9 +630,7 @@
     // ── Filter chip toggle (within each group) ──
     (function () {
       document.querySelectorAll('.filter-bar').forEach(bar => {
-        const chips = bar.querySelectorAll('.chip');
         let groups = []; let current = [];
-        // group chips by the preceding .lbl
         bar.childNodes.forEach(n => {
           if (n.nodeType === 1) {
             if (n.classList.contains('lbl')) { if (current.length) groups.push(current); current = []; }
@@ -644,6 +642,7 @@
           g.forEach(c => c.addEventListener('click', () => {
             g.forEach(x => x.classList.remove('active'));
             c.classList.add('active');
+            applyFilters();
           }));
         });
       });
@@ -659,6 +658,142 @@
           alert(m + ' FY26\nGross Revenue: $' + r + 'K\nSet-Aside Collected: $' + s + 'K\n\n(Drill-in to facility-level detail would open here.)');
         });
       });
+    })();
+
+    // ── District + Facility Type filtering ──
+    (function () {
+      // Save baseline month-bar values for proportional rescaling
+      const monthBars = document.querySelectorAll('#monthBars .bar-col');
+      monthBars.forEach(col => {
+        col.dataset.baseRev = col.dataset.rev;
+        col.dataset.baseSa  = col.dataset.sa;
+      });
+      const BASE_TOTAL_REV = 6420000; // matches initial Gross Revenue $6.42M
+      const BASE_TOTAL_NET = 2180000;
+      const BASE_TOTAL_SA  = 214800;
+
+      // Donut definitions by facility type
+      const DONUT = {
+        all:   { grad: 'conic-gradient(#032d60 0 46%, #1b96ff 46% 76%, #b76e00 76% 92%, #5867e8 92% 100%)',
+                 legend: [['#032d60','Cafeteria','46%'],['#1b96ff','Vending','30%'],['#b76e00','Snack Bar','16%'],['#5867e8','Other / Concessions','8%']],
+                 scope: 'Total' },
+        cafe:  { grad: 'conic-gradient(#032d60 0 100%)',
+                 legend: [['#032d60','Cafeteria','100%']],
+                 scope: 'Cafeteria' },
+        vend:  { grad: 'conic-gradient(#1b96ff 0 100%)',
+                 legend: [['#1b96ff','Vending','100%']],
+                 scope: 'Vending' },
+        snack: { grad: 'conic-gradient(#b76e00 0 100%)',
+                 legend: [['#b76e00','Snack Bar','100%']],
+                 scope: 'Snack Bar' }
+      };
+
+      function getSelected(group) {
+        const bar = document.querySelector('.filter-bar');
+        const all = bar.querySelectorAll('.chip');
+        const attr = group === 'district' ? 'data-district' : 'data-ftype';
+        for (const c of all) {
+          if (c.hasAttribute(attr) && c.classList.contains('active')) {
+            return c.getAttribute(attr);
+          }
+        }
+        return 'all';
+      }
+
+      function fmtUSD(n) {
+        if (n >= 1e6) return '$' + (n/1e6).toFixed(2) + 'M';
+        if (n >= 1e3) return '$' + (n/1e3).toFixed(1).replace(/\.0$/,'') + 'K';
+        return '$' + n.toLocaleString();
+      }
+
+      window.applyFilters = function () {
+        const dist  = getSelected('district');
+        const ftype = getSelected('ftype');
+
+        // Filter rows (top ops + facility P&L)
+        let visRev = 0, visNet = 0, visSa = 0, visCount = 0;
+        document.querySelectorAll('tr[data-district]').forEach(r => {
+          const dMatch = (dist === 'all') || (r.dataset.district === dist);
+          const fMatch = (ftype === 'all') || (r.dataset.ftype === ftype);
+          const show = dMatch && fMatch;
+          r.style.display = show ? '' : 'none';
+          if (show && r.parentElement.id === 'topOpsBody') {
+            visCount++;
+            visRev += parseInt(r.dataset.rev || 0, 10);
+            visNet += parseInt(r.dataset.net || 0, 10);
+            visSa  += parseInt(r.dataset.sa  || 0, 10);
+          }
+        });
+
+        // Scope decision: if all/all → show full-program totals; else show filtered aggregates
+        const scoped = !(dist === 'all' && ftype === 'all');
+        const totalRev = scoped ? Math.max(visRev, 0) : BASE_TOTAL_REV;
+        const totalNet = scoped ? Math.max(visNet, 0) : BASE_TOTAL_NET;
+        const totalSa  = scoped ? Math.max(visSa,  0) : BASE_TOTAL_SA;
+
+        // KPI strip
+        document.getElementById('kpiRev').textContent  = fmtUSD(totalRev);
+        document.getElementById('kpiNet').textContent  = fmtUSD(totalNet);
+        document.getElementById('kpiSa').textContent   = scoped ? fmtUSD(totalSa) : '$214,800';
+
+        // Outstanding-reports KPI repurposed as "Operators in scope" when filtered
+        const kpiCountLbl = document.getElementById('kpiCountLbl');
+        const kpiCount    = document.getElementById('kpiCount');
+        const kpiCountDel = document.getElementById('kpiCountDelta');
+        if (scoped) {
+          kpiCountLbl.textContent = 'Operators in Scope';
+          kpiCount.textContent    = visCount;
+          kpiCountDel.className   = 'delta flat';
+          kpiCountDel.style.color = '#54698d';
+          kpiCountDel.textContent = labelFor(dist, ftype);
+        } else {
+          kpiCountLbl.textContent = 'Outstanding Reports';
+          kpiCount.textContent    = '3';
+          kpiCountDel.className   = 'delta down';
+          kpiCountDel.style.color = '';
+          kpiCountDel.textContent = '2 overdue';
+        }
+
+        // Donut center value + scope label
+        document.getElementById('donutTotal').textContent = fmtUSD(totalRev);
+        document.getElementById('donutScope').textContent = scoped ? labelFor(dist, ftype) : 'Total';
+
+        // Donut graphic + legend (drive off facility-type filter)
+        const def = DONUT[ftype] || DONUT.all;
+        const donutEl = document.getElementById('revDonut');
+        donutEl.style.background = def.grad;
+        const legend = document.getElementById('donutLegend');
+        legend.innerHTML = def.legend.map(([color, name, pct]) =>
+          `<li><i style="background:${color};"></i> ${name} <b>${pct}</b></li>`
+        ).join('');
+
+        // Scale monthly bars by overall revenue ratio
+        const scale = scoped ? (totalRev / BASE_TOTAL_REV) : 1;
+        monthBars.forEach(col => {
+          const baseRev = parseFloat(col.dataset.baseRev);
+          const baseSa  = parseFloat(col.dataset.baseSa);
+          const newRev  = Math.round(baseRev * scale);
+          const newSa   = +(baseSa * scale).toFixed(1);
+          // Re-derive bar heights using same proportions as initial (rev/maxRev → 0..82%)
+          const revH = Math.max(2, Math.min(82, baseRev * scale / 8.1));
+          const saH  = Math.max(1, Math.min(15, baseSa * scale / 2.0));
+          col.querySelector('.bar-rev').style.height = revH + '%';
+          col.querySelector('.bar-sa').style.height  = saH + '%';
+          col.setAttribute('data-rev', newRev);
+          col.setAttribute('data-sa', newSa);
+          const m = col.getAttribute('data-month');
+          col.querySelector('.tip').textContent = m + ' \u00B7 Rev $' + newRev + 'K \u00B7 SA $' + newSa + 'K';
+        });
+      };
+
+      function labelFor(dist, ftype) {
+        const D = { all:'All Districts', metro:'Metro Atlanta', north:'North GA', south:'South GA' };
+        const F = { all:'All Facility Types', cafe:'Cafeteria', vend:'Vending', snack:'Snack Bar' };
+        const parts = [];
+        if (dist  !== 'all') parts.push(D[dist]);
+        if (ftype !== 'all') parts.push(F[ftype]);
+        return parts.length ? parts.join(' \u00B7 ') : 'Total';
+      }
     })();
   </script>
 

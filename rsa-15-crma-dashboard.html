@@ -1,0 +1,1210 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>RSA-15 Vending Facility Program — CRM Analytics Dashboard | GVRA</title>
+  <meta name="description" content="Salesforce CRM Analytics (CRMA / Tableau CRM) dashboard view of the RSA-15 Report of Vending Facility Program for FY26." />
+  <style>
+    /* ── Salesforce CRMA tokens ── */
+    :root {
+      --sf-blue:        #0176d3;
+      --sf-blue-mid:    #1b96ff;
+      --sf-blue-deep:   #032d60;
+      --sf-blue-light:  #eaf5fe;
+      --sf-purple:      #5867e8;
+      --sf-teal:        #06a59a;
+      --sf-green:       #2e844a;
+      --sf-green-mid:   #45c65a;
+      --sf-amber:       #b76e00;
+      --sf-amber-mid:   #fcc003;
+      --sf-red:         #ba0517;
+      --sf-pink:        #e668c4;
+      --sf-orange:      #fe9339;
+      --sf-border:      #dddbda;
+      --sf-bg:          #f3f2f2;
+
+      /* CRMA-specific (dark canvas + light tiles) */
+      --crma-canvas:    #16325c;     /* dashboard canvas (deep blue) */
+      --crma-canvas-2:  #0e2547;
+      --crma-tile:      #ffffff;
+      --crma-tile-2:    #f7faff;
+      --crma-text:      #181818;
+      --crma-muted:     #54698d;
+      --crma-line:      rgba(255,255,255,0.12);
+      --crma-shadow:    0 2px 6px rgba(0,0,0,0.25), 0 1px 2px rgba(0,0,0,0.15);
+    }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: 'Salesforce Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Arial, sans-serif;
+      color: var(--crma-text);
+      background: var(--sf-bg);
+      font-size: 13px;
+      line-height: 1.45;
+    }
+    button { font-family: inherit; cursor: pointer; }
+    a { color: var(--sf-blue); text-decoration: none; }
+
+    /* ── Global Header (identical to financial-reporting.html) ── */
+    .global-header {
+      background: #fff; border-bottom: 1px solid var(--sf-border);
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 10px 20px; height: 64px;
+      position: sticky; top: 0; z-index: 100;
+    }
+    .gh-brand img { height: 44px; display: block; }
+    .gh-right { display: flex; align-items: center; gap: 12px; }
+    .gh-icon {
+      width: 32px; height: 32px; border-radius: 4px; border: none;
+      background: transparent; color: #444241;
+      display: inline-flex; align-items: center; justify-content: center; font-size: 16px;
+    }
+    .gh-icon:hover { background: #f3f3f3; }
+    .gh-avatar {
+      width: 32px; height: 32px; border-radius: 50%;
+      background: var(--sf-blue-deep); color: #fff;
+      display: inline-flex; align-items: center; justify-content: center;
+      font-size: 12px; font-weight: 700;
+    }
+
+    /* ── App bar (matches RSA-15 / Financial Reporting) ── */
+    .app-bar {
+      background: #fff; border-bottom: 1px solid var(--sf-border);
+      padding: 0 20px;
+      display: flex; align-items: stretch; gap: 0; overflow-x: auto;
+    }
+    .app-bar .app-name {
+      display: inline-flex; align-items: center; gap: 8px;
+      padding: 10px 16px 10px 0; margin-right: 14px;
+      font-weight: 700; color: var(--sf-blue-deep); font-size: 14px;
+      border-right: 1px solid var(--sf-border);
+    }
+    .app-bar .app-name::before {
+      content: ''; width: 18px; height: 18px; border-radius: 4px;
+      background: var(--sf-blue); display: inline-block;
+    }
+    .app-tab {
+      padding: 12px 14px; font-size: 13px; font-weight: 600;
+      color: #444241; white-space: nowrap;
+      border-bottom: 3px solid transparent;
+    }
+    .app-tab:hover { color: var(--sf-blue); text-decoration: none; }
+    .app-tab.active { color: var(--sf-blue); border-bottom-color: var(--sf-blue); }
+
+    /* ── CRMA dashboard chrome ── */
+    .crma-bar {
+      background: #fff; border-bottom: 1px solid var(--sf-border);
+      padding: 12px 20px;
+      display: flex; align-items: center; justify-content: space-between;
+      gap: 16px; flex-wrap: wrap;
+    }
+    .crma-bar .crumbs { font-size: 12px; color: #54698d; }
+    .crma-bar h1 {
+      font-size: 18px; font-weight: 700; color: var(--sf-blue-deep);
+      display: inline-flex; align-items: center; gap: 10px;
+    }
+    .crma-bar h1::before {
+      content: ''; width: 26px; height: 26px; border-radius: 6px;
+      background: linear-gradient(135deg, var(--sf-blue) 0%, var(--sf-purple) 100%);
+      display: inline-block;
+    }
+    .crma-bar .meta { font-size: 11px; color: #54698d; margin-top: 2px; }
+    .crma-actions { display: flex; gap: 8px; flex-wrap: wrap; }
+    .ctl {
+      padding: 6px 12px; border: 1px solid var(--sf-border); border-radius: 4px;
+      background: #fff; color: #181818; font-size: 12px; font-weight: 600;
+      display: inline-flex; align-items: center; gap: 6px;
+    }
+    .ctl:hover { background: #f3f3f3; }
+    .ctl.primary { background: var(--sf-blue); color: #fff; border-color: var(--sf-blue); }
+    .ctl.primary:hover { background: #014486; border-color: #014486; }
+    .ctl .ico { font-size: 13px; }
+
+    /* ── Filter strip ── */
+    .filter-strip {
+      background: #fff; border-bottom: 1px solid var(--sf-border);
+      padding: 10px 20px;
+      display: flex; flex-wrap: wrap; gap: 8px; align-items: center;
+    }
+    .filter-strip .lbl { font-size: 11px; font-weight: 700; color: #54698d; text-transform: uppercase; letter-spacing: 0.04em; margin-right: 6px; }
+    .chip {
+      padding: 5px 11px; border-radius: 100px; border: 1px solid var(--sf-border);
+      background: #f7faff; color: #032d60; font-size: 12px; font-weight: 600;
+      display: inline-flex; align-items: center; gap: 6px; cursor: pointer;
+    }
+    .chip:hover { border-color: var(--sf-blue); }
+    .chip.active { background: var(--sf-blue); color: #fff; border-color: var(--sf-blue); }
+    .chip .caret { font-size: 9px; opacity: 0.7; }
+
+    /* Dropdown menu (for Fiscal Year chip) */
+    .chip-dd { position: relative; outline: none; }
+    .chip-menu {
+      position: absolute; top: calc(100% + 6px); left: 0; z-index: 60;
+      background: #fff; border: 1px solid var(--sf-border); border-radius: 6px;
+      box-shadow: 0 4px 16px rgba(0,0,0,0.12);
+      min-width: 160px; padding: 4px 0;
+      display: none;
+    }
+    .chip-dd.open .chip-menu { display: block; }
+    .chip-menu [role="option"] {
+      padding: 8px 14px; font-size: 12px; font-weight: 600; color: #181818;
+      cursor: pointer; display: flex; align-items: center; justify-content: space-between; gap: 10px;
+    }
+    .chip-menu [role="option"]:hover { background: var(--sf-blue-light); color: var(--sf-blue-deep); }
+    .chip-menu [role="option"][aria-selected="true"]::after {
+      content: '\2713'; color: var(--sf-blue); font-weight: 700;
+    }
+
+    /* ── Dashboard canvas (CRMA visual: deep-blue background) ── */
+    .canvas {
+      background: linear-gradient(180deg, var(--crma-canvas) 0%, var(--crma-canvas-2) 100%);
+      padding: 18px 20px 32px;
+      min-height: calc(100vh - 64px - 47px - 60px - 50px);
+    }
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(12, 1fr);
+      gap: 14px;
+    }
+    .tile {
+      background: var(--crma-tile);
+      border-radius: 6px;
+      box-shadow: var(--crma-shadow);
+      padding: 14px 16px;
+      display: flex; flex-direction: column;
+      min-height: 110px;
+      position: relative;
+    }
+    .tile h3 {
+      font-size: 11px; color: #54698d; font-weight: 700;
+      text-transform: uppercase; letter-spacing: 0.06em;
+      margin-bottom: 6px;
+      display: flex; align-items: center; justify-content: space-between; gap: 8px;
+    }
+    .tile h3 .more { color: #c9c7c5; font-size: 14px; cursor: pointer; }
+    .tile h3 .sub { font-weight: 500; text-transform: none; letter-spacing: 0; color: #c9c7c5; font-size: 10px; }
+
+    /* Span helpers */
+    .col-2  { grid-column: span 2; }
+    .col-3  { grid-column: span 3; }
+    .col-4  { grid-column: span 4; }
+    .col-5  { grid-column: span 5; }
+    .col-6  { grid-column: span 6; }
+    .col-7  { grid-column: span 7; }
+    .col-8  { grid-column: span 8; }
+    .col-12 { grid-column: span 12; }
+    @media (max-width: 1100px) {
+      .col-2, .col-3, .col-4 { grid-column: span 6; }
+      .col-5, .col-6, .col-7, .col-8 { grid-column: span 12; }
+    }
+    @media (max-width: 640px) {
+      .col-2, .col-3, .col-4, .col-5, .col-6, .col-7, .col-8 { grid-column: span 12; }
+    }
+
+    /* ── KPI tile ── */
+    .kpi .v {
+      font-size: 30px; font-weight: 700; color: var(--sf-blue-deep);
+      letter-spacing: -0.02em; line-height: 1.05;
+      font-variant-numeric: tabular-nums;
+    }
+    .kpi .delta {
+      margin-top: 4px; font-size: 12px; font-weight: 600;
+      display: inline-flex; align-items: center; gap: 4px;
+    }
+    .kpi .delta.up { color: var(--sf-green); }
+    .kpi .delta.down { color: var(--sf-red); }
+    .kpi .delta.flat { color: var(--crma-muted); }
+    .kpi .target {
+      margin-top: 8px; font-size: 11px; color: var(--crma-muted);
+    }
+    .kpi-bar {
+      margin-top: 6px; height: 5px; border-radius: 100px; background: #ecebea; overflow: hidden;
+    }
+    .kpi-bar > span { display: block; height: 100%; background: linear-gradient(90deg, var(--sf-blue) 0%, var(--sf-blue-mid) 100%); border-radius: 100px; }
+
+    /* ── Bar chart (horizontal) ── */
+    .hbar { display: flex; flex-direction: column; gap: 8px; margin-top: 6px; }
+    .hbar .row { display: grid; grid-template-columns: 130px 1fr 70px; gap: 8px; align-items: center; font-size: 12px; }
+    .hbar .row .name { color: #181818; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .hbar .row .track { background: #ecebea; height: 12px; border-radius: 4px; overflow: hidden; }
+    .hbar .row .fill {
+      height: 100%; border-radius: 4px;
+      background: linear-gradient(90deg, var(--sf-blue) 0%, var(--sf-blue-mid) 100%);
+    }
+    .hbar .row.alt .fill { background: linear-gradient(90deg, var(--sf-purple) 0%, var(--sf-pink) 100%); }
+    .hbar .row.tri .fill { background: linear-gradient(90deg, var(--sf-teal) 0%, var(--sf-green-mid) 100%); }
+    .hbar .row .val { text-align: right; color: #54698d; font-weight: 700; font-variant-numeric: tabular-nums; }
+
+    /* ── Vertical bar chart (column) ── */
+    .vbar-wrap { padding-top: 6px; }
+    .vbar {
+      display: grid;
+      grid-template-columns: repeat(12, 1fr);
+      gap: 6px;
+      align-items: end;
+      height: 180px;
+    }
+    .vbar .col {
+      display: flex; flex-direction: column; align-items: center; gap: 4px;
+      height: 100%; justify-content: flex-end;
+    }
+    .vbar .col .bar {
+      width: 100%; background: linear-gradient(180deg, var(--sf-blue-mid) 0%, var(--sf-blue) 100%);
+      border-radius: 4px 4px 0 0; min-height: 6px;
+      position: relative;
+    }
+    .vbar .col .bar.target {
+      background: linear-gradient(180deg, var(--sf-purple) 0%, var(--sf-blue-deep) 100%);
+    }
+    .vbar .col .lbl {
+      font-size: 10px; color: var(--crma-muted); font-weight: 600;
+    }
+    .vbar .col .topnum {
+      position: absolute; top: -16px; left: 50%; transform: translateX(-50%);
+      font-size: 10px; font-weight: 700; color: #032d60; white-space: nowrap;
+    }
+    .vbar-x { margin-top: 8px; font-size: 11px; color: var(--crma-muted); display: flex; justify-content: space-between; }
+
+    /* ── Donut ── */
+    .donut-wrap {
+      display: flex; align-items: center; gap: 14px; margin-top: 4px;
+    }
+    .donut {
+      --p1: 45;   /* Federal */
+      --p2: 75;   /* + Public  */
+      --p3: 100;  /* + Private */
+      width: 110px; height: 110px; border-radius: 50%;
+      background:
+        conic-gradient(
+          var(--sf-blue)    0%   calc(var(--p1) * 1%),
+          var(--sf-purple)  calc(var(--p1) * 1%) calc(var(--p2) * 1%),
+          var(--sf-teal)    calc(var(--p2) * 1%) calc(var(--p3) * 1%)
+        );
+      position: relative; flex: 0 0 auto;
+    }
+    .donut::after {
+      content: ''; position: absolute; inset: 16px;
+      background: #fff; border-radius: 50%;
+    }
+    .donut .center {
+      position: absolute; inset: 0;
+      display: flex; flex-direction: column; align-items: center; justify-content: center;
+      z-index: 1;
+    }
+    .donut .center .v { font-size: 22px; font-weight: 700; color: var(--sf-blue-deep); }
+    .donut .center .l { font-size: 10px; color: var(--crma-muted); text-transform: uppercase; letter-spacing: 0.04em; }
+    .legend { display: flex; flex-direction: column; gap: 6px; font-size: 12px; flex: 1; }
+    .legend .row {
+      display: grid; grid-template-columns: 12px 1fr auto auto; gap: 8px; align-items: center;
+    }
+    .legend .sw { width: 12px; height: 12px; border-radius: 3px; }
+    .legend .name { color: #181818; font-weight: 600; }
+    .legend .pct { color: var(--crma-muted); font-weight: 600; font-size: 11px; }
+    .legend .num { color: var(--sf-blue-deep); font-weight: 700; font-variant-numeric: tabular-nums; }
+
+    /* ── Gauge ── */
+    .gauge-wrap { display: flex; flex-direction: column; align-items: center; gap: 6px; margin-top: 8px; }
+    .gauge {
+      width: 160px; height: 90px; position: relative; overflow: hidden;
+    }
+    .gauge .arc {
+      width: 160px; height: 160px; border-radius: 50%;
+      background: conic-gradient(
+        from 270deg,
+        var(--sf-red)    0deg 36deg,
+        var(--sf-amber)  36deg 90deg,
+        var(--sf-green)  90deg 180deg,
+        #ecebea          180deg 360deg
+      );
+      position: relative;
+    }
+    .gauge .arc::after {
+      content: ''; position: absolute; inset: 18px; background: #fff; border-radius: 50%;
+    }
+    .gauge .needle {
+      position: absolute; left: 50%; top: 100%;
+      width: 3px; height: 70px; background: #181818;
+      transform-origin: 50% 0%;
+      transform: translateX(-50%) rotate(-90deg) rotate(var(--angle, 65deg));
+      transition: transform 0.5s ease;
+      border-radius: 3px;
+      z-index: 2;
+    }
+    .gauge .hub {
+      position: absolute; left: 50%; top: 100%; width: 14px; height: 14px;
+      background: #181818; border-radius: 50%;
+      transform: translate(-50%, -50%); z-index: 3;
+    }
+    .gauge-val { font-size: 22px; font-weight: 700; color: var(--sf-blue-deep); }
+    .gauge-lbl { font-size: 11px; color: var(--crma-muted); }
+
+    /* ── Stacked bar (matrix) ── */
+    .stack { display: flex; flex-direction: column; gap: 8px; margin-top: 4px; }
+    .stack .row { display: grid; grid-template-columns: 160px 1fr 80px; gap: 8px; align-items: center; font-size: 11px; }
+    .stack .row .name { color: #181818; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .stack .row .bar {
+      display: flex; height: 14px; border-radius: 3px; overflow: hidden; background: #ecebea;
+    }
+    .stack .row .seg { height: 100%; }
+    .stack .row .total { text-align: right; font-weight: 700; color: var(--sf-blue-deep); font-variant-numeric: tabular-nums; }
+    .stack-legend { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 10px; font-size: 11px; color: #54698d; }
+    .stack-legend .item { display: inline-flex; align-items: center; gap: 5px; }
+    .stack-legend .sw { width: 10px; height: 10px; border-radius: 2px; }
+
+    /* ── Trend / sparkline area ── */
+    .trend-wrap { margin-top: 6px; }
+    .trend-foot { display: flex; justify-content: space-between; font-size: 11px; color: var(--crma-muted); margin-top: 6px; }
+
+    /* ── Compact data table ── */
+    .ctable { width: 100%; border-collapse: collapse; font-size: 12px; margin-top: 4px; }
+    .ctable th, .ctable td { text-align: left; padding: 6px 8px; border-bottom: 1px solid #ecebea; }
+    .ctable th { font-size: 10px; color: #54698d; font-weight: 700; text-transform: uppercase; letter-spacing: 0.04em; }
+    .ctable td.num, .ctable th.num { text-align: right; font-variant-numeric: tabular-nums; }
+    .ctable tbody tr:hover { background: #f7faff; }
+
+    /* ── Pills ── */
+    .pill {
+      display: inline-flex; align-items: center; gap: 4px;
+      padding: 2px 8px; border-radius: 100px; font-size: 10px; font-weight: 700;
+      text-transform: uppercase; letter-spacing: 0.04em;
+    }
+    .pill.green { background: #ddf3e4; color: var(--sf-green); }
+    .pill.amber { background: #fef0c3; color: var(--sf-amber); }
+    .pill.red   { background: #feded8; color: var(--sf-red); }
+    .pill.blue  { background: var(--sf-blue-light); color: var(--sf-blue-deep); }
+
+    /* Section title strip on canvas */
+    .canvas-title {
+      grid-column: span 12;
+      color: #fff; font-size: 13px; font-weight: 700;
+      text-transform: uppercase; letter-spacing: 0.08em;
+      padding: 10px 4px 2px;
+      display: flex; align-items: center; gap: 10px;
+      margin-top: 4px;
+    }
+    .canvas-title .bar { flex: 1; height: 1px; background: rgba(255,255,255,0.18); }
+
+    /* Footer */
+    .footer-bar {
+      text-align: center; padding: 14px 20px;
+      font-size: 12px; color: #54698d;
+      background: #fff; border-top: 1px solid var(--sf-border);
+    }
+
+    /* Open-source / view toggle */
+    .view-toggle { display: inline-flex; border: 1px solid var(--sf-border); border-radius: 4px; overflow: hidden; }
+    .view-toggle .ctl { border-radius: 0; border: none; border-right: 1px solid var(--sf-border); }
+    .view-toggle .ctl:last-child { border-right: none; }
+    .view-toggle .ctl.active { background: var(--sf-blue); color: #fff; }
+  </style>
+</head>
+<body>
+
+  <!-- Global Header -->
+  <header class="global-header" aria-label="Global header">
+    <a href="bep-program.html" class="gh-brand" aria-label="GVRA home">
+      <img src="GVRA.png" alt="Georgia Vocational Rehabilitation Agency" />
+    </a>
+    <div class="gh-right">
+      <button class="gh-icon" aria-label="Help">?</button>
+      <button class="gh-icon" aria-label="Setup">&#9881;</button>
+      <button class="gh-icon" aria-label="Notifications">&#128276;</button>
+      <span class="gh-avatar" aria-label="Renee Patel">RP</span>
+    </div>
+  </header>
+
+  <!-- App bar -->
+  <nav class="app-bar" aria-label="BEP application tabs">
+    <span class="app-name">BEP Operator Console</span>
+    <a href="bep-program.html" class="app-tab">Home</a>
+    <a href="operator-lifecycle.html" class="app-tab">Operators</a>
+    <a href="#" class="app-tab">Cases</a>
+    <a href="facility-management.html" class="app-tab">Facilities</a>
+    <a href="#" class="app-tab">Training</a>
+    <a href="#" class="app-tab">Set-Aside</a>
+    <a href="financial-reporting.html" class="app-tab">Reports</a>
+    <a href="#" class="app-tab active">Dashboards</a>
+  </nav>
+
+  <!-- CRMA chrome -->
+  <section class="crma-bar" aria-label="Dashboard header">
+    <div>
+      <div class="crumbs">CRM Analytics &nbsp;&rsaquo;&nbsp; <a href="#">Apps</a> &nbsp;&rsaquo;&nbsp; <a href="#">GVRA BEP Compliance</a> &nbsp;&rsaquo;&nbsp; <a href="rsa-15-report.html">RSA-15 Report</a></div>
+      <h1>RSA-15 Vending Facility Program &mdash; CRMA Dashboard</h1>
+      <div class="meta"><span id="metaPeriod">FY26 (Oct 1, 2025 &ndash; Sep 30, 2026)</span> &middot; Last refreshed <span id="metaRefreshed">May 14, 2026 10:42&nbsp;AM</span> &middot; Dataset: <strong id="metaDataset">BEP_RSA15_FY26</strong> &middot; <span id="metaRows">14,238</span> rows &middot; <span class="pill green" id="metaStatus">LIVE</span></div>
+    </div>
+    <div class="crma-actions">
+      <div class="view-toggle" role="tablist" aria-label="View">
+        <button class="ctl active" aria-pressed="true">Dashboard</button>
+        <a href="rsa-15-report.html" class="ctl" aria-pressed="false">Form View</a>
+      </div>
+      <button class="ctl"><span class="ico">&#128260;</span> Refresh</button>
+      <button class="ctl"><span class="ico">&#128190;</span> Save</button>
+      <button class="ctl"><span class="ico">&#128229;</span> Share</button>
+      <button class="ctl primary"><span class="ico">&#128202;</span> Submit RSA-15</button>
+    </div>
+  </section>
+
+  <!-- Filter strip -->
+  <div class="filter-strip" aria-label="Dashboard filters">
+    <span class="lbl">Filters</span>
+    <span class="chip active chip-dd" id="fyChip" tabindex="0" role="button" aria-haspopup="listbox" aria-expanded="false">
+      Fiscal Year: <span id="fyLabel">FY26</span> <span class="caret">&#9660;</span>
+      <div class="chip-menu" role="listbox" aria-label="Fiscal Year">
+        <div role="option" data-fy="FY26" aria-selected="true">FY26</div>
+        <div role="option" data-fy="FY25" aria-selected="false">FY25</div>
+        <div role="option" data-fy="FY24" aria-selected="false">FY24</div>
+      </div>
+    </span>
+    <span class="chip" id="periodChip">Reporting Period: <span id="periodLabel">Oct 1, 2025 &ndash; Sep 30, 2026</span> <span class="caret">&#9660;</span></span>
+    <span class="chip">District: All <span class="caret">&#9660;</span></span>
+    <span class="chip">Property Class: All <span class="caret">&#9660;</span></span>
+    <span class="chip">Federal Agency: All <span class="caret">&#9660;</span></span>
+    <span class="chip">Vendor Status: Active <span class="caret">&#9660;</span></span>
+    <span class="chip">View: Owner = R. Patel <span class="caret">&#9660;</span></span>
+  </div>
+
+  <!-- ───────── Dashboard canvas ───────── -->
+  <main class="canvas">
+    <div class="grid">
+
+      <!-- ─── Row 1: KPI strip ─── -->
+      <div class="canvas-title">Program Snapshot &mdash; FY26 YTD <span class="bar"></span></div>
+
+      <div class="tile kpi col-2">
+        <h3>Vendor Earnings <span class="more">&#8942;</span></h3>
+        <div class="v" id="kpiEarn">$5.25M</div>
+        <div class="delta up" id="kpiEarnDelta">&#9650; 8.4% YoY</div>
+        <div class="target" id="kpiEarnTgt">Target $5.10M</div>
+        <div class="kpi-bar"><span id="kpiEarnBar" style="width:103%"></span></div>
+      </div>
+
+      <div class="tile kpi col-2">
+        <h3>Active Vendors <span class="more">&#8942;</span></h3>
+        <div class="v" id="kpiVend">94</div>
+        <div class="delta up" id="kpiVendDelta">&#9650; 4 net adds</div>
+        <div class="target" id="kpiVendTgt">EOY target 96</div>
+        <div class="kpi-bar"><span id="kpiVendBar" style="width:97.9%; background:linear-gradient(90deg,var(--sf-purple),var(--sf-pink))"></span></div>
+      </div>
+
+      <div class="tile kpi col-2">
+        <h3>Set-Aside Collected <span class="more">&#8942;</span></h3>
+        <div class="v" id="kpiSA">$214,800</div>
+        <div class="delta up" id="kpiSADelta">&#9650; 6.1% vs FY25</div>
+        <div class="target" id="kpiSATgt">Plan $202,400</div>
+        <div class="kpi-bar"><span id="kpiSABar" style="width:106%; background:linear-gradient(90deg,var(--sf-teal),var(--sf-green-mid))"></span></div>
+      </div>
+
+      <div class="tile kpi col-2">
+        <h3>Avg Vendor Earnings <span class="more">&#8942;</span></h3>
+        <div class="v" id="kpiAvg">$55.8K</div>
+        <div class="delta up" id="kpiAvgDelta">&#9650; 3.2% YoY</div>
+        <div class="target" id="kpiAvgTgt">State median $52.1K</div>
+        <div class="kpi-bar"><span id="kpiAvgBar" style="width:88%; background:linear-gradient(90deg,var(--sf-orange),var(--sf-amber-mid))"></span></div>
+      </div>
+
+      <div class="tile kpi col-2">
+        <h3>Net Profit Margin <span class="more">&#8942;</span></h3>
+        <div class="v" id="kpiMargin">28.6%</div>
+        <div class="delta up" id="kpiMarginDelta">&#9650; 1.4 pts</div>
+        <div class="target" id="kpiMarginTgt">Industry bench 25%</div>
+        <div class="kpi-bar"><span id="kpiMarginBar" style="width:81%"></span></div>
+      </div>
+
+      <div class="tile kpi col-2">
+        <h3>Form Completeness <span class="more">&#8942;</span></h3>
+        <div class="v" id="kpiComp">87%</div>
+        <div class="delta amber" id="kpiCompDelta" style="color:var(--sf-amber)">&#9650; 11 of 13 sections</div>
+        <div class="target" id="kpiCompTgt">Submission due Sep 30, 2026</div>
+        <div class="kpi-bar"><span id="kpiCompBar" style="width:87%; background:linear-gradient(90deg,var(--sf-amber),var(--sf-amber-mid))"></span></div>
+      </div>
+
+      <!-- ─── Row 2: Earnings & Employment ─── -->
+      <div class="canvas-title">&sect;1 Earnings &amp; Employment <span class="bar"></span></div>
+
+      <div class="tile col-7">
+        <h3>P&amp;L Waterfall &mdash; FY26 <span class="sub">$ thousands</span></h3>
+        <div class="vbar-wrap">
+          <div class="vbar" aria-label="P&L waterfall">
+            <div class="col"><div class="bar" style="height:95%"><span class="topnum">$18.4M</span></div><div class="lbl">Sales</div></div>
+            <div class="col"><div class="bar" style="height:50%; background:linear-gradient(180deg,#fcc003,#b76e00)"><span class="topnum">$9.6M</span></div><div class="lbl">Cost</div></div>
+            <div class="col"><div class="bar target" style="height:46%"><span class="topnum">$8.8M</span></div><div class="lbl">Gross</div></div>
+            <div class="col"><div class="bar" style="height:11%; background:linear-gradient(180deg,#fcc003,#b76e00)"><span class="topnum">$2.1M</span></div><div class="lbl">Payroll</div></div>
+            <div class="col"><div class="bar" style="height:10%; background:linear-gradient(180deg,#fcc003,#b76e00)"><span class="topnum">$1.9M</span></div><div class="lbl">Other</div></div>
+            <div class="col"><div class="bar target" style="height:24%"><span class="topnum">$4.7M</span></div><div class="lbl">Op. Profit</div></div>
+            <div class="col"><div class="bar" style="height:2%; background:linear-gradient(180deg,#06a59a,#45c65a)"><span class="topnum">$413K</span></div><div class="lbl">VM Inc.</div></div>
+            <div class="col"><div class="bar" style="height:1%; background:linear-gradient(180deg,#06a59a,#45c65a)"><span class="topnum">$186K</span></div><div class="lbl">Benefits</div></div>
+            <div class="col"><div class="bar target" style="height:27%"><span class="topnum">$5.28M</span></div><div class="lbl">Net Proc.</div></div>
+            <div class="col"><div class="bar" style="height:1%; background:linear-gradient(180deg,#fcc003,#b76e00)"><span class="topnum">$215K</span></div><div class="lbl">Set-Aside</div></div>
+            <div class="col"><div class="bar target" style="height:26%"><span class="topnum">$5.06M</span></div><div class="lbl">Net Profit</div></div>
+            <div class="col"><div class="bar" style="height:27%"><span class="topnum">$5.25M</span></div><div class="lbl">Earnings</div></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="tile col-3">
+        <h3>Employment Mix <span class="more">&#8942;</span></h3>
+        <div class="donut-wrap">
+          <div class="donut" id="empDonut" style="--p1:69; --p2:100; --p3:100;
+            background: conic-gradient(var(--sf-blue) 0% 69%, var(--sf-purple) 69% 100%);">
+            <div class="center"><div class="v" id="empTotal">136</div><div class="l">Total</div></div>
+          </div>
+          <div class="legend">
+            <div class="row"><span class="sw" style="background:var(--sf-blue)"></span><span class="name">Vendors (PY)</span><span class="num" id="empVend">94.0</span><span class="pct" id="empVendPct">69%</span></div>
+            <div class="row"><span class="sw" style="background:var(--sf-purple)"></span><span class="name">Other PWD</span><span class="num" id="empOpd">42</span><span class="pct" id="empOpdPct">31%</span></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="tile col-2">
+        <h3>Avg vs State Median <span class="more">&#8942;</span></h3>
+        <div class="gauge-wrap">
+          <div class="gauge"><div class="arc"></div><div class="needle" id="avgNeedle" style="--angle: 115deg"></div><div class="hub"></div></div>
+          <div class="gauge-val" id="avgGaugeVal">+7.0%</div>
+          <div class="gauge-lbl" id="avgGaugeLbl">$55.8K vs $52.1K</div>
+        </div>
+      </div>
+
+      <!-- ─── Row 3: Facilities ─── -->
+      <div class="canvas-title">&sect;2 Facilities by Property Class &amp; Federal Agency <span class="bar"></span></div>
+
+      <div class="tile col-4">
+        <h3>Facilities by Property Class <span class="sub">EOY = <span id="facEoyHdr">98</span></span></h3>
+        <div class="donut-wrap">
+          <div class="donut" id="facDonut">
+            <div class="center"><div class="v" id="facEoy">98</div><div class="l">EOY</div></div>
+          </div>
+          <div class="legend">
+            <div class="row"><span class="sw" style="background:var(--sf-blue)"></span><span class="name">Federal</span><span class="num" id="facFed">39</span><span class="pct" id="facFedPct">40%</span></div>
+            <div class="row"><span class="sw" style="background:var(--sf-purple)"></span><span class="name">Public</span><span class="num" id="facPub">47</span><span class="pct" id="facPubPct">48%</span></div>
+            <div class="row"><span class="sw" style="background:var(--sf-teal)"></span><span class="name">Private</span><span class="num" id="facPriv">12</span><span class="pct" id="facPrivPct">12%</span></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="tile col-5">
+        <h3>Federal Property Facilities by Agency <span class="sub">end-of-year</span></h3>
+        <div class="hbar">
+          <div class="row"><span class="name">GSA</span><span class="track"><span class="fill" style="width:89%"></span></span><span class="val">8</span></div>
+          <div class="row alt"><span class="name">DoD (3a + 3b)</span><span class="track"><span class="fill" style="width:100%"></span></span><span class="val">9</span></div>
+          <div class="row"><span class="name">Veterans Admin.</span><span class="track"><span class="fill" style="width:67%"></span></span><span class="val">6</span></div>
+          <div class="row"><span class="name">U.S. Postal Service</span><span class="track"><span class="fill" style="width:56%"></span></span><span class="val">5</span></div>
+          <div class="row tri"><span class="name">DHS</span><span class="track"><span class="fill" style="width:33%"></span></span><span class="val">3</span></div>
+          <div class="row tri"><span class="name">Multi-loc Routes</span><span class="track"><span class="fill" style="width:33%"></span></span><span class="val">3</span></div>
+          <div class="row"><span class="name">HHS</span><span class="track"><span class="fill" style="width:22%"></span></span><span class="val">2</span></div>
+          <div class="row"><span class="name">Federal Courts</span><span class="track"><span class="fill" style="width:22%"></span></span><span class="val">2</span></div>
+          <div class="row"><span class="name">DOI</span><span class="track"><span class="fill" style="width:11%"></span></span><span class="val">1</span></div>
+        </div>
+      </div>
+
+      <div class="tile col-3">
+        <h3>Facility Movement <span class="sub">Beg / Add / Close / EOY</span></h3>
+        <table class="ctable" id="facMoveTbl">
+          <thead><tr><th>Class</th><th class="num">Beg</th><th class="num">Add</th><th class="num">Close</th><th class="num">EOY</th></tr></thead>
+          <tbody>
+            <tr data-cls="fed"><td>Federal</td><td class="num">38</td><td class="num">3</td><td class="num">2</td><td class="num"><strong>39</strong></td></tr>
+            <tr data-cls="pub"><td>Public</td><td class="num">46</td><td class="num">4</td><td class="num">3</td><td class="num"><strong>47</strong></td></tr>
+            <tr data-cls="priv"><td>Private</td><td class="num">11</td><td class="num">1</td><td class="num">0</td><td class="num"><strong>12</strong></td></tr>
+          </tbody>
+        </table>
+        <div style="margin-top:8px; font-size:11px; color:var(--crma-muted);" id="facMoveYoY">Net +6 facilities YoY <span class="pill green" style="margin-left:6px">+6.5%</span></div>
+      </div>
+
+      <!-- ─── Row 4: Cafeteria & Vendors ─── -->
+      <div class="canvas-title">&sect;3 Federal Cafeteria Contracts &amp; &sect;4 Vendors <span class="bar"></span></div>
+
+      <div class="tile col-7">
+        <h3>Cafeteria / Military Dining Contract Sales <span class="sub">most recent option year</span></h3>
+        <div class="hbar">
+          <div class="row"><span class="name">Fort Stewart (Army)</span><span class="track"><span class="fill" style="width:100%"></span></span><span class="val">$3.18M</span></div>
+          <div class="row alt"><span class="name">Robins AFB (USAF)</span><span class="track"><span class="fill" style="width:77%"></span></span><span class="val">$2.46M</span></div>
+          <div class="row tri"><span class="name">Dobbins ARB (USAF)</span><span class="track"><span class="fill" style="width:32%"></span></span><span class="val">$1.01M</span></div>
+          <div class="row"><span class="name">MCLB Albany (USMC)</span><span class="track"><span class="fill" style="width:28%"></span></span><span class="val">$885K</span></div>
+        </div>
+        <div style="margin-top:10px; padding-top:10px; border-top:1px solid #ecebea; display:flex; justify-content:space-between; font-size:12px;">
+          <span style="color:var(--crma-muted);">Total contract value</span>
+          <span style="color:var(--sf-blue-deep); font-weight:700;" id="cafTotal">$7.54M across 4 active R-S contracts</span>
+        </div>
+      </div>
+
+      <div class="tile col-5">
+        <h3>Vendor Movement by Class <span class="sub">Begin &rarr; EOY</span></h3>
+        <div class="stack">
+          <div class="row"><span class="name">Federal</span><span class="bar">
+            <span class="seg" style="width:38%; background:var(--sf-blue)"></span>
+            <span class="seg" style="width:4%; background:var(--sf-green)"></span>
+            <span class="seg" style="width:3%; background:var(--sf-red)"></span>
+          </span><span class="total">36</span></div>
+          <div class="row"><span class="name">Public</span><span class="bar">
+            <span class="seg" style="width:48%; background:var(--sf-blue)"></span>
+            <span class="seg" style="width:5%; background:var(--sf-green)"></span>
+            <span class="seg" style="width:3%; background:var(--sf-red)"></span>
+          </span><span class="total">47</span></div>
+          <div class="row"><span class="name">Private</span><span class="bar">
+            <span class="seg" style="width:11%; background:var(--sf-blue)"></span>
+            <span class="seg" style="width:2%; background:var(--sf-green)"></span>
+            <span class="seg" style="width:1%; background:var(--sf-red)"></span>
+          </span><span class="total">11</span></div>
+        </div>
+        <div class="stack-legend">
+          <span class="item"><span class="sw" style="background:var(--sf-blue)"></span> Beginning</span>
+          <span class="item"><span class="sw" style="background:var(--sf-green)"></span> Entering</span>
+          <span class="item"><span class="sw" style="background:var(--sf-red)"></span> Leaving</span>
+        </div>
+      </div>
+
+      <!-- ─── Row 5: Highway + Set-aside trend ─── -->
+      <div class="canvas-title">&sect;5 Interstate Highway Program &amp; &sect;7 Set-Aside Trend <span class="bar"></span></div>
+
+      <div class="tile col-4">
+        <h3>Highway Program Locations <span class="sub">TEA-21</span></h3>
+        <div style="display:flex; align-items:center; gap:24px; margin-top:8px;">
+          <div>
+            <div style="font-size:34px; font-weight:700; color:var(--sf-blue-deep); line-height:1;" id="hwyLoc">28</div>
+            <div style="font-size:11px; color:var(--crma-muted); margin-top:4px;">Total locations</div>
+          </div>
+          <div>
+            <div style="font-size:22px; font-weight:700; color:var(--sf-blue);" id="hwyRec">$612K</div>
+            <div style="font-size:11px; color:var(--crma-muted); margin-top:2px;" id="hwyRecLbl">Receipts (FY26)</div>
+          </div>
+        </div>
+        <div class="hbar" style="margin-top:14px;">
+          <div class="row"><span class="name">Vendor-operated</span><span class="track"><span class="fill" id="hwyVoFill" style="width:43%"></span></span><span class="val" id="hwyVo">12</span></div>
+          <div class="row alt"><span class="name">Third-party</span><span class="track"><span class="fill" id="hwyTpFill" style="width:57%"></span></span><span class="val" id="hwyTp">16</span></div>
+        </div>
+      </div>
+
+      <div class="tile col-8">
+        <h3>Set-Aside Collection &mdash; 12-month Trend <span class="sub">collected vs target ($K)</span></h3>
+        <div class="vbar-wrap">
+          <div class="vbar" aria-label="Set-aside trend">
+            <div class="col"><div class="bar" style="height:55%"><span class="topnum">15.4</span></div><div class="lbl">Oct</div></div>
+            <div class="col"><div class="bar" style="height:62%"><span class="topnum">17.2</span></div><div class="lbl">Nov</div></div>
+            <div class="col"><div class="bar" style="height:78%"><span class="topnum">21.8</span></div><div class="lbl">Dec</div></div>
+            <div class="col"><div class="bar" style="height:50%"><span class="topnum">14.0</span></div><div class="lbl">Jan</div></div>
+            <div class="col"><div class="bar" style="height:64%"><span class="topnum">17.9</span></div><div class="lbl">Feb</div></div>
+            <div class="col"><div class="bar" style="height:71%"><span class="topnum">19.8</span></div><div class="lbl">Mar</div></div>
+            <div class="col"><div class="bar" style="height:75%"><span class="topnum">21.0</span></div><div class="lbl">Apr</div></div>
+            <div class="col"><div class="bar target" style="height:82%"><span class="topnum">22.9</span></div><div class="lbl">May</div></div>
+            <div class="col"><div class="bar target" style="height:73%; opacity:0.55"><span class="topnum">20.3</span></div><div class="lbl">Jun</div></div>
+            <div class="col"><div class="bar target" style="height:71%; opacity:0.55"><span class="topnum">19.8</span></div><div class="lbl">Jul</div></div>
+            <div class="col"><div class="bar target" style="height:65%; opacity:0.55"><span class="topnum">18.2</span></div><div class="lbl">Aug</div></div>
+            <div class="col"><div class="bar target" style="height:54%; opacity:0.55"><span class="topnum">15.0</span></div><div class="lbl">Sep</div></div>
+          </div>
+          <div class="trend-foot">
+            <span>Solid = actual &middot; Faded = forecast</span>
+            <span>YTD collected <strong style="color:var(--sf-blue-deep)" id="saYtd">$214.8K</strong> &middot; Plan <strong style="color:var(--sf-blue-deep)" id="saPlan">$202.4K</strong> <span class="pill green" id="saDelta">+6.1%</span></span>
+          </div>
+        </div>
+      </div>
+
+      <!-- ─── Row 6: Expenditures matrix ─── -->
+      <div class="canvas-title">&sect;6 Program Expenditures by Source of Funds <span class="bar"></span></div>
+
+      <div class="tile col-7">
+        <h3>Expenditure Categories &mdash; stacked by funding source <span class="sub">$ totals</span></h3>
+        <div class="stack">
+          <div class="row"><span class="name">New / Replacement Equip.</span><span class="bar">
+            <span class="seg" style="width:20%; background:var(--sf-blue)"></span>
+            <span class="seg" style="width:12%; background:var(--sf-purple)"></span>
+            <span class="seg" style="width:10%; background:var(--sf-amber)"></span>
+            <span class="seg" style="width:14%; background:var(--sf-teal)"></span>
+            <span class="seg" style="width:44%; background:var(--sf-green)"></span>
+          </span><span class="total">$190K</span></div>
+          <div class="row"><span class="name">Maintenance</span><span class="bar">
+            <span class="seg" style="width:25%; background:var(--sf-blue)"></span>
+            <span class="seg" style="width:16%; background:var(--sf-purple)"></span>
+            <span class="seg" style="width:10%; background:var(--sf-amber)"></span>
+            <span class="seg" style="width:19%; background:var(--sf-teal)"></span>
+            <span class="seg" style="width:30%; background:var(--sf-green)"></span>
+          </span><span class="total">$60K</span></div>
+          <div class="row"><span class="name">Refurbishment</span><span class="bar">
+            <span class="seg" style="width:25%; background:var(--sf-blue)"></span>
+            <span class="seg" style="width:14%; background:var(--sf-purple)"></span>
+            <span class="seg" style="width:9%; background:var(--sf-amber)"></span>
+            <span class="seg" style="width:16%; background:var(--sf-teal)"></span>
+            <span class="seg" style="width:36%; background:var(--sf-green)"></span>
+          </span><span class="total">$90K</span></div>
+          <div class="row"><span class="name">Acquisition</span><span class="bar">
+            <span class="seg" style="width:20%; background:var(--sf-blue)"></span>
+            <span class="seg" style="width:10%; background:var(--sf-purple)"></span>
+            <span class="seg" style="width:7%; background:var(--sf-amber)"></span>
+            <span class="seg" style="width:17%; background:var(--sf-teal)"></span>
+            <span class="seg" style="width:46%; background:var(--sf-green)"></span>
+          </span><span class="total">$46K</span></div>
+          <div class="row"><span class="name">Mgmt Services</span><span class="bar">
+            <span class="seg" style="width:18%; background:var(--sf-blue)"></span>
+            <span class="seg" style="width:11%; background:var(--sf-purple)"></span>
+            <span class="seg" style="width:10%; background:var(--sf-amber)"></span>
+            <span class="seg" style="width:22%; background:var(--sf-teal)"></span>
+            <span class="seg" style="width:39%; background:var(--sf-green)"></span>
+          </span><span class="total">$100K</span></div>
+          <div class="row"><span class="name">Fair Min. Return</span><span class="bar">
+            <span class="seg" style="width:17%; background:var(--sf-blue)"></span>
+            <span class="seg" style="width:10%; background:var(--sf-purple)"></span>
+            <span class="seg" style="width:7%; background:var(--sf-amber)"></span>
+            <span class="seg" style="width:21%; background:var(--sf-teal)"></span>
+            <span class="seg" style="width:45%; background:var(--sf-green)"></span>
+          </span><span class="total">$184K</span></div>
+          <div class="row"><span class="name">Retirement / Pension</span><span class="bar">
+            <span class="seg" style="width:26%; background:var(--sf-blue)"></span>
+            <span class="seg" style="width:16%; background:var(--sf-purple)"></span>
+            <span class="seg" style="width:9%; background:var(--sf-amber)"></span>
+            <span class="seg" style="width:20%; background:var(--sf-teal)"></span>
+            <span class="seg" style="width:29%; background:var(--sf-green)"></span>
+          </span><span class="total">$48K</span></div>
+          <div class="row"><span class="name">Health Insurance</span><span class="bar">
+            <span class="seg" style="width:26%; background:var(--sf-blue)"></span>
+            <span class="seg" style="width:16%; background:var(--sf-purple)"></span>
+            <span class="seg" style="width:9%; background:var(--sf-amber)"></span>
+            <span class="seg" style="width:20%; background:var(--sf-teal)"></span>
+            <span class="seg" style="width:29%; background:var(--sf-green)"></span>
+          </span><span class="total">$57K</span></div>
+        </div>
+        <div class="stack-legend">
+          <span class="item"><span class="sw" style="background:var(--sf-blue)"></span> VM Income (Federal)</span>
+          <span class="item"><span class="sw" style="background:var(--sf-purple)"></span> VM Income (Non-Fed)</span>
+          <span class="item"><span class="sw" style="background:var(--sf-amber)"></span> Set-Aside</span>
+          <span class="item"><span class="sw" style="background:var(--sf-teal)"></span> State Approp.</span>
+          <span class="item"><span class="sw" style="background:var(--sf-green)"></span> Federal Funds</span>
+        </div>
+      </div>
+
+      <div class="tile col-5">
+        <h3>Funding Source Mix &mdash; <span id="fundFy">FY26</span> <span class="sub">Total <span id="fundTotalHdr">$846K</span></span></h3>
+        <div class="donut-wrap">
+          <div class="donut" style="
+            background: conic-gradient(
+              var(--sf-blue)   0% 21%,
+              var(--sf-purple) 21% 34%,
+              var(--sf-amber)  34% 43%,
+              var(--sf-teal)   43% 61%,
+              var(--sf-green)  61% 100%
+            );">
+            <div class="center"><div class="v" id="fundTotal">$846K</div><div class="l">Total</div></div>
+          </div>
+          <div class="legend">
+            <div class="row"><span class="sw" style="background:var(--sf-blue)"></span><span class="name">VM Federal</span><span class="num">$181.6K</span><span class="pct">21%</span></div>
+            <div class="row"><span class="sw" style="background:var(--sf-purple)"></span><span class="name">VM Non-Fed</span><span class="num">$106.6K</span><span class="pct">13%</span></div>
+            <div class="row"><span class="sw" style="background:var(--sf-amber)"></span><span class="name">Set-Aside</span><span class="num">$75.8K</span><span class="pct">9%</span></div>
+            <div class="row"><span class="sw" style="background:var(--sf-teal)"></span><span class="name">State Approp.</span><span class="num">$155.8K</span><span class="pct">18%</span></div>
+            <div class="row"><span class="sw" style="background:var(--sf-green)"></span><span class="name">Federal Funds</span><span class="num">$326.2K</span><span class="pct">39%</span></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ─── Row 7: Sites & training ─── -->
+      <div class="canvas-title">&sect;8 Sites Surveyed &amp; &sect;9 Training Outcomes <span class="bar"></span></div>
+
+      <div class="tile col-5">
+        <h3>Sites Surveyed Funnel <span class="sub">Federal vs Non-Federal</span></h3>
+        <table class="ctable">
+          <thead><tr><th>Disposition</th><th class="num">Federal</th><th class="num">Non-Fed</th><th class="num">Total</th><th class="num">%</th></tr></thead>
+          <tbody>
+            <tr><td><strong>Surveyed</strong></td><td class="num">22</td><td class="num">31</td><td class="num"><strong>53</strong></td><td class="num">100%</td></tr>
+            <tr><td>&nbsp;&nbsp;Accepted by SLA</td><td class="num">14</td><td class="num">21</td><td class="num">35</td><td class="num"><span class="pill green">66%</span></td></tr>
+            <tr><td>&nbsp;&nbsp;Not Accepted</td><td class="num">5</td><td class="num">7</td><td class="num">12</td><td class="num"><span class="pill amber">23%</span></td></tr>
+            <tr><td>&nbsp;&nbsp;Denied by Mgmt</td><td class="num">2</td><td class="num">2</td><td class="num">4</td><td class="num"><span class="pill red">8%</span></td></tr>
+            <tr><td>&nbsp;&nbsp;Pending</td><td class="num">1</td><td class="num">1</td><td class="num">2</td><td class="num"><span class="pill blue">4%</span></td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="tile col-4">
+        <h3>Training Outcomes <span class="sub">FY26 cohort = 18</span></h3>
+        <div class="donut-wrap">
+          <div class="donut" style="
+            background: conic-gradient(
+              var(--sf-green) 0% 50%,
+              var(--sf-blue) 50% 72%,
+              var(--sf-purple) 72% 89%,
+              var(--sf-amber) 89% 100%
+            );">
+            <div class="center"><div class="v">18</div><div class="l">Trained</div></div>
+          </div>
+          <div class="legend">
+            <div class="row"><span class="sw" style="background:var(--sf-green)"></span><span class="name">Licensed &amp; placed</span><span class="num">9</span><span class="pct">50%</span></div>
+            <div class="row"><span class="sw" style="background:var(--sf-blue)"></span><span class="name">Awaiting placement</span><span class="num">4</span><span class="pct">22%</span></div>
+            <div class="row"><span class="sw" style="background:var(--sf-purple)"></span><span class="name">Employed in BEP</span><span class="num">3</span><span class="pct">17%</span></div>
+            <div class="row"><span class="sw" style="background:var(--sf-amber)"></span><span class="name">Allied food svc.</span><span class="num">2</span><span class="pct">11%</span></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="tile col-3">
+        <h3>Vendor Up-Skilling <span class="sub">FY26</span></h3>
+        <div class="hbar">
+          <div class="row"><span class="name">In-Service</span><span class="track"><span class="fill" style="width:87%"></span></span><span class="val">62</span></div>
+          <div class="row alt"><span class="name">Upward Mobility</span><span class="track"><span class="fill" style="width:34%"></span></span><span class="val">24</span></div>
+          <div class="row tri"><span class="name">Food Safety</span><span class="track"><span class="fill" style="width:100%"></span></span><span class="val">71</span></div>
+          <div class="row"><span class="name">Conferences</span><span class="track"><span class="fill" style="width:17%"></span></span><span class="val">12</span></div>
+        </div>
+      </div>
+
+      <!-- ─── Row 8: Compliance & Risk ─── -->
+      <div class="canvas-title">Compliance, Risk &amp; Submission Readiness <span class="bar"></span></div>
+
+      <div class="tile col-3">
+        <h3>Form Completeness <span class="sub" id="compSub">11 of 13 sections</span></h3>
+        <div class="gauge-wrap">
+          <div class="gauge"><div class="arc"></div><div class="needle" id="compNeedle" style="--angle: 156deg"></div><div class="hub"></div></div>
+          <div class="gauge-val" id="compGaugeVal">87%</div>
+          <div class="gauge-lbl" id="compGaugeLbl">Submit by Sep 30, 2026</div>
+        </div>
+      </div>
+
+      <div class="tile col-4">
+        <h3>Section Status <span class="sub">data-quality scoring</span></h3>
+        <table class="ctable" id="sectionStatus">
+          <thead><tr><th>Section</th><th>Status</th><th class="num">Issues</th></tr></thead>
+          <tbody>
+            <tr><td>&sect;1 Earnings &amp; Employment</td><td><span class="pill green">Complete</span></td><td class="num">0</td></tr>
+            <tr><td>&sect;2 Facilities</td><td><span class="pill green">Complete</span></td><td class="num">0</td></tr>
+            <tr><td>&sect;3 Cafeteria Contracts</td><td><span class="pill green">Complete</span></td><td class="num">0</td></tr>
+            <tr><td>&sect;4 Vendors</td><td><span class="pill green">Complete</span></td><td class="num">0</td></tr>
+            <tr><td>&sect;5 Highway Program</td><td><span class="pill green">Complete</span></td><td class="num">0</td></tr>
+            <tr><td>&sect;6 Expenditures</td><td><span class="pill amber">Review</span></td><td class="num">2</td></tr>
+            <tr><td>&sect;7 Distribution</td><td><span class="pill green">Complete</span></td><td class="num">0</td></tr>
+            <tr><td>&sect;8 Sites Surveyed</td><td><span class="pill green">Complete</span></td><td class="num">0</td></tr>
+            <tr><td>&sect;9 Vendor Training</td><td><span class="pill green">Complete</span></td><td class="num">0</td></tr>
+            <tr><td>&sect;10 Personnel</td><td><span class="pill amber">Review</span></td><td class="num">1</td></tr>
+            <tr><td>&sect;11 Notes</td><td><span class="pill green">Complete</span></td><td class="num">0</td></tr>
+            <tr><td>&sect;12 Certification</td><td><span class="pill red">Pending</span></td><td class="num">1</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="tile col-5">
+        <h3>Einstein Insights &mdash; Smart Narrative <span class="sub">auto-generated</span></h3>
+        <div id="einsteinPanel" style="margin-top:6px; display:flex; flex-direction:column; gap:10px; font-size:12.5px; color:#181818; line-height:1.55;">
+          <div style="padding:10px 12px; background:#eaf5fe; border-left:3px solid var(--sf-blue); border-radius:3px;">
+            <strong style="color:var(--sf-blue-deep)">Earnings on track.</strong> Vendor Earnings of <strong>$5.25M</strong> exceed FY26 target by <strong>+3%</strong> with the strongest contribution from <strong>Atlanta Regional</strong> ($1.42M, +12% YoY).
+          </div>
+          <div style="padding:10px 12px; background:#ddf3e4; border-left:3px solid var(--sf-green); border-radius:3px;">
+            <strong style="color:var(--sf-green)">Set-aside collection ahead of plan.</strong> $214.8K collected vs $202.4K plan (+6.1%). Forecast EOY <strong>$236K</strong>.
+          </div>
+          <div style="padding:10px 12px; background:#fef0c3; border-left:3px solid var(--sf-amber); border-radius:3px;">
+            <strong style="color:var(--sf-amber)">Action needed &mdash; &sect;6 reconciliation.</strong> Two expenditure rows show variance &gt;5% vs G/L; review <em>Refurbishment</em> and <em>Mgmt Services</em>.
+          </div>
+          <div style="padding:10px 12px; background:#feded8; border-left:3px solid var(--sf-red); border-radius:3px;">
+            <strong style="color:var(--sf-red)">Certification pending.</strong> &sect;12 awaiting Executive Director sign-off &mdash; <strong>137 days</strong> until federal submission deadline.
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </main>
+
+  <footer class="footer-bar">
+    &copy; 2026 Georgia Vocational Rehabilitation Agency &middot; CRM Analytics &middot; RSA-15 figures shown are illustrative draft values for FY26.
+  </footer>
+
+  <script>
+    // ── FY datasets ──────────────────────────────────────────────
+    const FY_DATA = {
+      FY26: {
+        meta: {
+          period: 'FY26 (Oct 1, 2025 &ndash; Sep 30, 2026)',
+          refreshed: 'May 14, 2026 10:42&nbsp;AM',
+          dataset: 'BEP_RSA15_FY26',
+          rows: '14,238',
+          status: { text: 'LIVE', cls: 'green' },
+          periodChip: 'Oct 1, 2025 &ndash; Sep 30, 2026'
+        },
+        kpis: {
+          earn:   { v: '$5.25M',  delta: '&#9650; 8.4% YoY',  tgt: 'Target $5.10M',        bar: 103, deltaCls: 'up' },
+          vend:   { v: '94',      delta: '&#9650; 4 net adds', tgt: 'EOY target 96',        bar: 97.9, deltaCls: 'up' },
+          sa:     { v: '$214,800',delta: '&#9650; 6.1% vs FY25', tgt: 'Plan $202,400',      bar: 106, deltaCls: 'up' },
+          avg:    { v: '$55.8K',  delta: '&#9650; 3.2% YoY',  tgt: 'State median $52.1K',  bar: 88,  deltaCls: 'up' },
+          margin: { v: '28.6%',   delta: '&#9650; 1.4 pts',   tgt: 'Industry bench 25%',   bar: 81,  deltaCls: 'up' },
+          comp:   { v: '87%',     delta: '&#9650; 11 of 13 sections', tgt: 'Submission due Sep 30, 2026', bar: 87, deltaCls: 'amber', compSub: '11 of 13 sections', compLbl: 'Submit by Sep 30, 2026', compAngle: 156 }
+        },
+        emp:  { total: 136, vend: '94.0', vendPct: '69%', opd: 42, opdPct: '31%', donutBlue: 69 },
+        avgGauge: { val: '+7.0%', lbl: '$55.8K vs $52.1K', angle: 115 },
+        fac:  { eoy: 98, fed: 39, fedPct: '40%', pub: 47, pubPct: '48%', priv: 12, privPct: '12%',
+                fedBlue: 40, pubPurple: 88, privTeal: 100,
+                move: { fed: [38,3,2,39], pub: [46,4,3,47], priv: [11,1,0,12] },
+                yoy: 'Net +6 facilities YoY <span class="pill green" style="margin-left:6px">+6.5%</span>' },
+        caf: { total: '$7.54M across 4 active R-S contracts' },
+        hwy: { loc: 28, rec: '$612K', recLbl: 'Receipts (FY26)', vo: 12, voPct: 43, tp: 16, tpPct: 57 },
+        sa12: { ytd: '$214.8K', plan: '$202.4K', delta: '+6.1%', deltaCls: 'green' },
+        fund: { fy: 'FY26', total: '$846K' },
+        einstein: [
+          { cls:'blue',  title:'Earnings on track.',                 html:'Vendor Earnings of <strong>$5.25M</strong> exceed FY26 target by <strong>+3%</strong> with the strongest contribution from <strong>Atlanta Regional</strong> ($1.42M, +12% YoY).' },
+          { cls:'green', title:'Set-aside collection ahead of plan.',html:'$214.8K collected vs $202.4K plan (+6.1%). Forecast EOY <strong>$236K</strong>.' },
+          { cls:'amber', title:'Action needed &mdash; &sect;6 reconciliation.', html:'Two expenditure rows show variance &gt;5% vs G/L; review <em>Refurbishment</em> and <em>Mgmt Services</em>.' },
+          { cls:'red',   title:'Certification pending.',             html:'&sect;12 awaiting Executive Director sign-off &mdash; <strong>137 days</strong> until federal submission deadline.' }
+        ],
+        secStatus: [
+          ['&sect;1 Earnings &amp; Employment','green','Complete','0'],
+          ['&sect;2 Facilities','green','Complete','0'],
+          ['&sect;3 Cafeteria Contracts','green','Complete','0'],
+          ['&sect;4 Vendors','green','Complete','0'],
+          ['&sect;5 Highway Program','green','Complete','0'],
+          ['&sect;6 Expenditures','amber','Review','2'],
+          ['&sect;7 Distribution','green','Complete','0'],
+          ['&sect;8 Sites Surveyed','green','Complete','0'],
+          ['&sect;9 Vendor Training','green','Complete','0'],
+          ['&sect;10 Personnel','amber','Review','1'],
+          ['&sect;11 Notes','green','Complete','0'],
+          ['&sect;12 Certification','red','Pending','1']
+        ]
+      },
+      FY25: {
+        meta: {
+          period: 'FY25 (Oct 1, 2024 &ndash; Sep 30, 2025)',
+          refreshed: 'Nov 12, 2025 4:18&nbsp;PM',
+          dataset: 'BEP_RSA15_FY25',
+          rows: '13,612',
+          status: { text: 'FILED', cls: 'blue' },
+          periodChip: 'Oct 1, 2024 &ndash; Sep 30, 2025'
+        },
+        kpis: {
+          earn:   { v: '$4.84M',  delta: '&#9650; 5.2% YoY',  tgt: 'Target $4.75M',        bar: 101.9, deltaCls: 'up' },
+          vend:   { v: '90',      delta: '&#9650; 2 net adds', tgt: 'EOY target 92',        bar: 97.8, deltaCls: 'up' },
+          sa:     { v: '$202,400',delta: '&#9650; 4.8% vs FY24', tgt: 'Plan $193,200',     bar: 104.7, deltaCls: 'up' },
+          avg:    { v: '$53.8K',  delta: '&#9650; 2.1% YoY',  tgt: 'State median $51.4K',  bar: 84,  deltaCls: 'up' },
+          margin: { v: '27.2%',   delta: '&#9650; 0.9 pts',   tgt: 'Industry bench 25%',   bar: 76,  deltaCls: 'up' },
+          comp:   { v: '100%',    delta: '&#10003; All 13 sections', tgt: 'Submitted Oct 28, 2025', bar: 100, deltaCls: 'up', compSub: '13 of 13 sections', compLbl: 'Submitted Oct 28, 2025', compAngle: 180 }
+        },
+        emp:  { total: 128, vend: '90.0', vendPct: '70%', opd: 38, opdPct: '30%', donutBlue: 70 },
+        avgGauge: { val: '+4.7%', lbl: '$53.8K vs $51.4K', angle: 105 },
+        fac:  { eoy: 95, fed: 38, fedPct: '40%', pub: 46, pubPct: '48%', priv: 11, privPct: '12%',
+                fedBlue: 40, pubPurple: 88, privTeal: 100,
+                move: { fed: [37,3,2,38], pub: [44,4,2,46], priv: [10,1,0,11] },
+                yoy: 'Net +3 facilities YoY <span class="pill green" style="margin-left:6px">+3.3%</span>' },
+        caf: { total: '$7.12M across 4 active R-S contracts' },
+        hwy: { loc: 26, rec: '$578K', recLbl: 'Receipts (FY25)', vo: 11, voPct: 42, tp: 15, tpPct: 58 },
+        sa12: { ytd: '$202.4K', plan: '$193.2K', delta: '+4.8%', deltaCls: 'green' },
+        fund: { fy: 'FY25', total: '$812K' },
+        einstein: [
+          { cls:'green', title:'FY25 submitted.',                    html:'RSA-15 filed on <strong>Oct 28, 2025</strong>. Federal acknowledgment received Nov 4, 2025.' },
+          { cls:'blue',  title:'Earnings grew vs FY24.',             html:'Vendor Earnings of <strong>$4.84M</strong> exceeded FY25 target by <strong>+1.9%</strong>; Atlanta Regional led at $1.27M.' },
+          { cls:'blue',  title:'Set-aside +4.8% YoY.',               html:'$202.4K collected vs $193.2K plan; balance carried into FY26 set-aside reserve.' },
+          { cls:'green', title:'Audit clean.',                       html:'FY25 reconciliation complete &mdash; no findings from RSA program review.' }
+        ],
+        secStatus: [
+          ['&sect;1 Earnings &amp; Employment','green','Complete','0'],
+          ['&sect;2 Facilities','green','Complete','0'],
+          ['&sect;3 Cafeteria Contracts','green','Complete','0'],
+          ['&sect;4 Vendors','green','Complete','0'],
+          ['&sect;5 Highway Program','green','Complete','0'],
+          ['&sect;6 Expenditures','green','Complete','0'],
+          ['&sect;7 Distribution','green','Complete','0'],
+          ['&sect;8 Sites Surveyed','green','Complete','0'],
+          ['&sect;9 Vendor Training','green','Complete','0'],
+          ['&sect;10 Personnel','green','Complete','0'],
+          ['&sect;11 Notes','green','Complete','0'],
+          ['&sect;12 Certification','green','Submitted','0']
+        ]
+      },
+      FY24: {
+        meta: {
+          period: 'FY24 (Oct 1, 2023 &ndash; Sep 30, 2024)',
+          refreshed: 'Nov 8, 2024 9:31&nbsp;AM',
+          dataset: 'BEP_RSA15_FY24',
+          rows: '12,984',
+          status: { text: 'FILED', cls: 'blue' },
+          periodChip: 'Oct 1, 2023 &ndash; Sep 30, 2024'
+        },
+        kpis: {
+          earn:   { v: '$4.60M',  delta: '&#9650; 3.1% YoY',  tgt: 'Target $4.55M',        bar: 101.1, deltaCls: 'up' },
+          vend:   { v: '88',      delta: '&#9650; 2 net adds', tgt: 'EOY target 90',        bar: 97.7, deltaCls: 'up' },
+          sa:     { v: '$193,200',delta: '&#9650; 3.4% vs FY23', tgt: 'Plan $186,800',     bar: 103.4, deltaCls: 'up' },
+          avg:    { v: '$52.7K',  delta: '&#9650; 1.5% YoY',  tgt: 'State median $50.9K',  bar: 82,  deltaCls: 'up' },
+          margin: { v: '26.3%',   delta: '&#9650; 0.5 pts',   tgt: 'Industry bench 25%',   bar: 72,  deltaCls: 'up' },
+          comp:   { v: '100%',    delta: '&#10003; All 13 sections', tgt: 'Submitted Oct 30, 2024', bar: 100, deltaCls: 'up', compSub: '13 of 13 sections', compLbl: 'Submitted Oct 30, 2024', compAngle: 180 }
+        },
+        emp:  { total: 124, vend: '88.0', vendPct: '71%', opd: 36, opdPct: '29%', donutBlue: 71 },
+        avgGauge: { val: '+3.5%', lbl: '$52.7K vs $50.9K', angle: 100 },
+        fac:  { eoy: 92, fed: 37, fedPct: '40%', pub: 45, pubPct: '49%', priv: 10, privPct: '11%',
+                fedBlue: 40, pubPurple: 89, privTeal: 100,
+                move: { fed: [36,2,1,37], pub: [44,3,2,45], priv: [9,1,0,10] },
+                yoy: 'Net +3 facilities YoY <span class="pill green" style="margin-left:6px">+3.4%</span>' },
+        caf: { total: '$6.78M across 4 active R-S contracts' },
+        hwy: { loc: 25, rec: '$542K', recLbl: 'Receipts (FY24)', vo: 10, voPct: 40, tp: 15, tpPct: 60 },
+        sa12: { ytd: '$193.2K', plan: '$186.8K', delta: '+3.4%', deltaCls: 'green' },
+        fund: { fy: 'FY24', total: '$778K' },
+        einstein: [
+          { cls:'green', title:'FY24 closed.',                       html:'RSA-15 filed on <strong>Oct 30, 2024</strong>; archived to GVRA Compliance Vault.' },
+          { cls:'blue',  title:'Steady earnings growth.',            html:'Vendor Earnings of <strong>$4.60M</strong> grew <strong>+3.1%</strong> YoY despite supply-chain headwinds.' },
+          { cls:'blue',  title:'Vendor base stable.',                html:'88 active vendors at year-end; 2 new R-S licensees placed at federal locations.' },
+          { cls:'green', title:'Set-aside reconciled.',              html:'$193.2K collected, fully reconciled to GL; no audit exceptions.' }
+        ],
+        secStatus: [
+          ['&sect;1 Earnings &amp; Employment','green','Complete','0'],
+          ['&sect;2 Facilities','green','Complete','0'],
+          ['&sect;3 Cafeteria Contracts','green','Complete','0'],
+          ['&sect;4 Vendors','green','Complete','0'],
+          ['&sect;5 Highway Program','green','Complete','0'],
+          ['&sect;6 Expenditures','green','Complete','0'],
+          ['&sect;7 Distribution','green','Complete','0'],
+          ['&sect;8 Sites Surveyed','green','Complete','0'],
+          ['&sect;9 Vendor Training','green','Complete','0'],
+          ['&sect;10 Personnel','green','Complete','0'],
+          ['&sect;11 Notes','green','Complete','0'],
+          ['&sect;12 Certification','green','Submitted','0']
+        ]
+      }
+    };
+
+    function $(id) { return document.getElementById(id); }
+    function setHTML(id, html) { const el = $(id); if (el) el.innerHTML = html; }
+    function setWidth(id, pct) { const el = $(id); if (el) el.style.width = pct + '%'; }
+
+    function applyFY(fy) {
+      const d = FY_DATA[fy]; if (!d) return;
+
+      // meta strip
+      setHTML('metaPeriod', d.meta.period);
+      setHTML('metaRefreshed', d.meta.refreshed);
+      setHTML('metaDataset', d.meta.dataset);
+      setHTML('metaRows', d.meta.rows);
+      const status = $('metaStatus');
+      if (status) { status.className = 'pill ' + d.meta.status.cls; status.textContent = d.meta.status.text; }
+
+      // filter chips
+      setHTML('fyLabel', fy);
+      setHTML('periodLabel', d.meta.periodChip);
+
+      // KPIs
+      const k = d.kpis;
+      ['earn','vend','sa','avg','margin','comp'].forEach(key => {
+        const def = k[key];
+        setHTML('kpi' + cap(key), def.v);
+        const dEl = $('kpi' + cap(key) + 'Delta');
+        if (dEl) { dEl.className = 'delta ' + def.deltaCls; dEl.innerHTML = def.delta; if (key === 'comp' && def.deltaCls === 'amber') dEl.style.color = 'var(--sf-amber)'; else if (dEl.style) dEl.style.color = ''; }
+        setHTML('kpi' + cap(key) + 'Tgt', def.tgt);
+        setWidth('kpi' + cap(key) + 'Bar', def.bar);
+      });
+      // Comp gauge mirror
+      setHTML('compSub', k.comp.compSub);
+      setHTML('compGaugeVal', k.comp.v);
+      setHTML('compGaugeLbl', k.comp.compLbl);
+      const compNeedle = $('compNeedle'); if (compNeedle) compNeedle.style.setProperty('--angle', k.comp.compAngle + 'deg');
+
+      // Employment Mix
+      setHTML('empTotal', d.emp.total);
+      setHTML('empVend', d.emp.vend);
+      setHTML('empVendPct', d.emp.vendPct);
+      setHTML('empOpd', d.emp.opd);
+      setHTML('empOpdPct', d.emp.opdPct);
+      const ed = $('empDonut');
+      if (ed) ed.style.background = `conic-gradient(var(--sf-blue) 0% ${d.emp.donutBlue}%, var(--sf-purple) ${d.emp.donutBlue}% 100%)`;
+
+      // Avg gauge
+      setHTML('avgGaugeVal', d.avgGauge.val);
+      setHTML('avgGaugeLbl', d.avgGauge.lbl);
+      const an = $('avgNeedle'); if (an) an.style.setProperty('--angle', d.avgGauge.angle + 'deg');
+
+      // Facilities
+      setHTML('facEoy', d.fac.eoy);
+      setHTML('facEoyHdr', d.fac.eoy);
+      setHTML('facFed', d.fac.fed); setHTML('facFedPct', d.fac.fedPct);
+      setHTML('facPub', d.fac.pub); setHTML('facPubPct', d.fac.pubPct);
+      setHTML('facPriv', d.fac.priv); setHTML('facPrivPct', d.fac.privPct);
+      const fd = $('facDonut');
+      if (fd) fd.style.background = `conic-gradient(var(--sf-blue) 0% ${d.fac.fedBlue}%, var(--sf-purple) ${d.fac.fedBlue}% ${d.fac.pubPurple}%, var(--sf-teal) ${d.fac.pubPurple}% 100%)`;
+
+      // Facility movement table
+      const tbl = $('facMoveTbl');
+      if (tbl) {
+        ['fed','pub','priv'].forEach(cls => {
+          const row = tbl.querySelector(`tr[data-cls="${cls}"]`);
+          if (!row) return;
+          const cells = row.querySelectorAll('td');
+          const m = d.fac.move[cls];
+          cells[1].textContent = m[0];
+          cells[2].textContent = m[1];
+          cells[3].textContent = m[2];
+          cells[4].innerHTML = `<strong>${m[3]}</strong>`;
+        });
+      }
+      setHTML('facMoveYoY', d.fac.yoy);
+
+      // Cafeteria total
+      setHTML('cafTotal', d.caf.total);
+
+      // Highway
+      setHTML('hwyLoc', d.hwy.loc);
+      setHTML('hwyRec', d.hwy.rec);
+      setHTML('hwyRecLbl', d.hwy.recLbl);
+      setHTML('hwyVo', d.hwy.vo);
+      setHTML('hwyTp', d.hwy.tp);
+      setWidth('hwyVoFill', d.hwy.voPct);
+      setWidth('hwyTpFill', d.hwy.tpPct);
+
+      // Set-Aside trend footer
+      setHTML('saYtd', d.sa12.ytd);
+      setHTML('saPlan', d.sa12.plan);
+      const sd = $('saDelta'); if (sd) { sd.className = 'pill ' + d.sa12.deltaCls; sd.textContent = d.sa12.delta; }
+
+      // Funding source title
+      setHTML('fundFy', d.fund.fy);
+      setHTML('fundTotal', d.fund.total);
+      setHTML('fundTotalHdr', d.fund.total);
+
+      // Section status table
+      const ss = $('sectionStatus');
+      if (ss) {
+        const tbody = ss.querySelector('tbody');
+        tbody.innerHTML = d.secStatus.map(r =>
+          `<tr><td>${r[0]}</td><td><span class="pill ${r[1]}">${r[2]}</span></td><td class="num">${r[3]}</td></tr>`
+        ).join('');
+      }
+
+      // Einstein narrative
+      const ep = $('einsteinPanel');
+      if (ep) {
+        const bgMap = { blue:'#eaf5fe', green:'#ddf3e4', amber:'#fef0c3', red:'#feded8' };
+        const colorMap = { blue:'var(--sf-blue)', green:'var(--sf-green)', amber:'var(--sf-amber)', red:'var(--sf-red)' };
+        const titleMap = { blue:'var(--sf-blue-deep)', green:'var(--sf-green)', amber:'var(--sf-amber)', red:'var(--sf-red)' };
+        ep.innerHTML = d.einstein.map(item =>
+          `<div style="padding:10px 12px; background:${bgMap[item.cls]}; border-left:3px solid ${colorMap[item.cls]}; border-radius:3px;">
+            <strong style="color:${titleMap[item.cls]}">${item.title}</strong> ${item.html}
+          </div>`
+        ).join('');
+      }
+    }
+    function cap(s) { return s.charAt(0).toUpperCase() + s.slice(1); }
+
+    // ── Fiscal Year dropdown wiring ──
+    (function () {
+      const chip = $('fyChip');
+      if (!chip) return;
+      const menu = chip.querySelector('.chip-menu');
+
+      chip.addEventListener('click', (e) => {
+        e.stopPropagation();
+        const opt = e.target.closest('[role="option"]');
+        if (opt) {
+          const fy = opt.dataset.fy;
+          menu.querySelectorAll('[role="option"]').forEach(o => o.setAttribute('aria-selected', o === opt ? 'true' : 'false'));
+          chip.classList.remove('open');
+          chip.setAttribute('aria-expanded', 'false');
+          applyFY(fy);
+          return;
+        }
+        chip.classList.toggle('open');
+        chip.setAttribute('aria-expanded', chip.classList.contains('open') ? 'true' : 'false');
+      });
+
+      document.addEventListener('click', () => {
+        chip.classList.remove('open');
+        chip.setAttribute('aria-expanded', 'false');
+      });
+
+      chip.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape') { chip.classList.remove('open'); chip.setAttribute('aria-expanded', 'false'); }
+      });
+    })();
+
+    // Other chips: simple toggle
+    (function () {
+      document.querySelectorAll('.chip:not(.chip-dd)').forEach(c => {
+        c.addEventListener('click', () => c.classList.toggle('active'));
+      });
+    })();
+  </script>
+</body>
+</html>
