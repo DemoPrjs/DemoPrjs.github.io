@@ -420,8 +420,8 @@ nav{background:var(--navy);position:sticky;top:0;z-index:300;border-bottom:3px s
         <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z"/></svg>
         Cancellation Policy
       </div>
-      <div class="cc-row"><svg viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg>Free cancellation until <strong>Tuesday, June 10, 2026</strong> (72 hours before check-in)</div>
-      <div class="cc-row"><svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z"/></svg>After June 10 — first night's rate ($89) will be charged as a cancellation fee</div>
+      <div class="cc-row"><svg viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg>Free cancellation until <strong id="cf-cancel-deadline">Tuesday, June 10, 2026</strong> (72 hours before check-in)</div>
+      <div class="cc-row"><svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z"/></svg>After <span id="cf-cancel-short">June 10</span> — first night's rate ($89) will be charged as a cancellation fee</div>
       <div class="cc-row"><svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z"/></svg>No-show — full reservation amount will be charged</div>
     </div>
 
@@ -532,6 +532,14 @@ nav{background:var(--navy);position:sticky;top:0;z-index:300;border-bottom:3px s
       if (isNaN(d.getTime())) return iso;
       return d.toLocaleDateString('en-US',{weekday:'long',month:'long',day:'numeric',year:'numeric'});
     }
+    function fmtLongDate(d){
+      if (!(d instanceof Date) || isNaN(d.getTime())) return '';
+      return d.toLocaleDateString('en-US',{weekday:'long',month:'long',day:'numeric',year:'numeric'});
+    }
+    function fmtMonthDayDate(d){
+      if (!(d instanceof Date) || isNaN(d.getTime())) return '';
+      return d.toLocaleDateString('en-US',{month:'long',day:'numeric'});
+    }
     function fmtMoney(n){
       return '$' + n.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ',');
     }
@@ -540,13 +548,20 @@ nav{background:var(--navy);position:sticky;top:0;z-index:300;border-bottom:3px s
     if (roomMeta) setText('cf-room-meta', roomMeta);
 
     var nights = null;
-    if (start && end) {
-      var d1 = new Date(start + 'T00:00:00');
-      var d2 = new Date(end + 'T00:00:00');
-      if (!isNaN(d1) && !isNaN(d2)) {
-        nights = Math.max(1, Math.round((d2 - d1) / 86400000));
-      }
+    var d1 = start ? new Date(start + 'T00:00:00') : null;
+    var d2 = end ? new Date(end + 'T00:00:00') : null;
+
+    if (d1 && !isNaN(d1.getTime())) {
       setText('cf-checkin', fmtLong(start));
+
+      var cancelBy = new Date(d1);
+      cancelBy.setDate(cancelBy.getDate() - 3);
+      setText('cf-cancel-deadline', fmtLongDate(cancelBy));
+      setText('cf-cancel-short', fmtMonthDayDate(cancelBy));
+    }
+
+    if (d1 && d2 && !isNaN(d1.getTime()) && !isNaN(d2.getTime())) {
+      nights = Math.max(1, Math.round((d2 - d1) / 86400000));
       setText('cf-checkout', fmtLong(end));
     }
     if (nights != null) setText('cf-duration', nights + ' night' + (nights === 1 ? '' : 's'));
