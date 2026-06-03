@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8"/>
-<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1"/>
 <title>Gov360 | DoD MWR Self-Service Reservation Portal</title>
 <link rel="preconnect" href="https://fonts.googleapis.com"/>
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
@@ -195,6 +195,27 @@ footer{background:var(--navy);border-top:3px solid var(--red)}
 </style>
 </head>
 <body>
+<script type='text/javascript'>
+	function initEmbeddedMessaging() {
+    //alert('Hello! I am your AI assistant. How can I help you with your MWR reservations today?');
+		try {
+			embeddedservice_bootstrap.settings.language = 'en_US'; // For example, enter 'en' or 'en-US'
+
+			embeddedservice_bootstrap.init(
+				'00DDR000000qG7K',
+				'NWD_AI_Service_Agent',
+				'https://nwdemcm--dod.sandbox.my.site.com/ESWNWDAIServiceAgent1754308741530',
+				{
+					scrt2URL: 'https://nwdemcm--dod.sandbox.my.salesforce-scrt.com'
+				}
+			);
+		} catch (err) {
+      //alert('Error loading Embedded Messaging: ', err);
+			console.error('Error loading Embedded Messaging: ', err);
+		}
+	};
+</script>
+<script type='text/javascript' src='https://nwdemcm--dod.sandbox.my.site.com/ESWNWDAIServiceAgent1754308741530/assets/js/bootstrap.min.js' onload='initEmbeddedMessaging()'></script>
 
 <!-- NAV -->
 <nav>
@@ -429,7 +450,7 @@ footer{background:var(--navy);border-top:3px solid var(--red)}
 <!-- FLOAT CHAT -->
 <div class="float">
   <div class="float-tip">AI Assistant</div>
-  <button class="float-btn">
+  <button class="float-btn" onclick="initEmbeddedMessaging()">
     <svg viewBox="0 0 24 24"><path d="M20 2H4c-1.1 0-2 .9-2 2v18l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2z"/></svg>
   </button>
 </div>
