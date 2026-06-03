@@ -214,6 +214,13 @@ footer{background:var(--navy);border-top:3px solid var(--red)}
 			console.error('Error loading Embedded Messaging: ', err);
 		}
 	};
+	function openCustomChat() {
+		if (typeof embeddedservice_bootstrap !== 'undefined' && embeddedservice_bootstrap.utilAPI) {
+			embeddedservice_bootstrap.utilAPI.launchChat();
+		} else {
+			alert('Chat is still initializing. Please try again in a moment.');
+		}
+	}
 </script>
 <script type='text/javascript' src='https://nwdemcm--dod.sandbox.my.site.com/ESWNWDAIServiceAgent1754308741530/assets/js/bootstrap.min.js' onload='initEmbeddedMessaging()'></script>
 
@@ -450,7 +457,7 @@ footer{background:var(--navy);border-top:3px solid var(--red)}
 <!-- FLOAT CHAT -->
 <div class="float">
   <div class="float-tip">AI Assistant</div>
-  <button class="float-btn" onclick="initEmbeddedMessaging()">
+  <button class="float-btn" onclick="openCustomChat()">
     <svg viewBox="0 0 24 24"><path d="M20 2H4c-1.1 0-2 .9-2 2v18l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2z"/></svg>
   </button>
 </div>
