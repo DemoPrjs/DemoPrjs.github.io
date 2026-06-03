@@ -196,29 +196,48 @@ footer{background:var(--navy);border-top:3px solid var(--red)}
 </head>
 <body>
 <script type='text/javascript'>
+	// Create a flag to track if Salesforce APIs are fully ready
+	let isChatReady = false;
+
 	function initEmbeddedMessaging() {
-    //alert('Hello! I am your AI assistant. How can I help you with your MWR reservations today?');
 		try {
-			embeddedservice_bootstrap.settings.language = 'en_US'; // For example, enter 'en' or 'en-US'
+			if (typeof embeddedservice_bootstrap === 'undefined') {
+				console.warn('Salesforce bootstrap script file missing.');
+				return;
+			}
+
+			embeddedservice_bootstrap.settings.language = 'en_US'; 
+
+			// Add an event listener that triggers ONLY when APIs are fully operational
+			window.addEventListener("onEmbeddedMessagingReady", () => {
+				console.log("Salesforce Chat API is fully ready!");
+				isChatReady = true;
+				
+				// Optional: Automatically hide the default Salesforce button if you only want yours
+				if(embeddedservice_bootstrap.utilAPI) {
+					embeddedservice_bootstrap.utilAPI.hideChatButton();
+				}
+			});
 
 			embeddedservice_bootstrap.init(
 				'00DDR000000qG7K',
 				'NWD_AI_Service_Agent',
-				'https://nwdemcm--dod.sandbox.my.site.com/ESWNWDAIServiceAgent1754308741530',
+				'https://site.com',
 				{
-					scrt2URL: 'https://nwdemcm--dod.sandbox.my.salesforce-scrt.com'
+					scrt2URL: 'https://salesforce-scrt.com'
 				}
 			);
 		} catch (err) {
-      //alert('Error loading Embedded Messaging: ', err);
 			console.error('Error loading Embedded Messaging: ', err);
 		}
 	};
+
+	// Handled exclusively by the flag now
 	function openCustomChat() {
-		if (typeof embeddedservice_bootstrap !== 'undefined' && embeddedservice_bootstrap.utilAPI) {
-			embeddedservice_bootstrap.utilAPI.launchChat();
+		if (isChatReady && embeddedservice_bootstrap.utilAPI) {
+			embeddedservice_bootstrap.utilAPI.launchChat(); //
 		} else {
-			alert('Chat is still initializing. Please try again in a moment.');
+			alert('Chat is still establishing connection with Salesforce. Please wait a few seconds.');
 		}
 	}
 </script>
