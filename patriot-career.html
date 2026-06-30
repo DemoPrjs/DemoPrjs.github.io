@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>Project Patriot Pipeline | Your Mission. Your Career. Your Future.</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600;700&family=Roboto:wght@400;500;700&family=Roboto+Slab:wght@400;500;600;700&display=swap" rel="stylesheet"/>
+
+<!-- Primary design system -->
+<link rel="stylesheet" href="site.css"/>
+
+<style>
+/* ── Custom overrides: only for elements not covered by site.css ── */
+
+/* PATH TILES wrapper */
+.pp-paths-section {
+  background: var(--pp-white);
+  padding: 64px 0;
+}
+
+
+</style>
+</head>
+<body>
+
+
+<!-- ══════════════════════════════════════════════
+     BRAND HEADER
+     ══════════════════════════════════════════════ -->
+<header class="pp-header">
+  <div class="container">
+    <div class="pp-header-inner pp-header-inner-centered">
+      <a href="index.html" class="pp-brand-final">
+        <img
+          class="pp-brand-final-logo"
+          src="https://www.mypatriotcareer.mil/images/logo/ProjectPatriotPipeline.png"
+          alt="Project Patriot Pipeline — Department of War"
+        />
+      </a>
+    </div>
+  </div>
+</header>
+
+<!-- ══════════════════════════════════════════════
+     HOME HERO
+     ══════════════════════════════════════════════ -->
+<section class="pp-home">
+  <div class="container">
+    <div class="pp-home-hero">
+      <h1 class="pp-home-title">Your Mission. Your Career. Your Future.</h1>
+      <p class="pp-home-subtitle">Project Patriot Pipeline connects Service Members, Military Spouses, and Civilians to career development programs and opportunities.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════════
+     THREE PATH TILES
+     ══════════════════════════════════════════════ -->
+<section class="pp-paths-section">
+  <div class="container">
+    <div class="pp-paths">
+
+      <!-- Service Member -->
+      <div class="pp-path-card">
+        <div class="pp-path-bar pp-path-bar-navy"></div>
+        <div class="pp-path-inner">
+          <h2 class="pp-path-title">Service Member Path</h2>
+          <img
+            class="pp-path-image"
+            src="https://images.unsplash.com/photo-1630534658718-395efda906cb?w=600&h=240&fit=crop&q=80&auto=format"
+            alt="Service member in military uniform"
+          />
+          <p class="pp-path-copy">Connect to career development, advancement, and transition opportunities.</p>
+          <div class="pp-path-cta-wrap">
+            <a href="service-member-path.html" class="pp-btn-outline pp-btn-outline-navy">Learn More</a>
+          </div>
+        </div>
+      </div>
+
+      <!-- Military Spouse -->
+      <div class="pp-path-card">
+        <div class="pp-path-bar pp-path-bar-red"></div>
+        <div class="pp-path-inner">
+          <h2 class="pp-path-title">Military Spouse Path</h2>
+          <img
+            class="pp-path-image"
+            src="https://plus.unsplash.com/premium_photo-1675133719062-b3ede7975904?w=600&h=240&fit=crop&q=80&auto=format"
+            alt="Military spouse and child"
+          />
+          <p class="pp-path-copy">Build a meaningful career that grows with your family's military journey.</p>
+          <div class="pp-path-cta-wrap">
+            <a href="#" class="pp-btn-outline pp-btn-outline-red" onclick="openExternalWarning('https://spouseworks.militaryonesource.mil/portal/'); return false;">Learn More</a>
+          </div>
+        </div>
+      </div>
+
+      <!-- Federal Civilian -->
+      <div class="pp-path-card">
+        <div class="pp-path-bar pp-path-bar-blue"></div>
+        <div class="pp-path-inner">
+          <h2 class="pp-path-title">Federal Civilian Path</h2>
+          <img
+            class="pp-path-image"
+            src="https://plus.unsplash.com/premium_photo-1682125707803-f985bb8d8b6a?w=600&h=240&fit=crop&q=80&auto=format"
+            alt="Federal civilian worker with American flag"
+          />
+          <p class="pp-path-copy">Forge your career in the civilian workforce and rebuild the next era of national defense.</p>
+          <div class="pp-path-cta-wrap">
+            <a href="federal-civilian-path.html" class="pp-btn-outline pp-btn-outline-blue">Learn More</a>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════════
+     ABOUT SECTION
+     ══════════════════════════════════════════════ -->
+<section class="pp-about-section">
+  <div class="container">
+    <h2 class="pp-about-heading">What is Project Patriot Pipeline?</h2>
+    <div class="pp-about-box">
+      <h3 class="pp-about-box-title">A Direct Path to Mission-Critical Careers</h3>
+      <p class="pp-about-box-copy">
+        Project Patriot Pipeline highlights the Department of War's premier talent acquisition and development programs. These programs provide opportunities through direct hiring, comprehensive career guidance, and upskilling, to ensure that the dedication and experience of our Service Members, Military Spouses, and Federal Civilians are channeled into roles where they can make the greatest impact. There is support to help you maximize your potential and ensure a successful transition into your next critical career.
+      </p>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════════
+     FOOTER
+     ══════════════════════════════════════════════ -->
+<footer class="pp-footer">
+  <div class="container">
+    <div class="pp-footer-inner">
+      <nav class="pp-footer-links">
+        <a href="https://www.dantes.mil/privacy-policy/" class="pp-footer-link">Privacy &amp; Security</a>
+        <span class="pp-footer-separator">|</span>
+        <a href="https://dodcio.defense.gov/DoD-Web-Policy/" class="pp-footer-link">Terms of Use</a>
+        <span class="pp-footer-separator">|</span>
+        <a href="https://dodcio.defense.gov/508/" class="pp-footer-link">Accessibility</a>
+        <span class="pp-footer-separator">|</span>
+        <a href="https://www.war.gov/Legal-Administrative/Links-Disclaimer/" class="pp-footer-link">Disclaimer</a>
+      </nav>
+      <div class="pp-footer-logos">
+        <a href="https://www.veteranscrisisline.net/" target="_blank" rel="noopener">
+          <img class="pp-footer-vcl" src="https://www.mypatriotcareer.mil/images/logo/veterans-crisis-line.png" alt="Veterans Crisis Line"/>
+        </a>
+        <a href="https://www.war.gov/" target="_blank" rel="noopener">
+          <img class="pp-footer-seal" src="https://www.mypatriotcareer.mil/images/logo/seal.png" alt="Department of War Seal"/>
+        </a>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<!-- ══════════════════════════════════════════════
+     EXTERNAL LINK WARNING MODAL
+     ══════════════════════════════════════════════ -->
+<div id="external-warning-overlay" role="dialog" aria-modal="true" aria-labelledby="modal-title" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,0.55); z-index:9999; align-items:center; justify-content:center;">
+  <div style="background:#fff; max-width:480px; width:calc(100% - 40px); padding:36px 32px 28px 32px; box-shadow:0 8px 32px rgba(0,0,0,0.22);">
+    <div style="width:100%; height:6px; background:var(--pp-red); margin-bottom:24px;"></div>
+    <h2 id="modal-title" style="margin:0 0 16px 0; font-family:var(--pp-font-heading); font-size:28px; font-weight:600; color:var(--pp-navy); line-height:1.2;">Leaving Project Patriot Pipeline</h2>
+    <p style="margin:0 0 28px 0; font-family:var(--pp-font-body); font-size:16px; color:var(--pp-black); line-height:1.55;">You are about to leave the Project Patriot Pipeline website and visit an external site.</p>
+    <div style="display:flex; gap:14px; justify-content:flex-end;">
+      <button onclick="closeExternalWarning()" style="height:44px; padding:0 24px; background:#fff; border:2px solid var(--pp-navy); color:var(--pp-navy); font-family:var(--pp-font-ui); font-size:14px; font-weight:700; letter-spacing:0.04em; text-transform:uppercase; cursor:pointer;">Go Back</button>
+      <button id="modal-proceed-btn" onclick="proceedToExternal()" style="height:44px; padding:0 24px; background:var(--pp-red); border:2px solid var(--pp-red); color:#fff; font-family:var(--pp-font-ui); font-size:14px; font-weight:700; letter-spacing:0.04em; text-transform:uppercase; cursor:pointer;">Proceed</button>
+    </div>
+  </div>
+</div>
+
+<script>
+  var _externalUrl = '';
+
+  function openExternalWarning(url) {
+    _externalUrl = url;
+    var overlay = document.getElementById('external-warning-overlay');
+    overlay.style.display = 'flex';
+    document.getElementById('modal-proceed-btn').focus();
+  }
+
+  function closeExternalWarning() {
+    document.getElementById('external-warning-overlay').style.display = 'none';
+    _externalUrl = '';
+  }
+
+  function proceedToExternal() {
+    if (_externalUrl) {
+      window.open(_externalUrl, '_blank', 'noopener,noreferrer');
+    }
+    closeExternalWarning();
+  }
+
+  document.getElementById('external-warning-overlay').addEventListener('click', function(e) {
+    if (e.target === this) closeExternalWarning();
+  });
+
+  document.addEventListener('keydown', function(e) {
+    if (e.key === 'Escape') closeExternalWarning();
+  });
+</script>
+
+</body>
+</html>
