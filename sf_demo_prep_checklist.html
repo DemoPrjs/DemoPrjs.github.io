@@ -1129,8 +1129,29 @@
     setTimeout(() => t.classList.remove('show'), 2800);
   }
 
+  /* ── SCROLL SPY ── */
+  const sectionIds = ['sec-prelim','sec-fe','sec-be','sec-dev','sec-backup','sec-deck','sec-qs','sec-post'];
+
+  function updateActiveNav() {
+    const scrollY = window.scrollY + 120; // offset so active triggers a bit before reaching top
+    let current = sectionIds[0];
+
+    sectionIds.forEach(id => {
+      const el = document.getElementById(id);
+      if (el && el.offsetTop <= scrollY) current = id;
+    });
+
+    document.querySelectorAll('.nav-item').forEach(n => {
+      const target = n.getAttribute('href')?.replace('#','');
+      n.classList.toggle('active', target === current);
+    });
+  }
+
+  window.addEventListener('scroll', updateActiveNav, { passive: true });
+
   // Init
   updateProgress();
+  updateActiveNav();
 </script>
 </body>
 </html>
