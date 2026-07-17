@@ -1,0 +1,1136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Salesforce Demo Prep Checklist</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap');
+
+    :root {
+      --bg-base:        #0d1117;
+      --bg-card:        #161b22;
+      --bg-card-hover:  #1c2333;
+      --bg-section:     #1a2234;
+      --border:         #30363d;
+      --border-accent:  #21262d;
+      --sf-blue:        #00a1e0;
+      --sf-blue-dim:    #0077b600;
+      --sf-teal:        #06b6d4;
+      --sf-purple:      #7c5cbf;
+      --sf-green:       #22c55e;
+      --sf-amber:       #f59e0b;
+      --sf-red:         #ef4444;
+      --sf-muted:       #8b949e;
+      --text-primary:   #e6edf3;
+      --text-secondary: #8b949e;
+      --text-label:     #58a6ff;
+      --check-bg:       #0d2137;
+      --check-done:     #0a3a1a;
+      --radius-sm:      6px;
+      --radius-md:      10px;
+      --radius-lg:      16px;
+      --shadow:         0 4px 20px rgba(0,0,0,0.5);
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Inter', system-ui, sans-serif;
+      background: var(--bg-base);
+      color: var(--text-primary);
+      min-height: 100vh;
+      line-height: 1.6;
+    }
+
+    /* ── TOP BANNER ── */
+    .banner {
+      background: linear-gradient(135deg, #0f2540 0%, #0a1628 60%, #0d1a33 100%);
+      border-bottom: 1px solid var(--border);
+      padding: 28px 40px 24px;
+      position: relative;
+      overflow: hidden;
+    }
+    .banner::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(ellipse 60% 100% at 90% 50%, rgba(0,161,224,0.08) 0%, transparent 70%);
+      pointer-events: none;
+    }
+    .banner-inner {
+      max-width: 1100px;
+      margin: 0 auto;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 20px;
+      flex-wrap: wrap;
+    }
+    .banner-left { display: flex; align-items: center; gap: 16px; }
+    .sf-logo {
+      width: 40px; height: 40px;
+      background: linear-gradient(135deg, var(--sf-blue), var(--sf-teal));
+      border-radius: 10px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 20px; flex-shrink: 0;
+    }
+    .banner h1 { font-size: 1.4rem; font-weight: 700; letter-spacing: -0.02em; color: var(--text-primary); }
+    .banner p { font-size: 0.82rem; color: var(--text-secondary); margin-top: 2px; }
+    .badge {
+      display: inline-flex; align-items: center; gap: 6px;
+      background: rgba(0,161,224,0.12); border: 1px solid rgba(0,161,224,0.25);
+      color: var(--sf-blue); font-size: 0.72rem; font-weight: 600;
+      padding: 5px 12px; border-radius: 20px; white-space: nowrap;
+    }
+    .badge::before { content: '●'; font-size: 8px; }
+
+    /* ── PROGRESS BAR ── */
+    .progress-bar-wrap {
+      max-width: 1100px; margin: 0 auto; padding: 18px 40px 0;
+    }
+    .progress-meta {
+      display: flex; justify-content: space-between;
+      font-size: 0.78rem; color: var(--text-secondary); margin-bottom: 8px;
+    }
+    .progress-meta strong { color: var(--sf-blue); font-family: 'JetBrains Mono', monospace; font-size: 0.85rem; }
+    .progress-track {
+      height: 6px; background: var(--bg-card); border-radius: 10px; overflow: hidden;
+    }
+    .progress-fill {
+      height: 100%; border-radius: 10px;
+      background: linear-gradient(90deg, var(--sf-blue), var(--sf-teal));
+      transition: width 0.5s ease;
+      width: 0%;
+    }
+
+    /* ── LAYOUT ── */
+    .main {
+      max-width: 1100px; margin: 0 auto; padding: 32px 40px 60px;
+      display: flex; gap: 28px; align-items: flex-start;
+    }
+
+    /* ── SIDEBAR NAV ── */
+    .sidebar {
+      width: 220px; flex-shrink: 0; position: sticky; top: 24px;
+    }
+    .sidebar-label {
+      font-size: 0.68rem; font-weight: 600; letter-spacing: 0.12em;
+      text-transform: uppercase; color: var(--text-secondary);
+      margin-bottom: 12px; padding-left: 4px;
+    }
+    .nav-item {
+      display: flex; align-items: center; gap: 10px;
+      padding: 9px 12px; border-radius: var(--radius-sm);
+      font-size: 0.82rem; color: var(--text-secondary);
+      cursor: pointer; transition: all 0.15s ease;
+      text-decoration: none; border: none; background: none;
+      width: 100%; text-align: left; user-select: none;
+    }
+    .nav-item:hover { background: var(--bg-card); color: var(--text-primary); }
+    .nav-item.active { background: var(--check-bg); color: var(--sf-blue); font-weight: 500; }
+    .nav-dot {
+      width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0;
+      background: var(--border);
+    }
+    .nav-item.active .nav-dot { background: var(--sf-blue); }
+    .nav-divider { height: 1px; background: var(--border-accent); margin: 8px 0; }
+
+    /* ── CONTENT ── */
+    .content { flex: 1; min-width: 0; }
+
+    /* ── SECTION ── */
+    .section {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      margin-bottom: 24px;
+      overflow: hidden;
+      scroll-margin-top: 24px;
+    }
+    .section-header {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 20px 24px; cursor: pointer;
+      border-bottom: 1px solid var(--border);
+      gap: 12px;
+    }
+    .section-header-left { display: flex; align-items: center; gap: 14px; }
+    .section-icon {
+      width: 36px; height: 36px; border-radius: var(--radius-sm);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 17px; flex-shrink: 0;
+    }
+    .section-title { font-size: 1rem; font-weight: 600; }
+    .section-subtitle { font-size: 0.78rem; color: var(--text-secondary); margin-top: 2px; }
+    .section-chevron {
+      color: var(--text-secondary); font-size: 14px; flex-shrink: 0;
+      transition: transform 0.2s ease;
+    }
+    .section.collapsed .section-chevron { transform: rotate(-90deg); }
+    .section-progress-badge {
+      display: flex; align-items: center; gap: 6px;
+      font-size: 0.75rem; font-family: 'JetBrains Mono', monospace;
+      color: var(--text-secondary); flex-shrink: 0;
+    }
+    .section-body { padding: 0; }
+    .section.collapsed .section-body { display: none; }
+
+    /* ── SUB-SECTIONS ── */
+    .subsection { border-bottom: 1px solid var(--border-accent); }
+    .subsection:last-child { border-bottom: none; }
+    .subsection-header {
+      padding: 14px 24px 10px;
+      font-size: 0.78rem; font-weight: 600; letter-spacing: 0.08em;
+      text-transform: uppercase; color: var(--text-secondary);
+      display: flex; align-items: center; gap: 8px;
+    }
+    .subsection-tag {
+      font-size: 0.65rem; padding: 2px 8px; border-radius: 10px;
+      font-weight: 600; letter-spacing: 0.05em; text-transform: uppercase;
+    }
+
+    /* ── CHECKLIST ITEM ── */
+    .check-item {
+      display: flex; align-items: flex-start; gap: 12px;
+      padding: 11px 24px;
+      transition: background 0.12s ease;
+      cursor: pointer;
+    }
+    .check-item:hover { background: var(--bg-card-hover); }
+    .check-item.done { background: var(--check-done); }
+    .check-item.done .check-label { color: var(--text-secondary); text-decoration: line-through; text-decoration-color: rgba(139,148,158,0.4); }
+
+    .checkbox {
+      width: 18px; height: 18px; border-radius: 4px; flex-shrink: 0;
+      border: 1.5px solid var(--border); background: transparent;
+      display: flex; align-items: center; justify-content: center;
+      transition: all 0.15s ease; margin-top: 2px;
+    }
+    .check-item.done .checkbox {
+      background: var(--sf-green); border-color: var(--sf-green);
+    }
+    .checkbox svg { display: none; }
+    .check-item.done .checkbox svg { display: block; }
+
+    .check-label { font-size: 0.875rem; color: var(--text-primary); flex: 1; }
+    .check-tag {
+      display: inline-block; margin-top: 4px; font-size: 0.68rem;
+      padding: 2px 7px; border-radius: 8px; font-weight: 500;
+    }
+
+    /* ── QUESTION TABLE ── */
+    .q-table { width: 100%; border-collapse: collapse; }
+    .q-table th {
+      padding: 10px 16px; font-size: 0.7rem; font-weight: 600; text-transform: uppercase;
+      letter-spacing: 0.08em; color: var(--text-secondary);
+      background: var(--bg-section); text-align: left;
+      border-bottom: 1px solid var(--border);
+    }
+    .q-table td {
+      padding: 12px 16px; font-size: 0.83rem; border-bottom: 1px solid var(--border-accent);
+      vertical-align: top;
+    }
+    .q-table tr:last-child td { border-bottom: none; }
+    .q-table tr:hover td { background: var(--bg-card-hover); }
+    .q-num {
+      font-family: 'JetBrains Mono', monospace; font-size: 0.72rem;
+      color: var(--text-secondary); width: 40px; padding-left: 24px !important;
+    }
+    .q-text { color: var(--text-primary); }
+    .cat-badge {
+      display: inline-flex; align-items: center; font-size: 0.7rem; font-weight: 600;
+      padding: 3px 10px; border-radius: 20px; white-space: nowrap;
+    }
+    .q-owner-cell { width: 100px; }
+
+    /* ── FEEDBACK SECTION ── */
+    .feedback-grid {
+      display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px;
+      padding: 20px 24px;
+    }
+    .feedback-card {
+      background: var(--bg-section); border: 1px solid var(--border);
+      border-radius: var(--radius-md); padding: 16px;
+    }
+    .feedback-card-header {
+      display: flex; align-items: center; gap: 8px; margin-bottom: 10px;
+    }
+    .feedback-icon { font-size: 18px; }
+    .feedback-card-title { font-size: 0.82rem; font-weight: 600; }
+    .feedback-textarea {
+      width: 100%; background: var(--bg-base); border: 1px solid var(--border);
+      border-radius: var(--radius-sm); color: var(--text-primary);
+      font-family: 'Inter', sans-serif; font-size: 0.82rem; line-height: 1.5;
+      padding: 10px 12px; resize: vertical; min-height: 110px;
+      transition: border-color 0.15s ease; outline: none;
+    }
+    .feedback-textarea::placeholder { color: var(--text-secondary); }
+    .feedback-textarea:focus { border-color: var(--sf-blue); }
+
+    /* ── PRELIM QUESTIONS ── */
+    .prelim-grid {
+      display: grid; grid-template-columns: 1fr 1fr; gap: 12px;
+      padding: 20px 24px;
+    }
+    .prelim-card {
+      background: var(--bg-section); border: 1px solid var(--border);
+      border-radius: var(--radius-md); padding: 14px 16px;
+      display: flex; align-items: flex-start; gap: 12px;
+    }
+    .prelim-q-num {
+      font-family: 'JetBrains Mono', monospace; font-size: 0.7rem;
+      color: var(--sf-blue); font-weight: 600; flex-shrink: 0; margin-top: 2px;
+    }
+    .prelim-q-text { font-size: 0.85rem; color: var(--text-primary); flex: 1; }
+    .prelim-input {
+      margin-top: 8px; width: 100%; background: var(--bg-base);
+      border: 1px solid var(--border); border-radius: var(--radius-sm);
+      color: var(--text-primary); font-family: 'Inter', sans-serif;
+      font-size: 0.8rem; padding: 7px 10px; outline: none;
+      transition: border-color 0.15s ease;
+    }
+    .prelim-input:focus { border-color: var(--sf-blue); }
+    input[type="date"].prelim-input::-webkit-calendar-picker-indicator {
+      filter: invert(0.6); cursor: pointer;
+    }
+    .prelim-toggle {
+      display: flex; gap: 6px; margin-top: 8px;
+    }
+    .toggle-btn {
+      padding: 4px 12px; border-radius: 6px; font-size: 0.75rem; font-weight: 500;
+      cursor: pointer; border: 1px solid var(--border); background: var(--bg-base);
+      color: var(--text-secondary); transition: all 0.15s ease;
+    }
+    .toggle-btn.selected { background: var(--sf-blue); border-color: var(--sf-blue); color: white; }
+
+    /* ── ACTION BAR ── */
+    .action-bar {
+      display: flex; justify-content: space-between; align-items: center;
+      padding: 14px 24px; background: var(--bg-section);
+      border-top: 1px solid var(--border); gap: 12px; flex-wrap: wrap;
+    }
+    .action-bar-left { font-size: 0.8rem; color: var(--text-secondary); }
+    .btn {
+      padding: 7px 18px; border-radius: var(--radius-sm); font-size: 0.82rem;
+      font-weight: 500; cursor: pointer; border: none; transition: all 0.15s ease;
+      font-family: 'Inter', sans-serif;
+    }
+    .btn-primary { background: var(--sf-blue); color: white; }
+    .btn-primary:hover { background: #008dcc; }
+    .btn-ghost {
+      background: transparent; color: var(--text-secondary);
+      border: 1px solid var(--border);
+    }
+    .btn-ghost:hover { background: var(--bg-card-hover); color: var(--text-primary); }
+
+    /* ── DECK CHECKLIST ── */
+    .deck-grid {
+      display: grid; grid-template-columns: repeat(3, 1fr); gap: 0;
+    }
+    .deck-item {
+      display: flex; align-items: center; gap: 10px;
+      padding: 14px 20px; cursor: pointer;
+      border-right: 1px solid var(--border-accent);
+      border-bottom: 1px solid var(--border-accent);
+      transition: background 0.12s ease;
+    }
+    .deck-item:hover { background: var(--bg-card-hover); }
+    .deck-item.done { background: var(--check-done); }
+    .deck-item.done .deck-label { color: var(--text-secondary); text-decoration: line-through; }
+    .deck-label { font-size: 0.85rem; }
+    .deck-item:nth-child(3n) { border-right: none; }
+
+    /* ── COLORS PER CATEGORY ── */
+    .color-fe    { background: rgba(0,161,224,0.12); color: #00a1e0; }
+    .color-be    { background: rgba(124,92,191,0.12); color: #a78bfa; }
+    .color-dev   { background: rgba(245,158,11,0.12); color: #f59e0b; }
+    .color-backup { background: rgba(239,68,68,0.12); color: #ef4444; }
+    .color-gen   { background: rgba(100,116,139,0.12); color: #94a3b8; }
+    .tag-fe      { background: rgba(0,161,224,0.12); color: #00a1e0; }
+    .tag-be      { background: rgba(124,92,191,0.12); color: #a78bfa; }
+    .tag-dev     { background: rgba(245,158,11,0.12); color: #f59e0b; }
+
+    /* ── CATEGORY COLORS FOR QUESTIONS ── */
+    .cat-dm  { background: rgba(0,161,224,0.1); color: #00a1e0; }
+    .cat-arc { background: rgba(124,92,191,0.1); color: #a78bfa; }
+    .cat-exp { background: rgba(34,197,94,0.1); color: #22c55e; }
+    .cat-ast { background: rgba(245,158,11,0.1); color: #f59e0b; }
+    .cat-stf { background: rgba(239,68,68,0.1); color: #f87171; }
+    .cat-cm  { background: rgba(6,182,212,0.1); color: #06b6d4; }
+    .cat-sch { background: rgba(251,146,60,0.1); color: #fb923c; }
+    .cat-px  { background: rgba(167,139,250,0.1); color: #c4b5fd; }
+    .cat-gen { background: rgba(100,116,139,0.1); color: #94a3b8; }
+
+    /* ── ICON COLORS ── */
+    .icon-blue   { background: rgba(0,161,224,0.12); }
+    .icon-purple { background: rgba(124,92,191,0.12); }
+    .icon-amber  { background: rgba(245,158,11,0.12); }
+    .icon-teal   { background: rgba(6,182,212,0.12); }
+    .icon-green  { background: rgba(34,197,94,0.12); }
+    .icon-red    { background: rgba(239,68,68,0.12); }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 800px) {
+      .main { flex-direction: column; padding: 20px 16px 40px; }
+      .sidebar { width: 100%; position: static; display: flex; gap: 6px; flex-wrap: wrap; }
+      .sidebar-label { display: none; }
+      .nav-item { width: auto; padding: 6px 12px; font-size: 0.75rem; }
+      .banner { padding: 20px 16px; }
+      .progress-bar-wrap { padding: 14px 16px 0; }
+      .prelim-grid { grid-template-columns: 1fr; }
+      .feedback-grid { grid-template-columns: 1fr; }
+      .deck-grid { grid-template-columns: 1fr 1fr; }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      * { transition: none !important; }
+    }
+
+    /* ── SAVE TOAST ── */
+    .toast {
+      position: fixed; bottom: 28px; right: 28px;
+      background: #1a2234; border: 1px solid var(--sf-blue);
+      color: var(--text-primary); font-size: 0.82rem; font-weight: 500;
+      padding: 12px 20px; border-radius: var(--radius-md);
+      box-shadow: var(--shadow); z-index: 999;
+      transform: translateY(12px); opacity: 0;
+      transition: all 0.25s ease; pointer-events: none;
+    }
+    .toast.show { transform: translateY(0); opacity: 1; }
+  </style>
+</head>
+<body>
+
+<!-- BANNER -->
+<div class="banner">
+  <div class="banner-inner">
+    <div class="banner-left">
+      <div class="sf-logo">⚡</div>
+      <div>
+        <h1>Salesforce Licensing &amp; Permitting Orals Demo Prep Checklist</h1>
+        <p>Pursuit Team</p>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- PROGRESS -->
+<div class="progress-bar-wrap">
+  <div class="progress-meta">
+    <span>Overall completion</span>
+    <strong id="pct-label">0%</strong>
+  </div>
+  <div class="progress-track">
+    <div class="progress-fill" id="progress-fill"></div>
+  </div>
+</div>
+
+<!-- MAIN -->
+<div class="main">
+
+  <!-- SIDEBAR -->
+  <nav class="sidebar" aria-label="Sections">
+    <a class="nav-item active" href="#sec-prelim" onclick="navScrollTo(event,'sec-prelim',this)">
+      <span class="nav-dot"></span> Preliminary Questions
+    </a>
+    <div class="nav-divider"></div>
+    <a class="nav-item" href="#sec-fe" onclick="navScrollTo(event,'sec-fe',this)">
+      <span class="nav-dot"></span> Front End
+    </a>
+    <a class="nav-item" href="#sec-be" onclick="navScrollTo(event,'sec-be',this)">
+      <span class="nav-dot"></span> Back End
+    </a>
+    <a class="nav-item" href="#sec-dev" onclick="navScrollTo(event,'sec-dev',this)">
+      <span class="nav-dot"></span> Dev &amp; Environment
+    </a>
+    <a class="nav-item" href="#sec-backup" onclick="navScrollTo(event,'sec-backup',this)">
+      <span class="nav-dot"></span> Backup Recording
+    </a>
+    <div class="nav-divider"></div>
+    <a class="nav-item" href="#sec-deck" onclick="navScrollTo(event,'sec-deck',this)">
+      <span class="nav-dot"></span> Orals Demo Deck
+    </a>
+    <div class="nav-divider"></div>
+    <a class="nav-item" href="#sec-qs" onclick="navScrollTo(event,'sec-qs',this)">
+      <span class="nav-dot"></span> Anticipated Questions
+    </a>
+    <div class="nav-divider"></div>
+    <a class="nav-item" href="#sec-post" onclick="navScrollTo(event,'sec-post',this)">
+      <span class="nav-dot"></span> Post-Orals Checklist
+    </a>
+  </nav>
+
+  <!-- CONTENT -->
+  <div class="content">
+
+    <!-- ─── SECTION 1: PRELIMINARY ─── -->
+    <div class="section" id="sec-prelim">
+      <div class="section-header" onclick="toggleSection('sec-prelim')">
+        <div class="section-header-left">
+          <div class="section-icon icon-teal">🔍</div>
+          <div>
+            <div class="section-title">Preliminary Questions</div>
+            <div class="section-subtitle">Answer these before starting any demo prep work</div>
+          </div>
+        </div>
+        <span class="section-chevron">▾</span>
+      </div>
+      <div class="section-body">
+        <div class="prelim-grid" id="prelim-grid">
+
+          <div class="prelim-card">
+            <span class="prelim-q-num">Q1</span>
+            <div style="flex:1">
+              <div class="prelim-q-text">What is the <strong>client name</strong>?</div>
+              <input type="text" class="prelim-input" placeholder="e.g. Indiana Department of Transportation..." />
+            </div>
+          </div>
+
+          <div class="prelim-card">
+            <span class="prelim-q-num">Q2</span>
+            <div style="flex:1">
+              <div class="prelim-q-text">What is the <strong>demo date</strong>?</div>
+              <input type="date" class="prelim-input" />
+            </div>
+          </div>
+
+          <div class="prelim-card">
+            <span class="prelim-q-num">Q3</span>
+            <div style="flex:1">
+              <div class="prelim-q-text">Does the demo involve <strong>Salesforce Public Sector Solutions (PSS)</strong>?</div>
+              <div class="prelim-toggle">
+                <button class="toggle-btn" onclick="selectToggle(this, 'q3')">Yes</button>
+                <button class="toggle-btn" onclick="selectToggle(this, 'q3')">No</button>
+                <button class="toggle-btn" onclick="selectToggle(this, 'q3')">TBD</button>
+              </div>
+            </div>
+          </div>
+
+          <div class="prelim-card">
+            <span class="prelim-q-num">Q4</span>
+            <div style="flex:1">
+              <div class="prelim-q-text">Does the demo include a <strong>Community Portal</strong> and a <strong>back end</strong>?</div>
+              <div class="prelim-toggle">
+                <button class="toggle-btn" onclick="selectToggle(this, 'q4')">Both</button>
+                <button class="toggle-btn" onclick="selectToggle(this, 'q4')">Portal only</button>
+                <button class="toggle-btn" onclick="selectToggle(this, 'q4')">Back end only</button>
+              </div>
+            </div>
+          </div>
+
+          <div class="prelim-card">
+            <span class="prelim-q-num">Q5</span>
+            <div style="flex:1">
+              <div class="prelim-q-text">What <strong>specific features</strong> need to be included in this demo?</div>
+              <textarea class="prelim-input" rows="3" placeholder="List features here..."></textarea>
+            </div>
+          </div>
+
+          <div class="prelim-card">
+            <span class="prelim-q-num">Q6</span>
+            <div style="flex:1">
+              <div class="prelim-q-text">How many <strong>user personas</strong> will be part of the demo?</div>
+              <input type="text" class="prelim-input" placeholder="e.g. Applicant, Case Worker, Admin..." />
+            </div>
+          </div>
+
+          <div class="prelim-card" style="grid-column: 1 / -1;">
+            <span class="prelim-q-num">Q7</span>
+            <div style="flex:1">
+              <div class="prelim-q-text">Is the client expecting <strong>configuration-first</strong> or are they open to customization?</div>
+              <div class="prelim-toggle">
+                <button class="toggle-btn" onclick="selectToggle(this, 'q7')">Config first</button>
+                <button class="toggle-btn" onclick="selectToggle(this, 'q7')">Customization OK</button>
+                <button class="toggle-btn" onclick="selectToggle(this, 'q7')">Mixed</button>
+                <button class="toggle-btn" onclick="selectToggle(this, 'q7')">TBD</button>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+    <!-- ─── SECTION 2a: FRONT END ─── -->
+    <div class="section" id="sec-fe">
+      <div class="section-header" onclick="toggleSection('sec-fe')">
+        <div class="section-header-left">
+          <div class="section-icon icon-blue">🖥️</div>
+          <div>
+            <div class="section-title">Dev Checklist — Front End</div>
+            <div class="section-subtitle">Community Portal &amp; application-facing components</div>
+          </div>
+        </div>
+        <div style="display:flex; align-items:center; gap:14px;">
+          <span class="section-progress-badge" id="prog-fe"></span>
+          <span class="section-chevron">▾</span>
+        </div>
+      </div>
+      <div class="section-body">
+        <div class="subsection">
+          <div class="subsection-header">
+            <span class="subsection-tag tag-fe">Portal Header</span>
+          </div>
+          <div class="check-item" onclick="toggleItem(this)">
+            <div class="checkbox"><svg width="10" height="8" viewBox="0 0 10 8" fill="none"><path d="M1 4L3.5 6.5L9 1" stroke="white" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+            <span class="check-label">Community portal header includes: profile menu, notifications, Contact Us link, Login/Logout, Registration with MFA</span>
+          </div>
+        </div>
+        <div class="subsection">
+          <div class="subsection-header">
+            <span class="subsection-tag tag-fe">Email Templates</span>
+          </div>
+          <div class="check-item" onclick="toggleItem(this)">
+            <div class="checkbox"><svg width="10" height="8" viewBox="0 0 10 8" fill="none"><path d="M1 4L3.5 6.5L9 1" stroke="white" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+            <span class="check-label">All email templates use a <strong>generic (non-personal) email address</strong> as the sender — no individual dev or test email addresses</span>
+          </div>
+        </div>
+        <div class="subsection">
+          <div class="subsection-header">
+            <span class="subsection-tag tag-fe">UI & Pages</span>
+          </div>
+          <div class="check-item" onclick="toggleItem(this)">
+            <div class="checkbox"><svg width="10" height="8" viewBox="0 0 10 8" fill="none"><path d="M1 4L3.5 6.5L9 1" stroke="white" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+            <span class="check-label">Landing home page has a <strong>rich, polished UI</strong> — not a bare default page</span>
+          </div>
+          <div class="check-item" onclick="toggleItem(this)">
+            <div class="checkbox"><svg width="10" height="8" viewBox="0 0 10 8" fill="none"><path d="M1 4L3.5 6.5L9 1" stroke="white" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+            <span class="check-label">Application dashboard has a rich, polished UI</span>
+          </div>
+        </div>
+        <div class="subsection">
+          <div class="subsection-header">
+            <span class="subsection-tag tag-fe">Application Dashboard</span>
+          </div>
+          <div class="check-item" onclick="toggleItem(this)">
+            <div class="checkbox"><svg width="10" height="8" viewBox="0 0 10 8" fill="none"><path d="M1 4L3.5 6.5L9 1" stroke="white" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+            <span class="check-label">Dashboard shows a <strong>pizza tracker</strong> (visual step-by-step progress indicator) for application status</span>
+          </div>
+          <div class="check-item" onclick="toggleItem(this)">
+            <div class="checkbox"><svg width="10" height="8" viewBox="0 0 10 8" fill="none"><path d="M1 4L3.5 6.5L9 1" stroke="white" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+            <span class="check-label">Dashboard includes a <strong>comments component</strong> where users and staff can communicate</span>
+          </div>
+          <div class="check-item" onclick="toggleItem(this)">
+            <div class="checkbox"><svg width="10" height="8" viewBox="0 0 10 8" fill="none"><path d="M1 4L3.5 6.5L9 1" stroke="white" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+            <span class="check-label">Users can <strong>save an application as a draft</strong> (Save for Later) and come back to finish it</span>
+          </div>
+          <div class="check-item" onclick="toggleItem(this)">
+            <div class="checkbox"><svg width="10" height="8" viewBox="0 0 10 8" fill="none"><path d="M1 4L3.5 6.5L9 1" stroke="white" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+            <span class="check-label">Application details open via a <strong>double-click on "View Details"</strong> — not a standard button click</span>
+          </div>
+          <div class="check-item" onclick="toggleItem(this)">
+            <div class="checkbox"><svg width="10" height="8" viewBox="0 0 10 8" fill="none"><path d="M1 4L3.5 6.5L9 1" stroke="white" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+            <span class="check-label">Form fields are <strong>auto-populated from uploaded documents</strong> — user should not need to re-enter data already in a file</span>
+          </div>
+        </div>
+        <div class="subsection">
+          <div class="subsection-header">
+            <span class="subsection-tag tag-fe">Data & Users</span>
+          </div>
+          <div class="check-item" onclick="toggleItem(this)">
+            <div class="checkbox"><svg width="10" height="8" viewBox="0 0 10 8" fill="none"><path d="M1 4L3.5 6.5L9 1" stroke="white" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+            <span class="check-label">All test data looks realistic — <strong>no placeholder text</strong> like "Test", "Test User", "Test Application", "ACME", etc.</span>
+          </div>
+          <div class="check-item" onclick="toggleItem(this)">
+            <div class="checkbox"><svg width="10" height="8" viewBox="0 0 10 8" fill="none"><path d="M1 4L3.5 6.5L9 1" stroke="white" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+            <span class="check-label">A <strong>dedicated demo user account</strong> is created — separate from dev and QA users to avoid data or permission conflicts</span>
+          </div>
+          <div class="check-item" onclick="toggleItem(this)">
+            <div class="checkbox"><svg width="10" height="8" viewBox="0 0 10 8" fill="none"><path d="M1 4L3.5 6.5L9 1" stroke="white" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+            <span class="check-label">Demo user has all <strong>required permissions and profile settings</strong> configured — test the user login before the demo day</span>
+          </div>
+        </div>
+        <div class="action-bar">
+          <span class="action-bar-left" id="count-fe">0 of 12 items checked</span>
+          <button class="btn btn-ghost" onclick="clearSection('sec-fe')">Clear</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ─── SECTION 2b: BACK END ─── -->
+    <div class="section" id="sec-be">
+      <div class="section-header" onclick="toggleSection('sec-be')">
+        <div class="section-header-left">
+          <div class="section-icon icon-purple">⚙️</div>
+          <div>
+            <div class="section-title">Dev Checklist — Back End</div>
+            <div class="section-subtitle">Case management, automation, reporting</div>
+          </div>
+        </div>
+        <div style="display:flex; align-items:center; gap:14px;">
+          <span class="section-progress-badge" id="prog-be"></span>
+          <span class="section-chevron">▾</span>
+        </div>
+      </div>
+      <div class="section-body">
+        <div class="check-item" onclick="toggleItem(this)">
+          <div class="checkbox"><svg width="10" height="8" viewBox="0 0 10 8" fill="none"><path d="M1 4L3.5 6.5L9 1" stroke="white" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+          <span class="check-label"><strong>Guidance for Success</strong> is configured and displayed when a case changes status — staff should see clear next-step instructions at each stage</span>
+        </div>
+        <div class="check-item" onclick="toggleItem(this)">
+          <div class="checkbox"><svg width="10" height="8" viewBox="0 0 10 8" fill="none"><path d="M1 4L3.5 6.5L9 1" stroke="white" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+          <span class="check-label"><strong>In-App Notifications</strong> are set up and working — users receive alerts inside the platform when their case moves forward</span>
+        </div>
+        <div class="check-item" onclick="toggleItem(this)">
+          <div class="checkbox"><svg width="10" height="8" viewBox="0 0 10 8" fill="none"><path d="M1 4L3.5 6.5L9 1" stroke="white" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+          <span class="check-label">Back-end <strong>pizza tracker</strong> shows the current case status visually for the staff/agent view</span>
+        </div>
+        <div class="check-item" onclick="toggleItem(this)">
+          <div class="checkbox"><svg width="10" height="8" viewBox="0 0 10 8" fill="none"><path d="M1 4L3.5 6.5L9 1" stroke="white" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+          <span class="check-label"><strong>Reports and dashboards</strong> are built and populated with realistic demo data — no empty charts or tables</span>
+        </div>
+        <div class="check-item" onclick="toggleItem(this)">
+          <div class="checkbox"><svg width="10" height="8" viewBox="0 0 10 8" fill="none"><path d="M1 4L3.5 6.5L9 1" stroke="white" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+          <span class="check-label"><strong>Document Generation</strong> is working — the system can produce a document (e.g. letter, decision notice) from a case</span>
+        </div>
+        <div class="check-item" onclick="toggleItem(this)">
+          <div class="checkbox"><svg width="10" height="8" viewBox="0 0 10 8" fill="none"><path d="M1 4L3.5 6.5L9 1" stroke="white" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+          <span class="check-label"><strong>Email alerts</strong> are triggered automatically when a case is updated — test at least one full email flow end-to-end</span>
+        </div>
+        <div class="check-item" onclick="toggleItem(this)">
+          <div class="checkbox"><svg width="10" height="8" viewBox="0 0 10 8" fill="none"><path d="M1 4L3.5 6.5L9 1" stroke="white" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+          <span class="check-label">Demo user has all required <strong>back-end permissions and access</strong> (record types, queues, profiles, permission sets)</span>
+        </div>
+        <div class="check-item" onclick="toggleItem(this)">
+          <div class="checkbox"><svg width="10" height="8" viewBox="0 0 10 8" fill="none"><path d="M1 4L3.5 6.5L9 1" stroke="white" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+          <span class="check-label">Back-end test data is realistic — <strong>no generic placeholders</strong> like "Test Case", "Test Record", or "Lorem Ipsum"</span>
+        </div>
+        <div class="action-bar">
+          <span class="action-bar-left" id="count-be">0 of 8 items checked</span>
+          <button class="btn btn-ghost" onclick="clearSection('sec-be')">Clear</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ─── SECTION 2c: DEV & ENVIRONMENT ─── -->
+    <div class="section" id="sec-dev">
+      <div class="section-header" onclick="toggleSection('sec-dev')">
+        <div class="section-header-left">
+          <div class="section-icon icon-amber">🛠️</div>
+          <div>
+            <div class="section-title">Dev Checklist — Environment &amp; Code</div>
+            <div class="section-subtitle">Repo hygiene, code freeze, deployment readiness</div>
+          </div>
+        </div>
+        <div style="display:flex; align-items:center; gap:14px;">
+          <span class="section-progress-badge" id="prog-dev"></span>
+          <span class="section-chevron">▾</span>
+        </div>
+      </div>
+      <div class="section-body">
+        <div class="check-item" onclick="toggleItem(this)">
+          <div class="checkbox"><svg width="10" height="8" viewBox="0 0 10 8" fill="none"><path d="M1 4L3.5 6.5L9 1" stroke="white" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+          <span class="check-label">A <strong>dedicated GitHub repository</strong> is created for the demo — separate from any shared dev or sprint repo</span>
+        </div>
+        <div class="check-item" onclick="toggleItem(this)">
+          <div class="checkbox"><svg width="10" height="8" viewBox="0 0 10 8" fill="none"><path d="M1 4L3.5 6.5L9 1" stroke="white" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+          <span class="check-label">All settings and values are <strong>configurable via metadata or custom settings</strong> — no hardcoded IDs, URLs, or credentials in the code</span>
+        </div>
+        <div class="check-item" onclick="toggleItem(this)">
+          <div class="checkbox"><svg width="10" height="8" viewBox="0 0 10 8" fill="none"><path d="M1 4L3.5 6.5L9 1" stroke="white" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+          <span class="check-label"><strong>Give sufficient time for a code freeze before the demo</strong> — no new deployments or changes after the freeze date</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- ─── SECTION 2d: BACKUP RECORDING ─── -->
+    <div class="section" id="sec-backup">
+      <div class="section-header" onclick="toggleSection('sec-backup')">
+        <div class="section-header-left">
+          <div class="section-icon icon-red">🎬</div>
+          <div>
+            <div class="section-title">Backup Recording</div>
+            <div class="section-subtitle">Contingency plan if live demo fails</div>
+          </div>
+        </div>
+        <div style="display:flex; align-items:center; gap:14px;">
+          <span class="section-progress-badge" id="prog-backup"></span>
+          <span class="section-chevron">▾</span>
+        </div>
+      </div>
+      <div class="section-body">
+        <div class="check-item" onclick="toggleItem(this)">
+          <div class="checkbox"><svg width="10" height="8" viewBox="0 0 10 8" fill="none"><path d="M1 4L3.5 6.5L9 1" stroke="white" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+          <span class="check-label">A <strong>full walkthrough video of the demo</strong> has been recorded and is accessible to the presenter as a backup in case of technical issues on the day</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- ─── SECTION 3: DECK ─── -->
+    <div class="section" id="sec-deck">
+      <div class="section-header" onclick="toggleSection('sec-deck')">
+        <div class="section-header-left">
+          <div class="section-icon icon-teal">📊</div>
+          <div>
+            <div class="section-title">Orals Demo Deck Checklist</div>
+            <div class="section-subtitle">Confirm all required slides are included before finalizing the deck</div>
+          </div>
+        </div>
+        <div style="display:flex; align-items:center; gap:14px;">
+          <span class="section-progress-badge" id="prog-deck"></span>
+          <span class="section-chevron">▾</span>
+        </div>
+      </div>
+      <div class="section-body">
+        <div class="deck-grid">
+          <div class="deck-item" onclick="toggleDeckItem(this)">
+            <div class="checkbox"><svg width="10" height="8" viewBox="0 0 10 8" fill="none"><path d="M1 4L3.5 6.5L9 1" stroke="white" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+            <span class="deck-label">Agenda</span>
+          </div>
+          <div class="deck-item" onclick="toggleDeckItem(this)">
+            <div class="checkbox"><svg width="10" height="8" viewBox="0 0 10 8" fill="none"><path d="M1 4L3.5 6.5L9 1" stroke="white" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+            <span class="deck-label">The Team</span>
+          </div>
+          <div class="deck-item" onclick="toggleDeckItem(this)">
+            <div class="checkbox"><svg width="10" height="8" viewBox="0 0 10 8" fill="none"><path d="M1 4L3.5 6.5L9 1" stroke="white" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+            <span class="deck-label">Deloitte Company Credentials</span>
+          </div>
+          <div class="deck-item" onclick="toggleDeckItem(this)">
+            <div class="checkbox"><svg width="10" height="8" viewBox="0 0 10 8" fill="none"><path d="M1 4L3.5 6.5L9 1" stroke="white" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+            <span class="deck-label">Demo Scenarios Overview</span>
+          </div>
+          <div class="deck-item" onclick="toggleDeckItem(this)">
+            <div class="checkbox"><svg width="10" height="8" viewBox="0 0 10 8" fill="none"><path d="M1 4L3.5 6.5L9 1" stroke="white" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+            <span class="deck-label">Architecture</span>
+          </div>
+          <div class="deck-item" onclick="toggleDeckItem(this)">
+            <div class="checkbox"><svg width="10" height="8" viewBox="0 0 10 8" fill="none"><path d="M1 4L3.5 6.5L9 1" stroke="white" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+            <span class="deck-label">Implementation Approach &amp; Timeline</span>
+          </div>
+          <div class="deck-item" onclick="toggleDeckItem(this)">
+            <div class="checkbox"><svg width="10" height="8" viewBox="0 0 10 8" fill="none"><path d="M1 4L3.5 6.5L9 1" stroke="white" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+            <span class="deck-label">Data Migration</span>
+          </div>
+          <div class="deck-item" onclick="toggleDeckItem(this)">
+            <div class="checkbox"><svg width="10" height="8" viewBox="0 0 10 8" fill="none"><path d="M1 4L3.5 6.5L9 1" stroke="white" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+            <span class="deck-label">Integrations</span>
+          </div>
+          <div class="deck-item" onclick="toggleDeckItem(this)">
+            <div class="checkbox"><svg width="10" height="8" viewBox="0 0 10 8" fill="none"><path d="M1 4L3.5 6.5L9 1" stroke="white" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+            <span class="deck-label">Testing</span>
+          </div>
+        </div>
+        <div class="action-bar">
+          <span class="action-bar-left" id="count-deck">0 of 9 sections included</span>
+          <button class="btn btn-ghost" onclick="clearDeck()">Clear</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ─── SECTION 4: ANTICIPATED QUESTIONS ─── -->
+    <div class="section" id="sec-qs">
+      <div class="section-header" onclick="toggleSection('sec-qs')">
+        <div class="section-header-left">
+          <div class="section-icon icon-green">❓</div>
+          <div>
+            <div class="section-title">Anticipated Questions from Client</div>
+          </div>
+        </div>
+        <span class="section-chevron">▾</span>
+      </div>
+      <div class="section-body">
+        <div style="padding: 14px 24px 0; display:flex; gap:8px; flex-wrap:wrap;" id="cat-filters">
+          <button class="toggle-btn selected" onclick="filterCat('all', this)">All</button>
+          <button class="toggle-btn" onclick="filterCat('Data Migration', this)">Data Migration</button>
+          <button class="toggle-btn" onclick="filterCat('Design & Architecture', this)">Architecture</button>
+          <button class="toggle-btn" onclick="filterCat('Experience', this)">Experience</button>
+          <button class="toggle-btn" onclick="filterCat('Asset', this)">Asset</button>
+          <button class="toggle-btn" onclick="filterCat('Staffing', this)">Staffing</button>
+          <button class="toggle-btn" onclick="filterCat('CM/Training', this)">CM / Training</button>
+          <button class="toggle-btn" onclick="filterCat('Schedule', this)">Schedule</button>
+          <button class="toggle-btn" onclick="filterCat('Pricing', this)">Pricing</button>
+          <button class="toggle-btn" onclick="filterCat('General', this)">General</button>
+        </div>
+        <div style="overflow-x:auto; margin-top:14px;">
+          <table class="q-table" id="q-table">
+            <thead>
+              <tr>
+                <th class="q-num">#</th>
+                <th>Question</th>
+                <th style="width:140px;">Category</th>
+              </tr>
+            </thead>
+            <tbody id="q-tbody"></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- ─── SECTION 5: POST ORALS FEEDBACK ─── -->
+    <div class="section" id="sec-post">
+      <div class="section-header" onclick="toggleSection('sec-post')">
+        <div class="section-header-left">
+          <div class="section-icon icon-green">📝</div>
+          <div>
+            <div class="section-title">Post-Orals Checklist</div>
+            <div class="section-subtitle">Complete this after the orals session</div>
+          </div>
+        </div>
+        <span class="section-chevron">▾</span>
+      </div>
+      <div class="section-body">
+
+        <!-- Dev Items Tracking -->
+        <div class="subsection">
+          <div class="subsection-header">
+            <span class="subsection-tag tag-dev">Dev Items Tracking</span>
+          </div>
+          <div class="check-item" onclick="toggleItem(this)">
+            <div class="checkbox"><svg width="10" height="8" viewBox="0 0 10 8" fill="none"><path d="M1 4L3.5 6.5L9 1" stroke="white" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+            <span class="check-label">Create a <strong>GitHub repository</strong> dedicated to the orals demo codebase</span>
+          </div>
+          <div class="check-item" onclick="toggleItem(this)">
+            <div class="checkbox"><svg width="10" height="8" viewBox="0 0 10 8" fill="none"><path d="M1 4L3.5 6.5L9 1" stroke="white" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+            <span class="check-label"><strong>Move the orals demo codebase</strong> into the repo — all relevant files committed and organized</span>
+          </div>
+          <div class="check-item" onclick="toggleItem(this)">
+            <div class="checkbox"><svg width="10" height="8" viewBox="0 0 10 8" fill="none"><path d="M1 4L3.5 6.5L9 1" stroke="white" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+            <span class="check-label">Confirm the package is <strong>deployable to any dev sandbox</strong> — test a clean deployment end-to-end before signing off</span>
+          </div>
+          <div class="check-item" onclick="toggleItem(this)">
+            <div class="checkbox"><svg width="10" height="8" viewBox="0 0 10 8" fill="none"><path d="M1 4L3.5 6.5L9 1" stroke="white" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+            <span class="check-label">Document and add <strong>Pre-Deployment and Post-Deployment steps</strong> in the repo (README or runbook)</span>
+          </div>
+          <div class="check-item" onclick="toggleItem(this)">
+            <div class="checkbox"><svg width="10" height="8" viewBox="0 0 10 8" fill="none"><path d="M1 4L3.5 6.5L9 1" stroke="white" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+            <span class="check-label"><strong>Remove all API keys, credentials, and sensitive data</strong> from the codebase and Static Resources — nothing sensitive should be stored in version control</span>
+          </div>
+          <div class="check-item" onclick="toggleItem(this)">
+            <div class="checkbox"><svg width="10" height="8" viewBox="0 0 10 8" fill="none"><path d="M1 4L3.5 6.5L9 1" stroke="white" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+            <span class="check-label">Add <strong>Tech Stack details and license requirements</strong> to the repo documentation — list all tools, packages, and any paid licenses needed</span>
+          </div>
+        </div>
+
+        <!-- Feedback -->
+        <div class="feedback-grid">
+          <div class="feedback-card">
+            <div class="feedback-card-header">
+              <span class="feedback-icon">✅</span>
+              <span class="feedback-card-title" style="color: var(--sf-green);">What Went Well</span>
+            </div>
+            <textarea class="feedback-textarea" placeholder="What parts of the demo landed well? What did the client respond positively to?"></textarea>
+          </div>
+          <div class="feedback-card">
+            <div class="feedback-card-header">
+              <span class="feedback-icon">🔄</span>
+              <span class="feedback-card-title" style="color: var(--sf-amber);">Areas for Improvement</span>
+            </div>
+            <textarea class="feedback-textarea" placeholder="What could have been clearer or stronger? Any technical hiccups or timing issues?"></textarea>
+          </div>
+          <div class="feedback-card">
+            <div class="feedback-card-header">
+              <span class="feedback-icon">➡️</span>
+              <span class="feedback-card-title" style="color: var(--sf-blue);">Next Steps</span>
+            </div>
+            <textarea class="feedback-textarea" placeholder="What follow-up actions does the pursuit team need to take? Who owns them?"></textarea>
+          </div>
+        </div>
+        <div class="action-bar" style="justify-content:flex-end;">
+          <button class="btn btn-primary" onclick="showToast('Feedback saved!')">Save Feedback</button>
+        </div>
+      </div>
+    </div>
+
+  </div><!-- /content -->
+</div><!-- /main -->
+
+<!-- TOAST -->
+<div class="toast" id="toast">✓ Progress saved</div>
+
+<script>
+  /* ── QUESTIONS DATA ── */
+  const questions = [
+    {n:1,  q:"What is your approach to migrating existing users to the new SF platform?", cat:"Data Migration"},
+    {n:2,  q:"How will you handle data duplication for contacts and accounts (e.g. if an existing contact registers in the new EPS 2 platform, what happens to the existing contact)?", cat:"Design & Architecture"},
+    {n:3,  q:"Since EPS 2 will be in the same org as DCAT and DMO, how will they co-exist?", cat:"Design & Architecture"},
+    {n:"3b",q:"Have you implemented a similar solution in any other state?", cat:"Experience"},
+    {n:4,  q:"Why do you feel you have the capability to successfully deliver this project for the client?", cat:"Experience"},
+    {n:5,  q:"What was the biggest challenge you faced on a project similar to EPS 2? How did you solve it?", cat:"Experience"},
+    {n:6,  q:"Is there a fee to use GovConnect — one-time and/or ongoing?", cat:"Asset"},
+    {n:7,  q:"What is your plan to push updates to the GovConnect asset once we start using it?", cat:"Asset"},
+    {n:8,  q:"A major incident occurs after a major upgrade, affecting multiple users. (a) What is your immediate course of action? (b) What follow-up do you do once the situation is resolved?", cat:"Asset"},
+    {n:9,  q:"Explain how you will transfer knowledge to staff to enable them to take over full maintenance and support of the new system.", cat:"General"},
+    {n:10, q:"We have seen vendors say only Salesforce licenses are needed, then request additional tools during the project. What did you not document in your RFP response?", cat:"General"},
+    {n:11, q:"For the Project Manager: (a) What projects are you currently on and what is your role? (b) What will the impact be to those projects if you move to this one?", cat:"Staffing"},
+    {n:12, q:"Project Manager: Walk us through your work experience and special skills and how they will benefit this contract. What tools do you plan to use for project management?", cat:"Staffing"},
+    {n:14, q:"What is your approach to being on-site?", cat:"Staffing"},
+    {n:15, q:"Tell us more about your staffing plan and how you intend to incentivize retention. What is your average turnover rate?", cat:"Staffing"},
+    {n:16, q:"How does your staffing plan align with your proposed implementation and system development methodology?", cat:"Staffing"},
+    {n:18, q:"We are worried about data migration because of multiple legacy systems. How is your approach the best fit to solve this?", cat:"Data Migration"},
+    {n:19, q:"How are you ensuring that users across all districts are onboarded into the new system? With a release-based approach, how will your training plan adjust?", cat:"CM/Training"},
+    {n:20, q:"Discuss your proposed approach for addressing organizational change management.", cat:"CM/Training"},
+    {n:21, q:"Based on prior experience, what are the greatest change management challenges when implementing Salesforce across a large public-sector enterprise? How does your approach mitigate them?", cat:"CM/Training"},
+    {n:22, q:"What is your strategy for communicating to a large audience dispersed across multiple departments?", cat:"CM/Training"},
+    {n:23, q:"What is the one thing that could delay the schedule?", cat:"Schedule"},
+    {n:24, q:"For your proposed timeline, what is the critical path for project success?", cat:"Schedule"},
+    {n:25, q:"How did you estimate the effort for the required integrations?", cat:"Pricing"},
+    {n:26, q:"Why did your pricing include effort estimates for some integrations but not others?", cat:"Pricing"},
+    {n:27, q:"Your proposal assumes client will procure all software licenses. If we wanted Deloitte to procure some, would you be able to do that?", cat:"Pricing"},
+    {n:28, q:"Your pricing assumes a fixed number of hours per month. How can you be sure that is sufficient to meet all of the client's requirements?", cat:"Pricing"},
+    {n:29, q:"Your proposal assumes client will handle data cleansing, de-duplication, and migration from legacy systems. Why did you make that assumption? Is this something Deloitte can do?", cat:"Pricing"},
+    {n:30, q:"Your proposal assumed virtual 'train the trainer' training. Why? Would in-person training be an additional cost?", cat:"Pricing"},
+    {n:31, q:"It's Day 1 of this contract. How do you proceed to ensure a successful transition and what are your first steps?", cat:"General"},
+    {n:32, q:"What are the biggest opportunities and risks you see for the client in the next couple of years?", cat:"General"},
+    {n:33, q:"What are the risks (for your team and client) to this project? How will you mitigate them? What are the risks specific to your function/role?", cat:"General"},
+    {n:34, q:"Have you identified areas for scope creep? If so, detail your mitigation approach.", cat:"General"},
+    {n:35, q:"Are there any opportunities for savings on this contract?", cat:"General"},
+    {n:36, q:"Do you have any questions for us?", cat:"General"},
+  ];
+
+  const catClassMap = {
+    "Data Migration":      "cat-dm",
+    "Design & Architecture":"cat-arc",
+    "Experience":          "cat-exp",
+    "Asset":               "cat-ast",
+    "Staffing":            "cat-stf",
+    "CM/Training":         "cat-cm",
+    "Schedule":            "cat-sch",
+    "Pricing":             "cat-px",
+    "General":             "cat-gen",
+  };
+
+  function renderQuestions(filter) {
+    const tbody = document.getElementById('q-tbody');
+    tbody.innerHTML = '';
+    const list = filter === 'all' ? questions : questions.filter(q => q.cat === filter);
+    list.forEach(q => {
+      const tr = document.createElement('tr');
+      const cls = catClassMap[q.cat] || 'cat-gen';
+      tr.innerHTML = `
+        <td class="q-num">${q.n}</td>
+        <td class="q-text">${q.q}</td>
+        <td><span class="cat-badge ${cls}">${q.cat || '—'}</span></td>
+      `;
+      tbody.appendChild(tr);
+    });
+  }
+  renderQuestions('all');
+
+  function filterCat(cat, btn) {
+    document.querySelectorAll('#cat-filters .toggle-btn').forEach(b => b.classList.remove('selected'));
+    btn.classList.add('selected');
+    renderQuestions(cat);
+  }
+
+  /* ── SECTION TOGGLE ── */
+  function toggleSection(id) {
+    const sec = document.getElementById(id);
+    sec.classList.toggle('collapsed');
+  }
+
+  /* ── CHECKLIST ITEMS ── */
+  function toggleItem(el) {
+    el.classList.toggle('done');
+    updateProgress();
+  }
+
+  function clearSection(secId) {
+    document.querySelectorAll(`#${secId} .check-item.done`).forEach(el => el.classList.remove('done'));
+    updateProgress();
+  }
+
+  /* ── DECK ITEMS ── */
+  function toggleDeckItem(el) {
+    el.classList.toggle('done');
+    const cb = el.querySelector('.checkbox');
+    cb.querySelector('svg').style.display = el.classList.contains('done') ? 'block' : 'none';
+    cb.style.background = el.classList.contains('done') ? 'var(--sf-green)' : '';
+    cb.style.borderColor = el.classList.contains('done') ? 'var(--sf-green)' : '';
+    updateDeckCount();
+    updateProgress();
+  }
+
+  function clearDeck() {
+    document.querySelectorAll('.deck-item').forEach(el => {
+      el.classList.remove('done');
+      const cb = el.querySelector('.checkbox');
+      cb.querySelector('svg').style.display = 'none';
+      cb.style.background = '';
+      cb.style.borderColor = '';
+      const lbl = el.querySelector('.deck-label');
+      if (lbl) { lbl.style.textDecoration = ''; lbl.style.color = ''; }
+    });
+    updateDeckCount();
+    updateProgress();
+  }
+
+  function updateDeckCount() {
+    const total = document.querySelectorAll('.deck-item').length;
+    const done  = document.querySelectorAll('.deck-item.done').length;
+    const el = document.getElementById('count-deck');
+    if (el) el.textContent = `${done} of ${total} sections included`;
+    const prog = document.getElementById('prog-deck');
+    if (prog) prog.textContent = done > 0 ? `${done}/${total}` : '';
+  }
+
+  /* ── TOGGLE BUTTONS ── */
+  function selectToggle(btn, group) {
+    btn.closest('.prelim-toggle').querySelectorAll('.toggle-btn').forEach(b => b.classList.remove('selected'));
+    btn.classList.add('selected');
+  }
+
+  /* ── PROGRESS ── */
+  function updateProgress() {
+    const allCheckItems = document.querySelectorAll('.check-item');
+    const doneCheckItems = document.querySelectorAll('.check-item.done');
+    const deckItems = document.querySelectorAll('.deck-item');
+    const doneDeck = document.querySelectorAll('.deck-item.done');
+
+    const total = allCheckItems.length + deckItems.length;
+    const done  = doneCheckItems.length + doneDeck.length;
+    const pct   = total > 0 ? Math.round((done / total) * 100) : 0;
+
+    document.getElementById('progress-fill').style.width = pct + '%';
+    document.getElementById('pct-label').textContent = pct + '%';
+
+    // Section progress badges
+    updateSectionBadge('sec-fe', 'prog-fe', 'count-fe');
+    updateSectionBadge('sec-be', 'prog-be', 'count-be');
+    updateSectionBadge('sec-dev', 'prog-dev', null);
+    updateSectionBadge('sec-backup', 'prog-backup', null);
+    updateDeckCount();
+  }
+
+  function updateSectionBadge(secId, progId, countId) {
+    const sec = document.getElementById(secId);
+    if (!sec) return;
+    const items = sec.querySelectorAll('.check-item');
+    const done = sec.querySelectorAll('.check-item.done');
+    const prog = document.getElementById(progId);
+    if (prog) prog.textContent = items.length > 0 ? `${done.length}/${items.length}` : '';
+    if (countId) {
+      const c = document.getElementById(countId);
+      if (c) c.textContent = `${done.length} of ${items.length} items checked`;
+    }
+  }
+
+  /* ── SMOOTH SCROLL ── */
+  function navScrollTo(e, id, navEl) {
+    e.preventDefault();
+    document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+    if (navEl) navEl.classList.add('active');
+    const target = document.getElementById(id);
+    if (!target) return;
+    // Expand section if collapsed
+    if (target.classList.contains('collapsed')) {
+      target.classList.remove('collapsed');
+    }
+    setTimeout(() => {
+      target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }, 50);
+  }
+
+  /* ── TOAST ── */
+  function showToast(msg) {
+    const t = document.getElementById('toast');
+    t.textContent = '✓ ' + msg;
+    t.classList.add('show');
+    setTimeout(() => t.classList.remove('show'), 2800);
+  }
+
+  // Init
+  updateProgress();
+</script>
+</body>
+</html>
