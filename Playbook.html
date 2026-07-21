@@ -1,0 +1,1268 @@
+<title>The Cloud Blog — BMad Demo Playbook v2</title>
+<style>
+  :root {
+    --bg: #0B0F1A;
+    --surface: #131929;
+    --surface2: #1B2236;
+    --border: #252D42;
+    --text: #DDE4F0;
+    --muted: #7A8BA8;
+    --faint: #2E3A55;
+
+    --plan:   #F59E0B;
+    --plan-dim: rgba(245,158,11,0.10);
+    --plan-border: rgba(245,158,11,0.28);
+
+    --story:  #FB923C;
+    --story-dim: rgba(251,146,60,0.10);
+    --story-border: rgba(251,146,60,0.28);
+
+    --arch:   #60A5FA;
+    --arch-dim: rgba(96,165,250,0.10);
+    --arch-border: rgba(96,165,250,0.28);
+
+    --ux:     #A78BFA;
+    --ux-dim: rgba(167,139,250,0.10);
+    --ux-border: rgba(167,139,250,0.28);
+
+    --impl:   #34D399;
+    --impl-dim: rgba(52,211,153,0.10);
+    --impl-border: rgba(52,211,153,0.28);
+
+    --review: #FB7185;
+    --review-dim: rgba(251,113,133,0.09);
+    --review-border: rgba(251,113,133,0.26);
+
+    --info:   #38BDF8;
+    --info-dim: rgba(56,189,248,0.09);
+    --info-border: rgba(56,189,248,0.26);
+
+    --mono: 'Courier New', 'Menlo', 'Monaco', monospace;
+    --sans: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+  }
+  @media (prefers-color-scheme: light) {
+    :root {
+      --bg: #EFF3FA;
+      --surface: #FFFFFF;
+      --surface2: #E5ECF8;
+      --border: #C8D3E8;
+      --text: #18243A;
+      --muted: #5A6A88;
+      --faint: #B8C6DE;
+      --plan-dim: rgba(245,158,11,0.08);
+      --plan-border: rgba(217,119,6,0.32);
+      --story-dim: rgba(234,88,12,0.08);
+      --story-border: rgba(234,88,12,0.30);
+      --arch-dim: rgba(37,99,235,0.07);
+      --arch-border: rgba(37,99,235,0.28);
+      --ux-dim: rgba(109,40,217,0.07);
+      --ux-border: rgba(109,40,217,0.28);
+      --impl-dim: rgba(5,150,105,0.07);
+      --impl-border: rgba(5,150,105,0.28);
+      --review-dim: rgba(225,29,72,0.07);
+      --review-border: rgba(225,29,72,0.26);
+      --info-dim: rgba(2,132,199,0.07);
+      --info-border: rgba(2,132,199,0.26);
+    }
+  }
+  :root[data-theme="light"] {
+    --bg: #EFF3FA; --surface: #FFFFFF; --surface2: #E5ECF8;
+    --border: #C8D3E8; --text: #18243A; --muted: #5A6A88; --faint: #B8C6DE;
+    --plan-dim: rgba(245,158,11,0.08); --plan-border: rgba(217,119,6,0.32);
+    --story-dim: rgba(234,88,12,0.08); --story-border: rgba(234,88,12,0.30);
+    --arch-dim: rgba(37,99,235,0.07); --arch-border: rgba(37,99,235,0.28);
+    --ux-dim: rgba(109,40,217,0.07); --ux-border: rgba(109,40,217,0.28);
+    --impl-dim: rgba(5,150,105,0.07); --impl-border: rgba(5,150,105,0.28);
+    --review-dim: rgba(225,29,72,0.07); --review-border: rgba(225,29,72,0.26);
+    --info-dim: rgba(2,132,199,0.07); --info-border: rgba(2,132,199,0.26);
+  }
+  :root[data-theme="dark"] {
+    --bg: #0B0F1A; --surface: #131929; --surface2: #1B2236;
+    --border: #252D42; --text: #DDE4F0; --muted: #7A8BA8; --faint: #2E3A55;
+    --plan-dim: rgba(245,158,11,0.10); --plan-border: rgba(245,158,11,0.28);
+    --story-dim: rgba(251,146,60,0.10); --story-border: rgba(251,146,60,0.28);
+    --arch-dim: rgba(96,165,250,0.10); --arch-border: rgba(96,165,250,0.28);
+    --ux-dim: rgba(167,139,250,0.10); --ux-border: rgba(167,139,250,0.28);
+    --impl-dim: rgba(52,211,153,0.10); --impl-border: rgba(52,211,153,0.28);
+    --review-dim: rgba(251,113,133,0.09); --review-border: rgba(251,113,133,0.26);
+    --info-dim: rgba(56,189,248,0.09); --info-border: rgba(56,189,248,0.26);
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--sans);
+    font-size: 14px;
+    line-height: 1.65;
+    padding: 2rem 1rem 5rem;
+  }
+  .page { max-width: 880px; margin: 0 auto; }
+
+  /* ─── HEADER ─── */
+  .header { margin-bottom: 2rem; }
+  .eyebrow {
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 0.55rem;
+  }
+  .header h1 {
+    font-size: 1.7rem;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    line-height: 1.2;
+    text-wrap: balance;
+  }
+  .header h1 em { font-style: normal; color: var(--impl); }
+  .header-sub { color: var(--muted); margin-top: 0.55rem; font-size: 13.5px; max-width: 580px; line-height: 1.55; }
+
+  /* ─── CALLOUT BOXES ─── */
+  .callout {
+    border-radius: 8px;
+    padding: 1rem 1.2rem;
+    margin-bottom: 1rem;
+    border: 1px solid;
+    font-size: 13px;
+    line-height: 1.6;
+  }
+  .callout-info  { background: var(--info-dim);   border-color: var(--info-border); }
+  .callout-warn  { background: var(--story-dim);  border-color: var(--story-border); }
+  .callout h4 {
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    margin-bottom: 0.4rem;
+  }
+  .callout-info h4 { color: var(--info); }
+  .callout-warn h4 { color: var(--story); }
+  .callout p { color: var(--muted); }
+  .callout strong { color: var(--text); }
+
+  /* ─── HOW BMAD WORKS ─── */
+  .how-section {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 1.5rem;
+    margin: 1.75rem 0 2.5rem;
+  }
+  .how-section h2 {
+    font-size: 15px;
+    font-weight: 600;
+    margin-bottom: 1rem;
+    letter-spacing: -0.01em;
+  }
+  .how-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1rem;
+  }
+  .how-card {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 7px;
+    padding: 1rem;
+  }
+  .how-card-num {
+    font-family: var(--mono);
+    font-size: 10px;
+    color: var(--muted);
+    margin-bottom: 0.3rem;
+  }
+  .how-card h4 { font-size: 13px; font-weight: 600; margin-bottom: 0.3rem; }
+  .how-card p  { font-size: 12px; color: var(--muted); line-height: 1.5; }
+  .flow-arrow {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 20px;
+    color: var(--faint);
+    align-self: center;
+  }
+
+  /* ─── FILE TREE ─── */
+  .file-tree {
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: 7px;
+    padding: 1rem 1.2rem;
+    font-family: var(--mono);
+    font-size: 12px;
+    line-height: 1.9;
+    margin-top: 1.2rem;
+  }
+  .file-tree .folder { color: var(--muted); }
+  .file-tree .file   { color: var(--text); }
+  .file-tree .tag    {
+    font-size: 9.5px;
+    padding: 0.1rem 0.4rem;
+    border-radius: 3px;
+    margin-left: 0.5rem;
+    font-weight: 600;
+    border: 1px solid;
+  }
+  .t-plan  { background: var(--plan-dim);   color: var(--plan);   border-color: var(--plan-border); }
+  .t-story { background: var(--story-dim);  color: var(--story);  border-color: var(--story-border); }
+  .t-arch  { background: var(--arch-dim);   color: var(--arch);   border-color: var(--arch-border); }
+  .t-ux    { background: var(--ux-dim);     color: var(--ux);     border-color: var(--ux-border); }
+  .t-impl  { background: var(--impl-dim);   color: var(--impl);   border-color: var(--impl-border); }
+
+  /* ─── TIMELINE BAR ─── */
+  .timeline-wrap {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 1.25rem 1.4rem;
+    margin-bottom: 2.5rem;
+  }
+  .tl-label {
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 0.8rem;
+  }
+  .tl-track {
+    display: flex;
+    height: 26px;
+    border-radius: 5px;
+    overflow: hidden;
+    gap: 2px;
+  }
+  .tl-seg {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: var(--mono);
+    font-size: 9.5px;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    color: #0B0F1A;
+    border-radius: 3px;
+  }
+  .s1 { background: var(--plan);   flex: 8; }
+  .s2 { background: var(--story);  flex: 7; }
+  .s3 { background: var(--arch);   flex: 8; }
+  .s4 { background: var(--ux);     flex: 7; }
+  .s5 { background: var(--impl);   flex: 11; }
+  .s6 { background: var(--review); flex: 4; }
+  .tl-legend {
+    display: flex;
+    gap: 1rem;
+    flex-wrap: wrap;
+    margin-top: 0.8rem;
+  }
+  .tl-li { display: flex; align-items: center; gap: 0.35rem; font-size: 11.5px; color: var(--muted); }
+  .tl-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+
+  /* ─── PHASE HEADER ─── */
+  .phase-header {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding-bottom: 0.85rem;
+    border-bottom: 1px solid var(--border);
+    margin: 2.5rem 0 1.25rem;
+  }
+  .phase-badge {
+    font-family: var(--mono);
+    font-size: 9.5px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    font-weight: 700;
+    padding: 0.22rem 0.6rem;
+    border-radius: 3px;
+  }
+  .pb-plan  { background: var(--plan-dim);   color: var(--plan);   border: 1px solid var(--plan-border); }
+  .pb-story { background: var(--story-dim);  color: var(--story);  border: 1px solid var(--story-border); }
+  .pb-arch  { background: var(--arch-dim);   color: var(--arch);   border: 1px solid var(--arch-border); }
+  .pb-ux    { background: var(--ux-dim);     color: var(--ux);     border: 1px solid var(--ux-border); }
+  .pb-impl  { background: var(--impl-dim);   color: var(--impl);   border: 1px solid var(--impl-border); }
+  .pb-rev   { background: var(--review-dim); color: var(--review); border: 1px solid var(--review-border); }
+
+  .phase-header h2 { font-size: 1.05rem; font-weight: 600; letter-spacing: -0.01em; }
+  .phase-time { margin-left: auto; font-family: var(--mono); font-size: 11px; color: var(--muted); background: var(--surface2); border: 1px solid var(--border); padding: 0.2rem 0.55rem; border-radius: 20px; white-space: nowrap; }
+
+  /* ─── STEP CARD ─── */
+  .step-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    margin-bottom: 1.25rem;
+    overflow: hidden;
+  }
+  .sc-head {
+    display: flex;
+    align-items: flex-start;
+    gap: 1rem;
+    padding: 1.1rem 1.3rem;
+    border-bottom: 1px solid var(--border);
+  }
+  .sc-num {
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: var(--mono);
+    font-size: 11px;
+    font-weight: 700;
+    flex-shrink: 0;
+    margin-top: 1px;
+    border: 1.5px solid;
+  }
+  .n-plan  { background: var(--plan-dim);   color: var(--plan);   border-color: var(--plan-border); }
+  .n-story { background: var(--story-dim);  color: var(--story);  border-color: var(--story-border); }
+  .n-arch  { background: var(--arch-dim);   color: var(--arch);   border-color: var(--arch-border); }
+  .n-ux    { background: var(--ux-dim);     color: var(--ux);     border-color: var(--ux-border); }
+  .n-impl  { background: var(--impl-dim);   color: var(--impl);   border-color: var(--impl-border); }
+  .n-rev   { background: var(--review-dim); color: var(--review); border-color: var(--review-border); }
+
+  .sc-info { flex: 1; min-width: 0; }
+  .sc-title { font-size: 15px; font-weight: 600; margin-bottom: 0.2rem; }
+  .sc-why   { font-size: 12.5px; color: var(--muted); line-height: 1.55; }
+  .sc-meta  { display: flex; flex-direction: column; align-items: flex-end; gap: 0.4rem; flex-shrink: 0; }
+  .sc-time  { font-family: var(--mono); font-size: 13px; font-weight: 700; color: var(--text); }
+  .sc-skill { font-family: var(--mono); font-size: 10px; background: var(--surface2); border: 1px solid var(--border); color: var(--muted); padding: 0.15rem 0.45rem; border-radius: 3px; white-space: nowrap; }
+
+  .sc-body { padding: 0; }
+
+  /* ─── ACCORDION ROWS ─── */
+  .step-row {
+    border-bottom: 1px solid var(--border);
+    padding: 0.9rem 1.3rem;
+  }
+  .step-row:last-child { border-bottom: none; }
+
+  .row-label {
+    font-family: var(--mono);
+    font-size: 9.5px;
+    letter-spacing: 0.13em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 0.45rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+  .rl-badge {
+    font-size: 9px;
+    padding: 0.1rem 0.4rem;
+    border-radius: 2px;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+  }
+  .rl-open  { background: var(--info-dim); color: var(--info); border: 1px solid var(--info-border); }
+  .rl-paste { background: var(--plan-dim); color: var(--plan); border: 1px solid var(--plan-border); }
+  .rl-save  { background: var(--impl-dim); color: var(--impl); border: 1px solid var(--impl-border); }
+
+  .cmd-block {
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 0.7rem 0.9rem;
+    font-family: var(--mono);
+    font-size: 12px;
+    color: var(--text);
+    letter-spacing: 0.01em;
+  }
+  .prompt-block {
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 0.85rem 1rem;
+    font-family: var(--mono);
+    font-size: 11px;
+    line-height: 1.7;
+    color: var(--text);
+    white-space: pre-wrap;
+    word-break: break-word;
+  }
+  .prompt-hl { color: var(--info); }
+
+  .handoff-box {
+    background: var(--info-dim);
+    border: 1px solid var(--info-border);
+    border-radius: 6px;
+    padding: 0.75rem 1rem;
+    font-size: 12.5px;
+    color: var(--muted);
+    line-height: 1.55;
+  }
+  .handoff-box strong { color: var(--info); }
+
+  .chips { display: flex; gap: 0.45rem; flex-wrap: wrap; }
+  .chip {
+    font-family: var(--mono);
+    font-size: 10.5px;
+    padding: 0.2rem 0.55rem;
+    border-radius: 4px;
+    border: 1px solid;
+    font-weight: 500;
+  }
+  .ch-plan  { background: var(--plan-dim);   color: var(--plan);   border-color: var(--plan-border); }
+  .ch-story { background: var(--story-dim);  color: var(--story);  border-color: var(--story-border); }
+  .ch-arch  { background: var(--arch-dim);   color: var(--arch);   border-color: var(--arch-border); }
+  .ch-ux    { background: var(--ux-dim);     color: var(--ux);     border-color: var(--ux-border); }
+  .ch-impl  { background: var(--impl-dim);   color: var(--impl);   border-color: var(--impl-border); }
+
+  .checklist { list-style: none; display: flex; flex-direction: column; gap: 0.35rem; }
+  .checklist li {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.6rem;
+    font-size: 12.5px;
+    color: var(--muted);
+    line-height: 1.5;
+  }
+  .checklist li::before { content: '▸'; color: var(--faint); flex-shrink: 0; margin-top: 1px; font-size: 11px; }
+  .checklist li strong { color: var(--text); }
+
+  /* ─── EPIC/STORY TABLE ─── */
+  .table-wrap { overflow-x: auto; }
+  table { width: 100%; border-collapse: collapse; font-size: 12px; }
+  th { background: var(--surface2); color: var(--muted); font-family: var(--mono); font-size: 9.5px; letter-spacing: 0.1em; text-transform: uppercase; padding: 0.55rem 0.8rem; text-align: left; border-bottom: 1px solid var(--border); }
+  td { padding: 0.55rem 0.8rem; border-bottom: 1px solid var(--border); vertical-align: top; color: var(--text); line-height: 1.5; }
+  tr:last-child td { border-bottom: none; }
+  .epic-label { font-family: var(--mono); font-size: 10px; padding: 0.12rem 0.4rem; border-radius: 3px; font-weight: 600; background: var(--story-dim); color: var(--story); border: 1px solid var(--story-border); white-space: nowrap; }
+  .story-label { font-family: var(--mono); font-size: 10px; color: var(--muted); }
+
+  /* ─── DIVIDER ─── */
+  .divider { height: 1px; background: var(--border); margin: 2.5rem 0; }
+
+  /* ─── FOOTER TIPS ─── */
+  .tips-section {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 1.3rem 1.5rem;
+    margin-top: 3rem;
+  }
+  .tips-section h3 { font-size: 13.5px; font-weight: 600; margin-bottom: 1rem; }
+  .tips-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(230px, 1fr)); gap: 0.9rem; }
+  .tip { font-size: 12.5px; color: var(--muted); line-height: 1.55; }
+  .tip strong { color: var(--text); display: block; margin-bottom: 0.15rem; }
+
+  /* ─── DELIVERY BOX ─── */
+  .delivery {
+    background: var(--impl-dim);
+    border: 1px solid var(--impl-border);
+    border-radius: 8px;
+    padding: 1.3rem 1.5rem;
+    margin-top: 2.5rem;
+  }
+  .delivery h3 { font-size: 13px; font-weight: 600; color: var(--impl); margin-bottom: 0.9rem; }
+  .delivery-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 0.6rem; }
+  .d-item { background: var(--surface); border: 1px solid var(--border); border-radius: 6px; padding: 0.7rem 0.9rem; }
+  .d-file { font-family: var(--mono); font-size: 11.5px; font-weight: 600; color: var(--impl); margin-bottom: 0.2rem; }
+  .d-desc { font-size: 11px; color: var(--muted); line-height: 1.4; }
+
+  @media (max-width: 600px) {
+    .sc-head { flex-wrap: wrap; }
+    .sc-meta { flex-direction: row; align-items: center; margin-top: 0.5rem; }
+    .flow-arrow { display: none; }
+  }
+</style>
+
+<div class="page">
+
+  <!-- ─── HEADER ─── -->
+  <div class="header">
+    <div class="eyebrow">BMad Full Workflow · Training Demo Playbook · v2</div>
+    <h1>The Cloud Blog — <em>45-Minute</em> BMad Agent Guide</h1>
+    <p class="header-sub">Complete step-by-step execution for Puneet Gaur's demo: all 6 agents in sequence, with detailed instructions for people new to BMad. Includes Epic, User Stories, and Architecture steps.</p>
+  </div>
+
+  <!-- ─── HOW BMAD WORKS ─── -->
+  <div class="how-section">
+    <h2>How BMad Passes Context Between Agents — No Copy-Paste Needed</h2>
+    <div class="how-grid">
+      <div class="how-card">
+        <div class="how-card-num">Step A</div>
+        <h4>Agent saves output to a file</h4>
+        <p>Every agent is instructed to save its work as a named file (e.g., <code>prd.md</code>) inside your project folder. The file lives on disk.</p>
+      </div>
+      <div class="how-card">
+        <div class="how-card-num">Step B</div>
+        <h4>Next agent reads the file directly</h4>
+        <p>In the next fresh context window, you tell the agent: <em>"Read the file prd.md from this project directory."</em> Claude Code uses its Read tool to open it — you never paste anything.</p>
+      </div>
+      <div class="how-card">
+        <div class="how-card-num">Step C</div>
+        <h4>Agents build on each other</h4>
+        <p>By Step 5, the Dev Agent reads prd.md + epics.md + architecture.md + ux-spec.md automatically. All context is inherited from disk — no manual handoff required.</p>
+      </div>
+    </div>
+    <div class="file-tree">
+      <span class="folder">Project6/</span><br>
+      &nbsp;&nbsp;<span class="file">├── prd.md</span><span class="tag t-plan">Step 1</span><br>
+      &nbsp;&nbsp;<span class="file">├── epics.md</span><span class="tag t-story">Step 2</span><br>
+      &nbsp;&nbsp;<span class="file">├── stories/story-001.md ... story-006.md</span><span class="tag t-story">Step 2</span><br>
+      &nbsp;&nbsp;<span class="file">├── architecture.md</span><span class="tag t-arch">Step 3</span><br>
+      &nbsp;&nbsp;<span class="file">├── ux-spec.md</span><span class="tag t-ux">Step 4</span><br>
+      &nbsp;&nbsp;<span class="file">└── TheCloud.html</span><span class="tag t-impl">Step 5</span>
+    </div>
+  </div>
+
+  <!-- ─── CALLOUTS ─── -->
+  <div class="callout callout-info">
+    <h4>New to BMad? Read this first</h4>
+    <p>Each step runs in a <strong>fresh Claude Code context window</strong>. To open one: press <strong>Ctrl+N</strong> (or Cmd+N on Mac) in Claude Code, or click the <strong>+ New Chat</strong> button. This keeps each agent's context clean and prevents confusion between roles. After each step, the agent saves a file to your project folder — the next agent will read it automatically.</p>
+  </div>
+  <div class="callout callout-warn">
+    <h4>Important — Set your working directory first</h4>
+    <p>Before starting Step 1, make sure Claude Code is pointed at your Project6 folder. In Claude Code's terminal, run: <strong>cd /path/to/Project6</strong>. All agents will read and write files relative to this folder.</p>
+  </div>
+
+  <!-- ─── TIMELINE ─── -->
+  <div class="timeline-wrap">
+    <div class="tl-label">45-Minute Timeline — 6 Agents in Sequence</div>
+    <div class="tl-track">
+      <div class="tl-seg s1">PRD 8m</div>
+      <div class="tl-seg s2">EPICS 7m</div>
+      <div class="tl-seg s3">ARCH 8m</div>
+      <div class="tl-seg s4">UX 7m</div>
+      <div class="tl-seg s5">DEV 11m</div>
+      <div class="tl-seg s6">QA 4m</div>
+    </div>
+    <div class="tl-legend">
+      <div class="tl-li"><div class="tl-dot" style="background:var(--plan)"></div>Step 1: PM Agent (PRD) · 0–8 min</div>
+      <div class="tl-li"><div class="tl-dot" style="background:var(--story)"></div>Step 2: Epics &amp; Stories · 8–15 min</div>
+      <div class="tl-li"><div class="tl-dot" style="background:var(--arch)"></div>Step 3: Architect Agent · 15–23 min</div>
+      <div class="tl-li"><div class="tl-dot" style="background:var(--ux)"></div>Step 4: UX Designer Agent · 23–30 min</div>
+      <div class="tl-li"><div class="tl-dot" style="background:var(--impl)"></div>Step 5: Dev Agent · 30–41 min</div>
+      <div class="tl-li"><div class="tl-dot" style="background:var(--review)"></div>Step 6: Browser QA · 41–45 min</div>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════
+       STEP 1 — PM AGENT / PRD
+  ═══════════════════════════════════════ -->
+  <div class="phase-header">
+    <span class="phase-badge pb-plan">Phase 1 — Planning</span>
+    <h2>PM Agent — Create the PRD</h2>
+    <span class="phase-time">0 → 8 min</span>
+  </div>
+
+  <div class="step-card">
+    <div class="sc-head">
+      <div class="sc-num n-plan">1</div>
+      <div class="sc-info">
+        <div class="sc-title">PM Agent — Product Requirements Document</div>
+        <div class="sc-why">The PM Agent reads the project requirement (TheCloudBlog.pdf) and converts it into a structured PRD file. This becomes the single source of truth that all other agents read. <strong>You only describe the requirement once — here.</strong></div>
+      </div>
+      <div class="sc-meta">
+        <span class="sc-time">8 min</span>
+        <span class="sc-skill">bmad-agent-pm</span>
+      </div>
+    </div>
+    <div class="sc-body">
+      <div class="step-row">
+        <div class="row-label"><span class="rl-badge rl-open">OPEN</span>Open a brand-new Claude Code context window (Ctrl+N / Cmd+N)</div>
+        <div class="cmd-block">/bmad-agent-pm</div>
+      </div>
+      <div class="step-row">
+        <div class="row-label"><span class="rl-badge rl-paste">PASTE</span>Copy and paste this prompt into the chat. Press Enter.</div>
+        <div class="prompt-block">You are the BMad PM Agent. I have a requirement document for a new project.
+Please read it carefully and create a comprehensive PRD (Product Requirements Document).
+
+PROJECT NAME: The Cloud
+TYPE: Single-file HTML5 blog portal (no external libraries)
+BRAND: IT professional learning portal — Puneet Gaur
+
+REQUIREMENT SUMMARY:
+Build a single HTML file with these 8 sections:
+
+1. HEADER/NAVBAR
+   - Brand name: "The Cloud"
+   - Navigation links: Home, Topics, Register, Contact
+   - Clean, professional design
+
+2. HERO SECTION
+   - Strong welcome headline for an IT learning portal
+   - Subheading mentioning AWS, GitHub, DevOps, modern tech skills
+   - Two CTA buttons: "Explore Topics" and "Register"
+
+3. FEATURED TOPICS SECTION (6 cards)
+   - AWS — Amazon Web Services
+   - GitHub — Version Control
+   - DevOps — Automation and deployment
+   - Cloud Basics — IaaS, PaaS, SaaS fundamentals
+   - CI/CD — Continuous integration and delivery pipelines
+   - Linux — Shell, networking, permissions
+   - Each card: title + short description + button
+
+4. BLOG POSTS PREVIEW (3 sample cards)
+   - Each card: Post title + short excerpt + category tag + "Read More" button
+   - Topics: AWS EC2, Git Branching, GitHub Actions CI/CD
+
+5. USER REGISTRATION FORM
+   - Fields: Full Name, Email, Username, Password
+   - Register button
+
+6. CONTACT ME SECTION
+   - Fields: Name, Email, Subject, Message
+   - Send Message button
+
+7. ABOUT SECTION
+   - Introduce Puneet Gaur as an IT professional
+   - Focus: AWS, GitHub, cloud architecture, development tools
+
+8. FOOTER
+   - Copyright text
+   - Placeholders for LinkedIn, GitHub, and Email links
+
+TECHNICAL CONSTRAINTS (non-negotiable):
+- Plain HTML5 only — NO React, Bootstrap, Tailwind, jQuery, or any external library
+- Everything in ONE complete HTML file
+- Embedded CSS inside a &lt;style&gt; tag
+- Semantic HTML5 tags: header, nav, main, section, article, form, footer
+- Responsive layout (mobile-friendly)
+- Modern tech-themed color palette
+- Cards with soft shadows and rounded corners
+
+Please produce a PRD with these sections:
+1. Project Overview
+2. Goals and Objectives
+3. Target Audience
+4. Page Structure and Features (detailed)
+5. Technical Constraints
+6. Design Requirements
+7. Acceptance Criteria
+
+Save the PRD as: prd.md in the current project directory.</div>
+      </div>
+      <div class="step-row">
+        <div class="row-label"><span class="rl-badge rl-save">SAVE</span>Confirm the file is saved</div>
+        <div class="handoff-box">
+          After the agent finishes, verify <strong>prd.md</strong> appears in your project folder. You can type <code>ls</code> in the terminal to check. If the agent didn't save it automatically, type: <em>"Please save this PRD to prd.md now."</em>
+        </div>
+      </div>
+      <div class="step-row">
+        <div class="row-label">Output produced:</div>
+        <div class="chips">
+          <span class="chip ch-plan">prd.md</span>
+          <span class="chip ch-plan">Goals defined</span>
+          <span class="chip ch-plan">Acceptance criteria</span>
+          <span class="chip ch-plan">Tech constraints captured</span>
+        </div>
+      </div>
+      <div class="step-row">
+        <div class="row-label">Quick check before moving on:</div>
+        <ul class="checklist">
+          <li>prd.md file exists in the project folder</li>
+          <li>PRD mentions all 8 page sections</li>
+          <li>Technical constraint "single HTML file, no external libraries" is present</li>
+          <li>Acceptance criteria include responsiveness and semantic HTML</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════
+       STEP 2 — EPICS & USER STORIES
+  ═══════════════════════════════════════ -->
+  <div class="phase-header">
+    <span class="phase-badge pb-story">Phase 1 — Planning</span>
+    <h2>PM Agent — Epics &amp; User Stories</h2>
+    <span class="phase-time">8 → 15 min</span>
+  </div>
+
+  <div class="step-card">
+    <div class="sc-head">
+      <div class="sc-num n-story">2</div>
+      <div class="sc-info">
+        <div class="sc-title">Create Epics &amp; User Stories from the PRD</div>
+        <div class="sc-why">Epics group the big features. User Stories break each Epic into small, testable pieces of work written from the user's perspective ("As a visitor, I want to..."). This step shows the audience how BMad structures work before any code is written. The agent reads prd.md — you don't need to paste anything.</div>
+      </div>
+      <div class="sc-meta">
+        <span class="sc-time">7 min</span>
+        <span class="sc-skill">bmad-create-epics-and-stories</span>
+      </div>
+    </div>
+    <div class="sc-body">
+      <div class="step-row">
+        <div class="row-label"><span class="rl-badge rl-open">OPEN</span>Open a new context window. Do NOT continue in Step 1's window.</div>
+        <div class="cmd-block">/bmad-agent-pm</div>
+      </div>
+      <div class="step-row">
+        <div class="row-label"><span class="rl-badge rl-paste">PASTE</span>This prompt tells the agent to read prd.md — no copy-paste of the PRD content needed.</div>
+        <div class="prompt-block">You are the BMad PM Agent. The PRD for this project has already been saved.
+
+<span class="prompt-hl">Please read the file prd.md from the current project directory.</span>
+Do not ask me to paste it — use your Read tool to open it directly.
+
+Once you have read the PRD, please create:
+
+1. EPICS — Group the work into 4–6 high-level epics. Each epic should have:
+   - Epic ID (EP-001, EP-002, etc.)
+   - Epic title
+   - Brief description (1–2 sentences)
+   - Which page sections it covers
+
+2. USER STORIES — For each epic, write 3–5 user stories in this format:
+   As a [type of user], I want to [action], so that [benefit].
+
+   Include:
+   - Story ID (US-001, US-002, etc.)
+   - Story title
+   - User story sentence
+   - Acceptance criteria (3–5 bullet points)
+   - Priority: High / Medium / Low
+
+Suggested epics to consider:
+- Navigation &amp; Branding (Navbar + Header)
+- Content Discovery (Hero + Topics section)
+- Blog &amp; Content Reading (Blog posts preview)
+- User Onboarding (Registration form)
+- Community Engagement (Contact form + About section)
+- Site Infrastructure (Footer, responsiveness, performance)
+
+Save the epics summary as: epics.md
+Save each user story as a separate file: stories/story-001.md, stories/story-002.md, etc.
+(Create the stories/ folder if it doesn't exist)</div>
+      </div>
+      <div class="step-row">
+        <div class="row-label">Example of what the output should look like:</div>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr><th>Epic</th><th>ID</th><th>Sample User Story</th><th>Priority</th></tr>
+            </thead>
+            <tbody>
+              <tr><td><span class="epic-label">EP-001</span> Navigation &amp; Branding</td><td><span class="story-label">US-001</span></td><td>As a visitor, I want to see "The Cloud" brand name in the navbar so I immediately know which platform I'm on.</td><td>High</td></tr>
+              <tr><td><span class="epic-label">EP-002</span> Content Discovery</td><td><span class="story-label">US-004</span></td><td>As a learner, I want to browse topic cards for AWS, GitHub, DevOps so I can find what I want to learn.</td><td>High</td></tr>
+              <tr><td><span class="epic-label">EP-003</span> Blog &amp; Content Reading</td><td><span class="story-label">US-007</span></td><td>As a visitor, I want to see 3 blog post previews so I get a sense of the content quality before registering.</td><td>Medium</td></tr>
+              <tr><td><span class="epic-label">EP-004</span> User Onboarding</td><td><span class="story-label">US-010</span></td><td>As a new user, I want to register with my email and username so I can access the full portal.</td><td>High</td></tr>
+              <tr><td><span class="epic-label">EP-005</span> Community Engagement</td><td><span class="story-label">US-013</span></td><td>As a learner, I want to send a message to Puneet Gaur so I can ask questions about cloud topics.</td><td>Medium</td></tr>
+              <tr><td><span class="epic-label">EP-006</span> Site Infrastructure</td><td><span class="story-label">US-016</span></td><td>As a mobile user, I want the portal to work on my phone so I can learn on the go.</td><td>High</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+      <div class="step-row">
+        <div class="row-label">Output produced:</div>
+        <div class="chips">
+          <span class="chip ch-story">epics.md</span>
+          <span class="chip ch-story">stories/story-001.md to story-006+.md</span>
+          <span class="chip ch-story">~6 Epics</span>
+          <span class="chip ch-story">~18 User Stories</span>
+        </div>
+      </div>
+      <div class="step-row">
+        <div class="row-label">Quick check before moving on:</div>
+        <ul class="checklist">
+          <li>epics.md file exists with at least 4 epics (EP-001 through EP-004+)</li>
+          <li>stories/ folder exists with individual story files</li>
+          <li>Each story has a clear "As a... I want... so that..." sentence</li>
+          <li>Each story has acceptance criteria</li>
+          <li>Agent read prd.md on its own — you did NOT need to paste the PRD content</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════
+       STEP 3 — ARCHITECT
+  ═══════════════════════════════════════ -->
+  <div class="phase-header">
+    <span class="phase-badge pb-arch">Phase 2 — Solutioning</span>
+    <h2>Architect Agent — Architecture Document</h2>
+    <span class="phase-time">15 → 23 min</span>
+  </div>
+
+  <div class="step-card">
+    <div class="sc-head">
+      <div class="sc-num n-arch">3</div>
+      <div class="sc-info">
+        <div class="sc-title">Architect Agent — Technical Architecture Document</div>
+        <div class="sc-why">The Architect Agent reads the PRD and Epics, then produces a technical architecture document. For this project (a single HTML file) it defines the file structure, CSS architecture, component breakdown, and how sections connect. This is a key demo step — it shows BMad produces professional documentation before any code is written.</div>
+      </div>
+      <div class="sc-meta">
+        <span class="sc-time">8 min</span>
+        <span class="sc-skill">bmad-agent-architect</span>
+      </div>
+    </div>
+    <div class="sc-body">
+      <div class="step-row">
+        <div class="row-label"><span class="rl-badge rl-open">OPEN</span>Open a new context window.</div>
+        <div class="cmd-block">/bmad-agent-architect</div>
+      </div>
+      <div class="step-row">
+        <div class="row-label"><span class="rl-badge rl-paste">PASTE</span>The agent will read prd.md and epics.md automatically.</div>
+        <div class="prompt-block">You are the BMad Architect Agent. The planning documents for this project have been saved.
+
+<span class="prompt-hl">Please read these files from the current project directory:
+1. prd.md — the Product Requirements Document
+2. epics.md — the Epics and User Stories summary</span>
+
+Do not ask me to paste them — use your Read tool to open them directly.
+
+Once you have read both files, please create a technical architecture document for the project.
+
+PROJECT CONTEXT:
+This is a single-file HTML5 portal called "The Cloud" with NO external libraries.
+Everything — HTML structure, CSS, and any JavaScript interactions — lives in one file: TheCloud.html
+
+Please produce an Architecture Document (architecture.md) that covers:
+
+1. TECHNOLOGY STACK
+   - HTML5 (semantic structure)
+   - CSS3 (embedded in &lt;style&gt; tag) — no frameworks
+   - Vanilla JavaScript (if needed — only for minor interactions like mobile menu toggle)
+   - No build tools, no package managers, no CDNs
+
+2. FILE STRUCTURE
+   - Single file: TheCloud.html
+   - Internal structure: how the &lt;head&gt;, &lt;style&gt;, and &lt;body&gt; sections are organized
+
+3. CSS ARCHITECTURE
+   - CSS custom properties (variables) for the color palette and typography
+   - Section naming conventions (e.g., .hero, .topics, .blog-posts)
+   - Responsive design approach: flexbox/grid + media queries
+   - Card component pattern (shared across topics and blog posts)
+
+4. HTML COMPONENT BREAKDOWN
+   Map each Epic to its HTML section:
+   - EP-001 Navigation: &lt;header&gt; + &lt;nav&gt;
+   - EP-002 Content Discovery: &lt;section class="hero"&gt; + &lt;section class="topics"&gt;
+   - EP-003 Blog: &lt;section class="blog-posts"&gt;
+   - EP-004 Onboarding: &lt;section id="register"&gt; + &lt;form&gt;
+   - EP-005 Engagement: &lt;section id="contact"&gt; + &lt;section class="about"&gt;
+   - EP-006 Infrastructure: &lt;footer&gt; + CSS variables + viewport meta
+
+5. RESPONSIVE DESIGN STRATEGY
+   - Breakpoints: 768px (tablet), 480px (mobile)
+   - How the grid collapses from 3-col to 2-col to 1-col
+
+6. PERFORMANCE CONSIDERATIONS
+   - No HTTP requests (everything is embedded)
+   - Minimal JavaScript (prefer CSS for transitions and hover states)
+
+7. TRACEABILITY TABLE
+   A table mapping each Epic ID → HTML section → CSS class → Acceptance criteria reference
+
+Save the complete document as: architecture.md</div>
+      </div>
+      <div class="step-row">
+        <div class="row-label">Output produced:</div>
+        <div class="chips">
+          <span class="chip ch-arch">architecture.md</span>
+          <span class="chip ch-arch">Tech stack defined</span>
+          <span class="chip ch-arch">CSS architecture</span>
+          <span class="chip ch-arch">Epic → HTML mapping</span>
+          <span class="chip ch-arch">Responsive strategy</span>
+        </div>
+      </div>
+      <div class="step-row">
+        <div class="row-label">Quick check before moving on:</div>
+        <ul class="checklist">
+          <li>architecture.md file exists in the project folder</li>
+          <li>File lists the single-file approach with no external dependencies</li>
+          <li>CSS architecture section mentions CSS custom properties (variables)</li>
+          <li>Each Epic is mapped to an HTML section/component</li>
+          <li>Responsive breakpoints are specified</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════
+       STEP 4 — UX DESIGNER
+  ═══════════════════════════════════════ -->
+  <div class="phase-header">
+    <span class="phase-badge pb-ux">Phase 2 — Solutioning</span>
+    <h2>UX Designer Agent — Visual Design Specification</h2>
+    <span class="phase-time">23 → 30 min</span>
+  </div>
+
+  <div class="step-card">
+    <div class="sc-head">
+      <div class="sc-num n-ux">4</div>
+      <div class="sc-info">
+        <div class="sc-title">UX Designer Agent — Visual &amp; Layout Spec</div>
+        <div class="sc-why">The UX Agent reads the PRD and architecture document, then designs the full visual system: color palette (with hex codes), typography, and section-by-section layout specs. The Dev Agent will follow this spec exactly — no guessing about colors or spacing. This is the design blueprint.</div>
+      </div>
+      <div class="sc-meta">
+        <span class="sc-time">7 min</span>
+        <span class="sc-skill">bmad-agent-ux-designer</span>
+      </div>
+    </div>
+    <div class="sc-body">
+      <div class="step-row">
+        <div class="row-label"><span class="rl-badge rl-open">OPEN</span>Open a new context window.</div>
+        <div class="cmd-block">/bmad-agent-ux-designer</div>
+      </div>
+      <div class="step-row">
+        <div class="row-label"><span class="rl-badge rl-paste">PASTE</span>The agent reads 3 files automatically — no copy-paste needed.</div>
+        <div class="prompt-block">You are the BMad UX Designer Agent.
+
+<span class="prompt-hl">Please read these files from the current project directory:
+1. prd.md — the Product Requirements Document
+2. architecture.md — the Technical Architecture Document</span>
+
+Do not ask me to paste them — use your Read tool to open them directly.
+
+Once you have read both files, please create a complete UX and Visual Design Specification.
+
+PROJECT: "The Cloud" — tech-themed IT learning portal for Puneet Gaur
+
+Please produce a UX specification document (ux-spec.md) covering:
+
+1. COLOR PALETTE (provide exact hex codes — no vague descriptions)
+   - Primary background color
+   - Card/surface background
+   - Primary text color
+   - Secondary/muted text color
+   - Accent color (for buttons, links, highlights — tech/blue feel)
+   - Accent hover state
+   - Border color
+   - Form input background and border
+   - Success state color
+   Choose a modern dark tech palette that feels professional, not garish.
+
+2. TYPOGRAPHY
+   - Heading font (use system fonts only — no Google Fonts CDN links)
+   - Body text font + size (14px–16px recommended)
+   - Font stack (full CSS stack as it would appear in code)
+   - Heading scale: H1, H2, H3 sizes
+   - Line height for body and headings
+   - Letter spacing for uppercase labels
+
+3. COMPONENT SPECS — for each of the 8 page sections:
+
+   SECTION 1 — NAVBAR
+   - Height, logo font-size and weight
+   - Nav link style, spacing between links
+   - Hover state (underline or color shift)
+   - Mobile: hamburger menu or stacked layout
+
+   SECTION 2 — HERO
+   - Layout: centered or split?
+   - H1 size, color, and weight
+   - Subheading size and color
+   - Button styles for "Explore Topics" (primary) and "Register" (secondary/outline)
+   - Background: gradient or solid?
+
+   SECTION 3 — TOPIC CARDS (grid of 6)
+   - Card width, padding, border-radius, box-shadow
+   - Card header (icon/emoji placeholder or colored bar)
+   - Title font-size and color
+   - Description font-size and color
+   - Button style (outline or filled)
+   - Hover effect
+
+   SECTION 4 — BLOG POST CARDS (3 cards)
+   - Card layout, image placeholder behavior
+   - Category tag style (pill/chip)
+   - Title and excerpt font specs
+   - "Read More" button style
+
+   SECTION 5 — REGISTRATION FORM
+   - Form container width, background, border
+   - Input field style: border, border-radius, focus ring
+   - Label position (above the field)
+   - "Register" button: full-width or auto-width?
+
+   SECTION 6 — CONTACT FORM
+   - Same field specs as registration
+   - Textarea height
+   - "Send Message" button style
+
+   SECTION 7 — ABOUT SECTION
+   - Background treatment (subtle gradient or alternate color)
+   - Profile area layout
+   - Text alignment
+
+   SECTION 8 — FOOTER
+   - Background color
+   - Link style for LinkedIn, GitHub, Email
+   - Copyright text size and color
+
+4. RESPONSIVE BEHAVIOR
+   - How topic cards collapse: 3-col → 2-col → 1-col
+   - How blog cards collapse
+   - Navbar mobile behavior
+   - Form width on mobile
+
+Save the complete specification as: ux-spec.md</div>
+      </div>
+      <div class="step-row">
+        <div class="row-label">Output produced:</div>
+        <div class="chips">
+          <span class="chip ch-ux">ux-spec.md</span>
+          <span class="chip ch-ux">Hex color palette</span>
+          <span class="chip ch-ux">Typography scale</span>
+          <span class="chip ch-ux">8 section specs</span>
+          <span class="chip ch-ux">Component patterns</span>
+        </div>
+      </div>
+      <div class="step-row">
+        <div class="row-label">Quick check before moving on:</div>
+        <ul class="checklist">
+          <li>ux-spec.md file exists in the project folder</li>
+          <li>Color palette has actual hex codes (not just "dark blue")</li>
+          <li>Font stack uses system fonts only — no CDN URLs</li>
+          <li>All 8 sections have explicit layout descriptions</li>
+          <li>Card hover and button states are specified</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════
+       STEP 5 — DEV AGENT
+  ═══════════════════════════════════════ -->
+  <div class="phase-header">
+    <span class="phase-badge pb-impl">Phase 3 — Implementation</span>
+    <h2>Dev Agent — Build TheCloud.html</h2>
+    <span class="phase-time">30 → 41 min</span>
+  </div>
+
+  <div class="step-card">
+    <div class="sc-head">
+      <div class="sc-num n-impl">5</div>
+      <div class="sc-info">
+        <div class="sc-title">Dev Agent — Build the Complete HTML Portal</div>
+        <div class="sc-why">The Dev Agent reads all 4 documents (prd.md, epics.md, architecture.md, ux-spec.md) and implements the complete single-file HTML5 portal. This is the final deliverable — one file you can open in any browser. The agent does all the work; you just review the output. This is the payoff of the entire BMad workflow.</div>
+      </div>
+      <div class="sc-meta">
+        <span class="sc-time">11 min</span>
+        <span class="sc-skill">bmad-agent-dev</span>
+      </div>
+    </div>
+    <div class="sc-body">
+      <div class="step-row">
+        <div class="row-label"><span class="rl-badge rl-open">OPEN</span>Open a new context window.</div>
+        <div class="cmd-block">/bmad-agent-dev</div>
+      </div>
+      <div class="step-row">
+        <div class="row-label"><span class="rl-badge rl-paste">PASTE</span>The agent reads all 4 planning files — the entire project context is on disk, zero copy-paste.</div>
+        <div class="prompt-block">You are the BMad Dev Agent. All planning and design documents for this project are saved.
+
+<span class="prompt-hl">Please read these files from the current project directory:
+1. prd.md — Product Requirements Document
+2. epics.md — Epics and User Stories
+3. architecture.md — Technical Architecture Document
+4. ux-spec.md — UX and Visual Design Specification</span>
+
+Do not ask me to paste them — use your Read tool to open each one directly.
+
+Once you have read all four documents, build the complete implementation.
+
+DELIVERABLE: TheCloud.html — one complete, self-contained HTML5 file
+
+HARD RULES (non-negotiable):
+- ONE file only: TheCloud.html
+- Plain HTML5 + CSS embedded in &lt;style&gt; tag
+- ZERO external libraries — no CDN links, no npm, no Bootstrap, no Tailwind, no jQuery
+- All CSS custom properties (variables) defined as specified in ux-spec.md
+- Semantic HTML5 structure as defined in architecture.md
+- Fully responsive (mobile-first) as per the responsive strategy in architecture.md
+- Each Epic must be traceable to a section in the HTML (use the id attributes from architecture.md)
+
+CONTENT TO INCLUDE:
+
+SECTION 1 — NAVBAR
+   Brand: "The Cloud" (logo text)
+   Nav links: Home | Topics | Register | Contact (anchor links to sections below)
+
+SECTION 2 — HERO
+   H1: "Master the Cloud. Build Your Future."
+   Subheading: "Learn AWS, GitHub, DevOps, CI/CD, and modern cloud engineering skills — at your own pace."
+   Button 1 (primary): "Explore Topics" → scrolls to #topics
+   Button 2 (secondary/outline): "Register Now" → scrolls to #register
+
+SECTION 3 — TOPICS (id="topics")
+   6 cards with this content:
+   - AWS | "Amazon Web Services" | Launch EC2 instances, configure S3, manage IAM roles, and deploy serverless functions with Lambda.
+   - GitHub | "Version Control" | Master Git branching, pull requests, code reviews, and automate workflows with GitHub Actions.
+   - DevOps | "DevOps Culture" | Embrace automation, build deployment pipelines, monitor infrastructure, and practice SRE principles.
+   - Cloud Basics | "Cloud Computing Fundamentals" | Understand IaaS, PaaS, and SaaS models. Learn cloud providers, pricing, and architecture.
+   - CI/CD | "Continuous Integration &amp; Delivery" | Build pipelines with Jenkins, GitHub Actions, and GitLab CI. Automate testing and deployments.
+   - Linux | "Linux for Cloud" | Master the command line, shell scripting, file permissions, networking, and process management.
+
+SECTION 4 — BLOG POSTS (id="blog")
+   3 sample cards:
+   Card 1: "Getting Started with AWS EC2" | Tag: AWS | "Learn how to launch your first EC2 instance, configure security groups, and connect via SSH — a hands-on guide for beginners." | [Read More button]
+   Card 2: "Git Branching Strategies for Teams" | Tag: GitHub | "Explore trunk-based development, GitFlow, and feature branching. Choose the right strategy for your team's workflow." | [Read More button]
+   Card 3: "Building a CI/CD Pipeline with GitHub Actions" | Tag: CI/CD | "Step-by-step walkthrough of creating a GitHub Actions workflow that builds, tests, and deploys your application automatically." | [Read More button]
+
+SECTION 5 — REGISTRATION (id="register")
+   Form fields: Full Name, Email, Username, Password
+   Submit button: "Register"
+
+SECTION 6 — CONTACT (id="contact")
+   Form fields: Name, Email, Subject, Message (textarea)
+   Submit button: "Send Message"
+
+SECTION 7 — ABOUT (id="about")
+   Heading: "About The Cloud"
+   Content: "Hi, I'm Puneet Gaur — an IT professional passionate about cloud technologies and modern development practices. I created The Cloud to help learners like you navigate AWS, GitHub, DevOps, and cloud architecture through hands-on tutorials and real-world examples. Whether you're just starting out or looking to advance your skills, this portal is your gateway to the cloud."
+
+SECTION 8 — FOOTER
+   Copyright: "© 2024 The Cloud — by Puneet Gaur"
+   Links: LinkedIn [placeholder href="#"] | GitHub [placeholder href="#"] | Email [placeholder href="#"]
+
+OUTPUT REQUIREMENT:
+Return ONLY the complete HTML file content. No explanations outside the code.
+Save the file as: TheCloud.html in the current project directory.</div>
+      </div>
+      <div class="step-row">
+        <div class="row-label">Output produced:</div>
+        <div class="chips">
+          <span class="chip ch-impl">TheCloud.html</span>
+          <span class="chip ch-impl">All 8 sections complete</span>
+          <span class="chip ch-impl">Embedded CSS</span>
+          <span class="chip ch-impl">Fully responsive</span>
+          <span class="chip ch-impl">Zero dependencies</span>
+        </div>
+      </div>
+      <div class="step-row">
+        <div class="row-label">Quick check after the agent finishes:</div>
+        <ul class="checklist">
+          <li>TheCloud.html file exists in the project folder</li>
+          <li>File size is at least 50KB (a complete portal should be substantial)</li>
+          <li>No external &lt;link&gt; or &lt;script src="..."&gt; tags pointing to CDNs</li>
+          <li>&lt;style&gt; block is present with CSS custom properties (--color-*, --font-*)</li>
+          <li>All 6 topic cards have content (not placeholder)</li>
+          <li>Both forms are present (registration + contact)</li>
+          <li>"Puneet Gaur" appears in the About section</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════
+       STEP 6 — BROWSER QA
+  ═══════════════════════════════════════ -->
+  <div class="phase-header">
+    <span class="phase-badge pb-rev">Phase 4 — Review</span>
+    <h2>Browser QA — Test and Present</h2>
+    <span class="phase-time">41 → 45 min</span>
+  </div>
+
+  <div class="step-card">
+    <div class="sc-head">
+      <div class="sc-num n-rev">6</div>
+      <div class="sc-info">
+        <div class="sc-title">Open in Browser — Verify All 8 Sections</div>
+        <div class="sc-why">Open TheCloud.html in your browser and walk through the QA checklist. No server needed — double-click the file or drag it into a browser tab. This is your demo moment: show the audience the finished portal and the 5 artifacts BMad produced along the way.</div>
+      </div>
+      <div class="sc-meta">
+        <span class="sc-time">4 min</span>
+        <span class="sc-skill">browser QA</span>
+      </div>
+    </div>
+    <div class="sc-body">
+      <div class="step-row">
+        <div class="row-label">Open the file — no server needed:</div>
+        <div class="cmd-block">open TheCloud.html      # Mac
+start TheCloud.html     # Windows</div>
+      </div>
+      <div class="step-row">
+        <div class="row-label">Section-by-section checklist:</div>
+        <ul class="checklist">
+          <li><strong>Navbar:</strong> "The Cloud" brand name visible + all 4 nav links (Home, Topics, Register, Contact)</li>
+          <li><strong>Hero:</strong> Strong headline + subheading + 2 CTA buttons ("Explore Topics" and "Register Now")</li>
+          <li><strong>Topics:</strong> All 6 cards visible — AWS, GitHub, DevOps, Cloud Basics, CI/CD, Linux — each with a button</li>
+          <li><strong>Blog Posts:</strong> 3 post cards with titles, excerpts, category tags, "Read More" buttons</li>
+          <li><strong>Registration:</strong> Form with Full Name, Email, Username, Password fields + Register button</li>
+          <li><strong>Contact:</strong> Form with Name, Email, Subject, Message textarea + Send Message button</li>
+          <li><strong>About:</strong> "Puneet Gaur" mentioned + professional introduction paragraph</li>
+          <li><strong>Footer:</strong> Copyright line + LinkedIn, GitHub, Email links present</li>
+          <li><strong>Responsive:</strong> Resize browser to 375px wide — cards should stack to 1 column</li>
+          <li><strong>No console errors:</strong> Open DevTools (F12) → Console → no red error lines</li>
+        </ul>
+      </div>
+      <div class="step-row">
+        <div class="row-label">If something is missing, run a targeted fix (still in the same Dev Agent window):</div>
+        <div class="prompt-block">Please fix only this specific issue in TheCloud.html:
+[describe the problem — e.g., "The Contact form is missing from the file"
+or "Topic card buttons are not visible — they seem to be missing"]
+
+Open TheCloud.html with your Read tool, locate the issue, and apply the fix.
+Do not regenerate the entire file.</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="divider"></div>
+
+  <!-- ─── DELIVERABLES ─── -->
+  <div class="delivery">
+    <h3>Final Deliverables — What BMad Produced</h3>
+    <div class="delivery-grid">
+      <div class="d-item">
+        <div class="d-file">prd.md</div>
+        <div class="d-desc">Product Requirements Document — structured from the PDF</div>
+      </div>
+      <div class="d-item">
+        <div class="d-file">epics.md</div>
+        <div class="d-desc">6 Epics + 18+ User Stories with acceptance criteria</div>
+      </div>
+      <div class="d-item">
+        <div class="d-file">stories/*.md</div>
+        <div class="d-desc">Individual story files for each user story</div>
+      </div>
+      <div class="d-item">
+        <div class="d-file">architecture.md</div>
+        <div class="d-desc">Technical architecture — HTML structure, CSS system, epic mapping</div>
+      </div>
+      <div class="d-item">
+        <div class="d-file">ux-spec.md</div>
+        <div class="d-desc">Visual design spec — colors, typography, all 8 section layouts</div>
+      </div>
+      <div class="d-item">
+        <div class="d-file">TheCloud.html</div>
+        <div class="d-desc">Complete IT learning portal — open in any browser, zero dependencies</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ─── DEMO NARRATIVE ─── -->
+  <div class="callout callout-info" style="margin-top:1.5rem">
+    <h4>Demo Closing Narrative — Say This to the Audience</h4>
+    <p>
+      "We started with a PDF. The <strong>PM Agent</strong> read it and produced a structured PRD — without us writing a single line of documentation. The <strong>Epics Agent</strong> broke that into 6 Epics and 18 User Stories. The <strong>Architect Agent</strong> read those and designed the technical architecture. The <strong>UX Agent</strong> read the architecture and produced the visual design spec. Finally, the <strong>Dev Agent</strong> read all four documents and built the complete portal. <strong>Five agents, five artifacts, one deliverable — in 45 minutes.</strong> And at no point did you copy-paste a requirement from one agent to the next — every agent read the files its predecessor left behind."
+    </p>
+  </div>
+
+  <!-- ─── TIPS ─── -->
+  <div class="tips-section">
+    <h3>Tips for Demo Day — Avoid Common Mistakes</h3>
+    <div class="tips-grid">
+      <div class="tip">
+        <strong>Always open a fresh window per step</strong>
+        Using Ctrl+N / Cmd+N. Continuing in the same window contaminates the agent's context with the previous step's role — BMad agents work best with clean slates.
+      </div>
+      <div class="tip">
+        <strong>Confirm files are saved before moving on</strong>
+        Type <code>ls</code> in the terminal after each step. If the file isn't there, ask the agent: "Please save your output to [filename] now."
+      </div>
+      <div class="tip">
+        <strong>Prompts are pre-written above</strong>
+        Copy-paste the prompts directly. Do not retype during the demo — even one missing word ("epics.md" vs "epics") can confuse the agent.
+      </div>
+      <div class="tip">
+        <strong>If the Dev Agent runs over time</strong>
+        After 8 minutes, type: "Please output the complete HTML file now — use placeholder sections for anything not yet finished." This gets you an openable file to show.
+      </div>
+      <div class="tip">
+        <strong>Show the artifacts, not just the HTML</strong>
+        Open prd.md, epics.md, and architecture.md to the audience before opening the browser. The documents are the BMad story — they prove the methodology produced more than just code.
+      </div>
+      <div class="tip">
+        <strong>Highlight the "no copy-paste" moment</strong>
+        When running Step 3 (Architect), point out to the audience that you only typed "read prd.md" — the agent found the file on its own. This is the core BMad demo talking point.
+      </div>
+    </div>
+  </div>
+
+</div>
