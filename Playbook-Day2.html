@@ -1,0 +1,1429 @@
+<title>The Cloud Blog — BMad Enhancement Playbook · Day 2</title>
+<style>
+  :root {
+    --bg: #0B0F1A;
+    --surface: #131929;
+    --surface2: #1B2236;
+    --border: #252D42;
+    --text: #DDE4F0;
+    --muted: #7A8BA8;
+    --faint: #2E3A55;
+
+    --plan:   #F59E0B;
+    --plan-dim: rgba(245,158,11,0.10);
+    --plan-border: rgba(245,158,11,0.28);
+
+    --story:  #FB923C;
+    --story-dim: rgba(251,146,60,0.10);
+    --story-border: rgba(251,146,60,0.28);
+
+    --arch:   #60A5FA;
+    --arch-dim: rgba(96,165,250,0.10);
+    --arch-border: rgba(96,165,250,0.28);
+
+    --ux:     #A78BFA;
+    --ux-dim: rgba(167,139,250,0.10);
+    --ux-border: rgba(167,139,250,0.28);
+
+    --impl:   #34D399;
+    --impl-dim: rgba(52,211,153,0.10);
+    --impl-border: rgba(52,211,153,0.28);
+
+    --review: #FB7185;
+    --review-dim: rgba(251,113,133,0.09);
+    --review-border: rgba(251,113,133,0.26);
+
+    --info:   #38BDF8;
+    --info-dim: rgba(56,189,248,0.09);
+    --info-border: rgba(56,189,248,0.26);
+
+    --enhance: #F472B6;
+    --enhance-dim: rgba(244,114,182,0.10);
+    --enhance-border: rgba(244,114,182,0.28);
+
+    --mono: 'Courier New', 'Menlo', 'Monaco', monospace;
+    --sans: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+  }
+  @media (prefers-color-scheme: light) {
+    :root {
+      --bg: #EFF3FA;
+      --surface: #FFFFFF;
+      --surface2: #E5ECF8;
+      --border: #C8D3E8;
+      --text: #18243A;
+      --muted: #5A6A88;
+      --faint: #B8C6DE;
+      --plan-dim: rgba(245,158,11,0.08);
+      --plan-border: rgba(217,119,6,0.32);
+      --story-dim: rgba(234,88,12,0.08);
+      --story-border: rgba(234,88,12,0.30);
+      --arch-dim: rgba(37,99,235,0.07);
+      --arch-border: rgba(37,99,235,0.28);
+      --ux-dim: rgba(109,40,217,0.07);
+      --ux-border: rgba(109,40,217,0.28);
+      --impl-dim: rgba(5,150,105,0.07);
+      --impl-border: rgba(5,150,105,0.28);
+      --review-dim: rgba(225,29,72,0.07);
+      --review-border: rgba(225,29,72,0.26);
+      --info-dim: rgba(2,132,199,0.07);
+      --info-border: rgba(2,132,199,0.26);
+      --enhance-dim: rgba(219,39,119,0.07);
+      --enhance-border: rgba(219,39,119,0.28);
+    }
+  }
+  :root[data-theme="light"] {
+    --bg: #EFF3FA; --surface: #FFFFFF; --surface2: #E5ECF8;
+    --border: #C8D3E8; --text: #18243A; --muted: #5A6A88; --faint: #B8C6DE;
+    --plan-dim: rgba(245,158,11,0.08); --plan-border: rgba(217,119,6,0.32);
+    --story-dim: rgba(234,88,12,0.08); --story-border: rgba(234,88,12,0.30);
+    --arch-dim: rgba(37,99,235,0.07); --arch-border: rgba(37,99,235,0.28);
+    --ux-dim: rgba(109,40,217,0.07); --ux-border: rgba(109,40,217,0.28);
+    --impl-dim: rgba(5,150,105,0.07); --impl-border: rgba(5,150,105,0.28);
+    --review-dim: rgba(225,29,72,0.07); --review-border: rgba(225,29,72,0.26);
+    --info-dim: rgba(2,132,199,0.07); --info-border: rgba(2,132,199,0.26);
+    --enhance-dim: rgba(219,39,119,0.07); --enhance-border: rgba(219,39,119,0.28);
+  }
+  :root[data-theme="dark"] {
+    --bg: #0B0F1A; --surface: #131929; --surface2: #1B2236;
+    --border: #252D42; --text: #DDE4F0; --muted: #7A8BA8; --faint: #2E3A55;
+    --plan-dim: rgba(245,158,11,0.10); --plan-border: rgba(245,158,11,0.28);
+    --story-dim: rgba(251,146,60,0.10); --story-border: rgba(251,146,60,0.28);
+    --arch-dim: rgba(96,165,250,0.10); --arch-border: rgba(96,165,250,0.28);
+    --ux-dim: rgba(167,139,250,0.10); --ux-border: rgba(167,139,250,0.28);
+    --impl-dim: rgba(52,211,153,0.10); --impl-border: rgba(52,211,153,0.28);
+    --review-dim: rgba(251,113,133,0.09); --review-border: rgba(251,113,133,0.26);
+    --info-dim: rgba(56,189,248,0.09); --info-border: rgba(56,189,248,0.26);
+    --enhance-dim: rgba(244,114,182,0.10); --enhance-border: rgba(244,114,182,0.28);
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--sans);
+    font-size: 14px;
+    line-height: 1.65;
+    padding: 2rem 1rem 5rem;
+  }
+  .page { max-width: 880px; margin: 0 auto; }
+
+  /* ─── HEADER ─── */
+  .header { margin-bottom: 2rem; }
+  .eyebrow {
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 0.55rem;
+  }
+  .header h1 {
+    font-size: 1.7rem;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    line-height: 1.2;
+    text-wrap: balance;
+  }
+  .header h1 em { font-style: normal; color: var(--enhance); }
+  .header-sub { color: var(--muted); margin-top: 0.55rem; font-size: 13.5px; max-width: 620px; line-height: 1.55; }
+
+  /* ─── CALLOUT BOXES ─── */
+  .callout {
+    border-radius: 8px;
+    padding: 1rem 1.2rem;
+    margin-bottom: 1rem;
+    border: 1px solid;
+    font-size: 13px;
+    line-height: 1.6;
+  }
+  .callout-info    { background: var(--info-dim);    border-color: var(--info-border); }
+  .callout-warn    { background: var(--story-dim);   border-color: var(--story-border); }
+  .callout-enhance { background: var(--enhance-dim); border-color: var(--enhance-border); }
+  .callout h4 {
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    margin-bottom: 0.4rem;
+  }
+  .callout-info h4    { color: var(--info); }
+  .callout-warn h4    { color: var(--story); }
+  .callout-enhance h4 { color: var(--enhance); }
+  .callout p { color: var(--muted); }
+  .callout strong { color: var(--text); }
+
+  /* ─── ENHANCEMENT BANNER ─── */
+  .enhance-banner {
+    background: var(--enhance-dim);
+    border: 1px solid var(--enhance-border);
+    border-radius: 10px;
+    padding: 1.5rem;
+    margin: 1.75rem 0 2.5rem;
+  }
+  .enhance-banner h2 {
+    font-size: 15px;
+    font-weight: 600;
+    margin-bottom: 0.8rem;
+    color: var(--enhance);
+    letter-spacing: -0.01em;
+  }
+  .enhance-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
+    gap: 0.9rem;
+    margin-top: 1rem;
+  }
+  .enhance-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 7px;
+    padding: 0.9rem 1rem;
+  }
+  .enhance-card-tag {
+    font-family: var(--mono);
+    font-size: 9px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--enhance);
+    margin-bottom: 0.3rem;
+    font-weight: 700;
+  }
+  .enhance-card h4 { font-size: 12.5px; font-weight: 600; margin-bottom: 0.25rem; }
+  .enhance-card p  { font-size: 11.5px; color: var(--muted); line-height: 1.5; }
+
+  /* ─── HOW BMAD WORKS (enhancement variant) ─── */
+  .how-section {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 1.5rem;
+    margin: 1.75rem 0 2.5rem;
+  }
+  .how-section h2 {
+    font-size: 15px;
+    font-weight: 600;
+    margin-bottom: 1rem;
+    letter-spacing: -0.01em;
+  }
+  .how-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1rem;
+  }
+  .how-card {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 7px;
+    padding: 1rem;
+  }
+  .how-card-num {
+    font-family: var(--mono);
+    font-size: 10px;
+    color: var(--muted);
+    margin-bottom: 0.3rem;
+  }
+  .how-card h4 { font-size: 13px; font-weight: 600; margin-bottom: 0.3rem; }
+  .how-card p  { font-size: 12px; color: var(--muted); line-height: 1.5; }
+
+  /* ─── FILE TREE ─── */
+  .file-tree {
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: 7px;
+    padding: 1rem 1.2rem;
+    font-family: var(--mono);
+    font-size: 12px;
+    line-height: 1.9;
+    margin-top: 1.2rem;
+  }
+  .file-tree .folder { color: var(--muted); }
+  .file-tree .file   { color: var(--text); }
+  .file-tree .file-new { color: var(--enhance); }
+  .file-tree .file-update { color: var(--impl); }
+  .file-tree .tag    {
+    font-size: 9.5px;
+    padding: 0.1rem 0.4rem;
+    border-radius: 3px;
+    margin-left: 0.5rem;
+    font-weight: 600;
+    border: 1px solid;
+  }
+  .t-plan   { background: var(--plan-dim);    color: var(--plan);    border-color: var(--plan-border); }
+  .t-story  { background: var(--story-dim);   color: var(--story);   border-color: var(--story-border); }
+  .t-arch   { background: var(--arch-dim);    color: var(--arch);    border-color: var(--arch-border); }
+  .t-ux     { background: var(--ux-dim);      color: var(--ux);      border-color: var(--ux-border); }
+  .t-impl   { background: var(--impl-dim);    color: var(--impl);    border-color: var(--impl-border); }
+  .t-new    { background: var(--enhance-dim); color: var(--enhance); border-color: var(--enhance-border); }
+
+  /* ─── TIMELINE BAR ─── */
+  .timeline-wrap {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 1.25rem 1.4rem;
+    margin-bottom: 2.5rem;
+  }
+  .tl-label {
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 0.8rem;
+  }
+  .tl-track {
+    display: flex;
+    height: 26px;
+    border-radius: 5px;
+    overflow: hidden;
+    gap: 2px;
+  }
+  .tl-seg {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: var(--mono);
+    font-size: 9.5px;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    color: #0B0F1A;
+    border-radius: 3px;
+  }
+  .s1 { background: var(--plan);    flex: 7; }
+  .s2 { background: var(--story);   flex: 6; }
+  .s3 { background: var(--arch);    flex: 7; }
+  .s4 { background: var(--ux);      flex: 7; }
+  .s5 { background: var(--impl);    flex: 13; }
+  .s6 { background: var(--review);  flex: 5; }
+  .tl-legend {
+    display: flex;
+    gap: 1rem;
+    flex-wrap: wrap;
+    margin-top: 0.8rem;
+  }
+  .tl-li { display: flex; align-items: center; gap: 0.35rem; font-size: 11.5px; color: var(--muted); }
+  .tl-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+
+  /* ─── PHASE HEADER ─── */
+  .phase-header {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding-bottom: 0.85rem;
+    border-bottom: 1px solid var(--border);
+    margin: 2.5rem 0 1.25rem;
+  }
+  .phase-badge {
+    font-family: var(--mono);
+    font-size: 9.5px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    font-weight: 700;
+    padding: 0.22rem 0.6rem;
+    border-radius: 3px;
+  }
+  .pb-plan    { background: var(--plan-dim);    color: var(--plan);    border: 1px solid var(--plan-border); }
+  .pb-story   { background: var(--story-dim);   color: var(--story);   border: 1px solid var(--story-border); }
+  .pb-arch    { background: var(--arch-dim);    color: var(--arch);    border: 1px solid var(--arch-border); }
+  .pb-ux      { background: var(--ux-dim);      color: var(--ux);      border: 1px solid var(--ux-border); }
+  .pb-impl    { background: var(--impl-dim);    color: var(--impl);    border: 1px solid var(--impl-border); }
+  .pb-rev     { background: var(--review-dim);  color: var(--review);  border: 1px solid var(--review-border); }
+  .pb-enhance { background: var(--enhance-dim); color: var(--enhance); border: 1px solid var(--enhance-border); }
+
+  .phase-header h2 { font-size: 1.05rem; font-weight: 600; letter-spacing: -0.01em; }
+  .phase-time { margin-left: auto; font-family: var(--mono); font-size: 11px; color: var(--muted); background: var(--surface2); border: 1px solid var(--border); padding: 0.2rem 0.55rem; border-radius: 20px; white-space: nowrap; }
+
+  /* ─── STEP CARD ─── */
+  .step-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    margin-bottom: 1.25rem;
+    overflow: hidden;
+  }
+  .sc-head {
+    display: flex;
+    align-items: flex-start;
+    gap: 1rem;
+    padding: 1.1rem 1.3rem;
+    border-bottom: 1px solid var(--border);
+  }
+  .sc-num {
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: var(--mono);
+    font-size: 11px;
+    font-weight: 700;
+    flex-shrink: 0;
+    margin-top: 1px;
+    border: 1.5px solid;
+  }
+  .n-plan    { background: var(--plan-dim);    color: var(--plan);    border-color: var(--plan-border); }
+  .n-story   { background: var(--story-dim);   color: var(--story);   border-color: var(--story-border); }
+  .n-arch    { background: var(--arch-dim);    color: var(--arch);    border-color: var(--arch-border); }
+  .n-ux      { background: var(--ux-dim);      color: var(--ux);      border-color: var(--ux-border); }
+  .n-impl    { background: var(--impl-dim);    color: var(--impl);    border-color: var(--impl-border); }
+  .n-rev     { background: var(--review-dim);  color: var(--review);  border-color: var(--review-border); }
+
+  .sc-info { flex: 1; min-width: 0; }
+  .sc-title { font-size: 15px; font-weight: 600; margin-bottom: 0.2rem; }
+  .sc-why   { font-size: 12.5px; color: var(--muted); line-height: 1.55; }
+  .sc-meta  { display: flex; flex-direction: column; align-items: flex-end; gap: 0.4rem; flex-shrink: 0; }
+  .sc-time  { font-family: var(--mono); font-size: 13px; font-weight: 700; color: var(--text); }
+  .sc-skill { font-family: var(--mono); font-size: 10px; background: var(--surface2); border: 1px solid var(--border); color: var(--muted); padding: 0.15rem 0.45rem; border-radius: 3px; white-space: nowrap; }
+
+  .sc-body { padding: 0; }
+
+  /* ─── ACCORDION ROWS ─── */
+  .step-row {
+    border-bottom: 1px solid var(--border);
+    padding: 0.9rem 1.3rem;
+  }
+  .step-row:last-child { border-bottom: none; }
+
+  .row-label {
+    font-family: var(--mono);
+    font-size: 9.5px;
+    letter-spacing: 0.13em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 0.45rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+  .rl-badge {
+    font-size: 9px;
+    padding: 0.1rem 0.4rem;
+    border-radius: 2px;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+  }
+  .rl-open  { background: var(--info-dim);    color: var(--info);    border: 1px solid var(--info-border); }
+  .rl-paste { background: var(--plan-dim);    color: var(--plan);    border: 1px solid var(--plan-border); }
+  .rl-save  { background: var(--impl-dim);    color: var(--impl);    border: 1px solid var(--impl-border); }
+  .rl-note  { background: var(--enhance-dim); color: var(--enhance); border: 1px solid var(--enhance-border); }
+
+  .cmd-block {
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 0.7rem 0.9rem;
+    font-family: var(--mono);
+    font-size: 12px;
+    color: var(--text);
+    letter-spacing: 0.01em;
+  }
+  .prompt-block {
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 0.85rem 1rem;
+    font-family: var(--mono);
+    font-size: 11px;
+    line-height: 1.7;
+    color: var(--text);
+    white-space: pre-wrap;
+    word-break: break-word;
+  }
+  .prompt-hl  { color: var(--info); }
+  .prompt-new { color: var(--enhance); }
+
+  .handoff-box {
+    background: var(--info-dim);
+    border: 1px solid var(--info-border);
+    border-radius: 6px;
+    padding: 0.75rem 1rem;
+    font-size: 12.5px;
+    color: var(--muted);
+    line-height: 1.55;
+  }
+  .handoff-box strong { color: var(--info); }
+
+  .chips { display: flex; gap: 0.45rem; flex-wrap: wrap; }
+  .chip {
+    font-family: var(--mono);
+    font-size: 10.5px;
+    padding: 0.2rem 0.55rem;
+    border-radius: 4px;
+    border: 1px solid;
+    font-weight: 500;
+  }
+  .ch-plan    { background: var(--plan-dim);    color: var(--plan);    border-color: var(--plan-border); }
+  .ch-story   { background: var(--story-dim);   color: var(--story);   border-color: var(--story-border); }
+  .ch-arch    { background: var(--arch-dim);    color: var(--arch);    border-color: var(--arch-border); }
+  .ch-ux      { background: var(--ux-dim);      color: var(--ux);      border-color: var(--ux-border); }
+  .ch-impl    { background: var(--impl-dim);    color: var(--impl);    border-color: var(--impl-border); }
+  .ch-enhance { background: var(--enhance-dim); color: var(--enhance); border-color: var(--enhance-border); }
+
+  .checklist { list-style: none; display: flex; flex-direction: column; gap: 0.35rem; }
+  .checklist li {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.6rem;
+    font-size: 12.5px;
+    color: var(--muted);
+    line-height: 1.5;
+  }
+  .checklist li::before { content: '▸'; color: var(--faint); flex-shrink: 0; margin-top: 1px; font-size: 11px; }
+  .checklist li strong { color: var(--text); }
+
+  /* ─── FEATURE TABLE ─── */
+  .table-wrap { overflow-x: auto; }
+  table { width: 100%; border-collapse: collapse; font-size: 12px; }
+  th { background: var(--surface2); color: var(--muted); font-family: var(--mono); font-size: 9.5px; letter-spacing: 0.1em; text-transform: uppercase; padding: 0.55rem 0.8rem; text-align: left; border-bottom: 1px solid var(--border); }
+  td { padding: 0.55rem 0.8rem; border-bottom: 1px solid var(--border); vertical-align: top; color: var(--text); line-height: 1.5; }
+  tr:last-child td { border-bottom: none; }
+  .epic-label  { font-family: var(--mono); font-size: 10px; padding: 0.12rem 0.4rem; border-radius: 3px; font-weight: 600; background: var(--story-dim); color: var(--story); border: 1px solid var(--story-border); white-space: nowrap; }
+  .new-label   { font-family: var(--mono); font-size: 10px; padding: 0.12rem 0.4rem; border-radius: 3px; font-weight: 600; background: var(--enhance-dim); color: var(--enhance); border: 1px solid var(--enhance-border); white-space: nowrap; }
+  .story-label { font-family: var(--mono); font-size: 10px; color: var(--muted); }
+
+  /* ─── DIVIDER ─── */
+  .divider { height: 1px; background: var(--border); margin: 2.5rem 0; }
+
+  /* ─── FOOTER TIPS ─── */
+  .tips-section {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 1.3rem 1.5rem;
+    margin-top: 3rem;
+  }
+  .tips-section h3 { font-size: 13.5px; font-weight: 600; margin-bottom: 1rem; }
+  .tips-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(230px, 1fr)); gap: 0.9rem; }
+  .tip { font-size: 12.5px; color: var(--muted); line-height: 1.55; }
+  .tip strong { color: var(--text); display: block; margin-bottom: 0.15rem; }
+
+  /* ─── DELIVERY BOX ─── */
+  .delivery {
+    background: var(--enhance-dim);
+    border: 1px solid var(--enhance-border);
+    border-radius: 8px;
+    padding: 1.3rem 1.5rem;
+    margin-top: 2.5rem;
+  }
+  .delivery h3 { font-size: 13px; font-weight: 600; color: var(--enhance); margin-bottom: 0.9rem; }
+  .delivery-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 0.6rem; }
+  .d-item { background: var(--surface); border: 1px solid var(--border); border-radius: 6px; padding: 0.7rem 0.9rem; }
+  .d-item.d-new { border-color: var(--enhance-border); }
+  .d-file     { font-family: var(--mono); font-size: 11.5px; font-weight: 600; color: var(--impl);    margin-bottom: 0.2rem; }
+  .d-file-new { font-family: var(--mono); font-size: 11.5px; font-weight: 600; color: var(--enhance); margin-bottom: 0.2rem; }
+  .d-desc { font-size: 11px; color: var(--muted); line-height: 1.4; }
+
+  @media (max-width: 600px) {
+    .sc-head { flex-wrap: wrap; }
+    .sc-meta { flex-direction: row; align-items: center; margin-top: 0.5rem; }
+  }
+</style>
+
+<div class="page">
+
+  <!-- ─── HEADER ─── -->
+  <div class="header">
+    <div class="eyebrow">BMad Enhancement Workflow · Day 2 Demo Playbook · v1</div>
+    <h1>The Cloud Blog — <em>Day 2</em> Enhancement Guide</h1>
+    <p class="header-sub">Step-by-step BMad agent execution for Puneet Gaur's Day 2 demo: 4 enhancements layered on top of TheCloud.html — Registration Modal, Contact Modal, Chatbot Widget, and AWS Tutorial section. All 6 agents in sequence, 45-minute window.</p>
+  </div>
+
+  <!-- ─── ENHANCEMENT OVERVIEW ─── -->
+  <div class="enhance-banner">
+    <h2>Day 2 Enhancements — 4 New Features Added to TheCloud.html</h2>
+    <p style="font-size:12.5px;color:var(--muted);margin-bottom:0.2rem;">This playbook is additive. The existing <strong style="color:var(--text)">TheCloud.html</strong>, <strong style="color:var(--text)">prd.md</strong>, <strong style="color:var(--text)">architecture.md</strong>, and <strong style="color:var(--text)">ux-spec.md</strong> are all read by agents — no re-work from scratch. Each agent extends the Day 1 artifacts and the Dev Agent produces an enhanced <strong style="color:var(--text)">TheCloudV2.html</strong>.</p>
+    <div class="enhance-grid">
+      <div class="enhance-card">
+        <div class="enhance-card-tag">Enhancement 1</div>
+        <h4>Registration Modal</h4>
+        <p>Replace the inline registration section with a modal popup triggered by the nav Register button. Fields: Full Name, Email, Username, Password.</p>
+      </div>
+      <div class="enhance-card">
+        <div class="enhance-card-tag">Enhancement 2</div>
+        <h4>Contact Us Modal</h4>
+        <p>Replace the inline contact section with a modal popup triggered by the nav Contact link. Fields: Name, Email, Subject, Message.</p>
+      </div>
+      <div class="enhance-card">
+        <div class="enhance-card-tag">Enhancement 3</div>
+        <h4>Chatbot Widget</h4>
+        <p>Floating chat button at bottom-right. Expands into a chat window with a welcome message, input box, and structured hooks for future AWS Bedrock API connection.</p>
+      </div>
+      <div class="enhance-card">
+        <div class="enhance-card-tag">Enhancement 4</div>
+        <h4>AWS Tutorial Section</h4>
+        <p>New dedicated section with a YouTube embed placeholder titled "AWS Basics for Beginners" and a short description, styled consistently with the portal theme.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- ─── HOW BMAD ENHANCEMENT WORKS ─── -->
+  <div class="how-section">
+    <h2>How Enhancement Works in BMad — Reading Day 1 Artifacts From Disk</h2>
+    <div class="how-grid">
+      <div class="how-card">
+        <div class="how-card-num">Step A</div>
+        <h4>Agents read existing Day 1 files</h4>
+        <p>Every agent starts by reading <em>prd.md</em>, <em>architecture.md</em>, <em>ux-spec.md</em>, and <em>TheCloud.html</em> from disk. No copy-paste. No regeneration of existing work.</p>
+      </div>
+      <div class="how-card">
+        <div class="how-card-num">Step B</div>
+        <h4>Agents append, not replace</h4>
+        <p>Each agent adds new sections to existing artifacts: <em>prd-v2.md</em> extends the PRD, new story files go into <em>stories/</em>, <em>architecture-v2.md</em> adds modal + chatbot design patterns.</p>
+      </div>
+      <div class="how-card">
+        <div class="how-card-num">Step C</div>
+        <h4>Dev Agent enhances TheCloud.html</h4>
+        <p>The Dev Agent reads all v2 artifacts plus the original <em>TheCloud.html</em>, applies the 4 enhancements surgically, and saves the result as <em>TheCloudV2.html</em>.</p>
+      </div>
+    </div>
+    <div class="file-tree">
+      <span class="folder">Project6/</span><br>
+      &nbsp;&nbsp;<span class="file">├── prd.md</span><span class="tag t-plan">Day 1 (read)</span><br>
+      &nbsp;&nbsp;<span class="file-new">├── prd-v2.md</span><span class="tag t-new">Step 1 (new)</span><br>
+      &nbsp;&nbsp;<span class="file">├── epics.md</span><span class="tag t-plan">Day 1 (read)</span><br>
+      &nbsp;&nbsp;<span class="file-new">├── stories/story-007.md … story-010.md</span><span class="tag t-new">Step 2 (new)</span><br>
+      &nbsp;&nbsp;<span class="file">├── architecture.md</span><span class="tag t-plan">Day 1 (read)</span><br>
+      &nbsp;&nbsp;<span class="file-new">├── architecture-v2.md</span><span class="tag t-new">Step 3 (new)</span><br>
+      &nbsp;&nbsp;<span class="file">├── ux-spec.md</span><span class="tag t-plan">Day 1 (read)</span><br>
+      &nbsp;&nbsp;<span class="file-new">├── ux-spec-v2.md</span><span class="tag t-new">Step 4 (new)</span><br>
+      &nbsp;&nbsp;<span class="file">├── TheCloud.html</span><span class="tag t-plan">Day 1 (read by Dev)</span><br>
+      &nbsp;&nbsp;<span class="file-new">└── TheCloudV2.html</span><span class="tag t-new">Step 5 (deliverable)</span>
+    </div>
+  </div>
+
+  <!-- ─── CALLOUTS ─── -->
+  <div class="callout callout-enhance">
+    <h4>Day 2 Context — You are enhancing, not rebuilding</h4>
+    <p>All Day 1 artifacts (<strong>prd.md, epics.md, architecture.md, ux-spec.md, TheCloud.html</strong>) are already in your project folder. Every agent in this playbook reads those files first, then creates v2 additions. The Dev Agent will open TheCloud.html, apply the 4 enhancements, and save a new file — <strong>it does not regenerate the whole portal from scratch</strong>.</p>
+  </div>
+  <div class="callout callout-info">
+    <h4>Fresh context window per step</h4>
+    <p>Press <strong>Ctrl+N (Cmd+N on Mac)</strong> to open a new Claude Code chat for each step. Do not continue in the previous step's window — each agent has a distinct role and a clean context produces cleaner output.</p>
+  </div>
+  <div class="callout callout-warn">
+    <h4>Working directory check</h4>
+    <p>Ensure Claude Code is pointed at your Project6 folder. Run <strong>ls</strong> in the terminal — you should see prd.md, architecture.md, TheCloud.html, and the stories/ folder. If not, run: <strong>cd /path/to/Project6</strong></p>
+  </div>
+
+  <!-- ─── TIMELINE ─── -->
+  <div class="timeline-wrap">
+    <div class="tl-label">45-Minute Timeline — 6 Steps for Day 2 Enhancement</div>
+    <div class="tl-track">
+      <div class="tl-seg s1">PRD v2 7m</div>
+      <div class="tl-seg s2">Stories 6m</div>
+      <div class="tl-seg s3">ARCH v2 7m</div>
+      <div class="tl-seg s4">UX v2 7m</div>
+      <div class="tl-seg s5">DEV 13m</div>
+      <div class="tl-seg s6">QA 5m</div>
+    </div>
+    <div class="tl-legend">
+      <div class="tl-li"><div class="tl-dot" style="background:var(--plan)"></div>Step 1: PM Agent (PRD v2) · 0–7 min</div>
+      <div class="tl-li"><div class="tl-dot" style="background:var(--story)"></div>Step 2: Enhancement Stories · 7–13 min</div>
+      <div class="tl-li"><div class="tl-dot" style="background:var(--arch)"></div>Step 3: Architect Agent (v2) · 13–20 min</div>
+      <div class="tl-li"><div class="tl-dot" style="background:var(--ux)"></div>Step 4: UX Designer (v2) · 20–27 min</div>
+      <div class="tl-li"><div class="tl-dot" style="background:var(--impl)"></div>Step 5: Dev Agent · 27–40 min</div>
+      <div class="tl-li"><div class="tl-dot" style="background:var(--review)"></div>Step 6: Browser QA · 40–45 min</div>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════
+       STEP 1 — PM AGENT / PRD v2
+  ═══════════════════════════════════════ -->
+  <div class="phase-header">
+    <span class="phase-badge pb-plan">Phase 1 — Planning</span>
+    <h2>PM Agent — Enhancement PRD (prd-v2.md)</h2>
+    <span class="phase-time">0 → 7 min</span>
+  </div>
+
+  <div class="step-card">
+    <div class="sc-head">
+      <div class="sc-num n-plan">1</div>
+      <div class="sc-info">
+        <div class="sc-title">PM Agent — Document the 4 Enhancement Requirements</div>
+        <div class="sc-why">The PM Agent reads the existing prd.md so it understands the full Day 1 scope, then creates a focused enhancement PRD that captures the 4 new features. This becomes the source of truth for all Day 2 agents — they read prd-v2.md, not the raw PDF requirement. <strong>You describe the enhancements once — right here.</strong></div>
+      </div>
+      <div class="sc-meta">
+        <span class="sc-time">7 min</span>
+        <span class="sc-skill">bmad-agent-pm</span>
+      </div>
+    </div>
+    <div class="sc-body">
+      <div class="step-row">
+        <div class="row-label"><span class="rl-badge rl-open">OPEN</span>Open a brand-new Claude Code context window (Ctrl+N / Cmd+N)</div>
+        <div class="cmd-block">/bmad-agent-pm</div>
+      </div>
+      <div class="step-row">
+        <div class="row-label"><span class="rl-badge rl-paste">PASTE</span>Copy and paste this prompt. Press Enter.</div>
+        <div class="prompt-block">You are the BMad PM Agent. This is a Day 2 enhancement request for an existing project.
+
+<span class="prompt-hl">Please read the existing PRD from the current project directory:
+1. prd.md — the Day 1 Product Requirements Document</span>
+
+Do not ask me to paste it — use your Read tool to open it directly.
+
+Once you have read prd.md, create a focused Enhancement PRD that documents 4 new features
+to be added to the existing portal. Do NOT rewrite the original PRD — produce a separate file
+that extends it.
+
+PROJECT: The Cloud — IT Learning Portal (Puneet Gaur)
+BASE FILE: TheCloud.html (already built in Day 1)
+TECHNICAL CONSTRAINT: Plain HTML/CSS/JavaScript only. No external libraries. Single HTML file.
+
+<span class="prompt-new">ENHANCEMENT REQUIREMENTS — document each of these 4 features in detail:</span>
+
+ENHANCEMENT 1 — REGISTRATION MODAL POPUP
+- Replace the inline registration section with a modal overlay
+- Modal opens when user clicks "Register" in the navbar or hero section CTA button
+- Modal fields: Full Name, Email, Username, Password
+- Modal has a close button (X) in the top-right corner
+- Clicking outside the modal overlay also closes it
+- Modal submit button: "Register"
+- The existing inline #register section should be removed from the page flow
+
+ENHANCEMENT 2 — CONTACT US MODAL POPUP
+- Replace the inline contact section with a modal overlay
+- Modal opens when user clicks "Contact" in the navbar
+- Modal fields: Name, Email, Subject, Message (textarea)
+- Modal has a close button (X) in the top-right corner
+- Clicking outside the modal overlay also closes it
+- Modal submit button: "Send Message"
+- The existing inline #contact section should be removed from the page flow
+
+ENHANCEMENT 3 — DUMMY CHATBOT WIDGET
+- Floating chat button fixed at bottom-right corner of the page
+- Clicking the button expands a chat window panel above the button
+- Chat window shows a dummy welcome message:
+  "Hi! I'm your cloud assistant. I can help you with AWS, GitHub, and DevOps topics."
+- User can type in an input field and click "Send"
+- Dummy responses can be hard-coded (no real AI — frontend only for now)
+- The code must include clearly labeled comments showing exactly where
+  an AWS Bedrock API call would be inserted in the future
+- Chat window can be collapsed by clicking the chat button again
+
+ENHANCEMENT 4 — AWS TUTORIALS SECTION
+- New dedicated section added to the page (between Blog Posts and About sections)
+- Section heading: "AWS Tutorials"
+- Contains a YouTube embed placeholder area (iframe or styled div placeholder)
+- Video title displayed below placeholder: "AWS Basics for Beginners"
+- Short description text: "Start your AWS journey with this beginner-friendly walkthrough.
+  Learn core services, navigate the console, and launch your first cloud resources."
+- Style must be consistent with the existing portal theme (same card/section patterns)
+- Placeholder should be clearly marked so a real YouTube embed URL can be added later
+
+Please produce an Enhancement PRD (prd-v2.md) with these sections:
+1. Enhancement Overview (why these 4 features improve the portal)
+2. Feature Specifications (one sub-section per enhancement, with fields, behavior, and constraints)
+3. Technical Constraints (same single-file, no external libraries rule)
+4. Impact on Existing Features (what changes vs what stays)
+5. Acceptance Criteria for each enhancement
+
+Save as: prd-v2.md in the current project directory.</div>
+      </div>
+      <div class="step-row">
+        <div class="row-label"><span class="rl-badge rl-save">SAVE</span>Confirm the file is saved</div>
+        <div class="handoff-box">
+          After the agent finishes, run <strong>ls</strong> in the terminal — you should see <strong>prd-v2.md</strong> alongside prd.md. If missing, type: <em>"Please save the Enhancement PRD to prd-v2.md now."</em>
+        </div>
+      </div>
+      <div class="step-row">
+        <div class="row-label">Output produced:</div>
+        <div class="chips">
+          <span class="chip ch-plan">prd-v2.md</span>
+          <span class="chip ch-plan">4 feature specs</span>
+          <span class="chip ch-plan">Acceptance criteria</span>
+          <span class="chip ch-plan">Impact analysis</span>
+        </div>
+      </div>
+      <div class="step-row">
+        <div class="row-label">Quick check before moving on:</div>
+        <ul class="checklist">
+          <li>prd-v2.md exists in the project folder alongside prd.md</li>
+          <li>All 4 enhancements are described with field-level detail</li>
+          <li>Chatbot entry mentions AWS Bedrock integration comments</li>
+          <li>Acceptance criteria listed for each enhancement</li>
+          <li>Agent read prd.md on its own — no copy-paste needed</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════
+       STEP 2 — ENHANCEMENT EPICS & STORIES
+  ═══════════════════════════════════════ -->
+  <div class="phase-header">
+    <span class="phase-badge pb-story">Phase 1 — Planning</span>
+    <h2>PM Agent — Enhancement Epics &amp; User Stories</h2>
+    <span class="phase-time">7 → 13 min</span>
+  </div>
+
+  <div class="step-card">
+    <div class="sc-head">
+      <div class="sc-num n-story">2</div>
+      <div class="sc-info">
+        <div class="sc-title">Create User Stories for the 4 Enhancement Features</div>
+        <div class="sc-why">Rather than regenerating all Day 1 epics, this step creates targeted user stories for the 4 new enhancements. Stories pick up from where Day 1 left off (US-019 onward) so the backlog stays continuous. The agent reads both prd-v2.md and the existing epics.md — you never paste anything.</div>
+      </div>
+      <div class="sc-meta">
+        <span class="sc-time">6 min</span>
+        <span class="sc-skill">bmad-create-epics-and-stories</span>
+      </div>
+    </div>
+    <div class="sc-body">
+      <div class="step-row">
+        <div class="row-label"><span class="rl-badge rl-open">OPEN</span>Open a new context window. Do NOT continue in Step 1's window.</div>
+        <div class="cmd-block">/bmad-agent-pm</div>
+      </div>
+      <div class="step-row">
+        <div class="row-label"><span class="rl-badge rl-paste">PASTE</span>This prompt reads existing files — no copy-paste of document content required.</div>
+        <div class="prompt-block">You are the BMad PM Agent. This is Day 2 of a project. Existing planning artifacts are on disk.
+
+<span class="prompt-hl">Please read these files from the current project directory:
+1. prd-v2.md — the Enhancement PRD (Day 2 requirements)
+2. epics.md  — the existing Day 1 Epics (so you know the current story numbering)</span>
+
+Do not ask me to paste them — use your Read tool to open them directly.
+
+Once you have read both files, create user stories for the 4 Day 2 enhancements.
+Continue story numbering from where Day 1 left off — check epics.md for the last story ID
+and start from the next number (e.g., if last was US-018, start at US-019).
+
+For each enhancement, write user stories in this format:
+  Story ID: US-0xx
+  Title: [short title]
+  User Story: As a [user type], I want to [action] so that [benefit].
+  Acceptance Criteria: (3–5 bullet points)
+  Priority: High / Medium / Low
+
+<span class="prompt-new">ENHANCEMENT EPICS — create one epic per enhancement:</span>
+
+EP-007 — Interactive Modal System
+  Stories for Registration Modal and Contact Modal behavior
+  (opening, closing via X button, closing by clicking the overlay, form fields, submission)
+
+EP-008 — AI Chatbot Widget
+  Stories for the floating chat button, expand/collapse, welcome message, user input,
+  dummy response behavior, and Bedrock integration comment hooks in code
+
+EP-009 — AWS Tutorials Content Section
+  Stories for the new section's placement, YouTube placeholder display,
+  video title, description, and future embed swap
+
+Save the new epics as an addition in: stories/enhancement-epics.md
+Save each new user story as separate files: stories/story-007.md, stories/story-008.md, etc.</div>
+      </div>
+      <div class="step-row">
+        <div class="row-label">What the story table should look like:</div>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr><th>Epic</th><th>ID</th><th>Sample User Story</th><th>Priority</th></tr>
+            </thead>
+            <tbody>
+              <tr><td><span class="new-label">EP-007</span> Modal System</td><td><span class="story-label">US-019</span></td><td>As a visitor, I want the Register button to open a modal so I can sign up without leaving the page.</td><td>High</td></tr>
+              <tr><td><span class="new-label">EP-007</span> Modal System</td><td><span class="story-label">US-020</span></td><td>As a user, I want to close the modal by pressing X or clicking outside it so I can dismiss it quickly.</td><td>High</td></tr>
+              <tr><td><span class="new-label">EP-008</span> Chatbot Widget</td><td><span class="story-label">US-022</span></td><td>As a learner, I want a floating chat button so I can ask questions without scrolling to a contact form.</td><td>Medium</td></tr>
+              <tr><td><span class="new-label">EP-008</span> Chatbot Widget</td><td><span class="story-label">US-023</span></td><td>As a developer, I want AWS Bedrock integration comments in the chatbot code so I can wire up real AI later.</td><td>Medium</td></tr>
+              <tr><td><span class="new-label">EP-009</span> AWS Tutorials</td><td><span class="story-label">US-025</span></td><td>As a learner, I want to see an AWS tutorial video placeholder so I know video content is coming.</td><td>Medium</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+      <div class="step-row">
+        <div class="row-label">Output produced:</div>
+        <div class="chips">
+          <span class="chip ch-story">stories/enhancement-epics.md</span>
+          <span class="chip ch-story">stories/story-007.md to story-010+.md</span>
+          <span class="chip ch-story">3 new Epics (EP-007 to EP-009)</span>
+          <span class="chip ch-story">~10 new User Stories</span>
+        </div>
+      </div>
+      <div class="step-row">
+        <div class="row-label">Quick check before moving on:</div>
+        <ul class="checklist">
+          <li>stories/enhancement-epics.md exists with EP-007, EP-008, EP-009</li>
+          <li>New story files exist in stories/ folder (story-007.md onward)</li>
+          <li>Story IDs continue from Day 1 numbering (no duplicate IDs)</li>
+          <li>Each story has clear acceptance criteria including modal close behavior</li>
+          <li>A story mentions AWS Bedrock integration comment hooks</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════
+       STEP 3 — ARCHITECT v2
+  ═══════════════════════════════════════ -->
+  <div class="phase-header">
+    <span class="phase-badge pb-arch">Phase 2 — Solutioning</span>
+    <h2>Architect Agent — Enhancement Architecture (architecture-v2.md)</h2>
+    <span class="phase-time">13 → 20 min</span>
+  </div>
+
+  <div class="step-card">
+    <div class="sc-head">
+      <div class="sc-num n-arch">3</div>
+      <div class="sc-info">
+        <div class="sc-title">Architect Agent — Technical Patterns for Modals, Chatbot &amp; YouTube Section</div>
+        <div class="sc-why">The Architect Agent reads the Day 1 architecture and the Enhancement PRD, then produces targeted architecture notes for the 4 new features. Modal overlay patterns, chatbot JS structure with Bedrock integration comments, and the YouTube section placement in the DOM — all defined here before any code is written. The Dev Agent will follow this exactly.</div>
+      </div>
+      <div class="sc-meta">
+        <span class="sc-time">7 min</span>
+        <span class="sc-skill">bmad-agent-architect</span>
+      </div>
+    </div>
+    <div class="sc-body">
+      <div class="step-row">
+        <div class="row-label"><span class="rl-badge rl-open">OPEN</span>Open a new context window.</div>
+        <div class="cmd-block">/bmad-agent-architect</div>
+      </div>
+      <div class="step-row">
+        <div class="row-label"><span class="rl-badge rl-paste">PASTE</span>The agent reads 3 files from disk — no copy-paste needed.</div>
+        <div class="prompt-block">You are the BMad Architect Agent. This is a Day 2 enhancement design session.
+
+<span class="prompt-hl">Please read these files from the current project directory:
+1. architecture.md — the Day 1 Technical Architecture Document
+2. prd-v2.md      — the Enhancement PRD (4 new features)</span>
+
+Do not ask me to paste them — use your Read tool to open them directly.
+
+Once you have read both files, produce an Enhancement Architecture Document.
+Do NOT rewrite architecture.md — create a new additive document.
+
+PROJECT: The Cloud — single HTML file (TheCloud.html), no external libraries.
+
+<span class="prompt-new">Please design the technical approach for each enhancement:</span>
+
+1. MODAL ARCHITECTURE (applies to both Registration and Contact modals)
+   - HTML structure: where modal markup lives in TheCloud.html
+     (recommended: append modal divs just before closing &lt;/body&gt; tag)
+   - CSS approach:
+     * .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.7); z-index: 1000 }
+     * .modal-box { position: relative; centered with margin: auto and flexbox }
+     * .modal-open / .modal-hidden — toggle visibility
+     * No external libraries — pure CSS transitions for open/close animation
+   - JavaScript approach:
+     * openModal(id) / closeModal(id) functions
+     * Event listeners: Register button → openModal('register-modal')
+     * Contact link → openModal('contact-modal')
+     * X button → closeModal()
+     * Overlay click → closeModal() (check event.target === overlay)
+   - Changes to existing HTML: remove #register and #contact sections from page flow;
+     update navbar anchor hrefs to call openModal() instead of scrolling to sections
+
+2. CHATBOT WIDGET ARCHITECTURE
+   - HTML structure: fixed-position widget wrapper at bottom-right
+     * Chat toggle button (circular, fixed position)
+     * Chat panel (hidden by default, shown on toggle)
+     * Messages area (scrollable div)
+     * Input row (text input + Send button)
+   - CSS:
+     * .chatbot-widget { position: fixed; bottom: 2rem; right: 2rem; z-index: 900 }
+     * .chat-panel { position: absolute; bottom: 4rem; right: 0; width: 320px }
+     * .chat-msg-user / .chat-msg-bot — differentiated message bubbles
+   - JavaScript structure:
+     * toggleChatbot() — show/hide panel
+     * sendMessage() — read input, append user bubble, call getBotResponse()
+     * getBotResponse(userText) — returns dummy string for now
+     * <!-- AWS BEDROCK INTEGRATION POINT: replace getBotResponse() body with
+           fetch call to API Gateway → Lambda → Bedrock InvokeModel endpoint -->
+     * Dummy responses can cycle through 3–4 pre-written cloud topic replies
+
+3. AWS TUTORIALS SECTION ARCHITECTURE
+   - Placement in TheCloud.html: new &lt;section id="tutorials"&gt; inserted between
+     the blog posts section and the about section
+   - HTML: section heading + one video card (or grid expandable later)
+   - YouTube placeholder: use a &lt;div class="yt-placeholder"&gt; with a styled
+     overlay showing a play icon — no actual iframe until a real URL is available
+   - Comment in HTML: &lt;!-- YOUTUBE EMBED: replace this div with an iframe src="..." --&gt;
+   - Nav update: add "Tutorials" link to navbar pointing to #tutorials anchor
+
+4. CHANGES SUMMARY TABLE
+   A table listing: Feature | HTML Change | CSS Change | JS Change | Removed Element
+
+Save as: architecture-v2.md in the current project directory.</div>
+      </div>
+      <div class="step-row">
+        <div class="row-label">Output produced:</div>
+        <div class="chips">
+          <span class="chip ch-arch">architecture-v2.md</span>
+          <span class="chip ch-arch">Modal HTML/CSS/JS pattern</span>
+          <span class="chip ch-arch">Chatbot widget structure</span>
+          <span class="chip ch-arch">Bedrock integration hook</span>
+          <span class="chip ch-arch">YouTube section placement</span>
+        </div>
+      </div>
+      <div class="step-row">
+        <div class="row-label">Quick check before moving on:</div>
+        <ul class="checklist">
+          <li>architecture-v2.md exists in the project folder</li>
+          <li>Modal close behavior (X button + overlay click) is specified in JS approach</li>
+          <li>Chatbot section includes the AWS Bedrock integration comment placeholder</li>
+          <li>YouTube section specifies where in the page the new section is inserted</li>
+          <li>Changes summary table identifies what gets removed (inline register/contact sections)</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════
+       STEP 4 — UX DESIGNER v2
+  ═══════════════════════════════════════ -->
+  <div class="phase-header">
+    <span class="phase-badge pb-ux">Phase 2 — Solutioning</span>
+    <h2>UX Designer Agent — Enhancement Visual Spec (ux-spec-v2.md)</h2>
+    <span class="phase-time">20 → 27 min</span>
+  </div>
+
+  <div class="step-card">
+    <div class="sc-head">
+      <div class="sc-num n-ux">4</div>
+      <div class="sc-info">
+        <div class="sc-title">UX Designer Agent — Visual &amp; Interaction Specs for 4 New Components</div>
+        <div class="sc-why">The UX Agent reads the existing Day 1 visual spec and architecture-v2.md, then designs the exact look of the modal popups, chatbot widget, and tutorial section — using the same color palette and type system already established. The Dev Agent needs precise pixel-level specs so it does not guess at styling.</div>
+      </div>
+      <div class="sc-meta">
+        <span class="sc-time">7 min</span>
+        <span class="sc-skill">bmad-agent-ux-designer</span>
+      </div>
+    </div>
+    <div class="sc-body">
+      <div class="step-row">
+        <div class="row-label"><span class="rl-badge rl-open">OPEN</span>Open a new context window.</div>
+        <div class="cmd-block">/bmad-agent-ux-designer</div>
+      </div>
+      <div class="step-row">
+        <div class="row-label"><span class="rl-badge rl-paste">PASTE</span>The agent reads 3 existing files — zero copy-paste of specifications.</div>
+        <div class="prompt-block">You are the BMad UX Designer Agent. This is a Day 2 enhancement design session.
+
+<span class="prompt-hl">Please read these files from the current project directory:
+1. ux-spec.md       — the Day 1 UX and Visual Design Specification (the established design system)
+2. architecture-v2.md — the Enhancement Architecture Document (4 new features)</span>
+
+Do not ask me to paste them — use your Read tool to open them directly.
+
+Once you have read both files, produce visual design specifications for the 4 new components.
+Do NOT rewrite ux-spec.md — produce ux-spec-v2.md that extends it.
+Use the SAME color palette, typography, and spacing system established in Day 1.
+
+<span class="prompt-new">Please design each new component in detail:</span>
+
+1. MODAL OVERLAY (shared by Registration and Contact modals)
+   - Overlay: semi-transparent dark background (use the existing --bg or a dimmed variant)
+   - Modal box:
+     * Width: 440px max, responsive (90vw on mobile)
+     * Background: use the card surface color from ux-spec.md
+     * Border-radius: match existing card radius
+     * Box-shadow: elevated (stronger than card shadow)
+     * Padding: 2rem
+   - Modal header:
+     * Title text: font-size, weight, color
+     * X close button: position (top-right corner), size (24–28px), color and hover state
+   - Form fields inside modal: match the existing form field spec from ux-spec.md exactly
+   - Submit button: full-width, use the primary button style from ux-spec.md
+   - Open animation: fade-in + slight scale-up (transform: scale(0.95) → scale(1))
+   - Close animation: fade-out
+
+2. CHATBOT WIDGET
+   - Toggle button:
+     * Size: 52px × 52px circular
+     * Background: use the primary accent color from ux-spec.md
+     * Icon: chat bubble or bot icon (emoji or CSS shape — no external icon library)
+     * Hover: slight scale-up (transform: scale(1.08))
+     * Position: fixed, bottom: 1.5rem, right: 1.5rem
+   - Chat panel (expanded state):
+     * Width: 320px (300px on mobile)
+     * Height: 420px with scrollable message area
+     * Background: surface color from ux-spec.md
+     * Border: 1px solid (existing border color)
+     * Border-radius: 12px
+     * Box-shadow: elevated
+   - Chat header:
+     * Background: accent color (semi-transparent or full)
+     * Text: "Cloud Assistant" in white, 13px semi-bold
+   - Message bubbles:
+     * Bot messages: left-aligned, muted background, 12px text, border-radius 8px
+     * User messages: right-aligned, accent color background, white text
+     * Max-width: 75% of panel
+   - Input row:
+     * Text input: flex-grow, matches existing input style
+     * Send button: compact, accent color, 10px font, padding 0.4rem 0.8rem
+
+3. AWS TUTORIALS SECTION
+   - Section heading: match the existing section heading style from ux-spec.md
+   - Video card:
+     * Same card container style as Topic Cards (border-radius, shadow, padding)
+     * Max-width: 640px, centered or left-aligned in the section grid
+   - YouTube placeholder area:
+     * Aspect ratio: 16:9 (use padding-top: 56.25% trick)
+     * Background: dark surface color with a subtle grid or gradient
+     * Center overlay: large play button icon (CSS triangle or ▶ character, 48px, accent color)
+     * Label below play icon: "AWS Basics for Beginners" — 14px, muted color
+   - Below placeholder:
+     * Video title: 16px, semi-bold, same color as card heading
+     * Description text: 13px, muted color, 2 lines max
+   - Hover state on card: same lift effect as existing topic cards
+
+4. RESPONSIVE NOTES FOR NEW COMPONENTS
+   - Modal: full-screen on mobile (90vw × auto height, no border-radius on mobile)
+   - Chatbot panel: 90vw on mobile, anchored to right edge
+   - Tutorial card: full-width on mobile
+
+Save as: ux-spec-v2.md in the current project directory.</div>
+      </div>
+      <div class="step-row">
+        <div class="row-label">Output produced:</div>
+        <div class="chips">
+          <span class="chip ch-ux">ux-spec-v2.md</span>
+          <span class="chip ch-ux">Modal overlay spec</span>
+          <span class="chip ch-ux">Chatbot widget spec</span>
+          <span class="chip ch-ux">YouTube placeholder spec</span>
+          <span class="chip ch-ux">Mobile responsive notes</span>
+        </div>
+      </div>
+      <div class="step-row">
+        <div class="row-label">Quick check before moving on:</div>
+        <ul class="checklist">
+          <li>ux-spec-v2.md exists in the project folder</li>
+          <li>Modal spec includes open/close animation details</li>
+          <li>Chatbot widget has exact pixel dimensions for the toggle button and panel</li>
+          <li>YouTube placeholder specifies the 16:9 aspect ratio technique</li>
+          <li>All new components reference the existing color palette from ux-spec.md (no new palette introduced)</li>
+          <li>Mobile behavior is described for each new component</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════
+       STEP 5 — DEV AGENT
+  ═══════════════════════════════════════ -->
+  <div class="phase-header">
+    <span class="phase-badge pb-impl">Phase 3 — Implementation</span>
+    <h2>Dev Agent — Build TheCloudV2.html</h2>
+    <span class="phase-time">27 → 40 min</span>
+  </div>
+
+  <div class="step-card">
+    <div class="sc-head">
+      <div class="sc-num n-impl">5</div>
+      <div class="sc-info">
+        <div class="sc-title">Dev Agent — Apply All 4 Enhancements to Produce TheCloudV2.html</div>
+        <div class="sc-why">The Dev Agent reads the Day 1 HTML file plus all v2 artifacts, then surgically applies the 4 enhancements: two modal popups, a chatbot widget, and a tutorials section. The original portal is preserved — the agent extends it, not replaces it. Output is a single self-contained TheCloudV2.html ready to open in any browser.</div>
+      </div>
+      <div class="sc-meta">
+        <span class="sc-time">13 min</span>
+        <span class="sc-skill">bmad-agent-dev</span>
+      </div>
+    </div>
+    <div class="sc-body">
+      <div class="step-row">
+        <div class="row-label"><span class="rl-badge rl-open">OPEN</span>Open a new context window.</div>
+        <div class="cmd-block">/bmad-agent-dev</div>
+      </div>
+      <div class="step-row">
+        <div class="row-label"><span class="rl-badge rl-paste">PASTE</span>The agent reads 5 files from disk — the complete Day 1 + Day 2 context, zero copy-paste.</div>
+        <div class="prompt-block">You are the BMad Dev Agent. This is a Day 2 enhancement build session.
+
+<span class="prompt-hl">Please read these files from the current project directory:
+1. TheCloud.html    — the complete Day 1 HTML portal (the base to enhance)
+2. prd-v2.md        — the Enhancement PRD (4 features to add)
+3. architecture-v2.md — the Enhancement Architecture Document
+4. ux-spec-v2.md    — the Enhancement Visual Design Specification</span>
+
+Do not ask me to paste them — use your Read tool to open each one directly.
+
+Once you have read all files, apply the 4 enhancements to TheCloud.html.
+Do NOT regenerate the entire portal from scratch.
+Read TheCloud.html first, understand the existing structure, then add the enhancements.
+
+DELIVERABLE: TheCloudV2.html — one complete, self-contained HTML5 file
+
+HARD RULES (non-negotiable):
+- ONE file only: TheCloudV2.html
+- Plain HTML5 + CSS in &lt;style&gt; + JavaScript in &lt;script&gt;
+- ZERO external libraries — no CDN links, no Bootstrap, no Tailwind, no jQuery
+- Preserve ALL existing content from TheCloud.html (branding, topic cards, blog posts, about, footer)
+- Preserve Puneet Gaur branding throughout
+- The 4 enhancements are ADDITIONS (or replacements for inline sections) — not a rewrite
+
+<span class="prompt-new">ENHANCEMENT 1 — REGISTRATION MODAL</span>
+- Remove the inline &lt;section id="register"&gt; form from the page flow
+- Add a modal overlay div (id="register-modal") just before &lt;/body&gt;
+- Modal contains: Full Name, Email, Username, Password fields + Register button + X close button
+- "Register" link in navbar and any "Register" CTA button must call openModal('register-modal') via onclick
+- Clicking the modal overlay (outside the modal box) closes the modal
+- CSS: modal overlay = position:fixed, inset:0, z-index:1000, background rgba(0,0,0,0.6)
+- CSS: modal box = centered, max-width:440px, same card surface color as existing cards
+- Animation: fade-in on open, fade-out on close (CSS opacity transition)
+
+<span class="prompt-new">ENHANCEMENT 2 — CONTACT MODAL</span>
+- Remove the inline &lt;section id="contact"&gt; form from the page flow
+- Add a modal overlay div (id="contact-modal") just before &lt;/body&gt;
+- Modal contains: Name, Email, Subject, Message (textarea) + Send Message button + X close button
+- "Contact" link in navbar must call openModal('contact-modal') via onclick (remove anchor href="#contact")
+- Same overlay click-to-close behavior as Registration modal
+- Same modal CSS pattern — reuse the modal CSS classes
+
+<span class="prompt-new">ENHANCEMENT 3 — CHATBOT WIDGET</span>
+- Add a fixed-position chatbot widget at bottom-right (position:fixed; bottom:1.5rem; right:1.5rem; z-index:900)
+- Toggle button: circular, 52px, accent color background, chat emoji or ▶ icon
+- Chat panel: hidden by default, appears above the button when toggled
+  * Width 320px, height 420px, surface background, border, border-radius:12px
+  * Header: "Cloud Assistant" text
+  * Messages area: scrollable, shows a welcome message on open:
+    "Hi! I'm your cloud assistant. I can help you with AWS, GitHub, and DevOps topics."
+  * Input row: text field + Send button
+- JavaScript:
+  function toggleChatbot() { /* show/hide panel */ }
+  function sendMessage() {
+    /* append user bubble, call getBotResponse() */
+  }
+  function getBotResponse(text) {
+    /* AWS BEDROCK INTEGRATION POINT:
+       Replace this function body with a fetch() call to your API Gateway endpoint.
+       Example: POST /bedrock-proxy with { prompt: text }
+       The Lambda function behind it calls bedrock.invokeModel({ modelId: "..." })
+       and returns the generated text response. */
+    // Dummy responses for demo:
+    const replies = [
+      "Great question! AWS EC2 lets you run virtual servers in the cloud.",
+      "For GitHub, try using feature branches and pull requests for collaboration.",
+      "DevOps is about automating the path from code commit to production deployment.",
+      "Check out the AWS Tutorials section below for beginner-friendly video content!"
+    ];
+    return replies[Math.floor(Math.random() * replies.length)];
+  }
+- Bot message bubbles: left-aligned, muted background
+- User message bubbles: right-aligned, accent color
+
+<span class="prompt-new">ENHANCEMENT 4 — AWS TUTORIALS SECTION</span>
+- Add a new &lt;section id="tutorials"&gt; between the blog posts section and the about section
+- Section heading: "AWS Tutorials" (same heading style as other sections)
+- Add "Tutorials" to the navbar links pointing to #tutorials
+- Video card: same card style as existing cards
+  * YouTube placeholder: 16:9 aspect ratio div with dark background + centered ▶ play icon
+  * &lt;!-- YOUTUBE EMBED: replace this div with: &lt;iframe src="https://www.youtube.com/embed/VIDEO_ID" ...&gt; --&gt;
+  * Video title below placeholder: "AWS Basics for Beginners"
+  * Description: "Start your AWS journey with this beginner-friendly walkthrough. Learn core services, navigate the console, and launch your first cloud resources."
+
+OUTPUT REQUIREMENT:
+Return ONLY the complete enhanced HTML file content. No explanations outside the code.
+Save as: TheCloudV2.html in the current project directory.</div>
+      </div>
+      <div class="step-row">
+        <div class="row-label"><span class="rl-badge rl-note">KEY POINT</span>Enhancement-specific tip — say this if the agent starts rewriting from scratch</div>
+        <div class="handoff-box">
+          If the agent begins producing a fresh portal rather than enhancing TheCloud.html, interrupt with: <strong>"Stop — please read TheCloud.html first with your Read tool, then apply only the 4 enhancements listed. Do not regenerate the whole file."</strong> This keeps Day 1 content intact and saves time.
+        </div>
+      </div>
+      <div class="step-row">
+        <div class="row-label">Output produced:</div>
+        <div class="chips">
+          <span class="chip ch-impl">TheCloudV2.html</span>
+          <span class="chip ch-impl">Registration modal</span>
+          <span class="chip ch-impl">Contact modal</span>
+          <span class="chip ch-impl">Chatbot widget + Bedrock hooks</span>
+          <span class="chip ch-impl">AWS Tutorials section</span>
+        </div>
+      </div>
+      <div class="step-row">
+        <div class="row-label">Quick check after the agent finishes:</div>
+        <ul class="checklist">
+          <li>TheCloudV2.html exists in the project folder</li>
+          <li>No external &lt;link&gt; or &lt;script src="..."&gt; tags pointing to CDNs</li>
+          <li>id="register-modal" and id="contact-modal" are present in the HTML</li>
+          <li>Inline &lt;section id="register"&gt; and &lt;section id="contact"&gt; are REMOVED from page flow</li>
+          <li>Chatbot widget div exists near &lt;/body&gt; with class or id for the widget</li>
+          <li>AWS Bedrock integration comment is visible inside getBotResponse() function</li>
+          <li>&lt;section id="tutorials"&gt; exists between blog posts and about sections</li>
+          <li>YouTube EMBED comment placeholder is in the tutorials section</li>
+          <li>"Puneet Gaur" branding is preserved in About section and footer</li>
+          <li>All 6 original topic cards still present</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════
+       STEP 6 — BROWSER QA
+  ═══════════════════════════════════════ -->
+  <div class="phase-header">
+    <span class="phase-badge pb-rev">Phase 4 — Review</span>
+    <h2>Browser QA — Test All 4 Enhancements</h2>
+    <span class="phase-time">40 → 45 min</span>
+  </div>
+
+  <div class="step-card">
+    <div class="sc-head">
+      <div class="sc-num n-rev">6</div>
+      <div class="sc-info">
+        <div class="sc-title">Open TheCloudV2.html — Test Every New Feature</div>
+        <div class="sc-why">Open the enhanced file in a browser and walk through every new interaction. Each enhancement has specific behaviors to verify — especially the modal close paths and the chatbot toggle. This is the Day 2 demo moment: show the audience the 4 features working live, then call out the AWS Bedrock integration comment in the browser's DevTools source view.</div>
+      </div>
+      <div class="sc-meta">
+        <span class="sc-time">5 min</span>
+        <span class="sc-skill">browser QA</span>
+      </div>
+    </div>
+    <div class="sc-body">
+      <div class="step-row">
+        <div class="row-label">Open the enhanced file — no server needed:</div>
+        <div class="cmd-block">open TheCloudV2.html      # Mac
+start TheCloudV2.html     # Windows</div>
+      </div>
+      <div class="step-row">
+        <div class="row-label">Enhancement 1 — Registration Modal checklist:</div>
+        <ul class="checklist">
+          <li><strong>Navbar:</strong> Click "Register" nav link → registration modal opens as an overlay</li>
+          <li><strong>Hero CTA:</strong> Click "Register Now" hero button → same modal opens</li>
+          <li><strong>Fields:</strong> Full Name, Email, Username, Password all visible inside modal</li>
+          <li><strong>X close:</strong> Click the X button → modal closes cleanly</li>
+          <li><strong>Overlay close:</strong> Click the dark area outside the modal box → modal closes</li>
+          <li><strong>Page unchanged:</strong> No inline registration form visible when scrolling the page</li>
+        </ul>
+      </div>
+      <div class="step-row">
+        <div class="row-label">Enhancement 2 — Contact Modal checklist:</div>
+        <ul class="checklist">
+          <li><strong>Navbar:</strong> Click "Contact" nav link → contact modal opens as an overlay</li>
+          <li><strong>Fields:</strong> Name, Email, Subject, Message (textarea) all visible</li>
+          <li><strong>X close:</strong> Click the X button → modal closes</li>
+          <li><strong>Overlay close:</strong> Click outside the modal box → modal closes</li>
+          <li><strong>Page unchanged:</strong> No inline contact form visible when scrolling the page</li>
+        </ul>
+      </div>
+      <div class="step-row">
+        <div class="row-label">Enhancement 3 — Chatbot Widget checklist:</div>
+        <ul class="checklist">
+          <li><strong>Button visible:</strong> Circular chat button fixed at bottom-right corner of page</li>
+          <li><strong>Expand:</strong> Click chat button → chat panel appears above the button</li>
+          <li><strong>Welcome message:</strong> "Hi! I'm your cloud assistant..." shown in the panel</li>
+          <li><strong>Send a message:</strong> Type "What is AWS?" → press Send → bot response appears</li>
+          <li><strong>Collapse:</strong> Click chat button again → panel hides</li>
+          <li><strong>Bedrock hook (show to audience):</strong> Open DevTools → Sources → search for "BEDROCK" — the integration comment should be clearly visible in the getBotResponse() function</li>
+        </ul>
+      </div>
+      <div class="step-row">
+        <div class="row-label">Enhancement 4 — AWS Tutorials Section checklist:</div>
+        <ul class="checklist">
+          <li><strong>Section visible:</strong> "AWS Tutorials" heading visible between Blog Posts and About sections</li>
+          <li><strong>Navbar link:</strong> "Tutorials" link in navbar scrolls to #tutorials section</li>
+          <li><strong>Video placeholder:</strong> 16:9 placeholder with play icon visible</li>
+          <li><strong>Video title:</strong> "AWS Basics for Beginners" shown below the placeholder</li>
+          <li><strong>Description:</strong> Short description text visible below the title</li>
+          <li><strong>YouTube hook (show to audience):</strong> View page source → search for "YOUTUBE EMBED" — the iframe swap comment should be clearly visible</li>
+        </ul>
+      </div>
+      <div class="step-row">
+        <div class="row-label">General QA — preserved content:</div>
+        <ul class="checklist">
+          <li>All 6 original topic cards (AWS, GitHub, DevOps, Cloud Basics, CI/CD, Linux) still present</li>
+          <li>3 blog post cards still present with original content</li>
+          <li>About section with "Puneet Gaur" content preserved</li>
+          <li>Footer with copyright and social links preserved</li>
+          <li>No console errors in DevTools (F12 → Console → no red lines)</li>
+          <li>Page is responsive — resize to 375px wide, modals should be full-width</li>
+        </ul>
+      </div>
+      <div class="step-row">
+        <div class="row-label">If a specific enhancement is broken, use this targeted fix prompt:</div>
+        <div class="prompt-block">Please fix only this specific issue in TheCloudV2.html:
+[describe the problem — e.g., "The Contact modal does not close when I click outside the box"
+or "The chatbot panel does not appear when I click the toggle button"]
+
+Open TheCloudV2.html with your Read tool, locate the relevant JavaScript/CSS, and fix it.
+Do not regenerate the entire file — fix only the specific bug.</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="divider"></div>
+
+  <!-- ─── DELIVERABLES ─── -->
+  <div class="delivery">
+    <h3>Day 2 Final Deliverables — What BMad Produced</h3>
+    <div class="delivery-grid">
+      <div class="d-item">
+        <div class="d-file">prd.md</div>
+        <div class="d-desc">Day 1 PRD — preserved as-is</div>
+      </div>
+      <div class="d-item d-new">
+        <div class="d-file-new">prd-v2.md</div>
+        <div class="d-desc">Enhancement PRD — 4 feature specs with acceptance criteria</div>
+      </div>
+      <div class="d-item">
+        <div class="d-file">epics.md</div>
+        <div class="d-desc">Day 1 Epics — preserved as-is</div>
+      </div>
+      <div class="d-item d-new">
+        <div class="d-file-new">stories/enhancement-epics.md</div>
+        <div class="d-desc">3 new Epics (EP-007 to EP-009) with Day 2 user stories</div>
+      </div>
+      <div class="d-item">
+        <div class="d-file">architecture.md</div>
+        <div class="d-desc">Day 1 Architecture — preserved as-is</div>
+      </div>
+      <div class="d-item d-new">
+        <div class="d-file-new">architecture-v2.md</div>
+        <div class="d-desc">Modal, chatbot, and tutorial section architecture patterns</div>
+      </div>
+      <div class="d-item">
+        <div class="d-file">ux-spec.md</div>
+        <div class="d-desc">Day 1 UX Spec — preserved as-is</div>
+      </div>
+      <div class="d-item d-new">
+        <div class="d-file-new">ux-spec-v2.md</div>
+        <div class="d-desc">Visual specs for modals, chatbot widget, and YouTube section</div>
+      </div>
+      <div class="d-item">
+        <div class="d-file">TheCloud.html</div>
+        <div class="d-desc">Day 1 portal — preserved, unchanged</div>
+      </div>
+      <div class="d-item d-new">
+        <div class="d-file-new">TheCloudV2.html</div>
+        <div class="d-desc">Enhanced portal — 4 new features, AWS Bedrock hooks, zero dependencies</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ─── DEMO NARRATIVE ─── -->
+  <div class="callout callout-enhance" style="margin-top:1.5rem">
+    <h4>Day 2 Demo Closing Narrative — Say This to the Audience</h4>
+    <p>
+      "Yesterday we built the portal from a PDF in 45 minutes. Today we showed how BMad handles an <strong>enhancement sprint</strong>. The PM Agent read the existing PRD and the new requirements — and produced a focused enhancement spec without touching Day 1 documents. The Architect designed the modal and chatbot patterns. The UX Agent extended the visual system without breaking the palette. And the Dev Agent read the original HTML file, applied 4 surgical additions, and delivered <strong>TheCloudV2.html</strong> — with the AWS Bedrock integration hook already stubbed out in the code. <strong>Six agents. Ten artifacts. Two days. One file to open in a browser.</strong> That's BMad at work."
+    </p>
+  </div>
+
+  <!-- ─── TIPS ─── -->
+  <div class="tips-section">
+    <h3>Tips for Day 2 Demo — Avoid Common Mistakes</h3>
+    <div class="tips-grid">
+      <div class="tip">
+        <strong>Tell the Dev Agent to read TheCloud.html first</strong>
+        The most common mistake is the agent generating a fresh portal instead of enhancing the existing one. The prompt above is explicit — but if it starts regenerating, interrupt immediately: "Stop — read TheCloud.html first."
+      </div>
+      <div class="tip">
+        <strong>Show the Bedrock comment to the audience</strong>
+        Open DevTools → Sources → search "BEDROCK". Point to the comment and say: "This is where a Lambda call to AWS Bedrock replaces the dummy response. The BMad Dev Agent structured the code for future integration."
+      </div>
+      <div class="tip">
+        <strong>Confirm modals close via overlay click</strong>
+        Both modal close paths (X button and overlay click) must work. Test both during QA — overlay click is the one most likely to be missing if the agent simplified the JS.
+      </div>
+      <div class="tip">
+        <strong>Show the YouTube embed comment</strong>
+        View page source → search "YOUTUBE EMBED". The comment shows exactly where a real iframe goes. Tell the audience: "One line swap and the tutorial video plays in production."
+      </div>
+      <div class="tip">
+        <strong>If the Dev Agent runs over 10 minutes</strong>
+        Type: "Please output TheCloudV2.html now with whatever enhancements are complete. Mark any unfinished enhancement with a &lt;!-- TODO --&gt; comment." This gets you an openable file fast.
+      </div>
+      <div class="tip">
+        <strong>Version comparison is the Day 2 talking point</strong>
+        Open TheCloud.html and TheCloudV2.html side by side in two browser tabs. Show the audience what changed — modals instead of inline forms, chatbot in the corner, new tutorials section. The diff tells the BMad story visually.
+      </div>
+    </div>
+  </div>
+
+</div>
