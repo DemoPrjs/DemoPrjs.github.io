@@ -1,0 +1,1532 @@
+<title>The Cloud Blog — BMad Enhancement Playbook · Day 3</title>
+<style>
+  :root {
+    --bg: #0B0F1A;
+    --surface: #131929;
+    --surface2: #1B2236;
+    --border: #252D42;
+    --text: #DDE4F0;
+    --muted: #7A8BA8;
+    --faint: #2E3A55;
+
+    --plan:   #F59E0B;
+    --plan-dim: rgba(245,158,11,0.10);
+    --plan-border: rgba(245,158,11,0.28);
+
+    --story:  #FB923C;
+    --story-dim: rgba(251,146,60,0.10);
+    --story-border: rgba(251,146,60,0.28);
+
+    --arch:   #60A5FA;
+    --arch-dim: rgba(96,165,250,0.10);
+    --arch-border: rgba(96,165,250,0.28);
+
+    --ux:     #A78BFA;
+    --ux-dim: rgba(167,139,250,0.10);
+    --ux-border: rgba(167,139,250,0.28);
+
+    --impl:   #34D399;
+    --impl-dim: rgba(52,211,153,0.10);
+    --impl-border: rgba(52,211,153,0.28);
+
+    --review: #FB7185;
+    --review-dim: rgba(251,113,133,0.09);
+    --review-border: rgba(251,113,133,0.26);
+
+    --info:   #38BDF8;
+    --info-dim: rgba(56,189,248,0.09);
+    --info-border: rgba(56,189,248,0.26);
+
+    --enhance: #F472B6;
+    --enhance-dim: rgba(244,114,182,0.10);
+    --enhance-border: rgba(244,114,182,0.28);
+
+    --day3: #2DD4BF;
+    --day3-dim: rgba(45,212,191,0.10);
+    --day3-border: rgba(45,212,191,0.28);
+
+    --mono: 'Courier New', 'Menlo', 'Monaco', monospace;
+    --sans: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+  }
+  @media (prefers-color-scheme: light) {
+    :root {
+      --bg: #EFF3FA; --surface: #FFFFFF; --surface2: #E5ECF8;
+      --border: #C8D3E8; --text: #18243A; --muted: #5A6A88; --faint: #B8C6DE;
+      --plan-dim: rgba(245,158,11,0.08); --plan-border: rgba(217,119,6,0.32);
+      --story-dim: rgba(234,88,12,0.08); --story-border: rgba(234,88,12,0.30);
+      --arch-dim: rgba(37,99,235,0.07); --arch-border: rgba(37,99,235,0.28);
+      --ux-dim: rgba(109,40,217,0.07); --ux-border: rgba(109,40,217,0.28);
+      --impl-dim: rgba(5,150,105,0.07); --impl-border: rgba(5,150,105,0.28);
+      --review-dim: rgba(225,29,72,0.07); --review-border: rgba(225,29,72,0.26);
+      --info-dim: rgba(2,132,199,0.07); --info-border: rgba(2,132,199,0.26);
+      --enhance-dim: rgba(219,39,119,0.07); --enhance-border: rgba(219,39,119,0.28);
+      --day3-dim: rgba(13,148,136,0.07); --day3-border: rgba(13,148,136,0.28);
+    }
+  }
+  :root[data-theme="light"] {
+    --bg: #EFF3FA; --surface: #FFFFFF; --surface2: #E5ECF8;
+    --border: #C8D3E8; --text: #18243A; --muted: #5A6A88; --faint: #B8C6DE;
+    --plan-dim: rgba(245,158,11,0.08); --plan-border: rgba(217,119,6,0.32);
+    --story-dim: rgba(234,88,12,0.08); --story-border: rgba(234,88,12,0.30);
+    --arch-dim: rgba(37,99,235,0.07); --arch-border: rgba(37,99,235,0.28);
+    --ux-dim: rgba(109,40,217,0.07); --ux-border: rgba(109,40,217,0.28);
+    --impl-dim: rgba(5,150,105,0.07); --impl-border: rgba(5,150,105,0.28);
+    --review-dim: rgba(225,29,72,0.07); --review-border: rgba(225,29,72,0.26);
+    --info-dim: rgba(2,132,199,0.07); --info-border: rgba(2,132,199,0.26);
+    --enhance-dim: rgba(219,39,119,0.07); --enhance-border: rgba(219,39,119,0.28);
+    --day3-dim: rgba(13,148,136,0.07); --day3-border: rgba(13,148,136,0.28);
+  }
+  :root[data-theme="dark"] {
+    --bg: #0B0F1A; --surface: #131929; --surface2: #1B2236;
+    --border: #252D42; --text: #DDE4F0; --muted: #7A8BA8; --faint: #2E3A55;
+    --plan-dim: rgba(245,158,11,0.10); --plan-border: rgba(245,158,11,0.28);
+    --story-dim: rgba(251,146,60,0.10); --story-border: rgba(251,146,60,0.28);
+    --arch-dim: rgba(96,165,250,0.10); --arch-border: rgba(96,165,250,0.28);
+    --ux-dim: rgba(167,139,250,0.10); --ux-border: rgba(167,139,250,0.28);
+    --impl-dim: rgba(52,211,153,0.10); --impl-border: rgba(52,211,153,0.28);
+    --review-dim: rgba(251,113,133,0.09); --review-border: rgba(251,113,133,0.26);
+    --info-dim: rgba(56,189,248,0.09); --info-border: rgba(56,189,248,0.26);
+    --enhance-dim: rgba(244,114,182,0.10); --enhance-border: rgba(244,114,182,0.28);
+    --day3-dim: rgba(45,212,191,0.10); --day3-border: rgba(45,212,191,0.28);
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--sans);
+    font-size: 14px;
+    line-height: 1.65;
+    padding: 2rem 1rem 5rem;
+  }
+  .page { max-width: 880px; margin: 0 auto; }
+
+  /* ─── HEADER ─── */
+  .header { margin-bottom: 2rem; }
+  .eyebrow {
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 0.55rem;
+  }
+  .header h1 { font-size: 1.7rem; font-weight: 700; letter-spacing: -0.02em; line-height: 1.2; text-wrap: balance; }
+  .header h1 em { font-style: normal; color: var(--day3); }
+  .header-sub { color: var(--muted); margin-top: 0.55rem; font-size: 13.5px; max-width: 620px; line-height: 1.55; }
+
+  /* ─── CALLOUT BOXES ─── */
+  .callout {
+    border-radius: 8px; padding: 1rem 1.2rem; margin-bottom: 1rem;
+    border: 1px solid; font-size: 13px; line-height: 1.6;
+  }
+  .callout-info    { background: var(--info-dim);    border-color: var(--info-border); }
+  .callout-warn    { background: var(--story-dim);   border-color: var(--story-border); }
+  .callout-day3    { background: var(--day3-dim);    border-color: var(--day3-border); }
+  .callout h4 { font-size: 12px; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; margin-bottom: 0.4rem; }
+  .callout-info h4    { color: var(--info); }
+  .callout-warn h4    { color: var(--story); }
+  .callout-day3 h4    { color: var(--day3); }
+  .callout p { color: var(--muted); }
+  .callout strong { color: var(--text); }
+
+  /* ─── ENHANCEMENT BANNER (Day 3) ─── */
+  .enhance-banner {
+    background: var(--day3-dim);
+    border: 1px solid var(--day3-border);
+    border-radius: 10px;
+    padding: 1.5rem;
+    margin: 1.75rem 0 2.5rem;
+  }
+  .enhance-banner h2 { font-size: 15px; font-weight: 600; margin-bottom: 0.8rem; color: var(--day3); letter-spacing: -0.01em; }
+  .enhance-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 0.9rem; margin-top: 1rem; }
+  .enhance-card { background: var(--surface); border: 1px solid var(--border); border-radius: 7px; padding: 0.9rem 1rem; }
+  .enhance-card-tag { font-family: var(--mono); font-size: 9px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--day3); margin-bottom: 0.3rem; font-weight: 700; }
+  .enhance-card h4 { font-size: 12.5px; font-weight: 600; margin-bottom: 0.25rem; }
+  .enhance-card p  { font-size: 11.5px; color: var(--muted); line-height: 1.5; }
+
+  /* ─── HOW BMAD WORKS ─── */
+  .how-section {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 1.5rem;
+    margin: 1.75rem 0 2.5rem;
+  }
+  .how-section h2 { font-size: 15px; font-weight: 600; margin-bottom: 1rem; letter-spacing: -0.01em; }
+  .how-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem; }
+  .how-card { background: var(--surface2); border: 1px solid var(--border); border-radius: 7px; padding: 1rem; }
+  .how-card-num { font-family: var(--mono); font-size: 10px; color: var(--muted); margin-bottom: 0.3rem; }
+  .how-card h4 { font-size: 13px; font-weight: 600; margin-bottom: 0.3rem; }
+  .how-card p  { font-size: 12px; color: var(--muted); line-height: 1.5; }
+
+  /* ─── FILE TREE ─── */
+  .file-tree {
+    background: var(--bg); border: 1px solid var(--border); border-radius: 7px;
+    padding: 1rem 1.2rem; font-family: var(--mono); font-size: 12px; line-height: 1.9; margin-top: 1.2rem;
+  }
+  .file-tree .folder { color: var(--muted); }
+  .file-tree .file   { color: var(--text); }
+  .file-tree .file-d2 { color: var(--enhance); }
+  .file-tree .file-d3 { color: var(--day3); }
+  .file-tree .tag    { font-size: 9.5px; padding: 0.1rem 0.4rem; border-radius: 3px; margin-left: 0.5rem; font-weight: 600; border: 1px solid; }
+  .t-plan  { background: var(--plan-dim);    color: var(--plan);    border-color: var(--plan-border); }
+  .t-d2    { background: var(--enhance-dim); color: var(--enhance); border-color: var(--enhance-border); }
+  .t-d3    { background: var(--day3-dim);    color: var(--day3);    border-color: var(--day3-border); }
+
+  /* ─── TIMELINE ─── */
+  .timeline-wrap {
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: 8px; padding: 1.25rem 1.4rem; margin-bottom: 2.5rem;
+  }
+  .tl-label { font-family: var(--mono); font-size: 10px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--muted); margin-bottom: 0.8rem; }
+  .tl-track { display: flex; height: 26px; border-radius: 5px; overflow: hidden; gap: 2px; }
+  .tl-seg { display: flex; align-items: center; justify-content: center; font-family: var(--mono); font-size: 9.5px; font-weight: 700; letter-spacing: 0.04em; color: #0B0F1A; border-radius: 3px; }
+  .s1 { background: var(--plan);   flex: 7; }
+  .s2 { background: var(--story);  flex: 6; }
+  .s3 { background: var(--arch);   flex: 7; }
+  .s4 { background: var(--ux);     flex: 7; }
+  .s5 { background: var(--day3);   flex: 13; }
+  .s6 { background: var(--review); flex: 5; }
+  .tl-legend { display: flex; gap: 1rem; flex-wrap: wrap; margin-top: 0.8rem; }
+  .tl-li { display: flex; align-items: center; gap: 0.35rem; font-size: 11.5px; color: var(--muted); }
+  .tl-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+
+  /* ─── PHASE HEADER ─── */
+  .phase-header { display: flex; align-items: center; gap: 0.75rem; padding-bottom: 0.85rem; border-bottom: 1px solid var(--border); margin: 2.5rem 0 1.25rem; }
+  .phase-badge { font-family: var(--mono); font-size: 9.5px; letter-spacing: 0.12em; text-transform: uppercase; font-weight: 700; padding: 0.22rem 0.6rem; border-radius: 3px; }
+  .pb-plan  { background: var(--plan-dim);   color: var(--plan);   border: 1px solid var(--plan-border); }
+  .pb-story { background: var(--story-dim);  color: var(--story);  border: 1px solid var(--story-border); }
+  .pb-arch  { background: var(--arch-dim);   color: var(--arch);   border: 1px solid var(--arch-border); }
+  .pb-ux    { background: var(--ux-dim);     color: var(--ux);     border: 1px solid var(--ux-border); }
+  .pb-impl  { background: var(--day3-dim);   color: var(--day3);   border: 1px solid var(--day3-border); }
+  .pb-rev   { background: var(--review-dim); color: var(--review); border: 1px solid var(--review-border); }
+  .phase-header h2 { font-size: 1.05rem; font-weight: 600; letter-spacing: -0.01em; }
+  .phase-time { margin-left: auto; font-family: var(--mono); font-size: 11px; color: var(--muted); background: var(--surface2); border: 1px solid var(--border); padding: 0.2rem 0.55rem; border-radius: 20px; white-space: nowrap; }
+
+  /* ─── STEP CARD ─── */
+  .step-card { background: var(--surface); border: 1px solid var(--border); border-radius: 10px; margin-bottom: 1.25rem; overflow: hidden; }
+  .sc-head { display: flex; align-items: flex-start; gap: 1rem; padding: 1.1rem 1.3rem; border-bottom: 1px solid var(--border); }
+  .sc-num { width: 28px; height: 28px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-family: var(--mono); font-size: 11px; font-weight: 700; flex-shrink: 0; margin-top: 1px; border: 1.5px solid; }
+  .n-plan  { background: var(--plan-dim);   color: var(--plan);   border-color: var(--plan-border); }
+  .n-story { background: var(--story-dim);  color: var(--story);  border-color: var(--story-border); }
+  .n-arch  { background: var(--arch-dim);   color: var(--arch);   border-color: var(--arch-border); }
+  .n-ux    { background: var(--ux-dim);     color: var(--ux);     border-color: var(--ux-border); }
+  .n-impl  { background: var(--day3-dim);   color: var(--day3);   border-color: var(--day3-border); }
+  .n-rev   { background: var(--review-dim); color: var(--review); border-color: var(--review-border); }
+  .sc-info { flex: 1; min-width: 0; }
+  .sc-title { font-size: 15px; font-weight: 600; margin-bottom: 0.2rem; }
+  .sc-why   { font-size: 12.5px; color: var(--muted); line-height: 1.55; }
+  .sc-meta  { display: flex; flex-direction: column; align-items: flex-end; gap: 0.4rem; flex-shrink: 0; }
+  .sc-time  { font-family: var(--mono); font-size: 13px; font-weight: 700; color: var(--text); }
+  .sc-skill { font-family: var(--mono); font-size: 10px; background: var(--surface2); border: 1px solid var(--border); color: var(--muted); padding: 0.15rem 0.45rem; border-radius: 3px; white-space: nowrap; }
+  .sc-body { padding: 0; }
+
+  /* ─── ACCORDION ROWS ─── */
+  .step-row { border-bottom: 1px solid var(--border); padding: 0.9rem 1.3rem; }
+  .step-row:last-child { border-bottom: none; }
+  .row-label { font-family: var(--mono); font-size: 9.5px; letter-spacing: 0.13em; text-transform: uppercase; color: var(--muted); margin-bottom: 0.45rem; display: flex; align-items: center; gap: 0.5rem; }
+  .rl-badge { font-size: 9px; padding: 0.1rem 0.4rem; border-radius: 2px; font-weight: 700; letter-spacing: 0.06em; }
+  .rl-open  { background: var(--info-dim);  color: var(--info);  border: 1px solid var(--info-border); }
+  .rl-paste { background: var(--plan-dim);  color: var(--plan);  border: 1px solid var(--plan-border); }
+  .rl-save  { background: var(--impl-dim);  color: var(--impl);  border: 1px solid var(--impl-border); }
+  .rl-note  { background: var(--day3-dim);  color: var(--day3);  border: 1px solid var(--day3-border); }
+
+  .cmd-block { background: var(--bg); border: 1px solid var(--border); border-radius: 6px; padding: 0.7rem 0.9rem; font-family: var(--mono); font-size: 12px; color: var(--text); letter-spacing: 0.01em; }
+  .prompt-block { background: var(--bg); border: 1px solid var(--border); border-radius: 6px; padding: 0.85rem 1rem; font-family: var(--mono); font-size: 11px; line-height: 1.7; color: var(--text); white-space: pre-wrap; word-break: break-word; }
+  .prompt-hl   { color: var(--info); }
+  .prompt-day3 { color: var(--day3); }
+
+  .handoff-box { background: var(--info-dim); border: 1px solid var(--info-border); border-radius: 6px; padding: 0.75rem 1rem; font-size: 12.5px; color: var(--muted); line-height: 1.55; }
+  .handoff-box strong { color: var(--info); }
+
+  .chips { display: flex; gap: 0.45rem; flex-wrap: wrap; }
+  .chip { font-family: var(--mono); font-size: 10.5px; padding: 0.2rem 0.55rem; border-radius: 4px; border: 1px solid; font-weight: 500; }
+  .ch-plan  { background: var(--plan-dim);   color: var(--plan);   border-color: var(--plan-border); }
+  .ch-story { background: var(--story-dim);  color: var(--story);  border-color: var(--story-border); }
+  .ch-arch  { background: var(--arch-dim);   color: var(--arch);   border-color: var(--arch-border); }
+  .ch-ux    { background: var(--ux-dim);     color: var(--ux);     border-color: var(--ux-border); }
+  .ch-impl  { background: var(--impl-dim);   color: var(--impl);   border-color: var(--impl-border); }
+  .ch-day3  { background: var(--day3-dim);   color: var(--day3);   border-color: var(--day3-border); }
+
+  .checklist { list-style: none; display: flex; flex-direction: column; gap: 0.35rem; }
+  .checklist li { display: flex; align-items: flex-start; gap: 0.6rem; font-size: 12.5px; color: var(--muted); line-height: 1.5; }
+  .checklist li::before { content: '▸'; color: var(--faint); flex-shrink: 0; margin-top: 1px; font-size: 11px; }
+  .checklist li strong { color: var(--text); }
+
+  /* ─── TABLE ─── */
+  .table-wrap { overflow-x: auto; }
+  table { width: 100%; border-collapse: collapse; font-size: 12px; }
+  th { background: var(--surface2); color: var(--muted); font-family: var(--mono); font-size: 9.5px; letter-spacing: 0.1em; text-transform: uppercase; padding: 0.55rem 0.8rem; text-align: left; border-bottom: 1px solid var(--border); }
+  td { padding: 0.55rem 0.8rem; border-bottom: 1px solid var(--border); vertical-align: top; color: var(--text); line-height: 1.5; }
+  tr:last-child td { border-bottom: none; }
+  .new-label { font-family: var(--mono); font-size: 10px; padding: 0.12rem 0.4rem; border-radius: 3px; font-weight: 600; background: var(--day3-dim); color: var(--day3); border: 1px solid var(--day3-border); white-space: nowrap; }
+  .story-label { font-family: var(--mono); font-size: 10px; color: var(--muted); }
+
+  /* ─── ASSUMPTION BOX ─── */
+  .assumption-box { background: var(--ux-dim); border: 1px solid var(--ux-border); border-radius: 6px; padding: 0.75rem 1rem; font-size: 12.5px; color: var(--muted); line-height: 1.6; margin-top: 0.6rem; }
+  .assumption-box strong { color: var(--ux); }
+
+  /* ─── DIVIDER ─── */
+  .divider { height: 1px; background: var(--border); margin: 2.5rem 0; }
+
+  /* ─── TIPS SECTION ─── */
+  .tips-section { background: var(--surface); border: 1px solid var(--border); border-radius: 8px; padding: 1.3rem 1.5rem; margin-top: 3rem; }
+  .tips-section h3 { font-size: 13.5px; font-weight: 600; margin-bottom: 1rem; }
+  .tips-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(230px, 1fr)); gap: 0.9rem; }
+  .tip { font-size: 12.5px; color: var(--muted); line-height: 1.55; }
+  .tip strong { color: var(--text); display: block; margin-bottom: 0.15rem; }
+
+  /* ─── DELIVERY BOX ─── */
+  .delivery { background: var(--day3-dim); border: 1px solid var(--day3-border); border-radius: 8px; padding: 1.3rem 1.5rem; margin-top: 2.5rem; }
+  .delivery h3 { font-size: 13px; font-weight: 600; color: var(--day3); margin-bottom: 0.9rem; }
+  .delivery-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 0.6rem; }
+  .d-item { background: var(--surface); border: 1px solid var(--border); border-radius: 6px; padding: 0.7rem 0.9rem; }
+  .d-item.d-d2  { border-color: var(--enhance-border); }
+  .d-item.d-d3  { border-color: var(--day3-border); }
+  .d-file     { font-family: var(--mono); font-size: 11.5px; font-weight: 600; color: var(--impl);    margin-bottom: 0.2rem; }
+  .d-file-d2  { font-family: var(--mono); font-size: 11.5px; font-weight: 600; color: var(--enhance); margin-bottom: 0.2rem; }
+  .d-file-d3  { font-family: var(--mono); font-size: 11.5px; font-weight: 600; color: var(--day3);    margin-bottom: 0.2rem; }
+  .d-desc { font-size: 11px; color: var(--muted); line-height: 1.4; }
+
+  @media (max-width: 600px) {
+    .sc-head { flex-wrap: wrap; }
+    .sc-meta { flex-direction: row; align-items: center; margin-top: 0.5rem; }
+  }
+</style>
+
+<div class="page">
+
+  <!-- ─── HEADER ─── -->
+  <div class="header">
+    <div class="eyebrow">BMad Enhancement Workflow · Day 3 Demo Playbook · v1</div>
+    <h1>The Cloud Blog — <em>Day 3</em> Enhancement Guide</h1>
+    <p class="header-sub">Step-by-step BMad agent execution for Puneet Gaur's Day 3 demo: 2 deep enhancements layered on top of TheCloudV2.html — a full Skills Video Playlist system and a live AWS Bedrock AI chatbot. All 6 agents in sequence, 45-minute window. <strong>Requires Playbook-Day2 to be fully complete first.</strong></p>
+  </div>
+
+  <!-- ─── ENHANCEMENT OVERVIEW ─── -->
+  <div class="enhance-banner">
+    <h2>Day 3 Enhancements — 2 Deep Features Added to TheCloudV2.html</h2>
+    <p style="font-size:12.5px;color:var(--muted);margin-bottom:0.2rem;">This playbook is additive. All Day 1 and Day 2 artifacts are read from disk by each agent. The Dev Agent enhances <strong style="color:var(--text)">TheCloudV2.html</strong> and produces <strong style="color:var(--text)">TheCloudV3.html</strong>.</p>
+    <div class="enhance-grid">
+      <div class="enhance-card">
+        <div class="enhance-card-tag">Enhancement 1</div>
+        <h4>Skills Video Playlist</h4>
+        <p>Replace the single YouTube placeholder in the Tutorials section with a full playlist system: 4 skill tracks (AWS, GitHub, DevOps, CI/CD), each with 3–4 video cards, tab navigation, and click-to-play inline embed.</p>
+      </div>
+      <div class="enhance-card">
+        <div class="enhance-card-tag">Enhancement 2</div>
+        <h4>Live AWS Bedrock Chatbot</h4>
+        <p>Replace the dummy getBotResponse() function with a real fetch() call to the AWS Bedrock API Gateway endpoint. Includes loading indicator, error handling, and graceful fallback. The chatbot now answers questions using a live LLM.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- ─── HOW BMAD ENHANCEMENT WORKS ─── -->
+  <div class="how-section">
+    <h2>How Day 3 Builds on Day 2 — Reading All Prior Artifacts From Disk</h2>
+    <div class="how-grid">
+      <div class="how-card">
+        <div class="how-card-num">Step A</div>
+        <h4>Agents read Day 1 + Day 2 files</h4>
+        <p>Every Day 3 agent starts by reading <em>prd-v2.md</em>, <em>architecture-v2.md</em>, <em>ux-spec-v2.md</em>, and <em>TheCloudV2.html</em>. No regeneration of prior work.</p>
+      </div>
+      <div class="how-card">
+        <div class="how-card-num">Step B</div>
+        <h4>Agents create v3 additions only</h4>
+        <p>Each agent produces <em>prd-v3.md</em>, <em>architecture-v3.md</em>, <em>ux-spec-v3.md</em> — extensions that sit alongside v2 files without touching them.</p>
+      </div>
+      <div class="how-card">
+        <div class="how-card-num">Step C</div>
+        <h4>Dev Agent delivers TheCloudV3.html</h4>
+        <p>The Dev Agent reads TheCloudV2.html plus all v3 artifacts, applies the 2 enhancements surgically, and saves <em>TheCloudV3.html</em>.</p>
+      </div>
+    </div>
+    <div class="file-tree">
+      <span class="folder">Project6/</span><br>
+      &nbsp;&nbsp;<span class="file">├── prd.md</span><span class="tag t-plan">Day 1 (read)</span><br>
+      &nbsp;&nbsp;<span class="file">├── prd-v2.md</span><span class="tag t-d2">Day 2 (read)</span><br>
+      &nbsp;&nbsp;<span class="file-d3">├── prd-v3.md</span><span class="tag t-d3">Step 1 (new)</span><br>
+      &nbsp;&nbsp;<span class="file">├── epics.md + stories/enhancement-epics.md</span><span class="tag t-plan">Day 1–2 (read)</span><br>
+      &nbsp;&nbsp;<span class="file-d3">├── stories/day3-epics.md + story-031.md …</span><span class="tag t-d3">Step 2 (new)</span><br>
+      &nbsp;&nbsp;<span class="file">├── architecture.md + architecture-v2.md</span><span class="tag t-plan">Day 1–2 (read)</span><br>
+      &nbsp;&nbsp;<span class="file-d3">├── architecture-v3.md</span><span class="tag t-d3">Step 3 (new)</span><br>
+      &nbsp;&nbsp;<span class="file">├── ux-spec.md + ux-spec-v2.md</span><span class="tag t-plan">Day 1–2 (read)</span><br>
+      &nbsp;&nbsp;<span class="file-d3">├── ux-spec-v3.md</span><span class="tag t-d3">Step 4 (new)</span><br>
+      &nbsp;&nbsp;<span class="file">├── TheCloud.html + TheCloudV2.html</span><span class="tag t-d2">Day 2 base (read by Dev)</span><br>
+      &nbsp;&nbsp;<span class="file-d3">└── TheCloudV3.html</span><span class="tag t-d3">Step 5 (deliverable)</span>
+    </div>
+  </div>
+
+  <!-- ─── CALLOUTS ─── -->
+  <div class="callout callout-day3">
+    <h4>Day 3 Context — You are enhancing TheCloudV2.html, not rebuilding</h4>
+    <p>All Day 1 and Day 2 artifacts (<strong>prd.md, prd-v2.md, architecture-v2.md, ux-spec-v2.md, TheCloudV2.html</strong>) are already in your project folder. The Dev Agent reads TheCloudV2.html first, then applies only the 2 Day 3 enhancements. <strong>It does not regenerate the portal from scratch.</strong></p>
+  </div>
+  <div class="callout callout-info">
+    <h4>Fresh context window per step</h4>
+    <p>Press <strong>Ctrl+N (Cmd+N on Mac)</strong> to open a new Claude Code chat for each step. Each agent has a distinct role — mixing steps in one window produces confused output.</p>
+  </div>
+  <div class="callout callout-warn">
+    <h4>Working directory check</h4>
+    <p>Run <strong>ls</strong> in the terminal — you should see prd-v2.md, architecture-v2.md, TheCloudV2.html, and the stories/ folder. If not, run: <strong>cd /path/to/Project6</strong></p>
+  </div>
+
+  <!-- ─── TIMELINE ─── -->
+  <div class="timeline-wrap">
+    <div class="tl-label">45-Minute Timeline — 6 Steps for Day 3 Enhancement</div>
+    <div class="tl-track">
+      <div class="tl-seg s1">PRD v3 7m</div>
+      <div class="tl-seg s2">Stories 6m</div>
+      <div class="tl-seg s3">ARCH v3 7m</div>
+      <div class="tl-seg s4">UX v3 7m</div>
+      <div class="tl-seg s5">DEV 13m</div>
+      <div class="tl-seg s6">QA 5m</div>
+    </div>
+    <div class="tl-legend">
+      <div class="tl-li"><div class="tl-dot" style="background:var(--plan)"></div>Step 1: PM Agent (PRD v3) · 0–7 min</div>
+      <div class="tl-li"><div class="tl-dot" style="background:var(--story)"></div>Step 2: Enhancement Stories · 7–13 min</div>
+      <div class="tl-li"><div class="tl-dot" style="background:var(--arch)"></div>Step 3: Architect Agent (v3) · 13–20 min</div>
+      <div class="tl-li"><div class="tl-dot" style="background:var(--ux)"></div>Step 4: UX Designer (v3) · 20–27 min</div>
+      <div class="tl-li"><div class="tl-dot" style="background:var(--day3)"></div>Step 5: Dev Agent · 27–40 min</div>
+      <div class="tl-li"><div class="tl-dot" style="background:var(--review)"></div>Step 6: Browser QA · 40–45 min</div>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════
+       STEP 1 — PM AGENT / PRD v3
+  ═══════════════════════════════════════ -->
+  <div class="phase-header">
+    <span class="phase-badge pb-plan">Phase 1 — Planning</span>
+    <h2>PM Agent — Enhancement PRD (prd-v3.md)</h2>
+    <span class="phase-time">0 → 7 min</span>
+  </div>
+
+  <div class="step-card">
+    <div class="sc-head">
+      <div class="sc-num n-plan">1</div>
+      <div class="sc-info">
+        <div class="sc-title">PM Agent — Document the 2 Day 3 Enhancement Requirements</div>
+        <div class="sc-why">The PM Agent reads prd-v2.md so it understands the full Day 1–2 scope, then creates a focused Day 3 Enhancement PRD covering the Skills Playlist and the AWS Bedrock live chatbot integration. This becomes the source of truth for all Day 3 agents. <strong>You describe the enhancements once — right here.</strong></div>
+      </div>
+      <div class="sc-meta">
+        <span class="sc-time">7 min</span>
+        <span class="sc-skill">bmad-agent-pm</span>
+      </div>
+    </div>
+    <div class="sc-body">
+      <div class="step-row">
+        <div class="row-label"><span class="rl-badge rl-open">OPEN</span>Open a brand-new Claude Code context window (Ctrl+N / Cmd+N)</div>
+        <div class="cmd-block">/bmad-agent-pm</div>
+      </div>
+      <div class="step-row">
+        <div class="row-label"><span class="rl-badge rl-paste">PASTE</span>Copy and paste this prompt. Press Enter.</div>
+        <div class="prompt-block">You are the BMad PM Agent. This is a Day 3 enhancement request for an existing project.
+
+<span class="prompt-hl">Please read the existing PRDs from the current project directory:
+1. prd-v2.md — the Day 2 Enhancement PRD (so you understand the full Day 1–2 scope)</span>
+
+Do not ask me to paste it — use your Read tool to open it directly.
+
+Once you have read prd-v2.md, create a focused Day 3 Enhancement PRD that documents
+2 new deep features to be added to the existing portal. Do NOT rewrite prd-v2.md —
+produce a separate file that extends it.
+
+PROJECT: The Cloud — IT Learning Portal (Puneet Gaur)
+BASE FILE: TheCloudV2.html (built in Day 2 — has modals, chatbot widget, tutorials section)
+TECHNICAL CONSTRAINT: Plain HTML/CSS/JavaScript only. No external libraries. Single HTML file.
+
+<span class="prompt-day3">ENHANCEMENT REQUIREMENTS — document each feature in detail:</span>
+
+ENHANCEMENT 1 — SKILLS VIDEO PLAYLIST SYSTEM
+The existing "AWS Tutorials" section in TheCloudV2.html has a single YouTube placeholder.
+Replace it with a full multi-track playlist system with these specifications:
+
+PLAYLIST TRACKS (4 skill categories):
+  Track 1 — AWS Fundamentals (4 videos)
+    Video 1: "AWS Basics for Beginners" · ~15 min · Intro to the console and core services
+    Video 2: "Amazon S3 Deep Dive" · ~12 min · Buckets, storage classes, versioning
+    Video 3: "EC2 Instance Setup" · ~18 min · Launch, connect, configure a virtual server
+    Video 4: "IAM Users, Roles & Policies" · ~14 min · Identity and access management essentials
+
+  Track 2 — GitHub & Version Control (3 videos)
+    Video 1: "Git Fundamentals in 30 Minutes" · ~30 min · Init, commit, push, pull workflow
+    Video 2: "GitHub Pull Requests Workflow" · ~20 min · Fork, branch, PR, review, merge
+    Video 3: "Branching Strategies" · ~16 min · Git Flow, trunk-based, feature flags
+
+  Track 3 — DevOps Essentials (3 videos)
+    Video 1: "DevOps Culture & Principles" · ~22 min · What DevOps means and why it matters
+    Video 2: "Docker Containers for Beginners" · ~25 min · Images, containers, Dockerfile
+    Video 3: "Kubernetes Architecture" · ~30 min · Pods, deployments, services overview
+
+  Track 4 — CI/CD Pipelines (3 videos)
+    Video 1: "GitHub Actions Complete Guide" · ~28 min · Workflows, jobs, triggers
+    Video 2: "Jenkins Pipeline Tutorial" · ~20 min · Jenkinsfile, stages, agents
+    Video 3: "AWS CodePipeline Walkthrough" · ~18 min · Source → Build → Deploy stages
+
+UI BEHAVIOR:
+  - Tab/pill navigation row to switch between the 4 tracks
+  - Active track shows a grid of video cards (2-column on desktop, 1-column on mobile)
+  - Each video card shows: thumbnail placeholder, video title, duration pill, short description
+  - Click a video card → inline YouTube embed player replaces the placeholder in that card
+  - YouTube iframes use real embed format: https://www.youtube.com/embed/VIDEO_ID
+  - All VIDEO_IDs are placeholders — comments in code show where real IDs go
+  - One video card expanded at a time; clicking another collapses the previous
+
+SECTION PLACEMENT:
+  - Replace the existing simple "AWS Tutorials" section entirely
+  - Section heading: "Skills Playlist" (or "Learn by Topic")
+  - Keep the section id="tutorials" so the navbar "Tutorials" link still works
+
+ENHANCEMENT 2 — LIVE AWS BEDROCK AI CHATBOT
+The existing chatbot in TheCloudV2.html uses a dummy getBotResponse() function that returns
+hard-coded strings. Replace this function with a real fetch() call to the AWS Bedrock API.
+
+API DETAILS:
+  Endpoint: POST https://mfobabs5n0.execute-api.us-east-2.amazonaws.com/dev/ask
+  Request body (JSON):
+    {
+      "prompt": "<user's message>",
+      "max_tokens": 200,
+      "temperature": 0.3
+    }
+  Expected response: JSON object — the agent should try response fields in this order:
+    data.response, data.text, data.completion, data.answer, data.body
+    If none match, JSON.stringify(data) as fallback.
+
+BEHAVIOR REQUIREMENTS:
+  - While waiting for API response: show a "..." typing indicator in a bot bubble
+  - On success: replace indicator with the actual API response text
+  - On API error (non-200): show "Sorry, the AI assistant is temporarily unavailable."
+  - On network error (fetch throws): show "Could not connect to the AI service."
+  - Send button disabled while request is in-flight (prevent double-sends)
+  - User can still type during loading (only Send is disabled)
+  - Keep all existing chatbot CSS, widget structure, and toggle behavior from Day 2
+
+CORS ASSUMPTION: The API Gateway endpoint is assumed to have CORS configured for browser
+fetch() calls. If a CORS error appears in the browser console, note it in the document
+as a deployment configuration issue (not a code issue).
+
+Please produce an Enhancement PRD (prd-v3.md) with these sections:
+1. Enhancement Overview (what changes and why)
+2. Feature Specifications (one sub-section per enhancement with full detail)
+3. Technical Constraints (single-file, no external libraries, fetch() for API)
+4. Impact on Existing Features (what changes vs what stays)
+5. Acceptance Criteria for each enhancement
+6. Assumptions & Open Questions
+
+Save as: prd-v3.md in the current project directory.</div>
+      </div>
+      <div class="step-row">
+        <div class="row-label"><span class="rl-badge rl-save">SAVE</span>Confirm the file is saved</div>
+        <div class="handoff-box">
+          After the agent finishes, run <strong>ls</strong> — you should see <strong>prd-v3.md</strong> alongside prd-v2.md. If missing, type: <em>"Please save the Enhancement PRD to prd-v3.md now."</em>
+        </div>
+      </div>
+      <div class="step-row">
+        <div class="row-label">Output produced:</div>
+        <div class="chips">
+          <span class="chip ch-plan">prd-v3.md</span>
+          <span class="chip ch-plan">Playlist track specs (4 tracks, 13 videos)</span>
+          <span class="chip ch-plan">Bedrock API spec + error handling</span>
+          <span class="chip ch-plan">Acceptance criteria</span>
+          <span class="chip ch-plan">Assumptions & CORS note</span>
+        </div>
+      </div>
+      <div class="step-row">
+        <div class="row-label">Quick check before moving on:</div>
+        <ul class="checklist">
+          <li>prd-v3.md exists in the project folder alongside prd-v2.md</li>
+          <li>All 4 playlist tracks are documented with video counts</li>
+          <li>Bedrock API endpoint URL is recorded exactly: https://mfobabs5n0.execute-api.us-east-2.amazonaws.com/dev/ask</li>
+          <li>Request body format (prompt, max_tokens, temperature) is in the spec</li>
+          <li>Loading state, error state, and fallback behavior are described</li>
+          <li>CORS assumption is documented in Assumptions section</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════
+       STEP 2 — ENHANCEMENT EPICS & STORIES
+  ═══════════════════════════════════════ -->
+  <div class="phase-header">
+    <span class="phase-badge pb-story">Phase 1 — Planning</span>
+    <h2>PM Agent — Day 3 Epics &amp; User Stories</h2>
+    <span class="phase-time">7 → 13 min</span>
+  </div>
+
+  <div class="step-card">
+    <div class="sc-head">
+      <div class="sc-num n-story">2</div>
+      <div class="sc-info">
+        <div class="sc-title">Create User Stories for the 2 Day 3 Enhancements</div>
+        <div class="sc-why">Creates targeted user stories for EP-010 (Skills Playlist) and EP-011 (Live Bedrock Chatbot). Stories continue from Day 2's last ID — story-030.md exists, so new stories start at US-031. The agent reads prd-v3.md and the existing enhancement-epics.md to find the correct numbering — no copy-paste needed.</div>
+      </div>
+      <div class="sc-meta">
+        <span class="sc-time">6 min</span>
+        <span class="sc-skill">bmad-create-epics-and-stories</span>
+      </div>
+    </div>
+    <div class="sc-body">
+      <div class="step-row">
+        <div class="row-label"><span class="rl-badge rl-open">OPEN</span>Open a new context window. Do NOT continue in Step 1's window.</div>
+        <div class="cmd-block">/bmad-agent-pm</div>
+      </div>
+      <div class="step-row">
+        <div class="row-label"><span class="rl-badge rl-paste">PASTE</span>This prompt reads existing files — no copy-paste of document content required.</div>
+        <div class="prompt-block">You are the BMad PM Agent. This is Day 3 of a project. Existing planning artifacts are on disk.
+
+<span class="prompt-hl">Please read these files from the current project directory:
+1. prd-v3.md            — the Day 3 Enhancement PRD (2 new features)
+2. stories/enhancement-epics.md — the Day 2 epics (so you know the current epic numbering)</span>
+
+Do not ask me to paste them — use your Read tool to open them directly.
+
+Once you have read both files, create user stories for the 2 Day 3 enhancements.
+Continue story numbering from where Day 2 left off.
+Day 2 produced stories up to story-030.md, so begin at US-031.
+Day 2 epics go up to EP-009, so begin at EP-010.
+
+For each story use this format:
+  Story ID: US-0xx
+  Title: [short title]
+  User Story: As a [user type], I want to [action] so that [benefit].
+  Acceptance Criteria: (3–5 bullet points)
+  Priority: High / Medium / Low
+
+<span class="prompt-day3">EPIC AND STORY SCOPE FOR DAY 3:</span>
+
+EP-010 — Skills Video Playlist System
+  Create stories covering:
+  - Tab navigation switching between 4 skill tracks (AWS, GitHub, DevOps, CI/CD)
+  - Video card grid layout within each track
+  - Click to expand inline YouTube player inside a card
+  - Collapse behavior when clicking another card
+  - Thumbnail placeholder appearance before a video is selected
+  - Mobile responsiveness (single-column card grid)
+  - Navbar "Tutorials" link still scrolls to the playlist section
+
+EP-011 — Live AWS Bedrock AI Chatbot
+  Create stories covering:
+  - Typing indicator ("...") appearing in a bot bubble while API is in-flight
+  - Send button disabled while waiting for response
+  - Successful API response displayed in the chat
+  - Error message shown if API returns non-200 status
+  - Network error fallback message shown if fetch() throws
+  - User can still type in the input during loading
+  - Chatbot widget toggle, header, and layout unchanged from Day 2
+
+Save as:
+  stories/day3-epics.md — the 2 new epics summary
+  stories/story-031.md, story-032.md, ... — individual story files (aim for 8–12 stories total)</div>
+      </div>
+      <div class="step-row">
+        <div class="row-label">What the story table should look like:</div>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr><th>Epic</th><th>ID</th><th>Sample User Story</th><th>Priority</th></tr>
+            </thead>
+            <tbody>
+              <tr><td><span class="new-label">EP-010</span> Skills Playlist</td><td><span class="story-label">US-031</span></td><td>As a learner, I want to click a skill track tab so I see only the videos for that topic without the page reloading.</td><td>High</td></tr>
+              <tr><td><span class="new-label">EP-010</span> Skills Playlist</td><td><span class="story-label">US-032</span></td><td>As a learner, I want to click a video card so an inline YouTube player opens inside that card without leaving the portal.</td><td>High</td></tr>
+              <tr><td><span class="new-label">EP-011</span> Live Bedrock</td><td><span class="story-label">US-036</span></td><td>As a user, I want a typing indicator to appear while the AI generates a response so I know the system is working.</td><td>High</td></tr>
+              <tr><td><span class="new-label">EP-011</span> Live Bedrock</td><td><span class="story-label">US-037</span></td><td>As a user, I want a friendly error message when the AI service is unavailable so I understand what happened.</td><td>Medium</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+      <div class="step-row">
+        <div class="row-label">Output produced:</div>
+        <div class="chips">
+          <span class="chip ch-story">stories/day3-epics.md</span>
+          <span class="chip ch-story">stories/story-031.md through story-040+.md</span>
+          <span class="chip ch-story">EP-010 (Skills Playlist)</span>
+          <span class="chip ch-story">EP-011 (Live Bedrock Chatbot)</span>
+          <span class="chip ch-story">~10 User Stories</span>
+        </div>
+      </div>
+      <div class="step-row">
+        <div class="row-label">Quick check before moving on:</div>
+        <ul class="checklist">
+          <li>stories/day3-epics.md exists with EP-010 and EP-011</li>
+          <li>New story files start at story-031.md (no overlap with Day 2)</li>
+          <li>Playlist stories cover tab switching, card click-to-play, and mobile layout</li>
+          <li>Bedrock stories cover loading state, error state, and network failure</li>
+          <li>Each story has 3–5 acceptance criteria bullet points</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════
+       STEP 3 — ARCHITECT v3
+  ═══════════════════════════════════════ -->
+  <div class="phase-header">
+    <span class="phase-badge pb-arch">Phase 2 — Solutioning</span>
+    <h2>Architect Agent — Enhancement Architecture (architecture-v3.md)</h2>
+    <span class="phase-time">13 → 20 min</span>
+  </div>
+
+  <div class="step-card">
+    <div class="sc-head">
+      <div class="sc-num n-arch">3</div>
+      <div class="sc-info">
+        <div class="sc-title">Architect Agent — Playlist DOM/JS Pattern &amp; Bedrock fetch() Integration</div>
+        <div class="sc-why">The Architect Agent reads architecture-v2.md and prd-v3.md, then designs the exact technical patterns for the playlist tab system and the Bedrock API fetch call. The Dev Agent must follow this spec precisely — it defines JS data structures, DOM manipulation approach, fetch() error handling, and where each piece of code lives in the single HTML file.</div>
+      </div>
+      <div class="sc-meta">
+        <span class="sc-time">7 min</span>
+        <span class="sc-skill">bmad-agent-architect</span>
+      </div>
+    </div>
+    <div class="sc-body">
+      <div class="step-row">
+        <div class="row-label"><span class="rl-badge rl-open">OPEN</span>Open a new context window.</div>
+        <div class="cmd-block">/bmad-agent-architect</div>
+      </div>
+      <div class="step-row">
+        <div class="row-label"><span class="rl-badge rl-paste">PASTE</span>The agent reads 2 files from disk — no copy-paste needed.</div>
+        <div class="prompt-block">You are the BMad Architect Agent. This is a Day 3 enhancement design session.
+
+<span class="prompt-hl">Please read these files from the current project directory:
+1. architecture-v2.md — the Day 2 Technical Architecture Document
+2. prd-v3.md          — the Day 3 Enhancement PRD (2 new features)</span>
+
+Do not ask me to paste them — use your Read tool to open them directly.
+
+Once you have read both files, produce architecture-v3.md.
+Do NOT rewrite architecture-v2.md — create a new additive document.
+
+PROJECT: The Cloud — single HTML file (TheCloudV2.html), no external libraries.
+
+<span class="prompt-day3">Please design the technical approach for each enhancement:</span>
+
+1. SKILLS PLAYLIST ARCHITECTURE
+
+DATA STRUCTURE (JavaScript constant at top of &lt;script&gt; block):
+const PLAYLISTS = {
+  aws: {
+    label: 'AWS Fundamentals',
+    videos: [
+      { id: 'YOUTUBE_ID_1', title: 'AWS Basics for Beginners', duration: '15:00', desc: 'Intro to the console and core services.' },
+      { id: 'YOUTUBE_ID_2', title: 'Amazon S3 Deep Dive',      duration: '12:00', desc: 'Buckets, storage classes, versioning.' },
+      { id: 'YOUTUBE_ID_3', title: 'EC2 Instance Setup',       duration: '18:00', desc: 'Launch, connect, configure a virtual server.' },
+      { id: 'YOUTUBE_ID_4', title: 'IAM Users, Roles & Policies', duration: '14:00', desc: 'Identity and access management essentials.' }
+    ]
+  },
+  github: {
+    label: 'GitHub & Version Control',
+    videos: [
+      { id: 'YOUTUBE_ID_5', title: 'Git Fundamentals in 30 Minutes', duration: '30:00', desc: 'Init, commit, push, pull workflow.' },
+      { id: 'YOUTUBE_ID_6', title: 'GitHub Pull Requests Workflow',   duration: '20:00', desc: 'Fork, branch, PR, review, merge.' },
+      { id: 'YOUTUBE_ID_7', title: 'Branching Strategies',            duration: '16:00', desc: 'Git Flow, trunk-based, feature flags.' }
+    ]
+  },
+  devops: {
+    label: 'DevOps Essentials',
+    videos: [
+      { id: 'YOUTUBE_ID_8',  title: 'DevOps Culture & Principles',    duration: '22:00', desc: 'What DevOps means and why it matters.' },
+      { id: 'YOUTUBE_ID_9',  title: 'Docker Containers for Beginners',duration: '25:00', desc: 'Images, containers, Dockerfile basics.' },
+      { id: 'YOUTUBE_ID_10', title: 'Kubernetes Architecture',         duration: '30:00', desc: 'Pods, deployments, services overview.' }
+    ]
+  },
+  cicd: {
+    label: 'CI/CD Pipelines',
+    videos: [
+      { id: 'YOUTUBE_ID_11', title: 'GitHub Actions Complete Guide',   duration: '28:00', desc: 'Workflows, jobs, triggers.' },
+      { id: 'YOUTUBE_ID_12', title: 'Jenkins Pipeline Tutorial',       duration: '20:00', desc: 'Jenkinsfile, stages, agents.' },
+      { id: 'YOUTUBE_ID_13', title: 'AWS CodePipeline Walkthrough',    duration: '18:00', desc: 'Source, Build, Deploy stages.' }
+    ]
+  }
+};
+
+HTML STRUCTURE (replaces the old tutorials section):
+&lt;section id="tutorials"&gt;
+  &lt;h2&gt;Skills Playlist&lt;/h2&gt;
+  &lt;div class="playlist-tabs"&gt;
+    &lt;button class="pl-tab active" onclick="switchTrack('aws')"&gt;AWS Fundamentals&lt;/button&gt;
+    &lt;button class="pl-tab" onclick="switchTrack('github')"&gt;GitHub &amp; Version Control&lt;/button&gt;
+    &lt;button class="pl-tab" onclick="switchTrack('devops')"&gt;DevOps Essentials&lt;/button&gt;
+    &lt;button class="pl-tab" onclick="switchTrack('cicd')"&gt;CI/CD Pipelines&lt;/button&gt;
+  &lt;/div&gt;
+  &lt;div class="playlist-grid" id="playlist-grid"&gt;&lt;/div&gt;
+&lt;/section&gt;
+
+JavaScript functions:
+  switchTrack(trackKey):
+    - Update active tab class (.pl-tab.active)
+    - Call renderPlaylist(trackKey)
+
+  renderPlaylist(trackKey):
+    - Clear #playlist-grid innerHTML
+    - Loop PLAYLISTS[trackKey].videos
+    - For each video, append a video card div (see card structure below)
+
+  playVideo(trackKey, videoIndex):
+    - Find the target card by data attribute
+    - Replace the .vid-thumb div with:
+      &lt;iframe src="https://www.youtube.com/embed/VIDEO_ID?autoplay=1"
+              width="100%" height="100%" frameborder="0" allowfullscreen&gt;&lt;/iframe&gt;
+    - If another card already has an iframe, restore it to thumbnail first
+
+VIDEO CARD HTML pattern (generated by renderPlaylist):
+  &lt;div class="vid-card" data-track="aws" data-idx="0"&gt;
+    &lt;div class="vid-thumb" onclick="playVideo('aws', 0)"&gt;
+      &lt;!-- YOUTUBE THUMBNAIL: replace YOUTUBE_ID_1 below with real video ID --&gt;
+      &lt;div class="vid-play-icon"&gt;▶&lt;/div&gt;
+      &lt;span class="vid-duration"&gt;15:00&lt;/span&gt;
+    &lt;/div&gt;
+    &lt;div class="vid-info"&gt;
+      &lt;div class="vid-title"&gt;AWS Basics for Beginners&lt;/div&gt;
+      &lt;div class="vid-desc"&gt;Intro to the console and core services.&lt;/div&gt;
+    &lt;/div&gt;
+  &lt;/div&gt;
+
+CSS key rules:
+  .playlist-tabs { display: flex; gap: 0.5rem; flex-wrap: wrap; margin-bottom: 1.5rem; }
+  .pl-tab { padding: 0.4rem 0.9rem; border-radius: 20px; font-size: 12px; cursor: pointer; }
+  .pl-tab.active { background: &lt;accent-color&gt;; color: #0B0F1A; border-color: transparent; }
+  .playlist-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 1rem; }
+  @media (max-width: 600px) { .playlist-grid { grid-template-columns: 1fr; } }
+  .vid-card { border: 1px solid var(--border); border-radius: 8px; overflow: hidden; }
+  .vid-thumb { position: relative; aspect-ratio: 16/9; background: var(--surface2); cursor: pointer; }
+  .vid-play-icon { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; font-size: 2.5rem; color: &lt;accent-color&gt;; }
+  .vid-duration { position: absolute; bottom: 0.4rem; right: 0.4rem; font-size: 10px; background: rgba(0,0,0,0.7); color: #fff; padding: 0.1rem 0.3rem; border-radius: 3px; }
+  .vid-info { padding: 0.75rem; }
+  .vid-title { font-size: 13px; font-weight: 600; margin-bottom: 0.2rem; }
+  .vid-desc { font-size: 11.5px; color: var(--muted); }
+
+Initialization: call switchTrack('aws') at the bottom of &lt;script&gt; (after DOM is ready)
+
+2. AWS BEDROCK CHATBOT INTEGRATION ARCHITECTURE
+
+Replace the existing getBotResponse(text) function body in TheCloudV2.html.
+The function must now be async. Update sendMessage() to await it.
+
+BEDROCK API CONSTANTS (add at top of &lt;script&gt; block):
+const BEDROCK_API_URL = 'https://mfobabs5n0.execute-api.us-east-2.amazonaws.com/dev/ask';
+const BEDROCK_PARAMS  = { max_tokens: 200, temperature: 0.3 };
+
+UPDATED FUNCTION SIGNATURES:
+  async function getBotResponse(userText):
+    1. Show loading bubble: appendChatBubble('bot', '...', 'loading')
+    2. Disable Send button: document.getElementById('chat-send').disabled = true
+    3. try {
+         const res = await fetch(BEDROCK_API_URL, {
+           method: 'POST',
+           headers: { 'Content-Type': 'application/json' },
+           body: JSON.stringify({ prompt: userText, ...BEDROCK_PARAMS })
+         });
+         if (!res.ok) throw new Error('HTTP ' + res.status);
+         const data = await res.json();
+         const reply = data.response ?? data.text ?? data.completion ??
+                       data.answer ?? data.body ?? JSON.stringify(data);
+         updateChatBubble('loading', reply);
+       } catch (err) {
+         const msg = err.message.startsWith('HTTP')
+           ? 'Sorry, the AI assistant is temporarily unavailable. (Error: ' + err.message + ')'
+           : 'Could not connect to the AI service. Please check your connection.';
+         updateChatBubble('loading', msg);
+       } finally {
+         document.getElementById('chat-send').disabled = false;
+       }
+
+HELPER FUNCTIONS needed (may already exist in Day 2 code — check before adding):
+  appendChatBubble(role, text, id):
+    Creates a div.chat-msg.chat-msg-{role} with textContent = text and data-bubble-id = id
+    Appends to messages area, scrolls to bottom, returns the element
+
+  updateChatBubble(id, newText):
+    Finds element with data-bubble-id = id, sets textContent = newText
+
+CHANGES SUMMARY TABLE:
+  Feature       | Change Type | What Changes
+  Playlist      | Replace     | Remove old tutorials section HTML; insert full playlist HTML + PLAYLISTS data + JS functions
+  Bedrock fetch | Replace     | getBotResponse() body replaced; sendMessage() made async-aware; 2 constants added
+  Everything else | No change  | All modals, navbar, topic cards, blog posts, about section, footer preserved</div>
+      </div>
+      <div class="step-row">
+        <div class="row-label">Output produced:</div>
+        <div class="chips">
+          <span class="chip ch-arch">architecture-v3.md</span>
+          <span class="chip ch-arch">PLAYLISTS JS data structure</span>
+          <span class="chip ch-arch">switchTrack() / renderPlaylist() / playVideo()</span>
+          <span class="chip ch-arch">async getBotResponse() with fetch()</span>
+          <span class="chip ch-arch">Error handling patterns</span>
+          <span class="chip ch-arch">Changes summary table</span>
+        </div>
+      </div>
+      <div class="step-row">
+        <div class="row-label">Quick check before moving on:</div>
+        <ul class="checklist">
+          <li>architecture-v3.md exists in the project folder</li>
+          <li>PLAYLISTS constant is defined with all 4 tracks and 13 placeholder video IDs</li>
+          <li>switchTrack(), renderPlaylist(), playVideo() functions are specified</li>
+          <li>Bedrock fetch() uses POST with the exact endpoint URL from prd-v3.md</li>
+          <li>Response field fallback chain (data.response ?? data.text ?? ...) is in the spec</li>
+          <li>Loading bubble and Send-button disable/enable pattern is documented</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════
+       STEP 4 — UX DESIGNER v3
+  ═══════════════════════════════════════ -->
+  <div class="phase-header">
+    <span class="phase-badge pb-ux">Phase 2 — Solutioning</span>
+    <h2>UX Designer Agent — Enhancement Visual Spec (ux-spec-v3.md)</h2>
+    <span class="phase-time">20 → 27 min</span>
+  </div>
+
+  <div class="step-card">
+    <div class="sc-head">
+      <div class="sc-num n-ux">4</div>
+      <div class="sc-info">
+        <div class="sc-title">UX Designer Agent — Visual Specs for Playlist Tabs, Video Cards &amp; Chat Loading State</div>
+        <div class="sc-why">The UX Agent reads the existing ux-spec-v2.md and architecture-v3.md, then designs the exact look of the playlist tab pills, video card grid, inline player expansion, and the chatbot's loading indicator. The Dev Agent needs precise styling so it does not guess — every color reference must use the existing CSS variables.</div>
+      </div>
+      <div class="sc-meta">
+        <span class="sc-time">7 min</span>
+        <span class="sc-skill">bmad-agent-ux-designer</span>
+      </div>
+    </div>
+    <div class="sc-body">
+      <div class="step-row">
+        <div class="row-label"><span class="rl-badge rl-open">OPEN</span>Open a new context window.</div>
+        <div class="cmd-block">/bmad-agent-ux-designer</div>
+      </div>
+      <div class="step-row">
+        <div class="row-label"><span class="rl-badge rl-paste">PASTE</span>The agent reads 2 existing files — zero copy-paste of specifications.</div>
+        <div class="prompt-block">You are the BMad UX Designer Agent. This is a Day 3 enhancement design session.
+
+<span class="prompt-hl">Please read these files from the current project directory:
+1. ux-spec-v2.md     — the Day 2 UX Specification (the established design system)
+2. architecture-v3.md — the Day 3 Architecture Document (playlist + chatbot patterns)</span>
+
+Do not ask me to paste them — use your Read tool to open them directly.
+
+Once you have read both files, produce ux-spec-v3.md.
+Do NOT rewrite ux-spec-v2.md — produce a new file that extends it.
+Use the SAME color palette, typography, and spacing system from Day 1–2.
+All CSS variable references must match the existing --bg, --surface, --impl, etc. variables.
+
+<span class="prompt-day3">Please design each new component in detail:</span>
+
+1. SKILLS PLAYLIST — TAB NAVIGATION ROW
+   - Layout: horizontal flex row, gap 0.5rem, flex-wrap to handle overflow on small screens
+   - Tab pill (inactive):
+     * Background: var(--surface2)
+     * Border: 1px solid var(--border)
+     * Text color: var(--muted)
+     * Font: var(--mono), 11.5px
+     * Padding: 0.4rem 1rem
+     * Border-radius: 20px (full pill)
+     * Cursor: pointer
+   - Tab pill (active / .pl-tab.active):
+     * Background: use the primary accent color established in ux-spec-v2.md
+     * Text color: #0B0F1A (dark, for contrast on bright accent)
+     * Font-weight: 600
+     * Border-color: transparent
+   - Hover state (inactive tab): background lightens slightly, border brightens
+   - Transition: background 0.15s ease
+
+2. VIDEO CARD GRID
+   - Grid: 2 columns on desktop (gap 1rem), 1 column on mobile (&lt;600px)
+   - Individual card:
+     * Background: var(--surface)
+     * Border: 1px solid var(--border)
+     * Border-radius: 8px
+     * Overflow: hidden
+     * Hover: border-color shifts to the accent color; subtle box-shadow lift (same as topic cards in ux-spec-v2.md)
+
+3. VIDEO THUMBNAIL PLACEHOLDER (before play clicked)
+   - Aspect ratio: 16:9 (use aspect-ratio: 16/9 CSS property or padding-top: 56.25% on inner div)
+   - Background: var(--surface2) with a subtle diagonal gradient toward var(--faint)
+   - Center element: ▶ character, font-size 2.5rem, color = accent color, opacity 0.9
+   - Bottom-right overlay: duration pill
+     * Background: rgba(0,0,0,0.72)
+     * Color: #FFFFFF
+     * Font: var(--mono), 10px
+     * Padding: 0.1rem 0.35rem
+     * Border-radius: 3px
+   - Cursor: pointer
+   - Hover: ▶ icon scales to 1.1, transition 0.12s
+
+4. VIDEO CARD — INFO AREA (below thumbnail)
+   - Padding: 0.75rem 0.9rem
+   - Video title: 13px, font-weight 600, color var(--text), margin-bottom 0.2rem
+   - Description: 11.5px, color var(--muted), line-height 1.45, max 2 lines (line-clamp or overflow hidden)
+
+5. INLINE YOUTUBE PLAYER (after ▶ clicked)
+   - The .vid-thumb div is replaced entirely by an &lt;iframe&gt;:
+     * width: 100%, height: 100% (fills the 16:9 container)
+     * No border, no border-radius on the iframe itself
+     * The card border-radius clips it naturally (overflow: hidden on card)
+   - Card border-color shifts to accent color when a video is playing (data-playing="true" attribute)
+   - No other visual change to the card — the info area below the player stays visible
+
+6. CHATBOT LOADING STATE
+   - "..." typing indicator:
+     * Same .chat-msg-bot bubble style as Day 2
+     * Content: three animated dots using CSS animation
+     * CSS: @keyframes blink { 0%,100% { opacity:.3 } 50% { opacity:1 } }
+     * Each dot: display:inline-block; animation: blink 1.2s infinite; animation-delay: 0s, 0.2s, 0.4s respectively
+   - Send button (disabled state):
+     * Opacity: 0.5
+     * Cursor: not-allowed
+     * No background or color change — just opacity
+   - Error bubble:
+     * Same .chat-msg-bot style but border-left: 2px solid var(--review)
+     * Text color: var(--review) for the error prefix; rest in var(--muted)
+
+7. RESPONSIVE NOTES FOR NEW COMPONENTS
+   - Playlist tabs: wrap to 2-column button grid on screens &lt;400px
+   - Video cards: single column at &lt;600px
+   - Inline YouTube player: fills full card width regardless of screen size
+
+Save as: ux-spec-v3.md in the current project directory.</div>
+      </div>
+      <div class="step-row">
+        <div class="row-label">Output produced:</div>
+        <div class="chips">
+          <span class="chip ch-ux">ux-spec-v3.md</span>
+          <span class="chip ch-ux">Tab pill active/inactive spec</span>
+          <span class="chip ch-ux">Video card + thumbnail spec</span>
+          <span class="chip ch-ux">Inline YouTube player spec</span>
+          <span class="chip ch-ux">Chatbot loading indicator CSS</span>
+          <span class="chip ch-ux">Error bubble styling</span>
+        </div>
+      </div>
+      <div class="step-row">
+        <div class="row-label">Quick check before moving on:</div>
+        <ul class="checklist">
+          <li>ux-spec-v3.md exists in the project folder</li>
+          <li>Tab pill active state uses the accent color from the established design system</li>
+          <li>Video thumbnail specifies 16:9 aspect ratio technique</li>
+          <li>Play icon hover scale (1.1) is specified</li>
+          <li>Chatbot loading dots animation (blink keyframe with 3 delays) is included</li>
+          <li>Error bubble uses var(--review) as the left-border color</li>
+          <li>All colors reference existing CSS variables — no new hex values introduced</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════
+       STEP 5 — DEV AGENT
+  ═══════════════════════════════════════ -->
+  <div class="phase-header">
+    <span class="phase-badge pb-impl">Phase 3 — Implementation</span>
+    <h2>Dev Agent — Build TheCloudV3.html</h2>
+    <span class="phase-time">27 → 40 min</span>
+  </div>
+
+  <div class="step-card">
+    <div class="sc-head">
+      <div class="sc-num n-impl">5</div>
+      <div class="sc-info">
+        <div class="sc-title">Dev Agent — Apply Both Day 3 Enhancements to Produce TheCloudV3.html</div>
+        <div class="sc-why">The Dev Agent reads TheCloudV2.html plus all v3 artifacts, then applies 2 surgical enhancements: replace the tutorials section with a full skills playlist, and replace the dummy chatbot function with a real async fetch() call to AWS Bedrock. Everything else from Day 2 is preserved exactly. Output: one self-contained TheCloudV3.html.</div>
+      </div>
+      <div class="sc-meta">
+        <span class="sc-time">13 min</span>
+        <span class="sc-skill">bmad-agent-dev</span>
+      </div>
+    </div>
+    <div class="sc-body">
+      <div class="step-row">
+        <div class="row-label"><span class="rl-badge rl-open">OPEN</span>Open a new context window.</div>
+        <div class="cmd-block">/bmad-agent-dev</div>
+      </div>
+      <div class="step-row">
+        <div class="row-label"><span class="rl-badge rl-paste">PASTE</span>The agent reads 4 files from disk — complete Day 2 base + Day 3 specs. Zero copy-paste.</div>
+        <div class="prompt-block">You are the BMad Dev Agent. This is a Day 3 enhancement build session.
+
+<span class="prompt-hl">Please read these files from the current project directory:
+1. TheCloudV2.html    — the complete Day 2 enhanced portal (the base to enhance)
+2. prd-v3.md          — the Day 3 Enhancement PRD
+3. architecture-v3.md — the Day 3 Architecture Document
+4. ux-spec-v3.md      — the Day 3 Visual Design Specification</span>
+
+Do not ask me to paste them — use your Read tool to open each one directly.
+
+Once you have read all files, apply the 2 Day 3 enhancements to TheCloudV2.html.
+Do NOT regenerate the entire portal from scratch.
+Read TheCloudV2.html first, understand the full structure, then apply only what changes.
+
+DELIVERABLE: TheCloudV3.html — one complete, self-contained HTML5 file
+
+HARD RULES (non-negotiable):
+- ONE file only: TheCloudV3.html
+- Plain HTML5 + CSS in &lt;style&gt; + JavaScript in &lt;script&gt;
+- ZERO external libraries — no CDN links, no Bootstrap, no jQuery
+- Preserve ALL Day 2 content: modals, chatbot widget, navbar, topic cards, blog posts, about, footer
+- Preserve Puneet Gaur branding throughout
+- The 2 enhancements are targeted replacements — not a full rewrite
+
+<span class="prompt-day3">ENHANCEMENT 1 — SKILLS VIDEO PLAYLIST (replaces old tutorials section)</span>
+
+STEP A — Remove the old tutorials &lt;section&gt; content from Day 2 (the single YouTube placeholder).
+Keep id="tutorials" and the section wrapper — only replace its inner content.
+
+STEP B — Add at the top of the &lt;script&gt; block (before all other functions):
+const PLAYLISTS = {
+  aws: {
+    label: 'AWS Fundamentals',
+    videos: [
+      { id: 'S12nSKhWAco', title: 'AWS Basics for Beginners',      duration: '15:00', desc: 'Intro to the AWS console and core cloud services.' },
+      { id: 'n4F9zn9eWvM', title: 'Amazon S3 Deep Dive',            duration: '12:00', desc: 'Buckets, storage classes, versioning and access control.' },
+      { id: '86Tuwtn3zp0', title: 'EC2 Instance Setup',             duration: '18:00', desc: 'Launch, connect, and configure a virtual server on AWS.' },
+      { id: 'hAk-7ImN6iM', title: 'IAM Users, Roles & Policies',   duration: '14:00', desc: 'Identity and access management essentials for AWS.' }
+    ]
+  },
+  github: {
+    label: 'GitHub & Version Control',
+    videos: [
+      { id: 'SWYqp7iY_Tc', title: 'Git & GitHub Crash Course',       duration: '32:00', desc: 'Init, commit, push, pull — complete beginner workflow. (Traversy Media)' },
+      { id: 'nCKdihvneS0', title: 'GitHub Pull Requests Workflow',    duration: '20:00', desc: 'Fork, branch, PR, review and merge — official GitHub tutorial.' },
+      { id: 'MCyvYT8FS5w', title: 'Git Branching Strategies',        duration: '16:00', desc: 'Git Flow, trunk-based development, feature flags explained.' }
+    ]
+  },
+  devops: {
+    label: 'DevOps Essentials',
+    videos: [
+      { id: '0yWAtQ6wYNM', title: 'What is DevOps? (TechWorld with Nana)', duration: '18:00', desc: 'DevOps vs SRE — what it really means.' },
+      { id: 'eGz9DS-aIeY', title: 'Docker Containers 101 (NetworkChuck)',  duration: '26:00', desc: 'Images, containers, Dockerfile basics.' },
+      { id: 'M-ulCUSbQZs', title: 'Kubernetes for Beginners',               duration: '20:00', desc: 'Pods, deployments, services — cluster architecture overview.' }
+    ]
+  },
+  cicd: {
+    label: 'CI/CD Pipelines',
+    videos: [
+      { id: 'R8_veQiYBjI', title: 'GitHub Actions Tutorial (TechWorld with Nana)', duration: '32:00', desc: 'Workflows, jobs, triggers and Docker CI/CD pipeline.' },
+      { id: 'bjelFjcY_o8', title: 'Jenkins Pipeline Tutorial',               duration: '20:00', desc: 'Jenkinsfile, stages and agents — full walkthrough.' },
+      { id: 'dWabtQ2kwE8', title: 'AWS CodePipeline Walkthrough',            duration: '15:00', desc: 'Source → Build → Deploy stages with AWS native tools.' }
+    ]
+  }
+};
+
+STEP C — Replace the tutorials section inner HTML with:
+&lt;h2 class="section-heading"&gt;Skills Playlist&lt;/h2&gt;
+&lt;p class="section-sub"&gt;Choose a skill track and click any video to start learning.&lt;/p&gt;
+&lt;div class="playlist-tabs" id="playlist-tabs"&gt;&lt;/div&gt;
+&lt;div class="playlist-grid" id="playlist-grid"&gt;&lt;/div&gt;
+
+STEP D — Add these JS functions (in &lt;script&gt; block):
+
+let activeTrack = 'aws';
+let activePlayerIdx = null;
+
+function buildPlaylistTabs() {
+  const tabs = document.getElementById('playlist-tabs');
+  tabs.innerHTML = '';
+  Object.keys(PLAYLISTS).forEach(key => {
+    const btn = document.createElement('button');
+    btn.className = 'pl-tab' + (key === activeTrack ? ' active' : '');
+    btn.textContent = PLAYLISTS[key].label;
+    btn.onclick = () => switchTrack(key);
+    tabs.appendChild(btn);
+  });
+}
+
+function switchTrack(key) {
+  activeTrack = key;
+  activePlayerIdx = null;
+  buildPlaylistTabs();
+  renderPlaylist(key);
+}
+
+function renderPlaylist(key) {
+  const grid = document.getElementById('playlist-grid');
+  grid.innerHTML = '';
+  PLAYLISTS[key].videos.forEach((v, i) => {
+    const card = document.createElement('div');
+    card.className = 'vid-card';
+    card.dataset.idx = i;
+    /* Real YouTube thumbnail via img.youtube.com — no API key, always loads. */
+    const thumbUrl = `https://img.youtube.com/vi/${v.id}/mqdefault.jpg`;
+    card.innerHTML = `
+      &lt;div class="vid-thumb" onclick="playVideo('${key}', ${i})" aria-label="Watch: ${v.title}"&gt;
+        &lt;img src="${thumbUrl}" alt="${v.title}" class="vid-thumb-img" onerror="this.style.display='none'"&gt;
+        &lt;div class="vid-play-icon"&gt;&#9654;&lt;/div&gt;
+        &lt;span class="vid-duration"&gt;${v.duration}&lt;/span&gt;
+      &lt;/div&gt;
+      &lt;div class="vid-info"&gt;
+        &lt;div class="vid-title"&gt;${v.title}&lt;/div&gt;
+        &lt;div class="vid-desc"&gt;${v.desc}&lt;/div&gt;
+      &lt;/div&gt;`;
+    grid.appendChild(card);
+  });
+}
+
+function playVideo(key, idx) {
+  /* Opens the video on YouTube in a new tab — avoids Error 153
+     (embedding disabled by channel owners) entirely. */
+  const video = PLAYLISTS[key].videos[idx];
+  if (!video) return;
+  const allCards = document.querySelectorAll('#playlist-grid .vid-card');
+  allCards.forEach(c => c.removeAttribute('data-playing'));
+  if (allCards[idx]) allCards[idx].setAttribute('data-playing', 'true');
+  activePlayerIdx = idx;
+  window.open('https://www.youtube.com/watch?v=' + video.id, '_blank', 'noopener,noreferrer');
+}
+
+STEP E — Add CSS for playlist (in &lt;style&gt; block, before closing tag):
+.playlist-tabs { display:flex; gap:0.5rem; flex-wrap:wrap; margin-bottom:1.5rem; }
+.pl-tab { padding:0.4rem 1rem; border-radius:20px; font-size:11.5px; font-family:var(--mono); cursor:pointer; background:var(--surface2); border:1px solid var(--border); color:var(--muted); transition:background 0.15s; }
+.pl-tab:hover { border-color:var(--impl); color:var(--text); }
+.pl-tab.active { background:var(--impl); color:#0B0F1A; font-weight:600; border-color:transparent; }
+.playlist-grid { display:grid; grid-template-columns:repeat(2,1fr); gap:1rem; }
+@media(max-width:600px){ .playlist-grid{ grid-template-columns:1fr; } }
+.vid-card { border:1px solid var(--border); border-radius:8px; overflow:hidden; transition:border-color 0.15s; }
+.vid-card:hover { border-color:var(--impl); }
+.vid-card[data-playing="true"] { border-color:var(--impl); }
+.vid-thumb { position:relative; aspect-ratio:16/9; background:var(--surface2); cursor:pointer; overflow:hidden; }
+.vid-thumb-img { position:absolute; inset:0; width:100%; height:100%; object-fit:cover; }
+.vid-play-icon { position:absolute; inset:0; display:flex; align-items:center; justify-content:center; font-size:2.5rem; color:var(--impl); transition:transform 0.12s; }
+.vid-thumb:hover .vid-play-icon { transform:scale(1.1); }
+.vid-duration { position:absolute; bottom:0.4rem; right:0.4rem; font-size:10px; background:rgba(0,0,0,0.72); color:#fff; padding:0.1rem 0.35rem; border-radius:3px; font-family:var(--mono); }
+.vid-info { padding:0.75rem 0.9rem; }
+.vid-title { font-size:13px; font-weight:600; margin-bottom:0.2rem; }
+.vid-desc { font-size:11.5px; color:var(--muted); line-height:1.45; }
+
+STEP F — Initialize at the bottom of &lt;script&gt; (just before &lt;/script&gt;):
+document.addEventListener('DOMContentLoaded', function() {
+  buildPlaylistTabs();
+  renderPlaylist('aws');
+});
+
+<span class="prompt-day3">ENHANCEMENT 2 — LIVE AWS BEDROCK CHATBOT</span>
+
+In TheCloudV2.html, locate the existing getBotResponse() function and sendMessage() function.
+
+STEP A — Add these constants at the top of the &lt;script&gt; block:
+const BEDROCK_API_URL = 'https://mfobabs5n0.execute-api.us-east-2.amazonaws.com/dev/ask';
+const BEDROCK_PARAMS  = { max_tokens: 200, temperature: 0.3 };
+
+STEP B — Replace sendMessage() to be async-aware:
+  - After appending the user bubble, call: getBotResponse(userInput).catch(console.error)
+  - (getBotResponse handles its own errors internally via try/catch — sendMessage just calls it)
+
+STEP C — Add extractReply() helper FIRST (reads the actual API field), then replace getBotResponse():
+
+/* extractReply — handles all common Bedrock / API Gateway response shapes.
+   This API returns { output_text, model_id, raw } so output_text is checked
+   first. Also handles Lambda proxy (body as JSON string), Claude 3 Messages
+   API (content[].text), and Converse API (output.message.content[].text). */
+function extractReply(data) {
+  if (!data || typeof data !== 'object') return data ? String(data) : '';
+  const fields = ['output_text','response','text','completion','answer','generation','generated_text','result'];
+  for (const f of fields) {
+    if (data[f] && typeof data[f] === 'string' && data[f].trim()) return data[f].trim();
+  }
+  if (Array.isArray(data.content)) {
+    for (const b of data.content) { if (b?.text?.trim()) return b.text.trim(); }
+  }
+  try {
+    const arr = data.output.message.content;
+    if (Array.isArray(arr)) { for (const b of arr) { if (b?.text?.trim()) return b.text.trim(); } }
+  } catch (e) {}
+  if (data.body !== undefined) {
+    let bodyObj = data.body;
+    if (typeof bodyObj === 'string') {
+      try { bodyObj = JSON.parse(bodyObj); } catch (e) { return bodyObj.trim() || JSON.stringify(data); }
+    }
+    if (bodyObj && typeof bodyObj === 'object') {
+      for (const f of fields) { if (bodyObj[f]?.trim()) return bodyObj[f].trim(); }
+      return JSON.stringify(bodyObj);
+    }
+  }
+  return JSON.stringify(data);
+}
+
+async function getBotResponse(userText) {
+  /* AWS BEDROCK INTEGRATION — endpoint returns { output_text, model_id, raw }
+     Endpoint: POST https://mfobabs5n0.execute-api.us-east-2.amazonaws.com/dev/ask
+     NOTE: API Gateway must have CORS enabled for browser fetch() calls. */
+  const sendBtn = document.getElementById('chat-send');
+  if (sendBtn) sendBtn.disabled = true;
+  const loadingId = 'bot-loading-' + Date.now();
+  appendChatBubble('bot', '...', loadingId);
+  try {
+    const res = await fetch(BEDROCK_API_URL, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ prompt: userText, ...BEDROCK_PARAMS })
+    });
+    if (!res.ok) throw new Error('HTTP ' + res.status);
+    const data = await res.json();
+    updateChatBubble(loadingId, extractReply(data));
+  } catch (err) {
+    const msg = (err.message || '').startsWith('HTTP')
+      ? 'Sorry, the AI assistant is temporarily unavailable.'
+      : 'Could not connect to the AI service.';
+    updateChatBubble(loadingId, msg, true);
+  } finally {
+    if (sendBtn) sendBtn.disabled = false;
+  }
+}
+
+STEP D — Add helper functions if they do not already exist in TheCloudV2.html:
+function appendChatBubble(role, text, bubbleId) {
+  const msgs = document.getElementById('chat-messages');
+  if (!msgs) return;
+  const div = document.createElement('div');
+  div.className = 'chat-msg chat-msg-' + role;
+  div.textContent = text;
+  if (bubbleId) div.dataset.bubbleId = bubbleId;
+  msgs.appendChild(div);
+  msgs.scrollTop = msgs.scrollHeight;
+  return div;
+}
+
+function updateChatBubble(bubbleId, newText, isError) {
+  const el = document.querySelector('[data-bubble-id="' + bubbleId + '"]');
+  if (!el) return;
+  el.textContent = newText;
+  if (isError) el.style.borderLeft = '2px solid #f87171';
+}
+
+STEP E — Add loading-dot animation CSS (in &lt;style&gt; block):
+@keyframes blink { 0%,100%{opacity:.3} 50%{opacity:1} }
+.chat-loading-dot { display:inline-block; animation:blink 1.2s infinite; }
+.chat-loading-dot:nth-child(2) { animation-delay:0.2s; }
+.chat-loading-dot:nth-child(3) { animation-delay:0.4s; }
+#chat-send:disabled { opacity:0.5; cursor:not-allowed; }
+
+OUTPUT REQUIREMENT:
+Save as: TheCloudV3.html in the current project directory.
+Return the complete enhanced HTML file. The file must open in any browser without a server.</div>
+      </div>
+      <div class="step-row">
+        <div class="row-label"><span class="rl-badge rl-note">KEY POINT</span>If the agent starts rewriting from scratch, interrupt with this</div>
+        <div class="handoff-box">
+          Type: <strong>"Stop — please read TheCloudV2.html first with your Read tool, then apply only the 2 Day 3 enhancements. Do not regenerate the whole file."</strong> This keeps all Day 2 features intact.
+        </div>
+      </div>
+      <div class="step-row">
+        <div class="row-label"><span class="rl-badge rl-note">API PARSING</span>How the chatbot extracts the reply from the API response</div>
+        <div class="assumption-box">
+          <strong>extractReply() function</strong> in TheCloudV3.html handles all common Bedrock / API Gateway response shapes automatically:<br><br>
+          1. <strong>Direct text fields:</strong> <code>response</code>, <code>text</code>, <code>completion</code>, <code>answer</code>, <code>generation</code><br>
+          2. <strong>Lambda proxy body as JSON string:</strong> parses <code>body</code> then retries field lookup<br>
+          3. <strong>Claude 3 Messages API:</strong> <code>{ content: [{ type:"text", text:"..." }] }</code><br>
+          4. <strong>Claude 3 Converse API:</strong> <code>{ output: { message: { content: [...] } } }</code><br>
+          5. <strong>Last resort:</strong> raw <code>JSON.stringify(data)</code> — never silently drops a response<br><br>
+          If JSON still appears in the chat: open DevTools → Network → click the <code>/ask</code> call → inspect the Response tab → note the actual JSON structure → add that field path to <code>extractReply()</code> in TheCloudV3.html.
+        </div>
+      </div>
+      <div class="step-row">
+        <div class="row-label">Output produced:</div>
+        <div class="chips">
+          <span class="chip ch-day3">TheCloudV3.html</span>
+          <span class="chip ch-day3">Skills Playlist (4 tracks, 13 videos)</span>
+          <span class="chip ch-day3">Tab navigation UI</span>
+          <span class="chip ch-day3">Click-to-play inline YouTube</span>
+          <span class="chip ch-day3">Async Bedrock fetch()</span>
+          <span class="chip ch-day3">Loading dots + error handling</span>
+        </div>
+      </div>
+      <div class="step-row">
+        <div class="row-label">Quick check after the agent finishes:</div>
+        <ul class="checklist">
+          <li>TheCloudV3.html exists in the project folder</li>
+          <li>No external &lt;script src&gt; or &lt;link href&gt; pointing to CDNs</li>
+          <li>The PLAYLISTS constant is in the &lt;script&gt; block with all 4 tracks</li>
+          <li>id="playlist-tabs" and id="playlist-grid" exist inside id="tutorials"</li>
+          <li>BEDROCK_API_URL constant points to the correct endpoint</li>
+          <li><code>extractReply()</code> function is present — checks <code>output_text</code> first, then Lambda proxy body, then Claude 3 content array</li>
+          <li>getBotResponse() calls <code>extractReply(data)</code> — NOT a raw field chain</li>
+          <li><code>renderPlaylist()</code> uses <code>img.youtube.com/vi/ID/mqdefault.jpg</code> for thumbnails</li>
+          <li><code>playVideo()</code> calls <code>window.open()</code> — NOT an iframe injection</li>
+          <li>All Day 2 modals (id="register-modal", id="contact-modal") still present</li>
+          <li>Chatbot widget still present with toggle behavior unchanged</li>
+          <li>"Puneet Gaur" branding in About section and footer preserved</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════
+       STEP 6 — BROWSER QA
+  ═══════════════════════════════════════ -->
+  <div class="phase-header">
+    <span class="phase-badge pb-rev">Phase 4 — Review</span>
+    <h2>Browser QA — Test Both Day 3 Enhancements</h2>
+    <span class="phase-time">40 → 45 min</span>
+  </div>
+
+  <div class="step-card">
+    <div class="sc-head">
+      <div class="sc-num n-rev">6</div>
+      <div class="sc-info">
+        <div class="sc-title">Open TheCloudV3.html — Test Playlist Navigation, Video Playback &amp; Live AI Chat</div>
+        <div class="sc-why">Open the file in a browser and test every new interaction. The playlist tab switching is the Day 3 visible demo moment — show all 4 tracks. The Bedrock chatbot is the highlight: send a real message and show the audience a live LLM response appearing in the chat window. Show DevTools Network tab to confirm the API call is happening.</div>
+      </div>
+      <div class="sc-meta">
+        <span class="sc-time">5 min</span>
+        <span class="sc-skill">browser QA</span>
+      </div>
+    </div>
+    <div class="sc-body">
+      <div class="step-row">
+        <div class="row-label">Open the enhanced file — no server needed:</div>
+        <div class="cmd-block">open TheCloudV3.html      # Mac
+start TheCloudV3.html     # Windows</div>
+      </div>
+      <div class="step-row">
+        <div class="row-label">Enhancement 1 — Skills Playlist checklist:</div>
+        <ul class="checklist">
+          <li><strong>Section visible:</strong> Scroll to Skills Playlist section — "Skills Playlist" heading and 4 tab pills are visible</li>
+          <li><strong>Tab 1 (AWS Fundamentals):</strong> Active by default — 4 video cards visible in 2-column grid</li>
+          <li><strong>Tab switch:</strong> Click "GitHub &amp; Version Control" tab → 3 GitHub video cards replace the AWS cards instantly</li>
+          <li><strong>Tab switch (again):</strong> Click "DevOps Essentials" → 3 DevOps cards appear; active tab pill styling changes</li>
+          <li><strong>Tab switch (again):</strong> Click "CI/CD Pipelines" → 3 CI/CD cards appear</li>
+          <li><strong>Video card:</strong> Each card shows the real YouTube thumbnail image, a ▶ play icon overlay, and a duration pill — loaded from <code>img.youtube.com</code>, no API key needed</li>
+          <li><strong>Click to play:</strong> Click a video card → the card highlights (accent border) and the video opens on YouTube in a new tab — no Error 153, works for all channels</li>
+          <li><strong>Multiple clicks:</strong> Click different cards — each opens its own YouTube tab; the last clicked card stays highlighted</li>
+          <li><strong>Navbar link:</strong> Click "Tutorials" in navbar → page scrolls smoothly to the playlist section</li>
+          <li><strong>Mobile (resize to 375px):</strong> Cards stack to single column; tabs wrap to two rows</li>
+        </ul>
+      </div>
+      <div class="step-row">
+        <div class="row-label">Enhancement 2 — Live Bedrock Chatbot checklist:</div>
+        <ul class="checklist">
+          <li><strong>Chat button visible:</strong> Circular chat button at bottom-right corner of page</li>
+          <li><strong>Open panel:</strong> Click chat button → chat panel expands above button</li>
+          <li><strong>Type a question:</strong> Type <em>"What is AWS EC2?"</em> in the input field</li>
+          <li><strong>Send:</strong> Click Send → user bubble appears immediately; Send button goes disabled (greyed out)</li>
+          <li><strong>Loading indicator:</strong> A bot bubble with "..." appears while the API request is in-flight</li>
+          <li><strong>Live response:</strong> After 1–3 seconds, "..." is replaced by the actual Bedrock LLM response text</li>
+          <li><strong>Send re-enabled:</strong> Send button becomes active again after response arrives</li>
+          <li><strong>Ask again:</strong> Type "Explain GitHub branches" → same loading → real AI response</li>
+          <li><strong>DevTools verification (show to audience):</strong> Open DevTools (F12) → Network tab → filter by "XHR/Fetch" → click the /ask request → confirm: Method=POST, Status=200, Response contains the LLM reply JSON</li>
+        </ul>
+      </div>
+      <div class="step-row">
+        <div class="row-label">CORS troubleshooting (if API returns a network error in the browser):</div>
+        <ul class="checklist">
+          <li>Open DevTools → Console → look for a CORS or "blocked by CORS policy" error</li>
+          <li>If CORS error appears: the API Gateway endpoint needs CORS enabled for the browser origin. This is a <strong>server configuration issue</strong>, not a code bug in TheCloudV3.html — the fetch() code is correct</li>
+          <li>Show the audience the error message in the chat bubble — point out it comes from the graceful error handler, not a crash</li>
+          <li>To demonstrate the API still works: open a new Claude Code terminal tab and run: <code>curl -s -X POST https://mfobabs5n0.execute-api.us-east-2.amazonaws.com/dev/ask -H "Content-Type: application/json" -d '{"prompt":"What is S3?","max_tokens":200,"temperature":0.3}'</code></li>
+        </ul>
+      </div>
+      <div class="step-row">
+        <div class="row-label">Day 2 regression check — confirm nothing was broken:</div>
+        <ul class="checklist">
+          <li>Navbar "Register" link → Registration modal opens correctly</li>
+          <li>Navbar "Contact" link → Contact modal opens correctly</li>
+          <li>Both modals close via X button and via clicking the overlay</li>
+          <li>All 6 original topic cards (AWS, GitHub, DevOps, Cloud Basics, CI/CD, Linux) still present</li>
+          <li>3 blog post cards still present with original content</li>
+          <li>About section with "Puneet Gaur" content preserved</li>
+          <li>Footer with copyright and social links preserved</li>
+          <li>No red errors in DevTools Console (F12 → Console)</li>
+        </ul>
+      </div>
+      <div class="step-row">
+        <div class="row-label">Targeted fix prompt — use this if a specific enhancement is broken:</div>
+        <div class="prompt-block">Please fix only this specific issue in TheCloudV3.html:
+[describe the problem — e.g., "Clicking a tab does not switch the video cards"
+or "The Bedrock chatbot returns undefined instead of the LLM reply text"
+or "The Send button stays disabled after the API response arrives"]
+
+Open TheCloudV3.html with your Read tool, find the relevant JS/CSS, and fix it.
+Do not regenerate the entire file — fix only the described bug.</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="divider"></div>
+
+  <!-- ─── DELIVERABLES ─── -->
+  <div class="delivery">
+    <h3>Day 3 Final Deliverables — What BMad Produced</h3>
+    <div class="delivery-grid">
+      <div class="d-item">
+        <div class="d-file">prd.md + prd-v2.md</div>
+        <div class="d-desc">Day 1–2 PRDs — preserved as-is</div>
+      </div>
+      <div class="d-item d-d3">
+        <div class="d-file-d3">prd-v3.md</div>
+        <div class="d-desc">Day 3 Enhancement PRD — playlist spec + Bedrock API spec</div>
+      </div>
+      <div class="d-item">
+        <div class="d-file">epics.md + enhancement-epics.md</div>
+        <div class="d-desc">Day 1–2 Epics — preserved as-is</div>
+      </div>
+      <div class="d-item d-d3">
+        <div class="d-file-d3">stories/day3-epics.md</div>
+        <div class="d-desc">EP-010 and EP-011 with Day 3 user stories (US-031 onward)</div>
+      </div>
+      <div class="d-item">
+        <div class="d-file">architecture.md + architecture-v2.md</div>
+        <div class="d-desc">Day 1–2 Architecture — preserved as-is</div>
+      </div>
+      <div class="d-item d-d3">
+        <div class="d-file-d3">architecture-v3.md</div>
+        <div class="d-desc">Playlist JS pattern + async Bedrock fetch() design</div>
+      </div>
+      <div class="d-item">
+        <div class="d-file">ux-spec.md + ux-spec-v2.md</div>
+        <div class="d-desc">Day 1–2 UX Specs — preserved as-is</div>
+      </div>
+      <div class="d-item d-d3">
+        <div class="d-file-d3">ux-spec-v3.md</div>
+        <div class="d-desc">Tab pills, video cards, inline player, loading dots spec</div>
+      </div>
+      <div class="d-item">
+        <div class="d-file">TheCloud.html + TheCloudV2.html</div>
+        <div class="d-desc">Day 1–2 portals — preserved, unchanged</div>
+      </div>
+      <div class="d-item d-d3">
+        <div class="d-file-d3">TheCloudV3.html</div>
+        <div class="d-desc">Full portal — 4-track skills playlist + live Bedrock AI chatbot</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ─── DEMO NARRATIVE ─── -->
+  <div class="callout callout-day3" style="margin-top:1.5rem">
+    <h4>Day 3 Demo Closing Narrative — Say This to the Audience</h4>
+    <p>
+      "Day 1 we built the portal from scratch. Day 2 we added modals, a chatbot widget, and stubbed out an AWS Bedrock hook in the code. Today — <strong>Day 3</strong> — we closed the loop. We took that stub and wired it to a live API. The PM Agent read the existing PRD and wrote the Bedrock API spec. The Architect designed the async fetch pattern and the playlist data structure. The UX Agent specified the tab pills and loading indicators. And the Dev Agent opened <strong>TheCloudV2.html</strong>, made two surgical changes, and delivered <strong>TheCloudV3.html</strong> — with a 4-track skills playlist and a chatbot that talks to a real LLM. <strong>Open DevTools, click Network, ask the chatbot a question, and watch the /ask call happen live.</strong> That's how BMad turns a stub into a shipped feature — three days, three versions, one evolving HTML file."
+    </p>
+  </div>
+
+  <!-- ─── TIPS ─── -->
+  <div class="tips-section">
+    <h3>Tips for Day 3 Demo — Avoid Common Mistakes</h3>
+    <div class="tips-grid">
+      <div class="tip">
+        <strong>Show DevTools Network to prove the API call is live</strong>
+        Open DevTools → Network → XHR filter → type a question → watch the /ask request appear. Click it → show the Request Payload (prompt, max_tokens, temperature) and the Response (LLM reply). This is the visual proof that the chatbot is no longer dummy code.
+      </div>
+      <div class="tip">
+        <strong>Tab switching is the playlist demo moment</strong>
+        Click through all 4 tabs fast to show the instant grid swap — no page reload, no flash. Point out the active tab pill styling change and the different video counts per track. This shows the PLAYLISTS data structure driving the UI.
+      </div>
+      <div class="tip">
+        <strong>Real video IDs are now embedded in PLAYLISTS</strong>
+        The PLAYLISTS constant uses real YouTube video IDs (Traversy Media, TechWorld with Nana, NetworkChuck, etc.). A "Watch on YouTube →" fallback link always appears below the inline player — so even if a channel disables embedding, learners can still reach the video. To swap a video, replace its 11-char ID in the PLAYLISTS constant in TheCloudV3.html.
+      </div>
+      <div class="tip">
+        <strong>If the Bedrock API returns a CORS error</strong>
+        The error message appears inside the chat bubble (not a crash). Point to it and say: "The chatbot caught the error gracefully." Then demonstrate the API works via curl in the terminal. CORS is a one-line API Gateway configuration change — not a code bug.
+      </div>
+      <div class="tip">
+        <strong>If the chatbot still shows raw JSON</strong>
+        The <code>extractReply()</code> function covers the most common Bedrock response shapes including Lambda proxy (<code>body</code> as a JSON string), Claude 3 Messages API, and Converse API. If the reply is still raw JSON: open DevTools → Network → /ask response body → identify the actual field path → add it to <code>extractReply()</code> in TheCloudV3.html. Each code path is clearly commented in the function.
+      </div>
+      <div class="tip">
+        <strong>If the Dev Agent rewrites from scratch</strong>
+        Interrupt: "Stop — read TheCloudV2.html first with your Read tool, then apply only the 2 enhancements." Day 2 has modals, the chatbot widget structure, and the CSS design system that must be preserved. A full rewrite loses all of that.
+      </div>
+    </div>
+  </div>
+
+</div>
