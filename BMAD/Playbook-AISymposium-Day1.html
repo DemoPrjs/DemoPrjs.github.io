@@ -1,0 +1,690 @@
+<title>AI Symposium Portal — Day 1 Playbook</title>
+<style>
+  :root {
+    --bg:#0B0F1A;--surface:#131929;--surface2:#1B2236;
+    --border:#252D42;--text:#DDE4F0;--muted:#7A8BA8;--faint:#2E3A55;
+    --plan:#F59E0B;--plan-dim:rgba(245,158,11,.10);--plan-border:rgba(245,158,11,.28);
+    --story:#FB923C;--story-dim:rgba(251,146,60,.10);--story-border:rgba(251,146,60,.28);
+    --arch:#60A5FA;--arch-dim:rgba(96,165,250,.10);--arch-border:rgba(96,165,250,.28);
+    --ux:#A78BFA;--ux-dim:rgba(167,139,250,.10);--ux-border:rgba(167,139,250,.28);
+    --impl:#34D399;--impl-dim:rgba(52,211,153,.10);--impl-border:rgba(52,211,153,.28);
+    --review:#FB7185;--review-dim:rgba(251,113,133,.09);--review-border:rgba(251,113,133,.26);
+    --info:#38BDF8;--info-dim:rgba(56,189,248,.09);--info-border:rgba(56,189,248,.26);
+    --mono:'Courier New','Menlo','Monaco',monospace;
+    --sans:-apple-system,BlinkMacSystemFont,'Segoe UI',system-ui,sans-serif;
+  }
+  @media(prefers-color-scheme:light){:root{
+    --bg:#EFF3FA;--surface:#FFFFFF;--surface2:#E5ECF8;
+    --border:#C8D3E8;--text:#18243A;--muted:#5A6A88;--faint:#B8C6DE;
+    --plan-dim:rgba(245,158,11,.08);--plan-border:rgba(217,119,6,.32);
+    --story-dim:rgba(234,88,12,.08);--story-border:rgba(234,88,12,.30);
+    --arch-dim:rgba(37,99,235,.07);--arch-border:rgba(37,99,235,.28);
+    --ux-dim:rgba(109,40,217,.07);--ux-border:rgba(109,40,217,.28);
+    --impl-dim:rgba(5,150,105,.07);--impl-border:rgba(5,150,105,.28);
+    --review-dim:rgba(225,29,72,.07);--review-border:rgba(225,29,72,.26);
+    --info-dim:rgba(2,132,199,.07);--info-border:rgba(2,132,199,.26);
+  }}
+  :root[data-theme="light"]{--bg:#EFF3FA;--surface:#FFFFFF;--surface2:#E5ECF8;--border:#C8D3E8;--text:#18243A;--muted:#5A6A88;--faint:#B8C6DE;--plan-dim:rgba(245,158,11,.08);--plan-border:rgba(217,119,6,.32);--story-dim:rgba(234,88,12,.08);--story-border:rgba(234,88,12,.30);--arch-dim:rgba(37,99,235,.07);--arch-border:rgba(37,99,235,.28);--ux-dim:rgba(109,40,217,.07);--ux-border:rgba(109,40,217,.28);--impl-dim:rgba(5,150,105,.07);--impl-border:rgba(5,150,105,.28);--review-dim:rgba(225,29,72,.07);--review-border:rgba(225,29,72,.26);--info-dim:rgba(2,132,199,.07);--info-border:rgba(2,132,199,.26);}
+  :root[data-theme="dark"]{--bg:#0B0F1A;--surface:#131929;--surface2:#1B2236;--border:#252D42;--text:#DDE4F0;--muted:#7A8BA8;--faint:#2E3A55;--plan-dim:rgba(245,158,11,.10);--plan-border:rgba(245,158,11,.28);--story-dim:rgba(251,146,60,.10);--story-border:rgba(251,146,60,.28);--arch-dim:rgba(96,165,250,.10);--arch-border:rgba(96,165,250,.28);--ux-dim:rgba(167,139,250,.10);--ux-border:rgba(167,139,250,.28);--impl-dim:rgba(52,211,153,.10);--impl-border:rgba(52,211,153,.28);--review-dim:rgba(251,113,133,.09);--review-border:rgba(251,113,133,.26);--info-dim:rgba(56,189,248,.09);--info-border:rgba(56,189,248,.26);}
+  *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+  body{background:var(--bg);color:var(--text);font-family:var(--sans);font-size:14px;line-height:1.65;padding:2rem 1rem 5rem;}
+  .page{max-width:880px;margin:0 auto;}
+  .header{margin-bottom:2rem;}
+  .eyebrow{font-family:var(--mono);font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);margin-bottom:.55rem;}
+  .header h1{font-size:1.7rem;font-weight:700;letter-spacing:-.02em;line-height:1.2;text-wrap:balance;}
+  .header h1 em{font-style:normal;color:var(--plan);}
+  .header-sub{color:var(--muted);margin-top:.55rem;font-size:13.5px;max-width:580px;line-height:1.55;}
+  .callout{border-radius:8px;padding:1rem 1.2rem;margin-bottom:1rem;border:1px solid;font-size:13px;line-height:1.6;}
+  .callout-info{background:var(--info-dim);border-color:var(--info-border);}
+  .callout-warn{background:var(--story-dim);border-color:var(--story-border);}
+  .callout h4{font-size:12px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;margin-bottom:.4rem;}
+  .callout-info h4{color:var(--info);}
+  .callout-warn h4{color:var(--story);}
+  .callout p{color:var(--muted);}
+  .callout strong{color:var(--text);}
+  .how-section{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:1.5rem;margin:1.75rem 0 2.5rem;}
+  .how-section h2{font-size:15px;font-weight:600;margin-bottom:1rem;letter-spacing:-.01em;}
+  .how-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:1rem;}
+  .how-card{background:var(--surface2);border:1px solid var(--border);border-radius:7px;padding:1rem;}
+  .how-card-num{font-family:var(--mono);font-size:10px;color:var(--muted);margin-bottom:.3rem;}
+  .how-card h4{font-size:13px;font-weight:600;margin-bottom:.3rem;}
+  .how-card p{font-size:12px;color:var(--muted);line-height:1.5;}
+  .file-tree{background:var(--bg);border:1px solid var(--border);border-radius:7px;padding:1rem 1.2rem;font-family:var(--mono);font-size:12px;line-height:1.9;margin-top:1.2rem;}
+  .file-tree .folder{color:var(--muted);}
+  .file-tree .file{color:var(--text);}
+  .file-tree .tag{font-size:9.5px;padding:.1rem .4rem;border-radius:3px;margin-left:.5rem;font-weight:600;border:1px solid;}
+  .t-plan{background:var(--plan-dim);color:var(--plan);border-color:var(--plan-border);}
+  .t-ux{background:var(--ux-dim);color:var(--ux);border-color:var(--ux-border);}
+  .t-info{background:var(--info-dim);color:var(--info);border-color:var(--info-border);}
+  .timeline-wrap{background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:1.25rem 1.4rem;margin-bottom:2.5rem;}
+  .tl-label{font-family:var(--mono);font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin-bottom:.8rem;}
+  .tl-track{display:flex;height:26px;border-radius:5px;overflow:hidden;gap:2px;}
+  .tl-seg{display:flex;align-items:center;justify-content:center;font-family:var(--mono);font-size:9.5px;font-weight:700;letter-spacing:.04em;color:#0B0F1A;border-radius:3px;}
+  .s1{background:var(--plan);flex:8;}
+  .s2{background:var(--plan);flex:9;}
+  .s3{background:var(--ux);flex:12;}
+  .s4{background:var(--info);flex:7;}
+  .s5{background:var(--impl);flex:9;}
+  .tl-legend{display:flex;gap:1rem;flex-wrap:wrap;margin-top:.8rem;}
+  .tl-li{display:flex;align-items:center;gap:.35rem;font-size:11.5px;color:var(--muted);}
+  .tl-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0;}
+  .phase-header{display:flex;align-items:center;gap:.75rem;padding-bottom:.85rem;border-bottom:1px solid var(--border);margin:2.5rem 0 1.25rem;}
+  .phase-badge{font-family:var(--mono);font-size:9.5px;letter-spacing:.12em;text-transform:uppercase;font-weight:700;padding:.22rem .6rem;border-radius:3px;}
+  .pb-plan{background:var(--plan-dim);color:var(--plan);border:1px solid var(--plan-border);}
+  .pb-ux{background:var(--ux-dim);color:var(--ux);border:1px solid var(--ux-border);}
+  .pb-info{background:var(--info-dim);color:var(--info);border:1px solid var(--info-border);}
+  .pb-impl{background:var(--impl-dim);color:var(--impl);border:1px solid var(--impl-border);}
+  .phase-header h2{font-size:1.05rem;font-weight:600;letter-spacing:-.01em;}
+  .phase-time{margin-left:auto;font-family:var(--mono);font-size:11px;color:var(--muted);background:var(--surface2);border:1px solid var(--border);padding:.2rem .55rem;border-radius:20px;white-space:nowrap;}
+  .step-card{background:var(--surface);border:1px solid var(--border);border-radius:10px;margin-bottom:1.25rem;overflow:hidden;}
+  .sc-head{display:flex;align-items:flex-start;gap:1rem;padding:1.1rem 1.3rem;border-bottom:1px solid var(--border);}
+  .sc-num{width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:var(--mono);font-size:11px;font-weight:700;flex-shrink:0;margin-top:1px;border:1.5px solid;}
+  .n-plan{background:var(--plan-dim);color:var(--plan);border-color:var(--plan-border);}
+  .n-ux{background:var(--ux-dim);color:var(--ux);border-color:var(--ux-border);}
+  .n-info{background:var(--info-dim);color:var(--info);border-color:var(--info-border);}
+  .n-impl{background:var(--impl-dim);color:var(--impl);border-color:var(--impl-border);}
+  .sc-info{flex:1;min-width:0;}
+  .sc-title{font-size:15px;font-weight:600;margin-bottom:.2rem;}
+  .sc-why{font-size:12.5px;color:var(--muted);line-height:1.55;}
+  .sc-meta{display:flex;flex-direction:column;align-items:flex-end;gap:.4rem;flex-shrink:0;}
+  .sc-time{font-family:var(--mono);font-size:13px;font-weight:700;color:var(--text);}
+  .sc-skill{font-family:var(--mono);font-size:10px;background:var(--surface2);border:1px solid var(--border);color:var(--muted);padding:.15rem .45rem;border-radius:3px;white-space:nowrap;}
+  .sc-body{padding:0;}
+  .step-row{border-bottom:1px solid var(--border);padding:.9rem 1.3rem;}
+  .step-row:last-child{border-bottom:none;}
+  .row-label{font-family:var(--mono);font-size:9.5px;letter-spacing:.13em;text-transform:uppercase;color:var(--muted);margin-bottom:.45rem;display:flex;align-items:center;gap:.5rem;}
+  .rl-badge{font-size:9px;padding:.1rem .4rem;border-radius:2px;font-weight:700;letter-spacing:.06em;}
+  .rl-open{background:var(--info-dim);color:var(--info);border:1px solid var(--info-border);}
+  .rl-paste{background:var(--plan-dim);color:var(--plan);border:1px solid var(--plan-border);}
+  .rl-save{background:var(--impl-dim);color:var(--impl);border:1px solid var(--impl-border);}
+  .rl-note{background:var(--ux-dim);color:var(--ux);border:1px solid var(--ux-border);}
+  .cmd-block{background:var(--bg);border:1px solid var(--border);border-radius:6px;padding:.7rem .9rem;font-family:var(--mono);font-size:12px;color:var(--text);letter-spacing:.01em;}
+  .prompt-block{background:var(--bg);border:1px solid var(--border);border-radius:6px;padding:.85rem 1rem;font-family:var(--mono);font-size:11px;line-height:1.7;color:var(--text);white-space:pre-wrap;word-break:break-word;}
+  .prompt-hl{color:var(--info);}
+  .handoff-box{background:var(--info-dim);border:1px solid var(--info-border);border-radius:6px;padding:.75rem 1rem;font-size:12.5px;color:var(--muted);line-height:1.55;}
+  .handoff-box strong{color:var(--info);}
+  .chips{display:flex;gap:.45rem;flex-wrap:wrap;}
+  .chip{font-family:var(--mono);font-size:10.5px;padding:.2rem .55rem;border-radius:4px;border:1px solid;font-weight:500;}
+  .ch-plan{background:var(--plan-dim);color:var(--plan);border-color:var(--plan-border);}
+  .ch-ux{background:var(--ux-dim);color:var(--ux);border-color:var(--ux-border);}
+  .ch-info{background:var(--info-dim);color:var(--info);border-color:var(--info-border);}
+  .ch-impl{background:var(--impl-dim);color:var(--impl);border-color:var(--impl-border);}
+  .checklist{list-style:none;display:flex;flex-direction:column;gap:.35rem;}
+  .checklist li{display:flex;align-items:flex-start;gap:.6rem;font-size:12.5px;color:var(--muted);line-height:1.5;}
+  .checklist li::before{content:'▸';color:var(--faint);flex-shrink:0;margin-top:1px;font-size:11px;}
+  .checklist li strong{color:var(--text);}
+  .divider{height:1px;background:var(--border);margin:2.5rem 0;}
+  .delivery{background:var(--impl-dim);border:1px solid var(--impl-border);border-radius:8px;padding:1.3rem 1.5rem;margin-top:2.5rem;}
+  .delivery h3{font-size:13px;font-weight:600;color:var(--impl);margin-bottom:.9rem;}
+  .delivery-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:.6rem;}
+  .d-item{background:var(--surface);border:1px solid var(--border);border-radius:6px;padding:.7rem .9rem;}
+  .d-file{font-family:var(--mono);font-size:11.5px;font-weight:600;color:var(--impl);margin-bottom:.2rem;}
+  .d-desc{font-size:11px;color:var(--muted);line-height:1.4;}
+  @media(max-width:600px){.sc-head{flex-wrap:wrap;}.sc-meta{flex-direction:row;align-items:center;margin-top:.5rem;}}
+  .copy-wrap{position:relative;}
+  .copy-btn{position:absolute;top:.45rem;right:.45rem;font-family:var(--mono);font-size:9px;letter-spacing:.08em;text-transform:uppercase;font-weight:700;background:var(--surface2);color:var(--muted);border:1px solid var(--border);border-radius:4px;padding:.2rem .55rem;cursor:pointer;transition:color .15s,border-color .15s,background .15s;line-height:1;z-index:1;}
+  .copy-btn:hover{color:var(--text);border-color:var(--muted);}
+  .copy-btn.copied{color:var(--impl);border-color:var(--impl-border);background:var(--impl-dim);}
+  .os-wrap{display:grid;grid-template-columns:1fr 1fr;gap:.5rem;margin:.4rem 0;}
+  .os-block{background:var(--bg);border:1px solid var(--border);border-radius:6px;padding:.6rem .85rem;font-family:var(--mono);font-size:11.5px;color:var(--text);letter-spacing:.01em;line-height:1.7;}
+  .os-lbl{font-size:9px;letter-spacing:.12em;text-transform:uppercase;font-weight:700;margin-bottom:.3rem;}
+  .os-mac .os-lbl{color:var(--info);}
+  .os-win .os-lbl{color:var(--impl);}
+  .os-note{color:var(--muted);font-size:10.5px;}
+  @media(max-width:640px){.os-wrap{grid-template-columns:1fr;}}
+</style>
+
+<div class="page">
+
+  <div class="header">
+    <div class="eyebrow">BMad Full Workflow · AI Symposium Portal · Day 1 of 3</div>
+    <h1>AI Symposium Portal — <em>Day 1</em> Analysis &amp; Design</h1>
+    <p class="header-sub">Step-by-step BMad agent execution for Day 1: Brainstorming → PRD → UX Design → Checkpoint Preview. Participants build the full AI Symposium portal from scratch using BMAD agents. Copy-paste prompts included for every step. 45-minute window.</p>
+  </div>
+
+  <div class="how-section">
+    <h2>Goal — By End of Day 1 You Will Have</h2>
+    <div class="how-grid">
+      <div class="how-card">
+        <div class="how-card-num">Output A</div>
+        <h4>brainstorm.md</h4>
+        <p>Feature list, user flows, and portal scope agreed upon by the PM Agent after structured ideation.</p>
+      </div>
+      <div class="how-card">
+        <div class="how-card-num">Output B</div>
+        <h4>prd.md</h4>
+        <p>Full Product Requirements Document with acceptance criteria, tech constraints, and all 7 portal sections defined.</p>
+      </div>
+      <div class="how-card">
+        <div class="how-card-num">Output C</div>
+        <h4>ux-spec.md</h4>
+        <p>UX specification covering page layouts, navigation flows, form fields, admin panel design, and chat widget behaviour.</p>
+      </div>
+      <div class="how-card">
+        <div class="how-card-num">Output D</div>
+        <h4>Wireframe Preview</h4>
+        <p>Live browser preview of the portal wireframe generated by the Checkpoint Preview agent from your UX spec.</p>
+      </div>
+    </div>
+    <div class="file-tree">
+      <span class="folder">Project6/</span><br>
+      &nbsp;&nbsp;<span class="file">├── brainstorm.md</span><span class="tag t-plan">Step 1</span><br>
+      &nbsp;&nbsp;<span class="file">├── prd.md</span><span class="tag t-plan">Step 2</span><br>
+      &nbsp;&nbsp;<span class="file">└── ux-spec.md</span><span class="tag t-ux">Step 3</span>
+    </div>
+  </div>
+
+  <div class="callout callout-info">
+    <h4>New to BMad? Read this first</h4>
+    <p>Each step runs in a <strong>fresh Claude Code context window</strong>. Press <strong>Ctrl+N</strong> (or Cmd+N on Mac) to open one. Each agent saves output to a file — the next agent reads it automatically. You never paste between agents.</p>
+  </div>
+  <div class="callout callout-warn">
+    <h4>Set your working directory before starting</h4>
+    <p>In your terminal, navigate to your Project6 folder — all agents read and write files here.</p>
+    <div class="os-wrap">
+      <div class="os-block os-mac"><div class="os-lbl">Mac / Linux</div>cd /path/to/Project6<br><span class="os-note"># confirm: pwd</span></div>
+      <div class="os-block os-win"><div class="os-lbl">Windows (CMD or PowerShell)</div>cd C:\Users\YourName\Project6<br><span class="os-note"># confirm: cd (no args)</span></div>
+    </div>
+  </div>
+
+  <div class="timeline-wrap">
+    <div class="tl-label">45-Minute Timeline — 5 Agents in Sequence</div>
+    <div class="tl-track">
+      <div class="tl-seg s1">BRAIN 8m</div>
+      <div class="tl-seg s2">PRD 9m</div>
+      <div class="tl-seg s3">UX 12m</div>
+      <div class="tl-seg s4">PREVIEW 7m</div>
+      <div class="tl-seg s5">REVIEW 9m</div>
+    </div>
+    <div class="tl-legend">
+      <div class="tl-li"><div class="tl-dot" style="background:var(--plan)"></div>Step 1: Brainstorming Agent · 0–8 min</div>
+      <div class="tl-li"><div class="tl-dot" style="background:var(--plan)"></div>Step 2: PM Agent (PRD) · 8–17 min</div>
+      <div class="tl-li"><div class="tl-dot" style="background:var(--ux)"></div>Step 3: UX Designer Agent · 17–29 min</div>
+      <div class="tl-li"><div class="tl-dot" style="background:var(--info)"></div>Step 4: Checkpoint Preview · 29–36 min</div>
+      <div class="tl-li"><div class="tl-dot" style="background:var(--impl)"></div>Step 5: Output Review &amp; Handoff · 36–45 min</div>
+    </div>
+  </div>
+
+  <!-- STEP 1 -->
+  <div class="phase-header">
+    <span class="phase-badge pb-plan">Phase 1 — Ideation</span>
+    <h2>Brainstorming Agent — Define the Portal Scope</h2>
+    <span class="phase-time">0 → 8 min</span>
+  </div>
+
+  <div class="step-card">
+    <div class="sc-head">
+      <div class="sc-num n-plan">1</div>
+      <div class="sc-info">
+        <div class="sc-title">Brainstorming Agent — AI Symposium Feature Discovery</div>
+        <div class="sc-why">The Brainstorming Agent helps you think through the portal scope before writing requirements. It identifies all user types, key features, data fields, and flows — so nothing is missed in the PRD. <strong>Do this before writing any requirements.</strong></div>
+      </div>
+      <div class="sc-meta">
+        <span class="sc-time">8 min</span>
+        <span class="sc-skill">bmad-brainstorming</span>
+      </div>
+    </div>
+    <div class="sc-body">
+      <div class="step-row">
+        <div class="row-label"><span class="rl-badge rl-open">OPEN</span>Open a brand-new Claude Code context window (Ctrl+N / Cmd+N)</div>
+        <div class="cmd-block">/bmad-brainstorming</div>
+      </div>
+      <div class="step-row">
+        <div class="row-label"><span class="rl-badge rl-paste">PASTE</span>Copy and paste this prompt. Press Enter.</div>
+        <div class="prompt-block">I want to build an <span class="prompt-hl">AI Symposium Portal</span> — a professional event management web portal for AI training symposiums. Help me brainstorm the complete feature set.
+
+PORTAL PURPOSE:
+A single-file ReactJS-style HTML portal where participants can learn about AI symposiums, register for upcoming events, and access past recordings. Admins can manage events end-to-end.
+
+USER TYPES:
+1. Guest visitor — browses upcoming and past symposiums
+2. Registered participant — registers for events, requests recordings
+3. Admin — creates, edits, and manages symposium events
+
+KNOWN FEATURES (expand on these):
+- Home page with featured upcoming symposium
+- Upcoming Symposiums list with registration
+- Past Symposiums archive with recording request form
+- Admin portal: create/edit/delete events
+- Contact Us form
+- Login page
+- AI chat widget
+
+EVENT DATA FIELDS (admin creates):
+- Event title, description, agenda
+- Date, time, location (city + venue)
+- Mode: In-Person / Virtual / Hybrid
+- Speaker name, speaker bio, speaker photo
+- Registration capacity, booked seats, available seats
+- Registration deadline
+- Tags/topics (AI, ML, LLM, GenAI, etc.)
+- Status: Draft / Published / Cancelled / Completed
+- Recording URL (post-event)
+- Contact person per event
+
+TEAM MEMBERS (show in Contact Us):
+- Puneet Gaur — puneet.gaur@yopmail.com
+- Mithun Davy — mithun.davy@yopmail.com
+- Alex William — alex.william@yopmail.com
+- Shiva Thyagaraj — shiva.thyagaraj@yopmail.com
+- Nagaraj Yanambakkam — nagaraj.yanambakkam@yopmail.com
+- Molly Mayers — molly.mayers@yopmail.com
+
+Please brainstorm:
+1. Any features I might have missed
+2. User flows for each user type
+3. Admin panel sections and navigation
+4. Chat widget behaviour
+5. Registration flow (steps, confirmations)
+6. Recording request flow
+
+Save your output as: brainstorm.md</div>
+      </div>
+      <div class="step-row">
+        <div class="row-label"><span class="rl-badge rl-save">SAVE</span>Confirm the file is saved</div>
+        <div class="handoff-box">After the agent finishes, verify <strong>brainstorm.md</strong> exists in your project folder. Type <code>ls</code> (Mac) or <code>dir</code> (Windows) to check. If not saved, say: <em>"Please save the brainstorm output to brainstorm.md now."</em></div>
+      </div>
+      <div class="step-row">
+        <div class="row-label">Output produced:</div>
+        <div class="chips">
+          <span class="chip ch-plan">brainstorm.md</span>
+          <span class="chip ch-plan">Feature list</span>
+          <span class="chip ch-plan">User flows</span>
+          <span class="chip ch-plan">Data model</span>
+        </div>
+      </div>
+      <div class="step-row">
+        <div class="row-label">Quick check before moving on:</div>
+        <ul class="checklist">
+          <li>brainstorm.md file exists in the project folder</li>
+          <li>All 3 user types are documented (Guest, Participant, Admin)</li>
+          <li>Admin event fields list is included</li>
+          <li>Chat widget and recording request flow are covered</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- STEP 2 -->
+  <div class="phase-header">
+    <span class="phase-badge pb-plan">Phase 1 — Planning</span>
+    <h2>PM Agent — Create the Product Requirements Document</h2>
+    <span class="phase-time">8 → 17 min</span>
+  </div>
+
+  <div class="step-card">
+    <div class="sc-head">
+      <div class="sc-num n-plan">2</div>
+      <div class="sc-info">
+        <div class="sc-title">PM Agent — Product Requirements Document (PRD)</div>
+        <div class="sc-why">The PM Agent reads brainstorm.md and converts it into a structured PRD with acceptance criteria. Every downstream agent (Architect, UX, Dev) reads this file. <strong>Get this right — it is the source of truth.</strong></div>
+      </div>
+      <div class="sc-meta">
+        <span class="sc-time">9 min</span>
+        <span class="sc-skill">bmad-agent-pm</span>
+      </div>
+    </div>
+    <div class="sc-body">
+      <div class="step-row">
+        <div class="row-label"><span class="rl-badge rl-open">OPEN</span>Open a brand-new Claude Code context window (Ctrl+N / Cmd+N)</div>
+        <div class="cmd-block">/bmad-agent-pm</div>
+      </div>
+      <div class="step-row">
+        <div class="row-label"><span class="rl-badge rl-paste">PASTE</span>Copy and paste this prompt. Press Enter.</div>
+        <div class="prompt-block">You are the BMad PM Agent. Read the brainstorming document I produced earlier and create a complete PRD for the AI Symposium Portal.
+
+Read this file first: brainstorm.md (in current directory)
+
+PROJECT: AI Symposium Portal
+TYPE: Single-file HTML portal (React-style, no build tools, no external frameworks)
+AUDIENCE: IT professionals attending AI training symposiums
+
+PRD MUST INCLUDE:
+1. Project Overview and Goals
+2. Target Audience (3 user types with personas)
+3. Portal Structure — 7 pages/views:
+   a. Home — hero banner, featured upcoming symposium, stats, team intro
+   b. Upcoming Symposiums — filterable card grid, register button
+   c. Event Detail — full info + registration form (name, email, company, role, dietary)
+   d. Past Symposiums — archive with recording request form
+   e. Admin Portal — dashboard + create/edit/delete events (all 22 fields)
+   f. Contact Us — team cards with 6 members and contact form
+   g. Login — username/password form
+4. Chat Widget — floating button, panel with AI-style responses about symposiums
+5. Admin Event Fields (list all 22 fields with data types)
+6. Technical Constraints:
+   - Single HTML file (no React build, no npm install)
+   - No external CSS frameworks (Tailwind, Bootstrap)
+   - Vanilla JS for interactivity
+   - Dark-first color theme
+   - Must work in browser without server
+7. Acceptance Criteria (one per feature)
+8. Out of Scope
+
+Save as: prd.md</div>
+      </div>
+      <div class="step-row">
+        <div class="row-label"><span class="rl-badge rl-save">SAVE</span>Confirm the file is saved</div>
+        <div class="handoff-box">After the agent finishes, verify <strong>prd.md</strong> exists. If you see the PRD in chat but no file, say: <em>"Please save to prd.md now."</em></div>
+      </div>
+      <div class="step-row">
+        <div class="row-label">Output produced:</div>
+        <div class="chips">
+          <span class="chip ch-plan">prd.md</span>
+          <span class="chip ch-plan">7 views defined</span>
+          <span class="chip ch-plan">22 event fields</span>
+          <span class="chip ch-plan">Acceptance criteria</span>
+        </div>
+      </div>
+      <div class="step-row">
+        <div class="row-label">Quick check before moving on:</div>
+        <ul class="checklist">
+          <li>prd.md file exists in the project folder</li>
+          <li>All 7 portal views are documented</li>
+          <li>Admin event fields list has at least 15 fields</li>
+          <li>Technical constraint "single HTML file" is explicitly stated</li>
+          <li>Acceptance criteria cover registration, admin CRUD, and chat widget</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- STEP 3 -->
+  <div class="phase-header">
+    <span class="phase-badge pb-ux">Phase 2 — Design</span>
+    <h2>UX Designer Agent — Create the UX Specification</h2>
+    <span class="phase-time">17 → 29 min</span>
+  </div>
+
+  <div class="step-card">
+    <div class="sc-head">
+      <div class="sc-num n-ux">3</div>
+      <div class="sc-info">
+        <div class="sc-title">UX Designer Agent — Layouts, Flows &amp; Component Spec</div>
+        <div class="sc-why">The UX Designer Agent reads prd.md and produces a detailed layout and interaction specification. The Dev Agent uses this to implement the exact visual structure — without any guessing about layout, colours, or interactions.</div>
+      </div>
+      <div class="sc-meta">
+        <span class="sc-time">12 min</span>
+        <span class="sc-skill">bmad-ux</span>
+      </div>
+    </div>
+    <div class="sc-body">
+      <div class="step-row">
+        <div class="row-label"><span class="rl-badge rl-open">OPEN</span>Open a brand-new Claude Code context window (Ctrl+N / Cmd+N)</div>
+        <div class="cmd-block">/bmad-ux</div>
+      </div>
+      <div class="step-row">
+        <div class="row-label"><span class="rl-badge rl-paste">PASTE</span>Copy and paste this prompt. Press Enter.</div>
+        <div class="prompt-block">You are the BMad UX Designer Agent. Read prd.md from the current directory and produce a complete UX specification for the AI Symposium Portal.
+
+Read: prd.md
+
+UX SPEC MUST COVER:
+
+1. DESIGN SYSTEM
+   - Font: Inter (via Google Fonts, weights 400–800) + system-ui fallback; monospace for labels/code
+   - Full CSS token set (dark-first):
+     --bg:#080D1A  --bg2:#0D1526  --surface:#111827  --surface2:#1A2438  --surface3:#21304A
+     --border:#2A3A54  --border2:#364A68
+     --text:#E2E8F4  --text2:#94A8C4  --text3:#5D7490
+     --accent:#10B981  --blue:#38BDF8  --purple:#A78BFA  --orange:#FB923C  --red:#F87171  --yellow:#FBBF24
+   - Gradient logo mark: 28×28px rounded square, linear-gradient(135deg, --accent, --blue)
+   - Gradient hero heading: linear-gradient(120deg, --accent, --blue) text-fill effect
+   - Light mode overrides under @media(prefers-color-scheme:light) + [data-theme="light"]
+
+2. NAVIGATION
+   - Top navbar: gradient logo mark + "AI Symposium" wordmark (accent colour on "Symposium")
+   - Centre links: Home | Upcoming | Past | Contact
+   - Right side (always visible, even when not logged in):
+     "Admin ↗" subtle button — navigates to admin (shows login if unauthenticated)
+     "Sign In" ghost button — navigates to login
+     "Register Now" primary CTA button — navigates to Upcoming Symposiums
+   - When logged in: replace Sign In + Register Now with "Logout (username)" button
+   - Mobile: centre links collapse at &lt;768px; logo + action buttons stay visible
+   - Active state indicator on centre links
+
+3. PAGE LAYOUTS — describe grid/flex layout for each:
+   a. Home: hero banner (event title + countdown + CTA), stat row (total events / participants / speakers), featured event card, team section
+   b. Upcoming Symposiums: search bar + filter chips (All / Virtual / In-Person / Hybrid), event card grid (3 columns), pagination
+   c. Event Detail: event header (title, date, speaker photo), tab panel (About / Agenda / Speaker / Register), registration form
+   d. Past Symposiums: archive grid, "Request Recording" button on each card, modal form
+   e. Admin Portal: sidebar with 3 labelled groups:
+        Overview: Dashboard | Create Symposium | Manage Events | Registrations | Recording Requests
+        Management: Speakers | Email Campaigns (placeholder)
+        Settings: Admin Users | System Config (placeholder)
+      Dashboard: 4 KPI cards + recent events table with status pills
+      Create form: 6 accordion sections (Basic Info, Date/Time &amp; Location, Training Content, Seats &amp; Registration, Speaker Information, Contact &amp; Recording)
+   f. Contact Us: 6 team member cards (photo placeholder, name, role, email), contact form
+   g. Login: centered card (username, password, "Sign In" button) — no "Login" label
+
+4. COMPONENTS
+   - Event Card: colour-coded left band, status badge, title, date/time, location chip, speaker name, seats-remaining pill with progress bar, Register/View button
+   - Registration Form: First Name, Last Name, Work Email, Company, Job Title, Phone (optional), Mode (In-Person/Virtual), "How did you hear about us?" dropdown, Special Requirements textarea, Submit
+   - Recording Request Modal: name, email, reason textarea, submit
+   - Recording Request Modal: name, email, reason textarea, submit
+   - Chat Widget: floating button (bottom-right), slide-up panel (bot greeting + message input + send), rotating FAQ responses
+   - Admin Event Form: 6 accordion sections — Basic Info, Schedule, Location, Speaker, Capacity, Media
+
+5. INTERACTION STATES
+   - Button hover/active states
+   - Form validation (inline error messages)
+   - Toast notifications for form success
+   - Empty states (no events found)
+
+6. RESPONSIVE BREAKPOINTS
+   - Desktop (≥1024px): 3-column grid
+   - Tablet (768–1023px): 2-column grid
+   - Mobile (&lt;768px): 1-column, stacked nav
+
+Save as: ux-spec.md</div>
+      </div>
+      <div class="step-row">
+        <div class="row-label"><span class="rl-badge rl-save">SAVE</span>Confirm the file is saved</div>
+        <div class="handoff-box">After the agent finishes, verify <strong>ux-spec.md</strong> exists. The UX spec should be detailed — if it's under 200 lines, ask: <em>"Please expand the layout descriptions for each page."</em></div>
+      </div>
+      <div class="step-row">
+        <div class="row-label">Output produced:</div>
+        <div class="chips">
+          <span class="chip ch-ux">ux-spec.md</span>
+          <span class="chip ch-ux">Color tokens</span>
+          <span class="chip ch-ux">7 page layouts</span>
+          <span class="chip ch-ux">Component specs</span>
+          <span class="chip ch-ux">Responsive rules</span>
+        </div>
+      </div>
+      <div class="step-row">
+        <div class="row-label">Quick check before moving on:</div>
+        <ul class="checklist">
+          <li>ux-spec.md file exists in the project folder</li>
+          <li>Color tokens include Inter font, dark bg (#080D1A), accent green (#10B981), --blue (#38BDF8)</li>
+          <li>All 7 page layouts are described with grid/flex details</li>
+          <li>Navigation includes "Register Now" primary CTA and always-visible "Admin ↗" link</li>
+          <li>Registration form lists all 9 fields including Job Title, Phone, How did you hear</li>
+          <li>Admin sidebar shows 3 groups (Overview, Management, Settings)</li>
+          <li>Chat widget panel behaviour is documented</li>
+          <li>Admin form 6-section accordion is described with correct section names</li>
+          <li>Responsive breakpoints are listed</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- STEP 4 -->
+  <div class="phase-header">
+    <span class="phase-badge pb-info">Phase 2 — Preview</span>
+    <h2>Checkpoint Preview — Validate Your Design Before Building</h2>
+    <span class="phase-time">29 → 36 min</span>
+  </div>
+
+  <div class="step-card">
+    <div class="sc-head">
+      <div class="sc-num n-info">4</div>
+      <div class="sc-info">
+        <div class="sc-title">Checkpoint Preview Agent — Wireframe from UX Spec</div>
+        <div class="sc-why">Before writing a single line of app code, the Checkpoint Preview agent generates a quick HTML wireframe directly from ux-spec.md. Open it in your browser to catch layout mistakes now — it's much faster to fix a spec than to fix built code.</div>
+      </div>
+      <div class="sc-meta">
+        <span class="sc-time">7 min</span>
+        <span class="sc-skill" style="color:var(--story);border-color:var(--story-border);background:var(--story-dim)">⚠ no skill — paste direct</span>
+      </div>
+    </div>
+    <div class="sc-body">
+      <div class="step-row">
+        <div class="row-label"><span class="rl-badge rl-open">OPEN</span>Open a brand-new Claude Code context window (Ctrl+N / Cmd+N)</div>
+        <div class="handoff-box" style="margin-top:0"><strong>Note:</strong> The <code>bmad-checkpoint-preview</code> skill is not installed in this BMad setup. <strong>Skip the slash command</strong> — just open a new context window and paste the prompt below directly. Claude will generate the wireframe without a skill wrapper.</div>
+      </div>
+      <div class="step-row">
+        <div class="row-label"><span class="rl-badge rl-paste">PASTE</span>Copy and paste this prompt. Press Enter.</div>
+        <div class="prompt-block">You are the BMad Checkpoint Preview Agent. Read ux-spec.md and prd.md from the current directory and generate an interactive HTML wireframe for the AI Symposium Portal.
+
+Read: ux-spec.md, prd.md
+
+Generate a SINGLE HTML FILE called: AISymposium-Wireframe.html
+
+The wireframe must:
+1. Include a top navbar: gradient icon mark + "AI Symposium" wordmark; centre links: Home | Upcoming | Past | Contact; right side (always visible): Admin ↗ | Sign In | Register Now (primary CTA)
+2. Show all 7 views using JavaScript toggle (show one view at a time)
+3. Use the dark-first color palette from ux-spec.md (#080D1A background, #10B981 accent)
+4. Include realistic sample data:
+   - 3 upcoming events with title, date, location, speaker, seats
+   - 2 past events with recording available / not available
+   - Admin dashboard with event count stats
+5. Make the registration form interactive (show success message on submit)
+6. Show the chat widget button (bottom-right) with a slide-up panel
+7. Include the admin event creation form with all 6 sections
+
+This is a design checkpoint — focus on layout correctness, not pixel-perfect styling.
+
+Save as: AISymposium-Wireframe.html</div>
+      </div>
+      <div class="step-row">
+        <div class="row-label"><span class="rl-badge rl-save">SAVE</span>Open in browser</div>
+        <div class="handoff-box">After saving, open <strong>AISymposium-Wireframe.html</strong> in your browser. Click through every view. Check that the layout matches what you described in ux-spec.md. Note any discrepancies — update ux-spec.md if needed before Day 2.</div>
+      </div>
+      <div class="step-row">
+        <div class="row-label">Output produced:</div>
+        <div class="chips">
+          <span class="chip ch-info">AISymposium-Wireframe.html</span>
+          <span class="chip ch-info">Interactive nav</span>
+          <span class="chip ch-info">7 views</span>
+          <span class="chip ch-info">Sample data</span>
+        </div>
+      </div>
+      <div class="step-row">
+        <div class="row-label">Quick check before moving on:</div>
+        <ul class="checklist">
+          <li>AISymposium-Wireframe.html opens in browser without errors</li>
+          <li>All 7 views are reachable via navbar clicks</li>
+          <li>Event cards show title, date, speaker, and seats</li>
+          <li>Chat widget button appears in bottom-right corner</li>
+          <li>Admin form shows multiple sections</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- STEP 5 -->
+  <div class="phase-header">
+    <span class="phase-badge pb-impl">Phase 2 — Handoff</span>
+    <h2>Output Review &amp; Day 2 Handoff</h2>
+    <span class="phase-time">36 → 45 min</span>
+  </div>
+
+  <div class="step-card">
+    <div class="sc-head">
+      <div class="sc-num n-impl">5</div>
+      <div class="sc-info">
+        <div class="sc-title">Review all Day 1 outputs and prepare for Day 2</div>
+        <div class="sc-why">Verify that all 3 files are saved and correct. Review the wireframe with your team. Make any corrections to prd.md or ux-spec.md before Day 2 — the Architecture and Dev agents will read these files directly.</div>
+      </div>
+      <div class="sc-meta">
+        <span class="sc-time">9 min</span>
+        <span class="sc-skill">Review</span>
+      </div>
+    </div>
+    <div class="sc-body">
+      <div class="step-row">
+        <div class="row-label"><span class="rl-badge rl-open">TERMINAL</span>Run this in your terminal to verify all outputs</div>
+        <div class="os-wrap">
+          <div class="os-block os-mac"><div class="os-lbl">Mac / Linux</div>ls -la brainstorm.md prd.md ux-spec.md AISymposium-Wireframe.html</div>
+          <div class="os-block os-win"><div class="os-lbl">Windows</div>dir brainstorm.md prd.md ux-spec.md AISymposium-Wireframe.html</div>
+        </div>
+      </div>
+      <div class="step-row">
+        <div class="row-label"><span class="rl-badge rl-note">NOTE</span>If any file is missing, re-run its step with the original prompt</div>
+        <div class="handoff-box">All four files should exist. If <strong>ux-spec.md</strong> or <strong>prd.md</strong> is thin, ask the agent in the same context: <em>"Please expand the [section] in more detail and resave the file."</em></div>
+      </div>
+      <div class="step-row">
+        <div class="row-label">Day 1 final outputs:</div>
+        <div class="chips">
+          <span class="chip ch-plan">brainstorm.md</span>
+          <span class="chip ch-plan">prd.md</span>
+          <span class="chip ch-ux">ux-spec.md</span>
+          <span class="chip ch-info">AISymposium-Wireframe.html</span>
+        </div>
+      </div>
+
+      <div class="step-row">
+        <div class="row-label">Day 2 will use these files — confirm they are complete:</div>
+        <ul class="checklist">
+          <li><strong>brainstorm.md</strong> — feature ideas and user flows</li>
+          <li><strong>prd.md</strong> — requirements with acceptance criteria and all 7 views</li>
+          <li><strong>ux-spec.md</strong> — layout, colors, components, responsive rules</li>
+          <li><strong>AISymposium-Wireframe.html</strong> — review in browser with your team</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <div class="delivery">
+    <h3>Day 1 Delivery Checklist</h3>
+    <div class="delivery-grid">
+      <div class="d-item">
+        <div class="d-file">brainstorm.md</div>
+        <div class="d-desc">Feature list, user types, flows</div>
+      </div>
+      <div class="d-item">
+        <div class="d-file">prd.md</div>
+        <div class="d-desc">PRD with 7 views, 22 fields, acceptance criteria</div>
+      </div>
+      <div class="d-item">
+        <div class="d-file">ux-spec.md</div>
+        <div class="d-desc">Layouts, colors, components, breakpoints</div>
+      </div>
+      <div class="d-item">
+        <div class="d-file">AISymposium-Wireframe.html</div>
+        <div class="d-desc">Interactive browser wireframe</div>
+      </div>
+    </div>
+  </div>
+
+</div>
+<script>
+document.addEventListener('DOMContentLoaded',function(){
+  document.querySelectorAll('.prompt-block').forEach(function(block){
+    var wrap=document.createElement('div');
+    wrap.className='copy-wrap';
+    block.parentNode.insertBefore(wrap,block);
+    wrap.appendChild(block);
+    var btn=document.createElement('button');
+    btn.className='copy-btn';
+    btn.textContent='Copy';
+    btn.addEventListener('click',function(){
+      var text=block.innerText;
+      if(navigator.clipboard&&navigator.clipboard.writeText){
+        navigator.clipboard.writeText(text).then(function(){
+          btn.textContent='Copied!';btn.classList.add('copied');
+          setTimeout(function(){btn.textContent='Copy';btn.classList.remove('copied');},2000);
+        }).catch(function(){fallback();});
+      } else {fallback();}
+      function fallback(){
+        var r=document.createRange();r.selectNodeContents(block);
+        window.getSelection().removeAllRanges();window.getSelection().addRange(r);
+        btn.textContent='Selected!';
+        setTimeout(function(){btn.textContent='Copy';},2000);
+      }
+    });
+    wrap.appendChild(btn);
+  });
+});
+</script>

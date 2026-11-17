@@ -1,0 +1,694 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI Symposium Portal — Use Case</title>
+<style>
+  :root {
+    --bg:#0B0F1A;--surface:#131929;--surface2:#1B2236;
+    --border:#252D42;--text:#DDE4F0;--muted:#7A8BA8;--faint:#2E3A55;
+    --accent:#10B981;--accent-dim:rgba(16,185,129,.10);--accent-border:rgba(16,185,129,.28);
+    --gold:#F59E0B;--gold-dim:rgba(245,158,11,.10);--gold-border:rgba(245,158,11,.28);
+    --blue:#60A5FA;--blue-dim:rgba(96,165,250,.10);--blue-border:rgba(96,165,250,.28);
+    --purple:#A78BFA;--purple-dim:rgba(167,139,250,.10);--purple-border:rgba(167,139,250,.28);
+    --teal:#2DD4BF;--teal-dim:rgba(45,212,191,.09);--teal-border:rgba(45,212,191,.26);
+    --red:#FB7185;--red-dim:rgba(251,113,133,.09);--red-border:rgba(251,113,133,.26);
+    --orange:#FB923C;--orange-dim:rgba(251,146,60,.10);--orange-border:rgba(251,146,60,.28);
+    --mono:'Courier New','Menlo','Monaco',monospace;
+    --sans:-apple-system,BlinkMacSystemFont,'Segoe UI',system-ui,sans-serif;
+  }
+  @media(prefers-color-scheme:light){:root{
+    --bg:#EFF3FA;--surface:#FFFFFF;--surface2:#E5ECF8;
+    --border:#C8D3E8;--text:#18243A;--muted:#5A6A88;--faint:#B8C6DE;
+    --accent:#059669;--accent-dim:rgba(5,150,105,.07);--accent-border:rgba(5,150,105,.28);
+    --gold-dim:rgba(245,158,11,.08);--gold-border:rgba(217,119,6,.32);
+    --blue-dim:rgba(37,99,235,.07);--blue-border:rgba(37,99,235,.28);
+    --purple-dim:rgba(109,40,217,.07);--purple-border:rgba(109,40,217,.28);
+    --teal-dim:rgba(13,148,136,.07);--teal-border:rgba(13,148,136,.28);
+    --red-dim:rgba(225,29,72,.07);--red-border:rgba(225,29,72,.26);
+    --orange-dim:rgba(234,88,12,.08);--orange-border:rgba(234,88,12,.30);
+  }}
+  :root[data-theme="dark"]{
+    --bg:#0B0F1A;--surface:#131929;--surface2:#1B2236;
+    --border:#252D42;--text:#DDE4F0;--muted:#7A8BA8;--faint:#2E3A55;
+    --accent:#10B981;
+  }
+  :root[data-theme="light"]{
+    --bg:#EFF3FA;--surface:#FFFFFF;--surface2:#E5ECF8;
+    --border:#C8D3E8;--text:#18243A;--muted:#5A6A88;--faint:#B8C6DE;
+    --accent:#059669;
+  }
+
+  *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+  body{background:var(--bg);color:var(--text);font-family:var(--sans);font-size:14px;line-height:1.65;padding:0 1rem 5rem;}
+  .page{max-width:900px;margin:0 auto;}
+
+  /* ── HERO ── */
+  .hero{padding:3rem 0 2.5rem;border-bottom:1px solid var(--border);margin-bottom:2.5rem;}
+  .eyebrow{font-family:var(--mono);font-size:10px;letter-spacing:.16em;text-transform:uppercase;color:var(--accent);margin-bottom:.6rem;}
+  .hero h1{font-size:2rem;font-weight:700;letter-spacing:-.025em;line-height:1.15;text-wrap:balance;margin-bottom:.75rem;}
+  .hero h1 em{font-style:normal;color:var(--accent);}
+  .hero-sub{color:var(--muted);font-size:14px;max-width:620px;line-height:1.6;}
+  .hero-badges{display:flex;flex-wrap:wrap;gap:.5rem;margin-top:1.25rem;}
+  .hb{font-family:var(--mono);font-size:10px;letter-spacing:.08em;text-transform:uppercase;font-weight:700;padding:.3rem .7rem;border-radius:4px;border:1px solid;}
+  .hb-green{background:var(--accent-dim);color:var(--accent);border-color:var(--accent-border);}
+  .hb-gold{background:var(--gold-dim);color:var(--gold);border-color:var(--gold-border);}
+  .hb-blue{background:var(--blue-dim);color:var(--blue);border-color:var(--blue-border);}
+  .hb-purple{background:var(--purple-dim);color:var(--purple);border-color:var(--purple-border);}
+
+  /* ── SECTION HEADER ── */
+  .sec-head{margin:2.5rem 0 1.25rem;}
+  .sec-label{font-family:var(--mono);font-size:9.5px;letter-spacing:.16em;text-transform:uppercase;color:var(--muted);margin-bottom:.4rem;}
+  .sec-head h2{font-size:1.2rem;font-weight:700;letter-spacing:-.015em;}
+  .sec-head p{color:var(--muted);font-size:13px;margin-top:.35rem;line-height:1.55;max-width:640px;}
+
+  /* ── SCENARIO CARD ── */
+  .scenario{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:1.75rem;margin-bottom:2rem;}
+  .scenario-lead{font-size:15px;font-weight:600;line-height:1.5;margin-bottom:1.1rem;color:var(--text);}
+  .scenario-lead em{font-style:normal;color:var(--accent);}
+  .pain-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:.85rem;margin-top:1rem;}
+  .pain-item{background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:1rem;}
+  .pain-icon{font-size:20px;margin-bottom:.4rem;}
+  .pain-item h4{font-size:12.5px;font-weight:600;margin-bottom:.3rem;}
+  .pain-item p{font-size:12px;color:var(--muted);line-height:1.5;}
+
+  /* ── USER PERSONA ── */
+  .personas{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:1rem;margin-bottom:2rem;}
+  .persona{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:1.25rem;overflow:hidden;position:relative;}
+  .persona::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;}
+  .p-guest::before{background:var(--blue);}
+  .p-part::before{background:var(--accent);}
+  .p-admin::before{background:var(--purple);}
+  .persona-role{font-family:var(--mono);font-size:9px;letter-spacing:.13em;text-transform:uppercase;font-weight:700;margin-bottom:.45rem;}
+  .p-guest .persona-role{color:var(--blue);}
+  .p-part .persona-role{color:var(--accent);}
+  .p-admin .persona-role{color:var(--purple);}
+  .persona h3{font-size:14px;font-weight:600;margin-bottom:.35rem;}
+  .persona p{font-size:12px;color:var(--muted);line-height:1.5;margin-bottom:.6rem;}
+  .persona-can{font-family:var(--mono);font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin-bottom:.4rem;}
+  .persona ul{list-style:none;display:flex;flex-direction:column;gap:.25rem;}
+  .persona ul li{font-size:12px;color:var(--muted);display:flex;gap:.5rem;align-items:flex-start;}
+  .persona ul li::before{content:'▸';flex-shrink:0;font-size:10px;margin-top:1px;}
+  .p-guest ul li::before{color:var(--blue);}
+  .p-part ul li::before{color:var(--accent);}
+  .p-admin ul li::before{color:var(--purple);}
+
+  /* ── PORTAL VIEWS ── */
+  .views-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:.85rem;margin-bottom:2rem;}
+  .view-card{background:var(--surface);border:1px solid var(--border);border-radius:9px;padding:1.1rem 1.15rem;}
+  .view-num{font-family:var(--mono);font-size:9px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin-bottom:.3rem;}
+  .view-card h4{font-size:13px;font-weight:600;margin-bottom:.3rem;}
+  .view-card p{font-size:12px;color:var(--muted);line-height:1.5;}
+  .view-tag{display:inline-block;font-family:var(--mono);font-size:9px;text-transform:uppercase;letter-spacing:.08em;font-weight:700;padding:.15rem .4rem;border-radius:3px;border:1px solid;margin-top:.5rem;}
+  .vt-pub{background:var(--blue-dim);color:var(--blue);border-color:var(--blue-border);}
+  .vt-adm{background:var(--purple-dim);color:var(--purple);border-color:var(--purple-border);}
+  .vt-auth{background:var(--orange-dim);color:var(--orange);border-color:var(--orange-border);}
+
+  /* ── 3-DAY JOURNEY ── */
+  .journey{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:1rem;margin-bottom:2rem;}
+  .day-card{background:var(--surface);border:1px solid var(--border);border-radius:10px;overflow:hidden;}
+  .day-head{padding:1rem 1.2rem;border-bottom:1px solid var(--border);}
+  .day-label{font-family:var(--mono);font-size:9px;letter-spacing:.14em;text-transform:uppercase;font-weight:700;margin-bottom:.3rem;}
+  .d1 .day-label{color:var(--gold);}
+  .d2 .day-label{color:var(--blue);}
+  .d3 .day-label{color:var(--teal);}
+  .day-head h3{font-size:14px;font-weight:700;}
+  .day-head p{font-size:12px;color:var(--muted);margin-top:.2rem;}
+  .day-body{padding:1rem 1.2rem;}
+  .agent-list{display:flex;flex-direction:column;gap:.5rem;}
+  .agent-row{display:flex;align-items:flex-start;gap:.6rem;}
+  .agent-step{font-family:var(--mono);font-size:9px;width:18px;height:18px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:700;flex-shrink:0;margin-top:1px;border:1.5px solid;}
+  .d1 .agent-step{background:var(--gold-dim);color:var(--gold);border-color:var(--gold-border);}
+  .d2 .agent-step{background:var(--blue-dim);color:var(--blue);border-color:var(--blue-border);}
+  .d3 .agent-step{background:var(--teal-dim);color:var(--teal);border-color:var(--teal-border);}
+  .agent-info{flex:1;min-width:0;}
+  .agent-name{font-family:var(--mono);font-size:10.5px;font-weight:600;color:var(--text);}
+  .agent-out{font-size:11px;color:var(--muted);margin-top:.1rem;}
+  .day-output{background:var(--surface2);border-top:1px solid var(--border);padding:.75rem 1.2rem;}
+  .out-label{font-family:var(--mono);font-size:9px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin-bottom:.4rem;}
+  .out-chips{display:flex;flex-wrap:wrap;gap:.35rem;}
+  .chip{font-family:var(--mono);font-size:10px;padding:.18rem .5rem;border-radius:3px;border:1px solid;font-weight:500;}
+  .c-gold{background:var(--gold-dim);color:var(--gold);border-color:var(--gold-border);}
+  .c-blue{background:var(--blue-dim);color:var(--blue);border-color:var(--blue-border);}
+  .c-teal{background:var(--teal-dim);color:var(--teal);border-color:var(--teal-border);}
+  .c-green{background:var(--accent-dim);color:var(--accent);border-color:var(--accent-border);}
+
+  /* ── END GOAL BOX ── */
+  .goal-box{background:var(--accent-dim);border:1px solid var(--accent-border);border-radius:12px;padding:1.75rem;margin-bottom:2rem;}
+  .goal-box h3{font-size:14px;font-weight:700;color:var(--accent);margin-bottom:1rem;}
+  .goal-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:.85rem;}
+  .goal-item{background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:1rem;}
+  .goal-item h4{font-size:12.5px;font-weight:700;margin-bottom:.3rem;}
+  .goal-item p{font-size:12px;color:var(--muted);line-height:1.5;}
+  .goal-check{color:var(--accent);margin-right:.3rem;}
+
+  /* ── TECH STACK ── */
+  .tech-row{display:flex;flex-wrap:wrap;gap:.65rem;margin-bottom:2rem;}
+  .tech-pill{background:var(--surface);border:1px solid var(--border);border-radius:6px;padding:.6rem 1rem;font-size:12.5px;display:flex;align-items:center;gap:.5rem;}
+  .tech-pill strong{font-family:var(--mono);font-size:11px;color:var(--accent);}
+  .tech-pill span{color:var(--muted);}
+
+  /* ── TIMELINE BAR ── */
+  .timeline-wrap{background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:1.25rem 1.4rem;margin-bottom:2rem;}
+  .tl-label{font-family:var(--mono);font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin-bottom:.8rem;}
+  .tl-track{display:flex;height:28px;border-radius:5px;overflow:hidden;gap:2px;}
+  .tl-seg{display:flex;align-items:center;justify-content:center;font-family:var(--mono);font-size:9.5px;font-weight:700;letter-spacing:.04em;color:#0B0F1A;border-radius:3px;}
+  .ts-d1{background:var(--gold);flex:1;}
+  .ts-d2{background:var(--blue);flex:1;}
+  .ts-d3{background:var(--teal);flex:1;}
+  .tl-legend{display:flex;gap:1.5rem;flex-wrap:wrap;margin-top:.8rem;}
+  .tl-li{display:flex;align-items:center;gap:.4rem;font-size:12px;color:var(--muted);}
+  .tl-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0;}
+
+  /* ── SAMPLE DATA ── */
+  .sample-box{background:var(--surface);border:1px solid var(--border);border-radius:10px;overflow:hidden;margin-bottom:2rem;}
+  .sample-head{padding:.85rem 1.2rem;background:var(--surface2);border-bottom:1px solid var(--border);font-family:var(--mono);font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);}
+  .sample-body{padding:1.1rem 1.2rem;}
+  .event-row{display:flex;align-items:flex-start;gap:1rem;padding:.75rem 0;border-bottom:1px solid var(--border);}
+  .event-row:last-child{border-bottom:none;}
+  .ev-status{font-family:var(--mono);font-size:9px;text-transform:uppercase;letter-spacing:.08em;font-weight:700;padding:.2rem .5rem;border-radius:3px;border:1px solid;white-space:nowrap;flex-shrink:0;}
+  .ev-upcoming{background:var(--accent-dim);color:var(--accent);border-color:var(--accent-border);}
+  .ev-past{background:var(--surface2);color:var(--muted);border-color:var(--border);}
+  .ev-info h5{font-size:13px;font-weight:600;margin-bottom:.2rem;}
+  .ev-info p{font-size:12px;color:var(--muted);}
+
+  /* ── TEAM ── */
+  .team-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:.75rem;margin-bottom:2rem;}
+  .team-card{background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:.9rem 1.1rem;display:flex;align-items:center;gap:.75rem;}
+  .team-avatar{width:36px;height:36px;border-radius:50%;background:var(--accent-dim);border:1px solid var(--accent-border);display:flex;align-items:center;justify-content:center;font-weight:700;font-size:14px;color:var(--accent);flex-shrink:0;}
+  .team-info h5{font-size:13px;font-weight:600;margin-bottom:.15rem;}
+  .team-info p{font-family:var(--mono);font-size:10px;color:var(--muted);}
+
+  /* ── CONTROLS ── */
+  .controls{position:sticky;top:0;z-index:10;background:var(--bg);border-bottom:1px solid var(--border);padding:.6rem 0;margin-bottom:0;display:flex;align-items:center;justify-content:space-between;}
+  .ctrl-left{font-family:var(--mono);font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);}
+  .theme-btn{font-family:var(--mono);font-size:10px;background:var(--surface2);color:var(--muted);border:1px solid var(--border);border-radius:4px;padding:.3rem .7rem;cursor:pointer;letter-spacing:.06em;}
+  .theme-btn:hover{color:var(--text);border-color:var(--muted);}
+
+  @media(max-width:600px){.hero h1{font-size:1.5rem;}.journey{grid-template-columns:1fr;}}
+</style>
+</head>
+<body>
+<div class="page">
+
+  <div class="controls">
+    <span class="ctrl-left">AI Symposium · Use Case &amp; End Goals</span>
+    <button class="theme-btn" onclick="toggleTheme()">Toggle Theme</button>
+  </div>
+
+  <!-- ── HERO ── -->
+  <div class="hero">
+    <div class="eyebrow">BMAD AI Training · 3-Day Hands-On Workshop</div>
+    <h1>Building an <em>AI Symposium Portal</em><br>with BMAD Agents</h1>
+    <p class="hero-sub">Over three 45-minute sessions, participants use the BMAD agent workflow — from brainstorming to code review — to build a fully functional event management portal from scratch. No pre-written code. Every file is generated by an AI agent following your prompts.</p>
+    <div class="hero-badges">
+      <span class="hb hb-green">3 × 45-min sessions</span>
+      <span class="hb hb-gold">10 BMAD agents</span>
+      <span class="hb hb-blue">Single-file HTML portal</span>
+      <span class="hb hb-purple">Playwright E2E tests</span>
+    </div>
+  </div>
+
+  <!-- ── BUSINESS SCENARIO ── -->
+  <div class="sec-head">
+    <div class="sec-label">Section 1</div>
+    <h2>The Business Scenario</h2>
+    <p>What problem are we solving? This is the context that makes the portal relevant — treat it as the client brief you'd receive on a real engagement.</p>
+  </div>
+
+  <div class="scenario">
+    <p class="scenario-lead">Your team runs <em>AI training symposiums</em> — quarterly in-person and virtual events where professionals learn about AI, machine learning, and generative AI. Right now, everything is managed over email and spreadsheets.</p>
+    <p style="font-size:13px;color:var(--muted);line-height:1.6;margin-bottom:1.1rem;">You need a professional web portal that lets participants discover and register for upcoming events, revisit past sessions through recordings, and allows administrators to create and manage every detail of each symposium — all in one place.</p>
+    <div class="pain-grid">
+      <div class="pain-item">
+        <div class="pain-icon">📋</div>
+        <h4>Manual Registration</h4>
+        <p>Participants email to register. The team tracks seats on a spreadsheet. Overbooking happens.</p>
+      </div>
+      <div class="pain-item">
+        <div class="pain-icon">🔗</div>
+        <h4>No Recording Access</h4>
+        <p>Past attendees struggle to find recordings. They email the contact person each time, creating back-and-forth.</p>
+      </div>
+      <div class="pain-item">
+        <div class="pain-icon">🗂️</div>
+        <h4>No Event Catalogue</h4>
+        <p>There is no single place to browse upcoming and past symposiums with details like agenda, speakers, and topics.</p>
+      </div>
+      <div class="pain-item">
+        <div class="pain-icon">🔒</div>
+        <h4>Admin Work is Manual</h4>
+        <p>Creating a new event means updating multiple documents, sending announcements, and manually tracking capacity.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── WHO USES IT ── -->
+  <div class="sec-head">
+    <div class="sec-label">Section 2</div>
+    <h2>Who Uses the Portal</h2>
+    <p>Three types of users interact with the portal, each with different access and goals.</p>
+  </div>
+
+  <div class="personas">
+    <div class="persona p-guest">
+      <div class="persona-role">Guest Visitor</div>
+      <h3>Anyone browsing</h3>
+      <p>Not logged in. Browses event information and decides whether to register. No account needed to view events.</p>
+      <div class="persona-can">Can do:</div>
+      <ul>
+        <li>View home page and featured event</li>
+        <li>Browse all upcoming symposiums</li>
+        <li>See event details, agenda, and speaker</li>
+        <li>Browse past symposiums archive</li>
+        <li>Contact the team</li>
+        <li>Register for an event (via form)</li>
+      </ul>
+    </div>
+    <div class="persona p-part">
+      <div class="persona-role">Registered Participant</div>
+      <h3>Event attendee</h3>
+      <p>Submits the registration form for a specific event. Can request recordings of completed symposiums they attended.</p>
+      <div class="persona-can">Can do:</div>
+      <ul>
+        <li>Everything a Guest can do</li>
+        <li>Fill out the registration form (name, email, company, role, dietary)</li>
+        <li>Request a recording via the Past Symposiums form</li>
+        <li>Use the AI chat widget for queries</li>
+      </ul>
+    </div>
+    <div class="persona p-admin">
+      <div class="persona-role">Admin User</div>
+      <h3>Event organiser</h3>
+      <p>Logs in to the admin portal with a username and password. Full CRUD control over all symposium events and their data.</p>
+      <div class="persona-can">Can do:</div>
+      <ul>
+        <li>Log in to the admin panel</li>
+        <li>Create new symposium events (22 fields)</li>
+        <li>Edit and update existing events</li>
+        <li>Delete or cancel events</li>
+        <li>Manage seat capacity and status</li>
+        <li>Add recording URLs post-event</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- ── WHAT YOU'LL BUILD ── -->
+  <div class="sec-head">
+    <div class="sec-label">Section 3</div>
+    <h2>What You Will Build — 7 Portal Views</h2>
+    <p>The finished portal is a single HTML file with client-side view routing. No server, no build tools, no frameworks — just one file that opens in any browser.</p>
+  </div>
+
+  <div class="views-grid">
+    <div class="view-card">
+      <div class="view-num">View 1</div>
+      <h4>Home</h4>
+      <p>Hero banner, featured upcoming symposium card with countdown, stat counters (events, participants, speakers), and team introduction.</p>
+      <span class="view-tag vt-pub">Public</span>
+    </div>
+    <div class="view-card">
+      <div class="view-num">View 2</div>
+      <h4>Upcoming Symposiums</h4>
+      <p>Filterable card grid of all published upcoming events. Each card shows date, mode, seats available, and a Register button.</p>
+      <span class="view-tag vt-pub">Public</span>
+    </div>
+    <div class="view-card">
+      <div class="view-num">View 3</div>
+      <h4>Event Detail</h4>
+      <p>Full event info — agenda, speaker bio, location, capacity — plus the registration form (name, email, company, role, dietary needs).</p>
+      <span class="view-tag vt-pub">Public</span>
+    </div>
+    <div class="view-card">
+      <div class="view-num">View 4</div>
+      <h4>Past Symposiums</h4>
+      <p>Archive of completed events. Each listing shows the contact person and a recording request form with a note sent by email.</p>
+      <span class="view-tag vt-pub">Public</span>
+    </div>
+    <div class="view-card">
+      <div class="view-num">View 5</div>
+      <h4>Admin Portal</h4>
+      <p>Dashboard with event stats. Create, edit, and delete events across all 22 data fields. Seat and status management.</p>
+      <span class="view-tag vt-adm">Admin only</span>
+    </div>
+    <div class="view-card">
+      <div class="view-num">View 6</div>
+      <h4>Contact Us</h4>
+      <p>Team member cards (6 people with names and email addresses). Contact form for general inquiries.</p>
+      <span class="view-tag vt-pub">Public</span>
+    </div>
+    <div class="view-card">
+      <div class="view-num">View 7</div>
+      <h4>Login</h4>
+      <p>Username and password form for admin access. Grants entry to the Admin Portal view on successful authentication.</p>
+      <span class="view-tag vt-auth">Auth gateway</span>
+    </div>
+  </div>
+
+  <!-- ── PORTAL FEATURES ── -->
+  <div class="sec-head">
+    <div class="sec-label">Section 4</div>
+    <h2>Key Portal Features</h2>
+  </div>
+
+  <div class="tech-row">
+    <div class="tech-pill"><strong>Dark Theme</strong><span>Background #080D1A, accent #10B981 (green)</span></div>
+    <div class="tech-pill"><strong>AI Chat Widget</strong><span>Floating button, panel with contextual responses</span></div>
+    <div class="tech-pill"><strong>Admin CRUD</strong><span>Create / Edit / Delete events with all 22 fields</span></div>
+    <div class="tech-pill"><strong>Registration Flow</strong><span>Form per event with capacity tracking</span></div>
+    <div class="tech-pill"><strong>Recording Requests</strong><span>Past events contact form for recordings</span></div>
+    <div class="tech-pill"><strong>Single HTML file</strong><span>No npm, no React build, opens in any browser</span></div>
+    <div class="tech-pill"><strong>Vanilla JS Routing</strong><span>Client-side view switching, no server required</span></div>
+    <div class="tech-pill"><strong>Responsive layout</strong><span>Works at desktop (1280px) and mobile (375px)</span></div>
+  </div>
+
+  <!-- ── SAMPLE DATA ── -->
+  <div class="sec-head">
+    <div class="sec-label">Section 5</div>
+    <h2>Sample Events in the Portal</h2>
+    <p>The Dev Agent pre-populates the portal with 3 upcoming and 2 past symposiums so there is real data to demonstrate on Day 2.</p>
+  </div>
+
+  <div class="sample-box">
+    <div class="sample-head">Sample event data seeded by the Dev Agent</div>
+    <div class="sample-body">
+      <div class="event-row">
+        <span class="ev-status ev-upcoming">Upcoming</span>
+        <div class="ev-info">
+          <h5>Generative AI in Enterprise — Practical Applications</h5>
+          <p>Virtual · Jan 2025 · 100 seats · Speaker: Dr Sarah Chen · Tags: GenAI, LLM, Enterprise</p>
+        </div>
+      </div>
+      <div class="event-row">
+        <span class="ev-status ev-upcoming">Upcoming</span>
+        <div class="ev-info">
+          <h5>Machine Learning Operations (MLOps) Deep Dive</h5>
+          <p>Hybrid · Feb 2025 · 75 seats · Speaker: Marcus Johnson · Tags: MLOps, DevOps, AI</p>
+        </div>
+      </div>
+      <div class="event-row">
+        <span class="ev-status ev-upcoming">Upcoming</span>
+        <div class="ev-info">
+          <h5>Responsible AI — Ethics, Bias &amp; Governance</h5>
+          <p>In-Person · Mar 2025 · 50 seats · Speaker: Dr Priya Sharma · Tags: Ethics, Governance, AI Policy</p>
+        </div>
+      </div>
+      <div class="event-row">
+        <span class="ev-status ev-past">Past</span>
+        <div class="ev-info">
+          <h5>Introduction to Large Language Models</h5>
+          <p>Virtual · Oct 2024 · Completed · Recording available · Contact: Puneet Gaur</p>
+        </div>
+      </div>
+      <div class="event-row">
+        <span class="ev-status ev-past">Past</span>
+        <div class="ev-info">
+          <h5>AI-Powered Automation with Python</h5>
+          <p>In-Person · Nov 2024 · Completed · Recording available · Contact: Mithun Davy</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── TEAM ── -->
+  <div class="sec-head">
+    <div class="sec-label">Section 6</div>
+    <h2>Portal Team Members</h2>
+    <p>These 6 people appear on the Contact Us page. The Dev Agent hardcodes them with their names and email addresses.</p>
+  </div>
+
+  <div class="team-grid">
+    <div class="team-card">
+      <div class="team-avatar">PG</div>
+      <div class="team-info"><h5>Puneet Gaur</h5><p>puneet.gaur@yopmail.com</p></div>
+    </div>
+    <div class="team-card">
+      <div class="team-avatar">MD</div>
+      <div class="team-info"><h5>Mithun Davy</h5><p>mithun.davy@yopmail.com</p></div>
+    </div>
+    <div class="team-card">
+      <div class="team-avatar">AW</div>
+      <div class="team-info"><h5>Alex William</h5><p>alex.william@yopmail.com</p></div>
+    </div>
+    <div class="team-card">
+      <div class="team-avatar">ST</div>
+      <div class="team-info"><h5>Shiva Thyagaraj</h5><p>shiva.thyagaraj@yopmail.com</p></div>
+    </div>
+    <div class="team-card">
+      <div class="team-avatar">NY</div>
+      <div class="team-info"><h5>Nagaraj Yanambakkam</h5><p>nagaraj.yanambakkam@yopmail.com</p></div>
+    </div>
+    <div class="team-card">
+      <div class="team-avatar">MM</div>
+      <div class="team-info"><h5>Molly Mayers</h5><p>molly.mayers@yopmail.com</p></div>
+    </div>
+  </div>
+
+  <!-- ── 3-DAY JOURNEY ── -->
+  <div class="sec-head">
+    <div class="sec-label">Section 7</div>
+    <h2>The 3-Day BMAD Agent Journey</h2>
+    <p>Each session is 45 minutes. Agents run in sequence — the output of one becomes the input of the next. All files are saved to your project folder.</p>
+  </div>
+
+  <div class="timeline-wrap">
+    <div class="tl-label">3-Session Overview — Each session 45 minutes</div>
+    <div class="tl-track">
+      <div class="tl-seg ts-d1">Day 1 — Analysis &amp; Design</div>
+      <div class="tl-seg ts-d2">Day 2 — Architecture &amp; Dev</div>
+      <div class="tl-seg ts-d3">Day 3 — Testing &amp; Review</div>
+    </div>
+    <div class="tl-legend">
+      <div class="tl-li"><div class="tl-dot" style="background:var(--gold)"></div>Day 1 · 4 agents · Outputs: brainstorm.md, prd.md, ux-spec.md, wireframe</div>
+      <div class="tl-li"><div class="tl-dot" style="background:var(--blue)"></div>Day 2 · 5 agents · Output: AISymposium.html (the working portal)</div>
+      <div class="tl-li"><div class="tl-dot" style="background:var(--teal)"></div>Day 3 · 3 agents · Outputs: Playwright test suite + code review report</div>
+    </div>
+  </div>
+
+  <div class="journey">
+
+    <div class="day-card d1">
+      <div class="day-head">
+        <div class="day-label">Day 1 · 45 min · Analysis &amp; Design</div>
+        <h3>Understand, Plan &amp; Design</h3>
+        <p>Define what to build before writing a single line of code.</p>
+      </div>
+      <div class="day-body">
+        <div class="agent-list">
+          <div class="agent-row">
+            <div class="agent-step">1</div>
+            <div class="agent-info">
+              <div class="agent-name">bmad-brainstorming</div>
+              <div class="agent-out">Feature list, user flows, data model → brainstorm.md</div>
+            </div>
+          </div>
+          <div class="agent-row">
+            <div class="agent-step">2</div>
+            <div class="agent-info">
+              <div class="agent-name">bmad-agent-pm</div>
+              <div class="agent-out">Full PRD with 7 views, 22 event fields, acceptance criteria → prd.md</div>
+            </div>
+          </div>
+          <div class="agent-row">
+            <div class="agent-step">3</div>
+            <div class="agent-info">
+              <div class="agent-name">bmad-ux</div>
+              <div class="agent-out">Page layouts, navigation, form fields, chat widget spec → ux-spec.md</div>
+            </div>
+          </div>
+          <div class="agent-row">
+            <div class="agent-step">4</div>
+            <div class="agent-info">
+              <div class="agent-name">bmad-checkpoint-preview</div>
+              <div class="agent-out">Live browser wireframe of the portal → AISymposium-Wireframe.html</div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="day-output">
+        <div class="out-label">Day 1 deliverables</div>
+        <div class="out-chips">
+          <span class="chip c-gold">brainstorm.md</span>
+          <span class="chip c-gold">prd.md</span>
+          <span class="chip c-gold">ux-spec.md</span>
+          <span class="chip c-gold">Wireframe preview</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="day-card d2">
+      <div class="day-head">
+        <div class="day-label">Day 2 · 45 min · Architecture &amp; Development</div>
+        <h3>Design, Plan &amp; Build</h3>
+        <p>Turn the PRD into a working portal using the Dev Agent.</p>
+      </div>
+      <div class="day-body">
+        <div class="agent-list">
+          <div class="agent-row">
+            <div class="agent-step">1</div>
+            <div class="agent-info">
+              <div class="agent-name">bmad-architecture</div>
+              <div class="agent-out">Component tree, data model, JS state management → architecture.md</div>
+            </div>
+          </div>
+          <div class="agent-row">
+            <div class="agent-step">2</div>
+            <div class="agent-info">
+              <div class="agent-name">bmad-create-epics-and-stories</div>
+              <div class="agent-out">6 epics, 18+ user stories with acceptance criteria → epics.md, stories/</div>
+            </div>
+          </div>
+          <div class="agent-row">
+            <div class="agent-step">3</div>
+            <div class="agent-info">
+              <div class="agent-name">bmad-sprint-planning</div>
+              <div class="agent-out">Sprint 1 (MVP) and Sprint 2 (enhancements) → sprint-plan.md</div>
+            </div>
+          </div>
+          <div class="agent-row">
+            <div class="agent-step">4</div>
+            <div class="agent-info">
+              <div class="agent-name">bmad-quick-dev</div>
+              <div class="agent-out">The complete portal — all 7 views, dark theme, chat widget → AISymposium.html</div>
+            </div>
+          </div>
+          <div class="agent-row">
+            <div class="agent-step">5</div>
+            <div class="agent-info">
+              <div class="agent-name">bmad-checkpoint-preview</div>
+              <div class="agent-out">Live browser preview of the built portal, gap report</div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="day-output">
+        <div class="out-label">Day 2 deliverables</div>
+        <div class="out-chips">
+          <span class="chip c-blue">architecture.md</span>
+          <span class="chip c-blue">epics.md</span>
+          <span class="chip c-blue">sprint-plan.md</span>
+          <span class="chip c-green">AISymposium.html ✓</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="day-card d3">
+      <div class="day-head">
+        <div class="day-label">Day 3 · 45 min · Testing &amp; Code Review</div>
+        <h3>Test, Validate &amp; Review</h3>
+        <p>Verify the portal works as specified and the code is production-quality.</p>
+      </div>
+      <div class="day-body">
+        <div class="agent-list">
+          <div class="agent-row">
+            <div class="agent-step">1</div>
+            <div class="agent-info">
+              <div class="agent-name">bmad-tea</div>
+              <div class="agent-out">Test strategy, 14 test cases, Playwright setup spec → test-approach.md</div>
+            </div>
+          </div>
+          <div class="agent-row">
+            <div class="agent-step">2</div>
+            <div class="agent-info">
+              <div class="agent-name">bmad-qa-generate-e2e-tests</div>
+              <div class="agent-out">12+ Playwright Python test cases against real HTML selectors → tests/test_portal.py</div>
+            </div>
+          </div>
+          <div class="agent-row">
+            <div class="agent-step">3</div>
+            <div class="agent-info">
+              <div class="agent-name">Playwright CLI (manual)</div>
+              <div class="agent-out">Run the test suite in Chromium — see pass/fail results for all views</div>
+            </div>
+          </div>
+          <div class="agent-row">
+            <div class="agent-step">4</div>
+            <div class="agent-info">
+              <div class="agent-name">bmad-code-review</div>
+              <div class="agent-out">Security, accessibility, HTML/JS quality findings → code-review.md</div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="day-output">
+        <div class="out-label">Day 3 deliverables</div>
+        <div class="out-chips">
+          <span class="chip c-teal">test-approach.md</span>
+          <span class="chip c-teal">test_portal.py</span>
+          <span class="chip c-teal">Playwright results</span>
+          <span class="chip c-teal">code-review.md</span>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- ── END GOALS ── -->
+  <div class="sec-head">
+    <div class="sec-label">Section 8</div>
+    <h2>End Goals — What Success Looks Like</h2>
+    <p>By the end of Day 3 every participant has the following on their machine, built entirely by BMAD agents following their own prompts.</p>
+  </div>
+
+  <div class="goal-box">
+    <h3>✅ Complete Workshop Deliverables</h3>
+    <div class="goal-grid">
+      <div class="goal-item">
+        <h4><span class="goal-check">✓</span>Working Portal</h4>
+        <p>AISymposium.html opens in any browser with all 7 views functional, dark theme, real sample data, and admin CRUD.</p>
+      </div>
+      <div class="goal-item">
+        <h4><span class="goal-check">✓</span>Planning Documents</h4>
+        <p>brainstorm.md, prd.md, ux-spec.md — the complete analysis and design artefacts a real project would produce.</p>
+      </div>
+      <div class="goal-item">
+        <h4><span class="goal-check">✓</span>Architecture Docs</h4>
+        <p>architecture.md, epics.md, sprint-plan.md — blueprints showing how the portal was planned before the first line of code.</p>
+      </div>
+      <div class="goal-item">
+        <h4><span class="goal-check">✓</span>E2E Test Suite</h4>
+        <p>tests/test_portal.py — 12+ Playwright Python tests that run against the portal in Chromium and produce a pass/fail report.</p>
+      </div>
+      <div class="goal-item">
+        <h4><span class="goal-check">✓</span>Code Review Report</h4>
+        <p>code-review.md — findings on security, accessibility, and HTML/JS quality with recommended improvements.</p>
+      </div>
+      <div class="goal-item">
+        <h4><span class="goal-check">✓</span>BMAD Know-How</h4>
+        <p>Hands-on experience with 10 BMAD agents across the full software lifecycle — from ideation to testing — that transfers to real projects immediately.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── BMAD AGENTS USED ── -->
+  <div class="sec-head">
+    <div class="sec-label">Section 9</div>
+    <h2>BMAD Agents Used in This Workshop</h2>
+  </div>
+
+  <div class="tech-row" style="margin-bottom:3rem">
+    <div class="tech-pill"><strong>bmad-brainstorming</strong><span>Feature ideation &amp; scope</span></div>
+    <div class="tech-pill"><strong>bmad-agent-pm</strong><span>PRD + epics &amp; stories</span></div>
+    <div class="tech-pill"><strong>bmad-ux</strong><span>UX specification</span></div>
+    <div class="tech-pill"><strong>bmad-checkpoint-preview</strong><span>Live wireframe &amp; portal preview</span></div>
+    <div class="tech-pill"><strong>bmad-architecture</strong><span>Technical architecture document</span></div>
+    <div class="tech-pill"><strong>bmad-create-epics-and-stories</strong><span>User story breakdown</span></div>
+    <div class="tech-pill"><strong>bmad-sprint-planning</strong><span>Sprint 1 MVP prioritisation</span></div>
+    <div class="tech-pill"><strong>bmad-quick-dev</strong><span>Full portal code generation</span></div>
+    <div class="tech-pill"><strong>bmad-tea</strong><span>Test strategy &amp; approach</span></div>
+    <div class="tech-pill"><strong>bmad-qa-generate-e2e-tests</strong><span>Playwright test suite</span></div>
+    <div class="tech-pill"><strong>bmad-code-review</strong><span>Security &amp; quality review</span></div>
+  </div>
+
+</div><!-- end .page -->
+
+<script>
+function toggleTheme(){
+  var root=document.documentElement;
+  var current=root.getAttribute('data-theme');
+  root.setAttribute('data-theme',current==='light'?'dark':'light');
+}
+</script>
+</body>
+</html>

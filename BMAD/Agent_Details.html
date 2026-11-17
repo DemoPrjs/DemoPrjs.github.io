@@ -1,0 +1,610 @@
+<title>BMad Agent Flow</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Space+Grotesk:wght@500;600;700&family=JetBrains+Mono:wght@400;500&display=swap">
+
+<style>
+/* Layout: dark-first tab page, vertical agent card flow per day */
+:root {
+  --bg: #080D1A;
+  --surface: #111827;
+  --surface2: #1A2537;
+  --border: #1F2D44;
+  --fg: #E2E8F4;
+  --fg-muted: #8899B4;
+  --fg-dim: #4A5F7A;
+  --d1a: #F59E0B;
+  --d1b: #A78BFA;
+  --d2a: #60A5FA;
+  --d2b: #FB923C;
+  --d2c: #34D399;
+  --d3a: #2DD4BF;
+  --d3b: #FB7185;
+  --font-d: 'Space Grotesk', system-ui, sans-serif;
+  --font-b: 'Inter', system-ui, sans-serif;
+  --font-m: 'JetBrains Mono', monospace;
+  color-scheme: dark;
+}
+@media (prefers-color-scheme: light) {
+  :root:not([data-theme="dark"]) {
+    --bg: #F0F4FA; --surface: #FFFFFF; --surface2: #E8EDF5;
+    --border: #CBD5E0; --fg: #0F1B2D; --fg-muted: #4A5F7A; --fg-dim: #9aaabb;
+    color-scheme: light;
+  }
+}
+:root[data-theme="light"] {
+  --bg: #F0F4FA; --surface: #FFFFFF; --surface2: #E8EDF5;
+  --border: #CBD5E0; --fg: #0F1B2D; --fg-muted: #4A5F7A; --fg-dim: #9aaabb;
+  color-scheme: light;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+body {
+  font-family: var(--font-b);
+  background: var(--bg);
+  color: var(--fg);
+  font-size: 14px;
+  line-height: 1.6;
+  padding-left: max(16px, env(safe-area-inset-left,0px));
+  padding-right: max(16px, env(safe-area-inset-right,0px));
+  padding-block: 0;
+}
+body::before {
+  content:""; position:fixed; inset:0 0 auto;
+  height:env(safe-area-inset-top,0px); z-index:101; background:var(--surface);
+}
+.site-header {
+  position:sticky; top:env(safe-area-inset-top,0px);
+  background:var(--surface); border-bottom:1px solid var(--border);
+  z-index:100;
+  padding-left: max(16px, env(safe-area-inset-left,0px));
+  padding-right: max(16px, env(safe-area-inset-right,0px));
+  padding-block: 0;
+  margin-left: max(-16px, calc(-1 * env(safe-area-inset-left,0px)));
+  margin-right: max(-16px, calc(-1 * env(safe-area-inset-right,0px)));
+}
+.header-inner {
+  max-width:900px; margin:0 auto;
+  display:flex; align-items:center; gap:12px; padding-block:12px;
+}
+.logo {
+  font-family:var(--font-d); font-weight:700; font-size:.95rem;
+  color:var(--fg); white-space:nowrap; letter-spacing:-.01em;
+}
+.logo span { color:var(--d1a); }
+.tab-nav {
+  display:flex; gap:2px; flex:1;
+  overflow-x:auto; scrollbar-width:none;
+}
+.tab-nav::-webkit-scrollbar{display:none}
+.tab-btn {
+  font-family:var(--font-b); font-size:13px; font-weight:500;
+  padding:5px 12px; border-radius:6px; border:none;
+  background:transparent; color:var(--fg-muted); cursor:pointer;
+  white-space:nowrap; transition:color .15s, background .15s;
+}
+.tab-btn:hover{background:var(--surface2);color:var(--fg)}
+.tab-btn.active{background:var(--surface2);color:var(--fg);font-weight:600}
+.tab-btn[data-day="1"].active{color:var(--d1a)}
+.tab-btn[data-day="2"].active{color:var(--d2a)}
+.tab-btn[data-day="3"].active{color:var(--d3a)}
+.theme-btn {
+  background:var(--surface2); border:1px solid var(--border);
+  border-radius:6px; padding:5px 9px; cursor:pointer;
+  color:var(--fg-muted); font-size:13px; line-height:1;
+  flex-shrink:0; transition:color .15s;
+}
+.theme-btn:hover{color:var(--fg)}
+button:focus-visible{outline:2px solid var(--d2a);outline-offset:2px}
+main {
+  max-width:900px; margin:0 auto; padding-block:32px;
+}
+.tab-panel{display:none}
+.tab-panel.active{display:block}
+
+/* ── OVERVIEW ── */
+.ov-intro{margin-bottom:28px}
+.ov-intro h2 {
+  font-family:var(--font-d); font-size:1.45rem; font-weight:700;
+  margin-bottom:5px; text-wrap:balance;
+}
+.ov-intro p{color:var(--fg-muted); max-width:58ch}
+.day-cards {
+  display:grid; grid-template-columns:repeat(3,1fr);
+  gap:14px; margin-bottom:36px;
+}
+@media(max-width:620px){.day-cards{grid-template-columns:1fr}}
+.day-card {
+  background:var(--surface); border:1px solid var(--border);
+  border-radius:10px; padding:16px 18px;
+  cursor:pointer; transition:transform .15s, border-color .15s;
+  min-width:0;
+}
+.day-card:hover{transform:translateY(-2px)}
+.day-card[data-day="1"]{border-top:3px solid var(--d1a)}
+.day-card[data-day="2"]{border-top:3px solid var(--d2a)}
+.day-card[data-day="3"]{border-top:3px solid var(--d3a)}
+.day-card[data-day="1"]:hover{border-color:var(--d1a)}
+.day-card[data-day="2"]:hover{border-color:var(--d2a)}
+.day-card[data-day="3"]:hover{border-color:var(--d3a)}
+.day-eyebrow {
+  font-family:var(--font-d); font-size:11px; font-weight:600;
+  letter-spacing:.08em; text-transform:uppercase; margin-bottom:3px;
+}
+[data-day="1"] .day-eyebrow{color:var(--d1a)}
+[data-day="2"] .day-eyebrow{color:var(--d2a)}
+[data-day="3"] .day-eyebrow{color:var(--d3a)}
+.day-title{font-family:var(--font-d);font-size:.9rem;font-weight:600;margin-bottom:1px}
+.day-dur{font-size:11px;color:var(--fg-dim);margin-bottom:14px;font-variant-numeric:tabular-nums}
+.ov-steps{list-style:none;display:flex;flex-direction:column;gap:9px}
+.ov-step{display:flex;align-items:flex-start;gap:8px;font-size:12px}
+.ov-num {
+  flex-shrink:0; width:17px; height:17px; border-radius:50%;
+  background:var(--surface2); display:flex; align-items:center;
+  justify-content:center; font-size:9px; font-weight:600;
+  color:var(--fg-muted); margin-top:2px;
+}
+.ov-info{min-width:0}
+.ov-name{font-weight:500;color:var(--fg);display:block;line-height:1.3}
+.ov-sk{font-family:var(--font-m);font-size:10px;color:var(--fg-muted)}
+.ov-chip {
+  display:inline-block; font-family:var(--font-m); font-size:9px;
+  background:var(--surface2); border-radius:3px;
+  padding:1px 5px; color:var(--fg-muted); margin-top:2px;
+}
+
+/* File inventory */
+.inv-head {
+  font-family:var(--font-d); font-size:.8rem; font-weight:600;
+  letter-spacing:.06em; text-transform:uppercase;
+  color:var(--fg-muted); margin-bottom:12px;
+}
+.inv-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(190px,1fr));gap:7px}
+.inv-file {
+  background:var(--surface); border:1px solid var(--border);
+  border-radius:6px; padding:9px 12px;
+  display:flex; align-items:center; gap:8px; min-width:0;
+}
+.inv-dot{width:7px;height:7px;border-radius:50%;flex-shrink:0}
+.inv-dot.d1{background:var(--d1a)}
+.inv-dot.d2{background:var(--d2a)}
+.inv-dot.d3{background:var(--d3a)}
+.inv-name{font-family:var(--font-m);font-size:11px;color:var(--fg);min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.inv-dl{font-size:10px;color:var(--fg-dim);flex-shrink:0;margin-left:auto;padding-left:6px;font-variant-numeric:tabular-nums}
+
+/* ── DAY PANELS ── */
+.day-hdr{margin-bottom:22px}
+.day-hdr-label{font-family:var(--font-d);font-size:11px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;margin-bottom:3px}
+.day-hdr h2{font-family:var(--font-d);font-size:1.35rem;font-weight:700;margin-bottom:4px;text-wrap:balance}
+.day-hdr p{color:var(--fg-muted);max-width:60ch}
+.timeline {
+  display:flex; height:5px; border-radius:3px;
+  overflow:hidden; margin-bottom:26px; gap:2px;
+}
+.tl-s{border-radius:3px;flex:var(--f)}
+#panel-1 .tl-s:nth-child(1){background:var(--d1a)}
+#panel-1 .tl-s:nth-child(2){background:color-mix(in srgb,var(--d1a) 60%,var(--d1b))}
+#panel-1 .tl-s:nth-child(3){background:var(--d1b)}
+#panel-1 .tl-s:nth-child(4){background:color-mix(in srgb,var(--d1b) 55%,var(--fg-dim))}
+#panel-1 .tl-s:nth-child(5){background:var(--fg-dim)}
+#panel-2 .tl-s:nth-child(1){background:var(--d2a)}
+#panel-2 .tl-s:nth-child(2){background:var(--d2b)}
+#panel-2 .tl-s:nth-child(3){background:color-mix(in srgb,var(--d2b) 50%,var(--d2c))}
+#panel-2 .tl-s:nth-child(4){background:var(--d2c)}
+#panel-2 .tl-s:nth-child(5){background:color-mix(in srgb,var(--d2c) 50%,var(--fg-dim))}
+#panel-3 .tl-s:nth-child(1){background:var(--d3a)}
+#panel-3 .tl-s:nth-child(2){background:color-mix(in srgb,var(--d3a) 55%,var(--d3b))}
+#panel-3 .tl-s:nth-child(3){background:var(--d3b)}
+#panel-3 .tl-s:nth-child(4){background:color-mix(in srgb,var(--d3b) 65%,var(--fg-dim))}
+
+/* Agent cards */
+.flow{display:flex;flex-direction:column}
+.acard {
+  background:var(--surface); border:1px solid var(--border);
+  border-radius:10px; padding:16px 18px;
+  display:grid; grid-template-columns:38px 1fr auto;
+  gap:12px; align-items:start;
+}
+.arrow {
+  display:flex; justify-content:center;
+  color:var(--fg-dim); position:relative;
+  padding:5px 0;
+}
+.arrow::before {
+  content:""; position:absolute; top:0; bottom:0;
+  left:calc(50% - 1px); width:2px; background:var(--border);
+}
+.arrow svg{position:relative;z-index:1;background:var(--bg)}
+.snum {
+  width:36px; height:36px; border-radius:50%;
+  display:flex; align-items:center; justify-content:center;
+  font-family:var(--font-d); font-size:14px; font-weight:700; flex-shrink:0;
+}
+#panel-1 .snum{background:color-mix(in srgb,var(--d1a) 14%,transparent);color:var(--d1a)}
+#panel-2 .snum{background:color-mix(in srgb,var(--d2a) 14%,transparent);color:var(--d2a)}
+#panel-3 .snum{background:color-mix(in srgb,var(--d3a) 14%,transparent);color:var(--d3a)}
+.cbody{min-width:0}
+.aname{font-family:var(--font-d);font-size:.95rem;font-weight:600;margin-bottom:4px}
+.skbadge {
+  display:inline-block; font-family:var(--font-m);
+  font-size:11px; font-weight:500; padding:2px 8px;
+  border-radius:4px; background:var(--surface2);
+  border:1px solid var(--border); margin-bottom:10px;
+}
+#panel-1 .skbadge{color:var(--d1b);border-color:color-mix(in srgb,var(--d1b) 28%,transparent)}
+#panel-2 .skbadge{color:var(--d2c);border-color:color-mix(in srgb,var(--d2c) 28%,transparent)}
+#panel-3 .skbadge{color:var(--d3b);border-color:color-mix(in srgb,var(--d3b) 28%,transparent)}
+.iorow{display:flex;flex-wrap:wrap;gap:5px;align-items:center}
+.iorow+.iorow{margin-top:5px}
+.iolabel{font-size:11px;color:var(--fg-dim);font-weight:500;letter-spacing:.03em;white-space:nowrap}
+.chip {
+  font-family:var(--font-m);font-size:11px;
+  background:var(--surface2);border:1px solid var(--border);
+  border-radius:4px;padding:1px 7px;color:var(--fg-muted);
+}
+.chip.out{border-color:currentColor;opacity:.88}
+#panel-1 .chip.out{color:var(--d1a)}
+#panel-2 .chip.out{color:var(--d2b)}
+#panel-3 .chip.out{color:var(--d3a)}
+.tbadge{font-size:12px;font-weight:600;color:var(--fg-dim);font-variant-numeric:tabular-nums;white-space:nowrap;padding-top:3px}
+
+@media(max-width:560px){
+  .acard{grid-template-columns:32px 1fr}
+  .tbadge{grid-column:2;padding-top:0;font-size:11px}
+}
+@media(prefers-reduced-motion:reduce){
+  .day-card{transition:none}.tab-btn{transition:none}
+}
+</style>
+
+<header class="site-header">
+  <div class="header-inner">
+    <div class="logo"><span>BMAD</span> Agent Flow</div>
+    <nav class="tab-nav" role="tablist" aria-label="Workshop days">
+      <button class="tab-btn active" role="tab" data-tab="overview" aria-selected="true" aria-controls="panel-overview">Overview</button>
+      <button class="tab-btn" role="tab" data-tab="1" data-day="1" aria-selected="false" aria-controls="panel-1">Day 1</button>
+      <button class="tab-btn" role="tab" data-tab="2" data-day="2" aria-selected="false" aria-controls="panel-2">Day 2</button>
+      <button class="tab-btn" role="tab" data-tab="3" data-day="3" aria-selected="false" aria-controls="panel-3">Day 3</button>
+    </nav>
+    <button class="theme-btn" id="themeBtn" aria-label="Toggle theme">☀︎</button>
+  </div>
+</header>
+
+<main>
+
+  <!-- OVERVIEW -->
+  <div class="tab-panel active" id="panel-overview" role="tabpanel">
+    <div class="ov-intro">
+      <h2>AI Symposium BMAD Workshop</h2>
+      <p>Three 45-minute sessions that take you from a blank brief to a tested, reviewed portal — a different AI agent at every step.</p>
+    </div>
+
+    <div class="day-cards">
+      <div class="day-card" data-day="1" role="button" tabindex="0" aria-label="Go to Day 1">
+        <div class="day-eyebrow">Day 1</div>
+        <div class="day-title">Analysis &amp; Design</div>
+        <div class="day-dur">45 min · 5 steps</div>
+        <ul class="ov-steps">
+          <li class="ov-step"><div class="ov-num">1</div><div class="ov-info"><span class="ov-name">Brainstorming Agent</span><span class="ov-sk">/bmad-brainstorming</span><div><span class="ov-chip">brainstorm.md</span></div></div></li>
+          <li class="ov-step"><div class="ov-num">2</div><div class="ov-info"><span class="ov-name">PM Agent</span><span class="ov-sk">/bmad-agent-pm</span><div><span class="ov-chip">prd.md</span></div></div></li>
+          <li class="ov-step"><div class="ov-num">3</div><div class="ov-info"><span class="ov-name">UX Designer Agent</span><span class="ov-sk">/bmad-ux</span><div><span class="ov-chip">ux-spec.md</span></div></div></li>
+          <li class="ov-step"><div class="ov-num">4</div><div class="ov-info"><span class="ov-name">Checkpoint Preview</span><span class="ov-sk">direct prompt</span><div><span class="ov-chip">Wireframe.html</span></div></div></li>
+          <li class="ov-step"><div class="ov-num">5</div><div class="ov-info"><span class="ov-name">Output Review</span><span class="ov-sk">manual</span><div><span class="ov-chip">→ Day 2</span></div></div></li>
+        </ul>
+      </div>
+
+      <div class="day-card" data-day="2" role="button" tabindex="0" aria-label="Go to Day 2">
+        <div class="day-eyebrow">Day 2</div>
+        <div class="day-title">Architecture &amp; Development</div>
+        <div class="day-dur">45 min · 5 steps</div>
+        <ul class="ov-steps">
+          <li class="ov-step"><div class="ov-num">1</div><div class="ov-info"><span class="ov-name">Architect Agent</span><span class="ov-sk">/bmad-architecture</span><div><span class="ov-chip">architecture.md</span></div></div></li>
+          <li class="ov-step"><div class="ov-num">2</div><div class="ov-info"><span class="ov-name">Epics &amp; Stories Agent</span><span class="ov-sk">/bmad-create-epics-and-stories</span><div><span class="ov-chip">epics.md</span></div></div></li>
+          <li class="ov-step"><div class="ov-num">3</div><div class="ov-info"><span class="ov-name">Sprint Planning Agent</span><span class="ov-sk">/bmad-sprint-planning</span><div><span class="ov-chip">sprint-plan.md</span></div></div></li>
+          <li class="ov-step"><div class="ov-num">4</div><div class="ov-info"><span class="ov-name">Dev Agent</span><span class="ov-sk">/bmad-agent-dev</span><div><span class="ov-chip">AISymposium.html</span></div></div></li>
+          <li class="ov-step"><div class="ov-num">5</div><div class="ov-info"><span class="ov-name">Checkpoint Preview</span><span class="ov-sk">manual check</span><div><span class="ov-chip">Verified portal</span></div></div></li>
+        </ul>
+      </div>
+
+      <div class="day-card" data-day="3" role="button" tabindex="0" aria-label="Go to Day 3">
+        <div class="day-eyebrow">Day 3</div>
+        <div class="day-title">Testing &amp; Code Review</div>
+        <div class="day-dur">45 min · 4 steps</div>
+        <ul class="ov-steps">
+          <li class="ov-step"><div class="ov-num">1</div><div class="ov-info"><span class="ov-name">TEA Agent</span><span class="ov-sk">/bmad-tea</span><div><span class="ov-chip">test-approach.md</span></div></div></li>
+          <li class="ov-step"><div class="ov-num">2</div><div class="ov-info"><span class="ov-name">QA E2E Generator</span><span class="ov-sk">/bmad-qa-generate-e2e-tests</span><div><span class="ov-chip">test_portal.py</span></div></div></li>
+          <li class="ov-step"><div class="ov-num">3</div><div class="ov-info"><span class="ov-name">Playwright Validation</span><span class="ov-sk">manual terminal</span><div><span class="ov-chip">pass/fail results</span></div></div></li>
+          <li class="ov-step"><div class="ov-num">4</div><div class="ov-info"><span class="ov-name">Code Review Agent</span><span class="ov-sk">/bmad-code-review</span><div><span class="ov-chip">code-review.md</span></div></div></li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="inv-head">Output files — all 3 days</div>
+    <div class="inv-grid">
+      <div class="inv-file"><div class="inv-dot d1"></div><div class="inv-name">brainstorm.md</div><div class="inv-dl">D1</div></div>
+      <div class="inv-file"><div class="inv-dot d1"></div><div class="inv-name">prd.md</div><div class="inv-dl">D1</div></div>
+      <div class="inv-file"><div class="inv-dot d1"></div><div class="inv-name">ux-spec.md</div><div class="inv-dl">D1</div></div>
+      <div class="inv-file"><div class="inv-dot d1"></div><div class="inv-name">AISymposium-Wireframe.html</div><div class="inv-dl">D1</div></div>
+      <div class="inv-file"><div class="inv-dot d2"></div><div class="inv-name">architecture.md</div><div class="inv-dl">D2</div></div>
+      <div class="inv-file"><div class="inv-dot d2"></div><div class="inv-name">epics.md</div><div class="inv-dl">D2</div></div>
+      <div class="inv-file"><div class="inv-dot d2"></div><div class="inv-name">stories/</div><div class="inv-dl">D2</div></div>
+      <div class="inv-file"><div class="inv-dot d2"></div><div class="inv-name">sprint-plan.md</div><div class="inv-dl">D2</div></div>
+      <div class="inv-file"><div class="inv-dot d2"></div><div class="inv-name">AISymposium.html</div><div class="inv-dl">D2</div></div>
+      <div class="inv-file"><div class="inv-dot d3"></div><div class="inv-name">test-approach.md</div><div class="inv-dl">D3</div></div>
+      <div class="inv-file"><div class="inv-dot d3"></div><div class="inv-name">tests/test_portal.py</div><div class="inv-dl">D3</div></div>
+      <div class="inv-file"><div class="inv-dot d3"></div><div class="inv-name">code-review.md</div><div class="inv-dl">D3</div></div>
+    </div>
+  </div>
+
+  <!-- DAY 1 -->
+  <div class="tab-panel" id="panel-1" role="tabpanel">
+    <div class="day-hdr">
+      <div class="day-hdr-label" style="color:var(--d1a)">Day 1 · 45 min</div>
+      <h2>Analysis &amp; Design</h2>
+      <p>From a blank brief to a wireframe — brainstorming, PM, and UX agents in sequence.</p>
+    </div>
+    <div class="timeline">
+      <div class="tl-s" style="--f:8"></div>
+      <div class="tl-s" style="--f:9"></div>
+      <div class="tl-s" style="--f:12"></div>
+      <div class="tl-s" style="--f:7"></div>
+      <div class="tl-s" style="--f:9"></div>
+    </div>
+    <div class="flow">
+
+      <div class="acard">
+        <div class="snum">1</div>
+        <div class="cbody">
+          <div class="aname">Brainstorming Agent</div>
+          <span class="skbadge">/bmad-brainstorming</span>
+          <div class="iorow"><span class="iolabel">IN</span><span class="chip">Portal brief (prompt)</span></div>
+          <div class="iorow"><span class="iolabel">OUT</span><span class="chip out">brainstorm.md</span></div>
+        </div>
+        <div class="tbadge">8 min</div>
+      </div>
+      <div class="arrow" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M8 2v12M3 9l5 5 5-5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+
+      <div class="acard">
+        <div class="snum">2</div>
+        <div class="cbody">
+          <div class="aname">PM Agent</div>
+          <span class="skbadge">/bmad-agent-pm</span>
+          <div class="iorow"><span class="iolabel">IN</span><span class="chip">brainstorm.md</span></div>
+          <div class="iorow"><span class="iolabel">OUT</span><span class="chip out">prd.md</span></div>
+        </div>
+        <div class="tbadge">9 min</div>
+      </div>
+      <div class="arrow" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M8 2v12M3 9l5 5 5-5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+
+      <div class="acard">
+        <div class="snum">3</div>
+        <div class="cbody">
+          <div class="aname">UX Designer Agent</div>
+          <span class="skbadge">/bmad-ux</span>
+          <div class="iorow"><span class="iolabel">IN</span><span class="chip">prd.md</span></div>
+          <div class="iorow"><span class="iolabel">OUT</span><span class="chip out">ux-spec.md</span></div>
+        </div>
+        <div class="tbadge">12 min</div>
+      </div>
+      <div class="arrow" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M8 2v12M3 9l5 5 5-5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+
+      <div class="acard">
+        <div class="snum">4</div>
+        <div class="cbody">
+          <div class="aname">Checkpoint Preview</div>
+          <span class="skbadge">direct prompt</span>
+          <div class="iorow"><span class="iolabel">IN</span><span class="chip">ux-spec.md</span><span class="chip">prd.md</span></div>
+          <div class="iorow"><span class="iolabel">OUT</span><span class="chip out">AISymposium-Wireframe.html</span></div>
+        </div>
+        <div class="tbadge">7 min</div>
+      </div>
+      <div class="arrow" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M8 2v12M3 9l5 5 5-5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+
+      <div class="acard">
+        <div class="snum">5</div>
+        <div class="cbody">
+          <div class="aname">Output Review</div>
+          <span class="skbadge">manual verification</span>
+          <div class="iorow"><span class="iolabel">IN</span><span class="chip">brainstorm.md</span><span class="chip">prd.md</span><span class="chip">ux-spec.md</span><span class="chip">Wireframe.html</span></div>
+          <div class="iorow"><span class="iolabel">OUT</span><span class="chip out">Handoff to Day 2 ✓</span></div>
+        </div>
+        <div class="tbadge">9 min</div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- DAY 2 -->
+  <div class="tab-panel" id="panel-2" role="tabpanel">
+    <div class="day-hdr">
+      <div class="day-hdr-label" style="color:var(--d2a)">Day 2 · 45 min</div>
+      <h2>Architecture &amp; Development</h2>
+      <p>From PRD and UX spec to a working portal — via architect, epics, sprint planning, and dev agents.</p>
+    </div>
+    <div class="timeline">
+      <div class="tl-s" style="--f:8"></div>
+      <div class="tl-s" style="--f:8"></div>
+      <div class="tl-s" style="--f:6"></div>
+      <div class="tl-s" style="--f:16"></div>
+      <div class="tl-s" style="--f:7"></div>
+    </div>
+    <div class="flow">
+
+      <div class="acard">
+        <div class="snum">1</div>
+        <div class="cbody">
+          <div class="aname">Architect Agent</div>
+          <span class="skbadge">/bmad-architecture</span>
+          <div class="iorow"><span class="iolabel">IN</span><span class="chip">prd.md</span><span class="chip">ux-spec.md</span></div>
+          <div class="iorow"><span class="iolabel">OUT</span><span class="chip out">architecture.md</span></div>
+        </div>
+        <div class="tbadge">8 min</div>
+      </div>
+      <div class="arrow" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M8 2v12M3 9l5 5 5-5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+
+      <div class="acard">
+        <div class="snum">2</div>
+        <div class="cbody">
+          <div class="aname">Epics &amp; Stories Agent</div>
+          <span class="skbadge">/bmad-create-epics-and-stories</span>
+          <div class="iorow"><span class="iolabel">IN</span><span class="chip">prd.md</span><span class="chip">architecture.md</span></div>
+          <div class="iorow"><span class="iolabel">OUT</span><span class="chip out">epics.md</span><span class="chip out">stories/</span></div>
+        </div>
+        <div class="tbadge">8 min</div>
+      </div>
+      <div class="arrow" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M8 2v12M3 9l5 5 5-5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+
+      <div class="acard">
+        <div class="snum">3</div>
+        <div class="cbody">
+          <div class="aname">Sprint Planning Agent</div>
+          <span class="skbadge">/bmad-sprint-planning</span>
+          <div class="iorow"><span class="iolabel">IN</span><span class="chip">epics.md</span><span class="chip">stories/</span></div>
+          <div class="iorow"><span class="iolabel">OUT</span><span class="chip out">sprint-plan.md</span></div>
+        </div>
+        <div class="tbadge">6 min</div>
+      </div>
+      <div class="arrow" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M8 2v12M3 9l5 5 5-5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+
+      <div class="acard">
+        <div class="snum">4</div>
+        <div class="cbody">
+          <div class="aname">Dev Agent</div>
+          <span class="skbadge">/bmad-agent-dev</span>
+          <div class="iorow"><span class="iolabel">IN</span><span class="chip">All artifacts</span></div>
+          <div class="iorow"><span class="iolabel">OUT</span><span class="chip out">AISymposium.html</span></div>
+        </div>
+        <div class="tbadge">16 min</div>
+      </div>
+      <div class="arrow" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M8 2v12M3 9l5 5 5-5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+
+      <div class="acard">
+        <div class="snum">5</div>
+        <div class="cbody">
+          <div class="aname">Checkpoint Preview</div>
+          <span class="skbadge">manual browser check</span>
+          <div class="iorow"><span class="iolabel">IN</span><span class="chip">AISymposium.html</span></div>
+          <div class="iorow"><span class="iolabel">OUT</span><span class="chip out">Verified portal ✓</span></div>
+        </div>
+        <div class="tbadge">7 min</div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- DAY 3 -->
+  <div class="tab-panel" id="panel-3" role="tabpanel">
+    <div class="day-hdr">
+      <div class="day-hdr-label" style="color:var(--d3a)">Day 3 · 45 min</div>
+      <h2>Testing &amp; Code Review</h2>
+      <p>From working portal to verified, reviewed code — TEA, QA E2E, Playwright, and code-review agents.</p>
+    </div>
+    <div class="timeline">
+      <div class="tl-s" style="--f:8"></div>
+      <div class="tl-s" style="--f:10"></div>
+      <div class="tl-s" style="--f:13"></div>
+      <div class="tl-s" style="--f:14"></div>
+    </div>
+    <div class="flow">
+
+      <div class="acard">
+        <div class="snum">1</div>
+        <div class="cbody">
+          <div class="aname">TEA Agent</div>
+          <span class="skbadge">/bmad-tea</span>
+          <div class="iorow"><span class="iolabel">IN</span><span class="chip">prd.md</span><span class="chip">AISymposium.html</span></div>
+          <div class="iorow"><span class="iolabel">OUT</span><span class="chip out">test-approach.md</span></div>
+        </div>
+        <div class="tbadge">8 min</div>
+      </div>
+      <div class="arrow" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M8 2v12M3 9l5 5 5-5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+
+      <div class="acard">
+        <div class="snum">2</div>
+        <div class="cbody">
+          <div class="aname">QA E2E Generator</div>
+          <span class="skbadge">/bmad-qa-generate-e2e-tests</span>
+          <div class="iorow"><span class="iolabel">IN</span><span class="chip">test-approach.md</span><span class="chip">AISymposium.html</span></div>
+          <div class="iorow"><span class="iolabel">OUT</span><span class="chip out">tests/test_portal.py</span></div>
+        </div>
+        <div class="tbadge">10 min</div>
+      </div>
+      <div class="arrow" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M8 2v12M3 9l5 5 5-5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+
+      <div class="acard">
+        <div class="snum">3</div>
+        <div class="cbody">
+          <div class="aname">Playwright Validation</div>
+          <span class="skbadge">manual terminal</span>
+          <div class="iorow"><span class="iolabel">IN</span><span class="chip">tests/test_portal.py</span></div>
+          <div class="iorow"><span class="iolabel">OUT</span><span class="chip out">Test pass/fail results</span></div>
+        </div>
+        <div class="tbadge">13 min</div>
+      </div>
+      <div class="arrow" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M8 2v12M3 9l5 5 5-5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+
+      <div class="acard">
+        <div class="snum">4</div>
+        <div class="cbody">
+          <div class="aname">Code Review Agent</div>
+          <span class="skbadge">/bmad-code-review</span>
+          <div class="iorow"><span class="iolabel">IN</span><span class="chip">AISymposium.html</span><span class="chip">prd.md</span></div>
+          <div class="iorow"><span class="iolabel">OUT</span><span class="chip out">code-review.md</span></div>
+        </div>
+        <div class="tbadge">14 min</div>
+      </div>
+
+    </div>
+  </div>
+
+</main>
+
+<script>
+(function(){
+  var tabs = document.querySelectorAll('.tab-btn');
+  var panels = document.querySelectorAll('.tab-panel');
+
+  function switchTab(id) {
+    tabs.forEach(function(t) {
+      var on = t.dataset.tab === id;
+      t.classList.toggle('active', on);
+      t.setAttribute('aria-selected', on);
+    });
+    panels.forEach(function(p) {
+      p.classList.toggle('active', p.id === 'panel-' + id);
+    });
+    try { localStorage.setItem('bmad-tab', id); } catch(e) {}
+  }
+
+  tabs.forEach(function(btn) {
+    btn.addEventListener('click', function() { switchTab(btn.dataset.tab); });
+  });
+
+  document.querySelectorAll('.day-card').forEach(function(card) {
+    card.addEventListener('click', function() { switchTab(card.dataset.day); });
+    card.addEventListener('keydown', function(e) {
+      if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); switchTab(card.dataset.day); }
+    });
+  });
+
+  try {
+    var saved = localStorage.getItem('bmad-tab');
+    if (saved) switchTab(saved);
+  } catch(e) {}
+
+  var themeBtn = document.getElementById('themeBtn');
+  var root = document.documentElement;
+  var saved_theme;
+  try { saved_theme = localStorage.getItem('bmad-theme'); } catch(e) {}
+  if (saved_theme) {
+    root.setAttribute('data-theme', saved_theme);
+    themeBtn.textContent = saved_theme === 'dark' ? '☀︎' : '☾';
+  }
+  themeBtn.addEventListener('click', function() {
+    var cur = root.getAttribute('data-theme');
+    var next = cur === 'light' ? 'dark' : 'light';
+    root.setAttribute('data-theme', next);
+    themeBtn.textContent = next === 'dark' ? '☀︎' : '☾';
+    try { localStorage.setItem('bmad-theme', next); } catch(e) {}
+  });
+})();
+</script>

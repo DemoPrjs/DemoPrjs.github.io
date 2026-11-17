@@ -1,0 +1,793 @@
+<title>AI Symposium Portal — Day 2 Playbook</title>
+<style>
+  :root {
+    --bg:#0B0F1A;--surface:#131929;--surface2:#1B2236;
+    --border:#252D42;--text:#DDE4F0;--muted:#7A8BA8;--faint:#2E3A55;
+    --plan:#F59E0B;--plan-dim:rgba(245,158,11,.10);--plan-border:rgba(245,158,11,.28);
+    --story:#FB923C;--story-dim:rgba(251,146,60,.10);--story-border:rgba(251,146,60,.28);
+    --arch:#60A5FA;--arch-dim:rgba(96,165,250,.10);--arch-border:rgba(96,165,250,.28);
+    --ux:#A78BFA;--ux-dim:rgba(167,139,250,.10);--ux-border:rgba(167,139,250,.28);
+    --impl:#34D399;--impl-dim:rgba(52,211,153,.10);--impl-border:rgba(52,211,153,.28);
+    --review:#FB7185;--review-dim:rgba(251,113,133,.09);--review-border:rgba(251,113,133,.26);
+    --info:#38BDF8;--info-dim:rgba(56,189,248,.09);--info-border:rgba(56,189,248,.26);
+    --mono:'Courier New','Menlo','Monaco',monospace;
+    --sans:-apple-system,BlinkMacSystemFont,'Segoe UI',system-ui,sans-serif;
+  }
+  @media(prefers-color-scheme:light){:root{
+    --bg:#EFF3FA;--surface:#FFFFFF;--surface2:#E5ECF8;
+    --border:#C8D3E8;--text:#18243A;--muted:#5A6A88;--faint:#B8C6DE;
+    --plan-dim:rgba(245,158,11,.08);--plan-border:rgba(217,119,6,.32);
+    --story-dim:rgba(234,88,12,.08);--story-border:rgba(234,88,12,.30);
+    --arch-dim:rgba(37,99,235,.07);--arch-border:rgba(37,99,235,.28);
+    --ux-dim:rgba(109,40,217,.07);--ux-border:rgba(109,40,217,.28);
+    --impl-dim:rgba(5,150,105,.07);--impl-border:rgba(5,150,105,.28);
+    --review-dim:rgba(225,29,72,.07);--review-border:rgba(225,29,72,.26);
+    --info-dim:rgba(2,132,199,.07);--info-border:rgba(2,132,199,.26);
+  }}
+  :root[data-theme="light"]{--bg:#EFF3FA;--surface:#FFFFFF;--surface2:#E5ECF8;--border:#C8D3E8;--text:#18243A;--muted:#5A6A88;--faint:#B8C6DE;--plan-dim:rgba(245,158,11,.08);--plan-border:rgba(217,119,6,.32);--story-dim:rgba(234,88,12,.08);--story-border:rgba(234,88,12,.30);--arch-dim:rgba(37,99,235,.07);--arch-border:rgba(37,99,235,.28);--ux-dim:rgba(109,40,217,.07);--ux-border:rgba(109,40,217,.28);--impl-dim:rgba(5,150,105,.07);--impl-border:rgba(5,150,105,.28);--review-dim:rgba(225,29,72,.07);--review-border:rgba(225,29,72,.26);--info-dim:rgba(2,132,199,.07);--info-border:rgba(2,132,199,.26);}
+  :root[data-theme="dark"]{--bg:#0B0F1A;--surface:#131929;--surface2:#1B2236;--border:#252D42;--text:#DDE4F0;--muted:#7A8BA8;--faint:#2E3A55;--plan-dim:rgba(245,158,11,.10);--plan-border:rgba(245,158,11,.28);--story-dim:rgba(251,146,60,.10);--story-border:rgba(251,146,60,.28);--arch-dim:rgba(96,165,250,.10);--arch-border:rgba(96,165,250,.28);--ux-dim:rgba(167,139,250,.10);--ux-border:rgba(167,139,250,.28);--impl-dim:rgba(52,211,153,.10);--impl-border:rgba(52,211,153,.28);--review-dim:rgba(251,113,133,.09);--review-border:rgba(251,113,133,.26);--info-dim:rgba(56,189,248,.09);--info-border:rgba(56,189,248,.26);}
+  *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+  body{background:var(--bg);color:var(--text);font-family:var(--sans);font-size:14px;line-height:1.65;padding:2rem 1rem 5rem;}
+  .page{max-width:880px;margin:0 auto;}
+  .header{margin-bottom:2rem;}
+  .eyebrow{font-family:var(--mono);font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);margin-bottom:.55rem;}
+  .header h1{font-size:1.7rem;font-weight:700;letter-spacing:-.02em;line-height:1.2;text-wrap:balance;}
+  .header h1 em{font-style:normal;color:var(--story);}
+  .header-sub{color:var(--muted);margin-top:.55rem;font-size:13.5px;max-width:580px;line-height:1.55;}
+  .callout{border-radius:8px;padding:1rem 1.2rem;margin-bottom:1rem;border:1px solid;font-size:13px;line-height:1.6;}
+  .callout-info{background:var(--info-dim);border-color:var(--info-border);}
+  .callout-warn{background:var(--story-dim);border-color:var(--story-border);}
+  .callout h4{font-size:12px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;margin-bottom:.4rem;}
+  .callout-info h4{color:var(--info);}
+  .callout-warn h4{color:var(--story);}
+  .callout p{color:var(--muted);}
+  .callout strong{color:var(--text);}
+  .how-section{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:1.5rem;margin:1.75rem 0 2.5rem;}
+  .how-section h2{font-size:15px;font-weight:600;margin-bottom:1rem;letter-spacing:-.01em;}
+  .how-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:1rem;}
+  .how-card{background:var(--surface2);border:1px solid var(--border);border-radius:7px;padding:1rem;}
+  .how-card-num{font-family:var(--mono);font-size:10px;color:var(--muted);margin-bottom:.3rem;}
+  .how-card h4{font-size:13px;font-weight:600;margin-bottom:.3rem;}
+  .how-card p{font-size:12px;color:var(--muted);line-height:1.5;}
+  .file-tree{background:var(--bg);border:1px solid var(--border);border-radius:7px;padding:1rem 1.2rem;font-family:var(--mono);font-size:12px;line-height:1.9;margin-top:1.2rem;}
+  .file-tree .folder{color:var(--muted);}
+  .file-tree .file{color:var(--text);}
+  .file-tree .file-new{color:var(--story);}
+  .file-tree .tag{font-size:9.5px;padding:.1rem .4rem;border-radius:3px;margin-left:.5rem;font-weight:600;border:1px solid;}
+  .t-plan{background:var(--plan-dim);color:var(--plan);border-color:var(--plan-border);}
+  .t-story{background:var(--story-dim);color:var(--story);border-color:var(--story-border);}
+  .t-arch{background:var(--arch-dim);color:var(--arch);border-color:var(--arch-border);}
+  .t-ux{background:var(--ux-dim);color:var(--ux);border-color:var(--ux-border);}
+  .t-impl{background:var(--impl-dim);color:var(--impl);border-color:var(--impl-border);}
+  .timeline-wrap{background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:1.25rem 1.4rem;margin-bottom:2.5rem;}
+  .tl-label{font-family:var(--mono);font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin-bottom:.8rem;}
+  .tl-track{display:flex;height:26px;border-radius:5px;overflow:hidden;gap:2px;}
+  .tl-seg{display:flex;align-items:center;justify-content:center;font-family:var(--mono);font-size:9.5px;font-weight:700;letter-spacing:.04em;color:#0B0F1A;border-radius:3px;}
+  .s1{background:var(--arch);flex:8;}
+  .s2{background:var(--story);flex:8;}
+  .s3{background:var(--story);flex:6;}
+  .s4{background:var(--impl);flex:16;}
+  .s5{background:var(--review);flex:7;}
+  .tl-legend{display:flex;gap:1rem;flex-wrap:wrap;margin-top:.8rem;}
+  .tl-li{display:flex;align-items:center;gap:.35rem;font-size:11.5px;color:var(--muted);}
+  .tl-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0;}
+  .phase-header{display:flex;align-items:center;gap:.75rem;padding-bottom:.85rem;border-bottom:1px solid var(--border);margin:2.5rem 0 1.25rem;}
+  .phase-badge{font-family:var(--mono);font-size:9.5px;letter-spacing:.12em;text-transform:uppercase;font-weight:700;padding:.22rem .6rem;border-radius:3px;}
+  .pb-arch{background:var(--arch-dim);color:var(--arch);border:1px solid var(--arch-border);}
+  .pb-story{background:var(--story-dim);color:var(--story);border:1px solid var(--story-border);}
+  .pb-impl{background:var(--impl-dim);color:var(--impl);border:1px solid var(--impl-border);}
+  .pb-rev{background:var(--review-dim);color:var(--review);border:1px solid var(--review-border);}
+  .phase-header h2{font-size:1.05rem;font-weight:600;letter-spacing:-.01em;}
+  .phase-time{margin-left:auto;font-family:var(--mono);font-size:11px;color:var(--muted);background:var(--surface2);border:1px solid var(--border);padding:.2rem .55rem;border-radius:20px;white-space:nowrap;}
+  .step-card{background:var(--surface);border:1px solid var(--border);border-radius:10px;margin-bottom:1.25rem;overflow:hidden;}
+  .sc-head{display:flex;align-items:flex-start;gap:1rem;padding:1.1rem 1.3rem;border-bottom:1px solid var(--border);}
+  .sc-num{width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:var(--mono);font-size:11px;font-weight:700;flex-shrink:0;margin-top:1px;border:1.5px solid;}
+  .n-arch{background:var(--arch-dim);color:var(--arch);border-color:var(--arch-border);}
+  .n-story{background:var(--story-dim);color:var(--story);border-color:var(--story-border);}
+  .n-impl{background:var(--impl-dim);color:var(--impl);border-color:var(--impl-border);}
+  .n-rev{background:var(--review-dim);color:var(--review);border-color:var(--review-border);}
+  .sc-info{flex:1;min-width:0;}
+  .sc-title{font-size:15px;font-weight:600;margin-bottom:.2rem;}
+  .sc-why{font-size:12.5px;color:var(--muted);line-height:1.55;}
+  .sc-meta{display:flex;flex-direction:column;align-items:flex-end;gap:.4rem;flex-shrink:0;}
+  .sc-time{font-family:var(--mono);font-size:13px;font-weight:700;color:var(--text);}
+  .sc-skill{font-family:var(--mono);font-size:10px;background:var(--surface2);border:1px solid var(--border);color:var(--muted);padding:.15rem .45rem;border-radius:3px;white-space:nowrap;}
+  .sc-body{padding:0;}
+  .step-row{border-bottom:1px solid var(--border);padding:.9rem 1.3rem;}
+  .step-row:last-child{border-bottom:none;}
+  .row-label{font-family:var(--mono);font-size:9.5px;letter-spacing:.13em;text-transform:uppercase;color:var(--muted);margin-bottom:.45rem;display:flex;align-items:center;gap:.5rem;}
+  .rl-badge{font-size:9px;padding:.1rem .4rem;border-radius:2px;font-weight:700;letter-spacing:.06em;}
+  .rl-open{background:var(--info-dim);color:var(--info);border:1px solid var(--info-border);}
+  .rl-paste{background:var(--plan-dim);color:var(--plan);border:1px solid var(--plan-border);}
+  .rl-save{background:var(--impl-dim);color:var(--impl);border:1px solid var(--impl-border);}
+  .rl-note{background:var(--story-dim);color:var(--story);border:1px solid var(--story-border);}
+  .cmd-block{background:var(--bg);border:1px solid var(--border);border-radius:6px;padding:.7rem .9rem;font-family:var(--mono);font-size:12px;color:var(--text);letter-spacing:.01em;}
+  .prompt-block{background:var(--bg);border:1px solid var(--border);border-radius:6px;padding:.85rem 1rem;font-family:var(--mono);font-size:11px;line-height:1.7;color:var(--text);white-space:pre-wrap;word-break:break-word;}
+  .prompt-hl{color:var(--info);}
+  .prompt-d2{color:var(--story);}
+  .handoff-box{background:var(--info-dim);border:1px solid var(--info-border);border-radius:6px;padding:.75rem 1rem;font-size:12.5px;color:var(--muted);line-height:1.55;}
+  .handoff-box strong{color:var(--info);}
+  .chips{display:flex;gap:.45rem;flex-wrap:wrap;}
+  .chip{font-family:var(--mono);font-size:10.5px;padding:.2rem .55rem;border-radius:4px;border:1px solid;font-weight:500;}
+  .ch-arch{background:var(--arch-dim);color:var(--arch);border-color:var(--arch-border);}
+  .ch-story{background:var(--story-dim);color:var(--story);border-color:var(--story-border);}
+  .ch-impl{background:var(--impl-dim);color:var(--impl);border-color:var(--impl-border);}
+  .ch-rev{background:var(--review-dim);color:var(--review);border-color:var(--review-border);}
+  .checklist{list-style:none;display:flex;flex-direction:column;gap:.35rem;}
+  .checklist li{display:flex;align-items:flex-start;gap:.6rem;font-size:12.5px;color:var(--muted);line-height:1.5;}
+  .checklist li::before{content:'▸';color:var(--faint);flex-shrink:0;margin-top:1px;font-size:11px;}
+  .checklist li strong{color:var(--text);}
+  .divider{height:1px;background:var(--border);margin:2.5rem 0;}
+  .delivery{background:var(--impl-dim);border:1px solid var(--impl-border);border-radius:8px;padding:1.3rem 1.5rem;margin-top:2.5rem;}
+  .delivery h3{font-size:13px;font-weight:600;color:var(--impl);margin-bottom:.9rem;}
+  .delivery-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:.6rem;}
+  .d-item{background:var(--surface);border:1px solid var(--border);border-radius:6px;padding:.7rem .9rem;}
+  .d-file{font-family:var(--mono);font-size:11.5px;font-weight:600;color:var(--impl);margin-bottom:.2rem;}
+  .d-desc{font-size:11px;color:var(--muted);line-height:1.4;}
+  @media(max-width:600px){.sc-head{flex-wrap:wrap;}.sc-meta{flex-direction:row;align-items:center;margin-top:.5rem;}}
+  .copy-wrap{position:relative;}
+  .copy-btn{position:absolute;top:.45rem;right:.45rem;font-family:var(--mono);font-size:9px;letter-spacing:.08em;text-transform:uppercase;font-weight:700;background:var(--surface2);color:var(--muted);border:1px solid var(--border);border-radius:4px;padding:.2rem .55rem;cursor:pointer;transition:color .15s,border-color .15s,background .15s;line-height:1;z-index:1;}
+  .copy-btn:hover{color:var(--text);border-color:var(--muted);}
+  .copy-btn.copied{color:var(--impl);border-color:var(--impl-border);background:var(--impl-dim);}
+  .os-wrap{display:grid;grid-template-columns:1fr 1fr;gap:.5rem;margin:.4rem 0;}
+  .os-block{background:var(--bg);border:1px solid var(--border);border-radius:6px;padding:.6rem .85rem;font-family:var(--mono);font-size:11.5px;color:var(--text);letter-spacing:.01em;line-height:1.7;}
+  .os-lbl{font-size:9px;letter-spacing:.12em;text-transform:uppercase;font-weight:700;margin-bottom:.3rem;}
+  .os-mac .os-lbl{color:var(--info);}
+  .os-win .os-lbl{color:var(--impl);}
+  .os-note{color:var(--muted);font-size:10.5px;}
+  @media(max-width:640px){.os-wrap{grid-template-columns:1fr;}}
+</style>
+
+<div class="page">
+
+  <div class="header">
+    <div class="eyebrow">BMad Full Workflow · AI Symposium Portal · Day 2 of 3</div>
+    <h1>AI Symposium Portal — <em>Day 2</em> Architecture &amp; Development</h1>
+    <p class="header-sub">Step-by-step BMad agent execution for Day 2: Architecture → Epics &amp; Stories → Sprint Planning → Dev Agent (build the portal) → Checkpoint Preview. <strong>Requires Day 1 outputs: prd.md and ux-spec.md.</strong></p>
+  </div>
+
+  <div class="how-section">
+    <h2>Goal — By End of Day 2 You Will Have</h2>
+    <div class="how-grid">
+      <div class="how-card">
+        <div class="how-card-num">Output A</div>
+        <h4>architecture.md</h4>
+        <p>Technical architecture: file structure, component tree, state management, data model, and routing strategy for the single-file portal.</p>
+      </div>
+      <div class="how-card">
+        <div class="how-card-num">Output B</div>
+        <h4>epics.md + stories/</h4>
+        <p>6 epics and 18+ user stories covering every feature — from Home page to Admin CRUD to Chat widget.</p>
+      </div>
+      <div class="how-card">
+        <div class="how-card-num">Output C</div>
+        <h4>sprint-plan.md</h4>
+        <p>Prioritised sprint plan: which stories go in Sprint 1 (MVP) and which in Sprint 2 (enhancements).</p>
+      </div>
+      <div class="how-card">
+        <div class="how-card-num">Output D</div>
+        <h4>AISymposium.html</h4>
+        <p>The fully built AI Symposium portal — single HTML file with all 7 views, dark theme, interactive JS, and chat widget.</p>
+      </div>
+    </div>
+    <div class="file-tree">
+      <span class="folder">Project6/</span><br>
+      &nbsp;&nbsp;<span class="file">├── brainstorm.md</span><span class="tag t-plan">Day 1</span><br>
+      &nbsp;&nbsp;<span class="file">├── prd.md</span><span class="tag t-plan">Day 1</span><br>
+      &nbsp;&nbsp;<span class="file">├── ux-spec.md</span><span class="tag t-ux">Day 1</span><br>
+      &nbsp;&nbsp;<span class="file-new">├── architecture.md</span><span class="tag t-arch">Step 1 NEW</span><br>
+      &nbsp;&nbsp;<span class="file-new">├── epics.md</span><span class="tag t-story">Step 2 NEW</span><br>
+      &nbsp;&nbsp;<span class="file-new">├── stories/</span><span class="tag t-story">Step 2 NEW</span><br>
+      &nbsp;&nbsp;<span class="file-new">├── sprint-plan.md</span><span class="tag t-story">Step 3 NEW</span><br>
+      &nbsp;&nbsp;<span class="file-new">└── AISymposium.html</span><span class="tag t-impl">Step 4 NEW</span>
+    </div>
+  </div>
+
+  <div class="callout callout-warn">
+    <h4>Prerequisite — Day 1 files must exist</h4>
+    <p>Verify both files exist before starting:</p>
+    <div class="os-wrap">
+      <div class="os-block os-mac"><div class="os-lbl">Mac / Linux</div>ls prd.md ux-spec.md</div>
+      <div class="os-block os-win"><div class="os-lbl">Windows</div>dir prd.md ux-spec.md</div>
+    </div>
+    <p style="margin-top:.5rem;">If missing, complete Day 1 first — these files are the inputs every Day 2 agent reads.</p>
+  </div>
+  <div class="callout callout-info">
+    <h4>Each step = fresh context window</h4>
+    <p>Press <strong>Ctrl+N</strong> (Windows) or <strong>Cmd+N</strong> (Mac) between every step. Agents share context through files on disk — not through the chat window.</p>
+  </div>
+
+  <div class="timeline-wrap">
+    <div class="tl-label">45-Minute Timeline — 5 Agents in Sequence</div>
+    <div class="tl-track">
+      <div class="tl-seg s1">ARCH 8m</div>
+      <div class="tl-seg s2">EPICS 8m</div>
+      <div class="tl-seg s3">SPRINT 6m</div>
+      <div class="tl-seg s4">DEV BUILD 16m</div>
+      <div class="tl-seg s5">PREVIEW 7m</div>
+    </div>
+    <div class="tl-legend">
+      <div class="tl-li"><div class="tl-dot" style="background:var(--arch)"></div>Step 1: Architect Agent · 0–8 min</div>
+      <div class="tl-li"><div class="tl-dot" style="background:var(--story)"></div>Step 2: Epics &amp; Stories Agent · 8–16 min</div>
+      <div class="tl-li"><div class="tl-dot" style="background:var(--story)"></div>Step 3: Sprint Planning Agent · 16–22 min</div>
+      <div class="tl-li"><div class="tl-dot" style="background:var(--impl)"></div>Step 4: Dev Agent (Quick Dev) · 22–38 min</div>
+      <div class="tl-li"><div class="tl-dot" style="background:var(--review)"></div>Step 5: Checkpoint Preview · 38–45 min</div>
+    </div>
+  </div>
+
+  <!-- STEP 1 -->
+  <div class="phase-header">
+    <span class="phase-badge pb-arch">Phase 3 — Architecture</span>
+    <h2>Architect Agent — Technical Architecture Document</h2>
+    <span class="phase-time">0 → 8 min</span>
+  </div>
+
+  <div class="step-card">
+    <div class="sc-head">
+      <div class="sc-num n-arch">1</div>
+      <div class="sc-info">
+        <div class="sc-title">Architect Agent — Single-File Portal Architecture</div>
+        <div class="sc-why">The Architect Agent reads prd.md and ux-spec.md and decides how to structure the single-file portal — component tree, data model, JavaScript state management, and view routing. The Dev Agent follows this blueprint exactly.</div>
+      </div>
+      <div class="sc-meta">
+        <span class="sc-time">8 min</span>
+        <span class="sc-skill">bmad-architecture</span>
+      </div>
+    </div>
+    <div class="sc-body">
+      <div class="step-row">
+        <div class="row-label"><span class="rl-badge rl-open">OPEN</span>Open a brand-new Claude Code context window (Ctrl+N / Cmd+N)</div>
+        <div class="cmd-block">/bmad-architecture</div>
+      </div>
+      <div class="step-row">
+        <div class="row-label"><span class="rl-badge rl-paste">PASTE</span>Copy and paste this prompt. Press Enter.</div>
+        <div class="prompt-block">You are the BMad Architect Agent. Read prd.md and ux-spec.md from the current directory and produce a complete technical architecture document for the AI Symposium Portal.
+
+Read: prd.md, ux-spec.md
+
+ARCHITECTURE MUST COVER:
+
+1. FILE STRUCTURE
+   - Single HTML file: AISymposium.html
+   - Embedded &lt;style&gt; block (no external CSS)
+   - Embedded &lt;script&gt; block (no external JS libraries)
+   - No build tools, no npm, no node_modules
+
+2. VIEW ROUTING
+   - Client-side view switching via JavaScript
+   - Views: home | upcoming | detail | past | admin | contact | login
+   - URL hash routing: #home, #upcoming, #detail?id=X, #past, #admin, #contact, #login
+   - Active nav link highlighting
+
+3. DATA MODEL
+   Define JavaScript objects for:
+   - Event { id, title, description, date, time, location, mode, speakerName, speakerBio, capacity, bookedSeats, status, tags, recordingUrl, contactPerson, registrationDeadline }
+   - Registration { eventId, name, email, company, role, dietary, registeredAt }
+   - User { username, role: 'admin' | 'participant' }
+   - ChatMessage { text, sender: 'user' | 'bot', timestamp }
+   Include sample data: 3 upcoming events, 2 past events
+
+4. COMPONENT ARCHITECTURE
+   Describe each major function:
+   - renderNavbar()
+   - renderHome()
+   - renderUpcoming(events)
+   - renderEventDetail(event)
+   - renderPast(events)
+   - renderAdmin(section)
+   - renderContact()
+   - renderLogin()
+   - renderChat()
+   - navigate(view, params)
+
+5. STATE MANAGEMENT
+   - Global state object: { currentView, currentUser, events[], registrations[], chatMessages[] }
+   - State mutation functions
+   - localStorage persistence for login state
+
+6. CSS ARCHITECTURE
+   - Color token system (CSS custom properties)
+   - Dark-first with light mode via prefers-color-scheme
+   - Component class naming convention
+
+7. SECURITY CONSIDERATIONS
+   - Client-side only (no server)
+   - Admin login: simple username/password check (hardcoded for demo)
+   - XSS prevention: use textContent not innerHTML for user input
+
+Save as: architecture.md</div>
+      </div>
+      <div class="step-row">
+        <div class="row-label"><span class="rl-badge rl-save">SAVE</span>Confirm the file is saved</div>
+        <div class="handoff-box">After the agent finishes, verify <strong>architecture.md</strong> exists. Check it covers the data model and the component function list — the Dev Agent uses both directly.</div>
+      </div>
+      <div class="step-row">
+        <div class="row-label">Output produced:</div>
+        <div class="chips">
+          <span class="chip ch-arch">architecture.md</span>
+          <span class="chip ch-arch">Data model</span>
+          <span class="chip ch-arch">Component tree</span>
+          <span class="chip ch-arch">State management</span>
+        </div>
+      </div>
+      <div class="step-row">
+        <div class="row-label">Quick check before moving on:</div>
+        <ul class="checklist">
+          <li>architecture.md exists in the project folder</li>
+          <li>Event data model has at least 15 fields</li>
+          <li>All 8 render functions are listed</li>
+          <li>Hash-based routing (#home, #upcoming, etc.) is documented</li>
+          <li>Sample data (3 upcoming + 2 past events) is included</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- STEP 2 -->
+  <div class="phase-header">
+    <span class="phase-badge pb-story">Phase 3 — Stories</span>
+    <h2>PM Agent — Epics &amp; User Stories</h2>
+    <span class="phase-time">8 → 16 min</span>
+  </div>
+
+  <div class="step-card">
+    <div class="sc-head">
+      <div class="sc-num n-story">2</div>
+      <div class="sc-info">
+        <div class="sc-title">Epics &amp; Stories Agent — Break Down the Work</div>
+        <div class="sc-why">The Epics &amp; Stories agent reads prd.md and architecture.md and breaks the portal into epics and individual user stories. Each story has clear acceptance criteria the Dev Agent can implement one at a time.</div>
+      </div>
+      <div class="sc-meta">
+        <span class="sc-time">8 min</span>
+        <span class="sc-skill">bmad-create-epics-and-stories</span>
+      </div>
+    </div>
+    <div class="sc-body">
+      <div class="step-row">
+        <div class="row-label"><span class="rl-badge rl-open">OPEN</span>Open a brand-new Claude Code context window (Ctrl+N / Cmd+N)</div>
+        <div class="cmd-block">/bmad-create-epics-and-stories</div>
+      </div>
+      <div class="step-row">
+        <div class="row-label"><span class="rl-badge rl-paste">PASTE</span>Copy and paste this prompt. Press Enter.</div>
+        <div class="prompt-block">You are the BMad PM Agent creating Epics and User Stories. Read prd.md and architecture.md from the current directory.
+
+Read: prd.md, architecture.md
+
+Create epics and user stories for the AI Symposium Portal.
+
+EPICS TO CREATE:
+1. EPIC-01: Public Portal — Home, Navigation, and Portal Shell
+2. EPIC-02: Upcoming Symposiums — Browse, Filter, and Register
+3. EPIC-03: Past Symposiums — Archive and Recording Request
+4. EPIC-04: Admin Portal — Event CRUD and Management Dashboard
+5. EPIC-05: User Authentication — Login and Session Management
+6. EPIC-06: Engagement — Chat Widget and Contact Us
+
+For EACH EPIC, create 3–4 user stories in this format:
+
+Story ID: STORY-XXX
+Epic: EPIC-0X
+Title: [short title]
+As a [user type], I want to [action], so that [benefit].
+Acceptance Criteria:
+  - AC1: [specific testable criterion]
+  - AC2: [specific testable criterion]
+  - AC3: [specific testable criterion]
+Story Points: [1 | 2 | 3 | 5]
+Priority: [High | Medium | Low]
+
+REQUIRED STORIES (must include):
+- STORY-001: View home page with featured upcoming event
+- STORY-002: Browse upcoming symposiums with filter by mode
+- STORY-003: Register for an upcoming symposium
+- STORY-004: View past symposiums archive
+- STORY-005: Request recording for a past event
+- STORY-006: Admin login
+- STORY-007: Admin create a new event (all fields)
+- STORY-008: Admin edit existing event
+- STORY-009: Admin delete event with confirmation
+- STORY-010: Admin view dashboard with event stats
+- STORY-011: Open and use the chat widget
+- STORY-012: Submit contact form
+
+Save the epics summary as: epics.md
+Save each story as: stories/story-XXX.md (e.g. stories/story-001.md)</div>
+      </div>
+      <div class="step-row">
+        <div class="row-label"><span class="rl-badge rl-save">SAVE</span>Confirm files are saved</div>
+        <div class="handoff-box">Verify <strong>epics.md</strong> exists and a <strong>stories/</strong> folder was created with individual story files.
+        <div class="os-wrap" style="margin-top:.5rem;">
+          <div class="os-block os-mac"><div class="os-lbl">Mac / Linux</div>ls stories/</div>
+          <div class="os-block os-win"><div class="os-lbl">Windows</div>dir stories\</div>
+        </div></div>
+      </div>
+      <div class="step-row">
+        <div class="row-label">Output produced:</div>
+        <div class="chips">
+          <span class="chip ch-story">epics.md</span>
+          <span class="chip ch-story">stories/story-001.md … story-012.md</span>
+          <span class="chip ch-story">6 epics</span>
+          <span class="chip ch-story">12+ stories</span>
+        </div>
+      </div>
+      <div class="step-row">
+        <div class="row-label">Quick check before moving on:</div>
+        <ul class="checklist">
+          <li>epics.md exists with all 6 epics listed</li>
+          <li>stories/ folder contains at least 12 story files</li>
+          <li>STORY-007 (admin create event) has acceptance criteria for all key fields</li>
+          <li>STORY-003 (registration) acceptance criteria covers form validation</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- STEP 3 -->
+  <div class="phase-header">
+    <span class="phase-badge pb-story">Phase 3 — Planning</span>
+    <h2>Sprint Planning Agent — Prioritise the Build</h2>
+    <span class="phase-time">16 → 22 min</span>
+  </div>
+
+  <div class="step-card">
+    <div class="sc-head">
+      <div class="sc-num n-story">3</div>
+      <div class="sc-info">
+        <div class="sc-title">Sprint Planning Agent — 2-Sprint Delivery Plan</div>
+        <div class="sc-why">The Sprint Planning agent groups stories into Sprint 1 (MVP — must-have for the portal to function) and Sprint 2 (enhancements). This tells the Dev Agent what to build first and ensures the portal is usable at the end of the session.</div>
+      </div>
+      <div class="sc-meta">
+        <span class="sc-time">6 min</span>
+        <span class="sc-skill">bmad-sprint-planning</span>
+      </div>
+    </div>
+    <div class="sc-body">
+      <div class="step-row">
+        <div class="row-label"><span class="rl-badge rl-open">OPEN</span>Open a brand-new Claude Code context window (Ctrl+N / Cmd+N)</div>
+        <div class="cmd-block">/bmad-sprint-planning</div>
+      </div>
+      <div class="step-row">
+        <div class="row-label"><span class="rl-badge rl-paste">PASTE</span>Copy and paste this prompt. Press Enter.</div>
+        <div class="prompt-block">You are the BMad Sprint Planning Agent. Read epics.md and all story files in the stories/ folder.
+
+Read: epics.md, stories/*.md
+
+Create a 2-sprint delivery plan for the AI Symposium Portal.
+
+CONSTRAINTS:
+- Sprint 1 is the MVP — everything a participant needs to see to call this a working portal
+- Sprint 2 is enhancements — nice-to-have features that don't block the demo
+- The Dev Agent will implement Sprint 1 stories first in a single session
+
+SPRINT 1 MVP — Must include (in this order):
+1. Portal shell: navbar, view routing, dark theme CSS
+2. Home page: hero, featured event, stat counters
+3. Upcoming Symposiums: event card grid with sample data
+4. Event Detail + Registration form
+5. Past Symposiums: archive with recording request modal
+6. Admin Login + Admin Portal shell
+7. Admin Create Event form (all fields)
+8. Admin Manage Events table
+9. Contact Us page (6 team members)
+10. Chat widget (floating button + panel)
+
+SPRINT 2 Enhancements:
+- Filter chips on Upcoming page
+- Countdown timer on featured event
+- Admin Dashboard stats charts
+- Login Remember Me persistence
+- Email validation on all forms
+- Print/export event schedule
+
+For each story, show:
+- Story ID, title, sprint assignment, reason for prioritization
+
+Save as: sprint-plan.md</div>
+      </div>
+      <div class="step-row">
+        <div class="row-label"><span class="rl-badge rl-save">SAVE</span>Confirm the file is saved</div>
+        <div class="handoff-box">Verify <strong>sprint-plan.md</strong> exists. Scan it quickly — Sprint 1 should have all 10 MVP items and Sprint 2 should have enhancements only.</div>
+      </div>
+      <div class="step-row">
+        <div class="row-label">Output produced:</div>
+        <div class="chips">
+          <span class="chip ch-story">sprint-plan.md</span>
+          <span class="chip ch-story">Sprint 1 MVP</span>
+          <span class="chip ch-story">Sprint 2 Enhancements</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- STEP 4 -->
+  <div class="phase-header">
+    <span class="phase-badge pb-impl">Phase 4 — Development</span>
+    <h2>Dev Agent — Build the AI Symposium Portal</h2>
+    <span class="phase-time">22 → 38 min</span>
+  </div>
+
+  <div class="step-card">
+    <div class="sc-head">
+      <div class="sc-num n-impl">4</div>
+      <div class="sc-info">
+        <div class="sc-title">Quick Dev Agent — Build the Full Portal in One Shot</div>
+        <div class="sc-why">The Quick Dev agent reads all prior outputs (prd.md, ux-spec.md, architecture.md, sprint-plan.md) and builds the complete portal as a single HTML file. This is the longest step — the agent may take 5–10 minutes to generate the full file.</div>
+      </div>
+      <div class="sc-meta">
+        <span class="sc-time">16 min</span>
+        <span class="sc-skill" style="color:var(--story);border-color:var(--story-border);background:var(--story-dim)">bmad-agent-dev ⚠ not bmad-quick-dev</span>
+      </div>
+    </div>
+    <div class="sc-body">
+      <div class="step-row">
+        <div class="row-label"><span class="rl-badge rl-open">OPEN</span>Open a brand-new Claude Code context window (Ctrl+N / Cmd+N)</div>
+        <div class="handoff-box" style="margin-top:0"><strong>Note:</strong> <code>bmad-quick-dev</code> is not installed. Use <code>/bmad-agent-dev</code> instead — it is the equivalent Dev Agent available in this BMad setup.</div>
+        <div class="cmd-block" style="margin-top:.5rem">/bmad-agent-dev</div>
+      </div>
+      <div class="step-row">
+        <div class="row-label"><span class="rl-badge rl-paste">PASTE</span>Copy and paste this prompt. Press Enter. Wait for completion — do not interrupt.</div>
+        <div class="prompt-block">You are the BMad Quick Dev Agent. Read all the following files and build the complete AI Symposium Portal.
+
+Read: prd.md, ux-spec.md, architecture.md, sprint-plan.md, epics.md
+
+BUILD: AISymposium.html — a single, complete, self-contained HTML file.
+
+TECHNICAL REQUIREMENTS:
+- Single HTML file with ONE external CDN link: Google Fonts Inter (weights 400,500,600,700,800)
+- Pure vanilla JavaScript (no React, Vue, jQuery, or any library)
+- Embedded CSS with full CSS custom property token system (see DESIGN SYSTEM below)
+- Dark-first theme; light mode via @media(prefers-color-scheme:light) + [data-theme="light"]
+- Works by opening directly in a browser AND when served via python3 -m http.server (for Playwright)
+
+DESIGN SYSTEM (must match exactly):
+- Font: 'Inter' from Google Fonts + system-ui fallback
+- CSS tokens:
+    --bg:#080D1A; --bg2:#0D1526; --surface:#111827; --surface2:#1A2438; --surface3:#21304A;
+    --border:#2A3A54; --border2:#364A68;
+    --text:#E2E8F4; --text2:#94A8C4; --text3:#5D7490;
+    --accent:#10B981; --blue:#38BDF8; --purple:#A78BFA; --orange:#FB923C; --red:#F87171; --yellow:#FBBF24;
+- Logo mark: 28×28px rounded square, background:linear-gradient(135deg,#10B981,#38BDF8)
+- Hero heading gradient: background:linear-gradient(120deg,#10B981,#38BDF8); -webkit-background-clip:text; -webkit-text-fill-color:transparent
+
+IMPLEMENT ALL 7 VIEWS (function-based JS routing — toggle .active class on views):
+1. HOME
+   - Navbar: gradient logo mark + "AI Symposium" wordmark; centre links: Home | Upcoming | Past | Contact
+     Right side (always visible): "Admin ↗" subtle btn | "Sign In" ghost btn | "Register Now" primary btn (→ Upcoming)
+     When logged in: replace Sign In + Register Now with "Logout (username)" btn
+   - Hero: gradient heading "Empowering the Future with AI", subheading, 2 CTA buttons
+   - Featured upcoming event card (large)
+   - Stats row: Total Events / Total Participants / Upcoming / Past
+   - Team section: 6 member cards with name, role, email
+
+2. UPCOMING SYMPOSIUMS
+   - Page title, filter chips: All | Virtual | In-Person | Hybrid
+   - Grid of event cards (3 per row on desktop)
+   - Each card: title, date/time, location, mode badge, speaker name, seats remaining, Register button
+   - Clicking Register → navigate to Event Detail view
+
+3. EVENT DETAIL
+   - Full event header: title, date, time, location, mode, speaker photo placeholder
+   - Tab panels: About | Agenda | Speaker | Register
+   - Registration form: First Name, Last Name, Work Email, Company, Job Title, Phone (optional), Mode (In-Person/Virtual dropdown), "How did you hear about us?" dropdown (Email/LinkedIn/Colleague/Company Portal), Special Requirements textarea, Submit button
+   - Success toast after form submit
+
+4. PAST SYMPOSIUMS
+   - Grid of past event cards
+   - Each card: title, date, location, status badge "Completed"
+   - "Request Recording" button → opens modal
+   - Recording request modal: Name, Email, Reason textarea, Submit
+
+5. ADMIN PORTAL ("Admin ↗" always visible in nav; routes to login if not authenticated)
+   - Sidebar with 3 labelled groups:
+     "Overview": 📊 Dashboard | ➕ Create Event | 📋 Manage Events | 👥 Registrations | 🎬 Recording Requests
+     "Management": 🎙 Speakers | 📧 Email Campaigns  ← show toast "coming soon" on click
+     "Settings": 👤 Admin Users | ⚙️ System Config    ← show toast "coming soon" on click
+   - Dashboard: 4 KPI cards (Total Events, Total Registrations, Upcoming Events, Avg Attendance) + recent events table with status pills (Published/Draft/Cancelled/Completed)
+   - Create Event form with these 6 sections:
+     * Basic Information: Title, Event Type, Format (Virtual/In-Person/Hybrid), Status, Description
+     * Date, Time &amp; Location: Date, Start Time, End Time, Venue/Location, Virtual Meeting Link, Full Address
+     * Training Content: Detailed Agenda, Learning Objectives, Prerequisites, Tags/Keywords
+     * Seats &amp; Registration: Total Seats, Booked Seats (read-only), Registration Deadline
+     * Speaker Information: Speaker Name, Speaker Title, Speaker Bio
+     * Contact &amp; Recording: Contact Person, Recording URL
+   - Manage Events: table with Title, Date, Mode, Status, Seats, Actions (Edit/Delete)
+   - Delete: confirm dialog before removing
+   - Edit: pre-fill create form with event data
+
+6. CONTACT US
+   - Section title and intro text
+   - 6 team member cards:
+     * Puneet Gaur — Lead Architect — puneet.gaur@yopmail.com
+     * Mithun Davy — Solution Architect — mithun.davy@yopmail.com
+     * Alex William — Senior Developer — alex.william@yopmail.com
+     * Shiva Thyagaraj — UX Designer — shiva.thyagaraj@yopmail.com
+     * Nagaraj Yanambakkam — QA Lead — nagaraj.yanambakkam@yopmail.com
+     * Molly Mayers — Program Manager — molly.mayers@yopmail.com
+   - Contact form: Name, Email, Subject, Message, Send button
+
+7. LOGIN (reached via "Sign In" or "Admin ↗" in navbar)
+   - Centered card: gradient logo mark + "AI Symposium" heading, Username, Password fields
+   - "Sign In" submit button (not "Login")
+   - Admin credentials: admin / admin123
+   - On success: navigate to Admin portal; navbar replaces Sign In + Register Now with "Logout (username)"
+   - Error message for wrong credentials
+
+CHAT WIDGET (always visible, all views):
+   - Floating button bottom-right: chat bubble icon
+   - Click toggles slide-up panel
+   - Panel: "AI Symposium Assistant" header, message history area
+   - Input field + Send button (disabled while API request is in-flight)
+   - Bot calls live AWS Bedrock API: POST https://mfobabs5n0.execute-api.us-east-2.amazonaws.com/dev/ask
+     Body: { "prompt": "&lt;user message&gt;", "max_tokens": 200, "temperature": 0.3 }
+     Response field: data.output_text (primary) with fallback chain: output_text ?? response ?? text ?? completion ?? answer ?? body
+     The API returns Markdown — implement a markdownToHtml() converter (headings, bold, bullets)
+     Fallback: local CHAT_FAQ keyword matching if API is unreachable
+   - Show animated typing indicator while awaiting response
+
+SAMPLE DATA (hardcoded in JS):
+3 upcoming events:
+  1. "GenAI Fundamentals for Enterprise" — Nov 15, 2026 — Virtual — Dr. Sarah Chen — 50 seats (12 booked)
+  2. "LLM Architecture Deep Dive" — Dec 3, 2026 — In-Person, Seattle WA — Prof. James Kumar — 30 seats (8 booked)
+  3. "AI Agent Frameworks Workshop" — Jan 10, 2027 — Hybrid, Chicago IL — Ms. Priya Nair — 40 seats (5 booked)
+
+2 past events:
+  1. "Introduction to Prompt Engineering" — Sep 20, 2026 — Virtual — Recording available
+  2. "ML Ops Best Practices" — Oct 8, 2026 — In-Person, Portland OR — Recording on request
+
+Save as: AISymposium.html</div>
+      </div>
+      <div class="step-row">
+        <div class="row-label"><span class="rl-badge rl-save">SAVE</span>Open in browser immediately after saving</div>
+        <div class="handoff-box">After the agent finishes, open <strong>AISymposium.html</strong> in your browser. Click every navbar link. Try registering for an event, log in as admin (admin / admin123), and open the chat widget. If any view is broken, describe the issue to the agent in the same context window and ask it to fix it.</div>
+      </div>
+      <div class="step-row">
+        <div class="row-label">Output produced:</div>
+        <div class="chips">
+          <span class="chip ch-impl">AISymposium.html</span>
+          <span class="chip ch-impl">7 views</span>
+          <span class="chip ch-impl">Admin CRUD</span>
+          <span class="chip ch-impl">Chat widget</span>
+          <span class="chip ch-impl">Dark theme</span>
+        </div>
+      </div>
+      <div class="step-row">
+        <div class="row-label">Quick check before moving on:</div>
+        <ul class="checklist">
+          <li>AISymposium.html opens in browser with no JavaScript console errors</li>
+          <li>Navbar shows gradient logo mark, all 4 centre links, plus "Admin ↗", "Sign In", "Register Now" on the right</li>
+          <li>"Register Now" navigates to Upcoming Symposiums; "Admin ↗" navigates to Admin (or login if unauthenticated)</li>
+          <li>Event cards show on Upcoming page with Register button and seats pill</li>
+          <li>Admin login works with admin / admin123; navbar shows "Logout (admin)" after login</li>
+          <li>Admin sidebar shows 3 groups: Overview, Management (Speakers, Email Campaigns), Settings (Admin Users, System Config)</li>
+          <li>Admin Create Event form shows all 6 sections with correct section titles</li>
+          <li>Registration form has 9+ fields including Job Title, Phone, How did you hear</li>
+          <li>Chat widget opens when floating button is clicked</li>
+          <li>Past Symposiums shows "Request Recording" button</li>
+          <li>Contact Us shows all 6 team members with yopmail.com emails</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- STEP 5 -->
+  <div class="phase-header">
+    <span class="phase-badge pb-rev">Phase 4 — Preview</span>
+    <h2>Checkpoint Preview — Validate the Built Portal</h2>
+    <span class="phase-time">38 → 45 min</span>
+  </div>
+
+  <div class="step-card">
+    <div class="sc-head">
+      <div class="sc-num n-rev">5</div>
+      <div class="sc-info">
+        <div class="sc-title">Checkpoint Preview Agent — Verify Portal Against PRD</div>
+        <div class="sc-why">The Checkpoint Preview agent reads the built AISymposium.html and compares it against prd.md and ux-spec.md. It generates a gap report listing anything missing or incorrect — before you go to Day 3 testing.</div>
+      </div>
+      <div class="sc-meta">
+        <span class="sc-time">7 min</span>
+        <span class="sc-skill" style="color:var(--story);border-color:var(--story-border);background:var(--story-dim)">⚠ no skill — paste direct</span>
+      </div>
+    </div>
+    <div class="sc-body">
+      <div class="step-row">
+        <div class="row-label"><span class="rl-badge rl-open">OPEN</span>Open a brand-new Claude Code context window (Ctrl+N / Cmd+N)</div>
+        <div class="handoff-box" style="margin-top:0"><strong>Note:</strong> <code>bmad-checkpoint-preview</code> is not installed in this BMad setup. <strong>Skip the slash command</strong> — open a new context window and paste the prompt below directly.</div>
+      </div>
+      <div class="step-row">
+        <div class="row-label"><span class="rl-badge rl-paste">PASTE</span>Copy and paste this prompt. Press Enter.</div>
+        <div class="prompt-block">You are the BMad Checkpoint Preview Agent. Read these files from the current directory:
+
+Read: AISymposium.html, prd.md, ux-spec.md
+
+Compare the built portal against the PRD and UX spec.
+
+Produce a gap report with 3 sections:
+1. IMPLEMENTED — features present and correct
+2. PARTIAL — features present but incomplete (describe what is missing)
+3. MISSING — features in the PRD/UX spec not implemented at all
+
+For each gap in sections 2 and 3, provide:
+- Feature name
+- What is missing
+- Priority: Critical (blocks Day 3) | High | Low
+
+Then: list the top 3 critical gaps to fix before Day 3 testing.
+
+Save the gap report as: gap-report.md
+
+Also: open AISymposium.html in a browser preview if possible, or describe the visual layout you observe from reading the HTML.</div>
+      </div>
+      <div class="step-row">
+        <div class="row-label"><span class="rl-badge rl-save">SAVE</span>Review the gap report</div>
+        <div class="handoff-box">Read <strong>gap-report.md</strong>. Fix any Critical gaps now by asking the Dev agent to patch AISymposium.html. High/Low gaps can wait for Day 3 review.</div>
+      </div>
+      <div class="step-row">
+        <div class="row-label">Day 2 final outputs:</div>
+        <div class="chips">
+          <span class="chip ch-arch">architecture.md</span>
+          <span class="chip ch-story">epics.md</span>
+          <span class="chip ch-story">stories/</span>
+          <span class="chip ch-story">sprint-plan.md</span>
+          <span class="chip ch-impl">AISymposium.html</span>
+          <span class="chip ch-rev">gap-report.md</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="delivery">
+    <h3>Day 2 Delivery Checklist</h3>
+    <div class="delivery-grid">
+      <div class="d-item">
+        <div class="d-file">architecture.md</div>
+        <div class="d-desc">Component tree, data model, routing</div>
+      </div>
+      <div class="d-item">
+        <div class="d-file">epics.md + stories/</div>
+        <div class="d-desc">6 epics, 12+ user stories</div>
+      </div>
+      <div class="d-item">
+        <div class="d-file">sprint-plan.md</div>
+        <div class="d-desc">Sprint 1 MVP + Sprint 2 backlog</div>
+      </div>
+      <div class="d-item">
+        <div class="d-file">AISymposium.html</div>
+        <div class="d-desc">Built portal — 7 views, dark theme, chat</div>
+      </div>
+      <div class="d-item">
+        <div class="d-file">gap-report.md</div>
+        <div class="d-desc">PRD vs. implementation gap analysis</div>
+      </div>
+    </div>
+  </div>
+
+</div>
+<script>
+document.addEventListener('DOMContentLoaded',function(){
+  document.querySelectorAll('.prompt-block').forEach(function(block){
+    var wrap=document.createElement('div');
+    wrap.className='copy-wrap';
+    block.parentNode.insertBefore(wrap,block);
+    wrap.appendChild(block);
+    var btn=document.createElement('button');
+    btn.className='copy-btn';
+    btn.textContent='Copy';
+    btn.addEventListener('click',function(){
+      var text=block.innerText;
+      if(navigator.clipboard&&navigator.clipboard.writeText){
+        navigator.clipboard.writeText(text).then(function(){
+          btn.textContent='Copied!';btn.classList.add('copied');
+          setTimeout(function(){btn.textContent='Copy';btn.classList.remove('copied');},2000);
+        }).catch(function(){fallback();});
+      } else {fallback();}
+      function fallback(){
+        var r=document.createRange();r.selectNodeContents(block);
+        window.getSelection().removeAllRanges();window.getSelection().addRange(r);
+        btn.textContent='Selected!';
+        setTimeout(function(){btn.textContent='Copy';},2000);
+      }
+    });
+    wrap.appendChild(btn);
+  });
+});
+</script>

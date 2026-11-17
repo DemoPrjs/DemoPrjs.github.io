@@ -1,0 +1,748 @@
+<title>AI Symposium Portal — Day 3 Playbook</title>
+<style>
+  :root {
+    --bg:#0B0F1A;--surface:#131929;--surface2:#1B2236;
+    --border:#252D42;--text:#DDE4F0;--muted:#7A8BA8;--faint:#2E3A55;
+    --plan:#F59E0B;--plan-dim:rgba(245,158,11,.10);--plan-border:rgba(245,158,11,.28);
+    --story:#FB923C;--story-dim:rgba(251,146,60,.10);--story-border:rgba(251,146,60,.28);
+    --arch:#60A5FA;--arch-dim:rgba(96,165,250,.10);--arch-border:rgba(96,165,250,.28);
+    --ux:#A78BFA;--ux-dim:rgba(167,139,250,.10);--ux-border:rgba(167,139,250,.28);
+    --impl:#34D399;--impl-dim:rgba(52,211,153,.10);--impl-border:rgba(52,211,153,.28);
+    --review:#FB7185;--review-dim:rgba(251,113,133,.09);--review-border:rgba(251,113,133,.26);
+    --info:#38BDF8;--info-dim:rgba(56,189,248,.09);--info-border:rgba(56,189,248,.26);
+    --qa:#2DD4BF;--qa-dim:rgba(45,212,191,.09);--qa-border:rgba(45,212,191,.26);
+    --mono:'Courier New','Menlo','Monaco',monospace;
+    --sans:-apple-system,BlinkMacSystemFont,'Segoe UI',system-ui,sans-serif;
+  }
+  @media(prefers-color-scheme:light){:root{
+    --bg:#EFF3FA;--surface:#FFFFFF;--surface2:#E5ECF8;
+    --border:#C8D3E8;--text:#18243A;--muted:#5A6A88;--faint:#B8C6DE;
+    --plan-dim:rgba(245,158,11,.08);--plan-border:rgba(217,119,6,.32);
+    --story-dim:rgba(234,88,12,.08);--story-border:rgba(234,88,12,.30);
+    --arch-dim:rgba(37,99,235,.07);--arch-border:rgba(37,99,235,.28);
+    --ux-dim:rgba(109,40,217,.07);--ux-border:rgba(109,40,217,.28);
+    --impl-dim:rgba(5,150,105,.07);--impl-border:rgba(5,150,105,.28);
+    --review-dim:rgba(225,29,72,.07);--review-border:rgba(225,29,72,.26);
+    --info-dim:rgba(2,132,199,.07);--info-border:rgba(2,132,199,.26);
+    --qa-dim:rgba(13,148,136,.07);--qa-border:rgba(13,148,136,.28);
+  }}
+  :root[data-theme="light"]{--bg:#EFF3FA;--surface:#FFFFFF;--surface2:#E5ECF8;--border:#C8D3E8;--text:#18243A;--muted:#5A6A88;--faint:#B8C6DE;--plan-dim:rgba(245,158,11,.08);--plan-border:rgba(217,119,6,.32);--story-dim:rgba(234,88,12,.08);--story-border:rgba(234,88,12,.30);--arch-dim:rgba(37,99,235,.07);--arch-border:rgba(37,99,235,.28);--ux-dim:rgba(109,40,217,.07);--ux-border:rgba(109,40,217,.28);--impl-dim:rgba(5,150,105,.07);--impl-border:rgba(5,150,105,.28);--review-dim:rgba(225,29,72,.07);--review-border:rgba(225,29,72,.26);--info-dim:rgba(2,132,199,.07);--info-border:rgba(2,132,199,.26);--qa-dim:rgba(13,148,136,.07);--qa-border:rgba(13,148,136,.28);}
+  :root[data-theme="dark"]{--bg:#0B0F1A;--surface:#131929;--surface2:#1B2236;--border:#252D42;--text:#DDE4F0;--muted:#7A8BA8;--faint:#2E3A55;--plan-dim:rgba(245,158,11,.10);--plan-border:rgba(245,158,11,.28);--story-dim:rgba(251,146,60,.10);--story-border:rgba(251,146,60,.28);--arch-dim:rgba(96,165,250,.10);--arch-border:rgba(96,165,250,.28);--ux-dim:rgba(167,139,250,.10);--ux-border:rgba(167,139,250,.28);--impl-dim:rgba(52,211,153,.10);--impl-border:rgba(52,211,153,.28);--review-dim:rgba(251,113,133,.09);--review-border:rgba(251,113,133,.26);--info-dim:rgba(56,189,248,.09);--info-border:rgba(56,189,248,.26);--qa-dim:rgba(45,212,191,.09);--qa-border:rgba(45,212,191,.26);}
+  *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+  body{background:var(--bg);color:var(--text);font-family:var(--sans);font-size:14px;line-height:1.65;padding:2rem 1rem 5rem;}
+  .page{max-width:880px;margin:0 auto;}
+  .header{margin-bottom:2rem;}
+  .eyebrow{font-family:var(--mono);font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);margin-bottom:.55rem;}
+  .header h1{font-size:1.7rem;font-weight:700;letter-spacing:-.02em;line-height:1.2;text-wrap:balance;}
+  .header h1 em{font-style:normal;color:var(--qa);}
+  .header-sub{color:var(--muted);margin-top:.55rem;font-size:13.5px;max-width:580px;line-height:1.55;}
+  .callout{border-radius:8px;padding:1rem 1.2rem;margin-bottom:1rem;border:1px solid;font-size:13px;line-height:1.6;}
+  .callout-info{background:var(--info-dim);border-color:var(--info-border);}
+  .callout-warn{background:var(--story-dim);border-color:var(--story-border);}
+  .callout-qa{background:var(--qa-dim);border-color:var(--qa-border);}
+  .callout h4{font-size:12px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;margin-bottom:.4rem;}
+  .callout-info h4{color:var(--info);}
+  .callout-warn h4{color:var(--story);}
+  .callout-qa h4{color:var(--qa);}
+  .callout p{color:var(--muted);}
+  .callout strong{color:var(--text);}
+  .how-section{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:1.5rem;margin:1.75rem 0 2.5rem;}
+  .how-section h2{font-size:15px;font-weight:600;margin-bottom:1rem;letter-spacing:-.01em;}
+  .how-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:1rem;}
+  .how-card{background:var(--surface2);border:1px solid var(--border);border-radius:7px;padding:1rem;}
+  .how-card-num{font-family:var(--mono);font-size:10px;color:var(--muted);margin-bottom:.3rem;}
+  .how-card h4{font-size:13px;font-weight:600;margin-bottom:.3rem;}
+  .how-card p{font-size:12px;color:var(--muted);line-height:1.5;}
+  .file-tree{background:var(--bg);border:1px solid var(--border);border-radius:7px;padding:1rem 1.2rem;font-family:var(--mono);font-size:12px;line-height:1.9;margin-top:1.2rem;}
+  .file-tree .folder{color:var(--muted);}
+  .file-tree .file{color:var(--text);}
+  .file-tree .file-new{color:var(--qa);}
+  .file-tree .tag{font-size:9.5px;padding:.1rem .4rem;border-radius:3px;margin-left:.5rem;font-weight:600;border:1px solid;}
+  .t-plan{background:var(--plan-dim);color:var(--plan);border-color:var(--plan-border);}
+  .t-ux{background:var(--ux-dim);color:var(--ux);border-color:var(--ux-border);}
+  .t-impl{background:var(--impl-dim);color:var(--impl);border-color:var(--impl-border);}
+  .t-qa{background:var(--qa-dim);color:var(--qa);border-color:var(--qa-border);}
+  .t-rev{background:var(--review-dim);color:var(--review);border-color:var(--review-border);}
+  .timeline-wrap{background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:1.25rem 1.4rem;margin-bottom:2.5rem;}
+  .tl-label{font-family:var(--mono);font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin-bottom:.8rem;}
+  .tl-track{display:flex;height:26px;border-radius:5px;overflow:hidden;gap:2px;}
+  .tl-seg{display:flex;align-items:center;justify-content:center;font-family:var(--mono);font-size:9.5px;font-weight:700;letter-spacing:.04em;color:#0B0F1A;border-radius:3px;}
+  .s1{background:var(--qa);flex:8;}
+  .s2{background:var(--qa);flex:10;}
+  .s3{background:var(--qa);flex:13;}
+  .s4{background:var(--review);flex:14;}
+  .tl-legend{display:flex;gap:1rem;flex-wrap:wrap;margin-top:.8rem;}
+  .tl-li{display:flex;align-items:center;gap:.35rem;font-size:11.5px;color:var(--muted);}
+  .tl-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0;}
+  .phase-header{display:flex;align-items:center;gap:.75rem;padding-bottom:.85rem;border-bottom:1px solid var(--border);margin:2.5rem 0 1.25rem;}
+  .phase-badge{font-family:var(--mono);font-size:9.5px;letter-spacing:.12em;text-transform:uppercase;font-weight:700;padding:.22rem .6rem;border-radius:3px;}
+  .pb-qa{background:var(--qa-dim);color:var(--qa);border:1px solid var(--qa-border);}
+  .pb-rev{background:var(--review-dim);color:var(--review);border:1px solid var(--review-border);}
+  .phase-header h2{font-size:1.05rem;font-weight:600;letter-spacing:-.01em;}
+  .phase-time{margin-left:auto;font-family:var(--mono);font-size:11px;color:var(--muted);background:var(--surface2);border:1px solid var(--border);padding:.2rem .55rem;border-radius:20px;white-space:nowrap;}
+  .step-card{background:var(--surface);border:1px solid var(--border);border-radius:10px;margin-bottom:1.25rem;overflow:hidden;}
+  .sc-head{display:flex;align-items:flex-start;gap:1rem;padding:1.1rem 1.3rem;border-bottom:1px solid var(--border);}
+  .sc-num{width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:var(--mono);font-size:11px;font-weight:700;flex-shrink:0;margin-top:1px;border:1.5px solid;}
+  .n-qa{background:var(--qa-dim);color:var(--qa);border-color:var(--qa-border);}
+  .n-rev{background:var(--review-dim);color:var(--review);border-color:var(--review-border);}
+  .sc-info{flex:1;min-width:0;}
+  .sc-title{font-size:15px;font-weight:600;margin-bottom:.2rem;}
+  .sc-why{font-size:12.5px;color:var(--muted);line-height:1.55;}
+  .sc-meta{display:flex;flex-direction:column;align-items:flex-end;gap:.4rem;flex-shrink:0;}
+  .sc-time{font-family:var(--mono);font-size:13px;font-weight:700;color:var(--text);}
+  .sc-skill{font-family:var(--mono);font-size:10px;background:var(--surface2);border:1px solid var(--border);color:var(--muted);padding:.15rem .45rem;border-radius:3px;white-space:nowrap;}
+  .sc-body{padding:0;}
+  .step-row{border-bottom:1px solid var(--border);padding:.9rem 1.3rem;}
+  .step-row:last-child{border-bottom:none;}
+  .row-label{font-family:var(--mono);font-size:9.5px;letter-spacing:.13em;text-transform:uppercase;color:var(--muted);margin-bottom:.45rem;display:flex;align-items:center;gap:.5rem;}
+  .rl-badge{font-size:9px;padding:.1rem .4rem;border-radius:2px;font-weight:700;letter-spacing:.06em;}
+  .rl-open{background:var(--info-dim);color:var(--info);border:1px solid var(--info-border);}
+  .rl-paste{background:var(--plan-dim);color:var(--plan);border:1px solid var(--plan-border);}
+  .rl-save{background:var(--impl-dim);color:var(--impl);border:1px solid var(--impl-border);}
+  .rl-run{background:var(--qa-dim);color:var(--qa);border:1px solid var(--qa-border);}
+  .rl-note{background:var(--story-dim);color:var(--story);border:1px solid var(--story-border);}
+  .cmd-block{background:var(--bg);border:1px solid var(--border);border-radius:6px;padding:.7rem .9rem;font-family:var(--mono);font-size:12px;color:var(--text);letter-spacing:.01em;margin-bottom:.5rem;}
+  .cmd-comment{color:var(--muted);font-style:italic;}
+  .prompt-block{background:var(--bg);border:1px solid var(--border);border-radius:6px;padding:.85rem 1rem;font-family:var(--mono);font-size:11px;line-height:1.7;color:var(--text);white-space:pre-wrap;word-break:break-word;}
+  .prompt-hl{color:var(--info);}
+  .prompt-qa{color:var(--qa);}
+  .handoff-box{background:var(--info-dim);border:1px solid var(--info-border);border-radius:6px;padding:.75rem 1rem;font-size:12.5px;color:var(--muted);line-height:1.55;}
+  .handoff-box strong{color:var(--info);}
+  .handoff-qa{background:var(--qa-dim);border:1px solid var(--qa-border);border-radius:6px;padding:.75rem 1rem;font-size:12.5px;color:var(--muted);line-height:1.55;}
+  .handoff-qa strong{color:var(--qa);}
+  .chips{display:flex;gap:.45rem;flex-wrap:wrap;}
+  .chip{font-family:var(--mono);font-size:10.5px;padding:.2rem .55rem;border-radius:4px;border:1px solid;font-weight:500;}
+  .ch-qa{background:var(--qa-dim);color:var(--qa);border-color:var(--qa-border);}
+  .ch-rev{background:var(--review-dim);color:var(--review);border-color:var(--review-border);}
+  .ch-impl{background:var(--impl-dim);color:var(--impl);border-color:var(--impl-border);}
+  .checklist{list-style:none;display:flex;flex-direction:column;gap:.35rem;}
+  .checklist li{display:flex;align-items:flex-start;gap:.6rem;font-size:12.5px;color:var(--muted);line-height:1.5;}
+  .checklist li::before{content:'▸';color:var(--faint);flex-shrink:0;margin-top:1px;font-size:11px;}
+  .checklist li strong{color:var(--text);}
+  .pw-section{background:var(--surface);border:1px solid var(--qa-border);border-radius:10px;padding:1.5rem;margin:1rem 0;}
+  .pw-section h3{font-size:14px;font-weight:600;color:var(--qa);margin-bottom:1rem;}
+  .pw-step{margin-bottom:1.2rem;}
+  .pw-step-label{font-family:var(--mono);font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--qa);margin-bottom:.4rem;}
+  .pw-desc{font-size:12.5px;color:var(--muted);margin-bottom:.5rem;line-height:1.5;}
+  .pw-code{background:var(--bg);border:1px solid var(--border);border-radius:6px;padding:.75rem 1rem;font-family:var(--mono);font-size:11.5px;line-height:1.8;color:var(--text);overflow-x:auto;white-space:pre;}
+  .pw-expect{font-size:12px;color:var(--impl);margin-top:.35rem;font-family:var(--mono);}
+  .divider{height:1px;background:var(--border);margin:2.5rem 0;}
+  .delivery{background:var(--qa-dim);border:1px solid var(--qa-border);border-radius:8px;padding:1.3rem 1.5rem;margin-top:2.5rem;}
+  .delivery h3{font-size:13px;font-weight:600;color:var(--qa);margin-bottom:.9rem;}
+  .delivery-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:.6rem;}
+  .d-item{background:var(--surface);border:1px solid var(--border);border-radius:6px;padding:.7rem .9rem;}
+  .d-file{font-family:var(--mono);font-size:11.5px;font-weight:600;color:var(--qa);margin-bottom:.2rem;}
+  .d-desc{font-size:11px;color:var(--muted);line-height:1.4;}
+  @media(max-width:600px){.sc-head{flex-wrap:wrap;}.sc-meta{flex-direction:row;align-items:center;margin-top:.5rem;}.pw-code{font-size:10.5px;}}
+  .copy-wrap{position:relative;}
+  .copy-btn{position:absolute;top:.45rem;right:.45rem;font-family:var(--mono);font-size:9px;letter-spacing:.08em;text-transform:uppercase;font-weight:700;background:var(--surface2);color:var(--muted);border:1px solid var(--border);border-radius:4px;padding:.2rem .55rem;cursor:pointer;transition:color .15s,border-color .15s,background .15s;line-height:1;z-index:1;}
+  .copy-btn:hover{color:var(--text);border-color:var(--muted);}
+  .copy-btn.copied{color:var(--qa);border-color:var(--qa-border);background:var(--qa-dim);}
+  .os-wrap{display:grid;grid-template-columns:1fr 1fr;gap:.5rem;margin:.4rem 0;}
+  .os-block{background:var(--bg);border:1px solid var(--border);border-radius:6px;padding:.6rem .85rem;font-family:var(--mono);font-size:11.5px;color:var(--text);letter-spacing:.01em;line-height:1.7;}
+  .os-lbl{font-size:9px;letter-spacing:.12em;text-transform:uppercase;font-weight:700;margin-bottom:.3rem;}
+  .os-mac .os-lbl{color:var(--info);}
+  .os-win .os-lbl{color:var(--impl);}
+  .os-note{color:var(--muted);font-size:10.5px;}
+  @media(max-width:640px){.os-wrap{grid-template-columns:1fr;}}
+</style>
+
+<div class="page">
+
+  <div class="header">
+    <div class="eyebrow">BMad Full Workflow · AI Symposium Portal · Day 3 of 3</div>
+    <h1>AI Symposium Portal — <em>Day 3</em> Testing &amp; Code Review</h1>
+    <p class="header-sub">Step-by-step BMad agent execution for Day 3: TEA → E2E Test Generation → Playwright validation (step-by-step commands) → Code Review. <strong>Requires Day 2 output: AISymposium.html.</strong></p>
+  </div>
+
+  <div class="how-section">
+    <h2>Goal — By End of Day 3 You Will Have</h2>
+    <div class="how-grid">
+      <div class="how-card">
+        <div class="how-card-num">Output A</div>
+        <h4>test-approach.md</h4>
+        <p>Test strategy: scope, test types, Playwright setup, coverage targets, and a risk register for the AI Symposium portal.</p>
+      </div>
+      <div class="how-card">
+        <div class="how-card-num">Output B</div>
+        <h4>tests/test_portal.py</h4>
+        <p>Generated Playwright Python E2E test file with 12+ test cases covering all portal views and interactions.</p>
+      </div>
+      <div class="how-card">
+        <div class="how-card-num">Output C</div>
+        <h4>Playwright Results</h4>
+        <p>Passing/failing test output from running the Playwright suite against AISymposium.html in a local Chromium browser.</p>
+      </div>
+      <div class="how-card">
+        <div class="how-card-num">Output D</div>
+        <h4>code-review.md</h4>
+        <p>Code review findings: security issues, HTML/JS quality, accessibility gaps, and recommended improvements.</p>
+      </div>
+    </div>
+    <div class="file-tree">
+      <span class="folder">Project6/</span><br>
+      &nbsp;&nbsp;<span class="file">├── AISymposium.html</span><span class="tag t-impl">Day 2</span><br>
+      &nbsp;&nbsp;<span class="file">├── prd.md, ux-spec.md</span><span class="tag t-plan">Day 1</span><br>
+      &nbsp;&nbsp;<span class="file-new">├── test-approach.md</span><span class="tag t-qa">Step 1 NEW</span><br>
+      &nbsp;&nbsp;<span class="file-new">├── tests/test_portal.py</span><span class="tag t-qa">Step 2 NEW</span><br>
+      &nbsp;&nbsp;<span class="file-new">├── tests/playwright.config.py</span><span class="tag t-qa">Step 2 NEW</span><br>
+      &nbsp;&nbsp;<span class="file-new">└── code-review.md</span><span class="tag t-rev">Step 4 NEW</span>
+    </div>
+  </div>
+
+  <div class="callout callout-warn">
+    <h4>Prerequisite — Day 2 files must exist</h4>
+    <p>Verify the portal file exists before starting:</p>
+    <div class="os-wrap">
+      <div class="os-block os-mac"><div class="os-lbl">Mac / Linux</div>ls AISymposium.html</div>
+      <div class="os-block os-win"><div class="os-lbl">Windows</div>dir AISymposium.html</div>
+    </div>
+    <p style="margin-top:.5rem;">Open it in a browser and confirm all 7 views load. If missing or broken, complete Day 2 first.</p>
+  </div>
+  <div class="callout callout-qa">
+    <h4>Playwright must be installed</h4>
+    <p>Playwright was installed in the BMAD setup guide (Phase 4). Verify with: <strong><code>python3 -m playwright --version</code></strong>. If not found, run: <strong><code>pip3 install pytest-playwright &amp;&amp; python3 -m playwright install chromium</code></strong></p>
+  </div>
+
+  <div class="timeline-wrap">
+    <div class="tl-label">45-Minute Timeline — 4 Phases in Sequence</div>
+    <div class="tl-track">
+      <div class="tl-seg s1">TEA 8m</div>
+      <div class="tl-seg s2">E2E GEN 10m</div>
+      <div class="tl-seg s3">PLAYWRIGHT 13m</div>
+      <div class="tl-seg s4">CODE REVIEW 14m</div>
+    </div>
+    <div class="tl-legend">
+      <div class="tl-li"><div class="tl-dot" style="background:var(--qa)"></div>Step 1: TEA Agent (Test Approach) · 0–8 min</div>
+      <div class="tl-li"><div class="tl-dot" style="background:var(--qa)"></div>Step 2: QA E2E Test Generator · 8–18 min</div>
+      <div class="tl-li"><div class="tl-dot" style="background:var(--qa)"></div>Step 3: Playwright Validation · 18–31 min</div>
+      <div class="tl-li"><div class="tl-dot" style="background:var(--review)"></div>Step 4: Code Review Agent · 31–45 min</div>
+    </div>
+  </div>
+
+  <!-- STEP 1 -->
+  <div class="phase-header">
+    <span class="phase-badge pb-qa">Phase 5 — Test Strategy</span>
+    <h2>TEA Agent — Test Environment &amp; Approach</h2>
+    <span class="phase-time">0 → 8 min</span>
+  </div>
+
+  <div class="step-card">
+    <div class="sc-head">
+      <div class="sc-num n-qa">1</div>
+      <div class="sc-info">
+        <div class="sc-title">TEA Agent — Test Strategy Document</div>
+        <div class="sc-why">The TEA (Test Environment and Approach) agent reads prd.md and defines the test strategy for the portal. It identifies what to test, which test types to use, and how to set up Playwright for a static HTML file. <strong>This guides everything in Steps 2 and 3.</strong></div>
+      </div>
+      <div class="sc-meta">
+        <span class="sc-time">8 min</span>
+        <span class="sc-skill">bmad-tea</span>
+      </div>
+    </div>
+    <div class="sc-body">
+      <div class="step-row">
+        <div class="row-label"><span class="rl-badge rl-open">OPEN</span>Open a brand-new Claude Code context window (Ctrl+N / Cmd+N)</div>
+        <div class="cmd-block">/bmad-tea</div>
+      </div>
+      <div class="step-row">
+        <div class="row-label"><span class="rl-badge rl-paste">PASTE</span>Copy and paste this prompt. Press Enter.</div>
+        <div class="prompt-block">You are the BMad TEA Agent (Test Environment and Approach). Read prd.md and AISymposium.html from the current directory.
+
+Read: prd.md, AISymposium.html
+
+Create a complete Test Approach document for the AI Symposium Portal.
+
+CONTEXT:
+- The portal is a single static HTML file (AISymposium.html)
+- Tests run against the file served locally via Python HTTP server or opened directly in a browser
+- Testing tool: Python Playwright (installed via UV)
+- No backend — all state is in-memory JavaScript
+
+TEST APPROACH MUST COVER:
+
+1. TEST SCOPE
+   - In scope: all 7 views, all interactive forms, admin CRUD, chat widget, navigation
+   - Out of scope: real email sending, payment processing, backend API
+
+2. TEST TYPES
+   a. Smoke Tests: portal loads, all views reachable, no JS errors on load
+   b. Functional Tests: form submissions, admin login, event registration, recording request
+   c. UI Tests: element visibility, dark theme, responsive at 1280px and 375px
+   d. Regression Tests: navigation state, admin CRUD operations
+
+3. PLAYWRIGHT SETUP
+   - Python Playwright (pytest-playwright)
+   - Base URL: file:///path/to/AISymposium.html OR http://localhost:8080
+   - Headless: False during training (so participants see browser)
+   - Browser: Chromium only
+   - Test directory: tests/
+
+4. TEST CASES LIST (just names, not code):
+   - TC-01: Portal loads without errors
+   - TC-02: All navbar links navigate correctly; "Register Now" CTA and "Admin ↗" link always visible in navbar
+   - TC-03: Home page displays featured event
+   - TC-04: Upcoming events page shows event cards
+   - TC-05: Event registration form submits successfully
+   - TC-06: Past events page shows completed events
+   - TC-07: Recording request modal opens and submits
+   - TC-08: Admin login succeeds with correct credentials
+   - TC-09: Admin login fails with wrong credentials
+   - TC-10: Admin can create a new event
+   - TC-11: Admin can delete an event
+   - TC-12: Chat widget opens; typing a FAQ keyword always returns a bot reply (live Bedrock API with FAQ fallback)
+   - TC-13: Contact form submits successfully
+   - TC-14: Portal is responsive at mobile width (375px)
+
+5. RISK REGISTER
+   - Risk: JS errors prevent view switching → Mitigation: smoke test on each view
+   - Risk: Admin form validation missing → Mitigation: test required field errors
+   - Risk: Chat widget doesn't reset → Mitigation: test re-open behaviour
+
+Save as: test-approach.md</div>
+      </div>
+      <div class="step-row">
+        <div class="row-label"><span class="rl-badge rl-save">SAVE</span>Confirm the file is saved</div>
+        <div class="handoff-box">Verify <strong>test-approach.md</strong> exists. Check the test cases list — it should have at least 14 named test cases. The QA generator will implement these as Playwright code in Step 2.</div>
+      </div>
+      <div class="step-row">
+        <div class="row-label">Output produced:</div>
+        <div class="chips">
+          <span class="chip ch-qa">test-approach.md</span>
+          <span class="chip ch-qa">14 test cases named</span>
+          <span class="chip ch-qa">Risk register</span>
+          <span class="chip ch-qa">Playwright setup spec</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- STEP 2 -->
+  <div class="phase-header">
+    <span class="phase-badge pb-qa">Phase 5 — Test Generation</span>
+    <h2>QA E2E Test Generator — Create Playwright Test Suite</h2>
+    <span class="phase-time">8 → 18 min</span>
+  </div>
+
+  <div class="step-card">
+    <div class="sc-head">
+      <div class="sc-num n-qa">2</div>
+      <div class="sc-info">
+        <div class="sc-title">QA Generate E2E Tests — Python Playwright Test File</div>
+        <div class="sc-why">The QA E2E Test Generator reads test-approach.md and AISymposium.html and produces a complete Python Playwright test file. It inspects the actual HTML selectors so tests use real element IDs, not guesses.</div>
+      </div>
+      <div class="sc-meta">
+        <span class="sc-time">10 min</span>
+        <span class="sc-skill">bmad-qa-generate-e2e-tests</span>
+      </div>
+    </div>
+    <div class="sc-body">
+      <div class="step-row">
+        <div class="row-label"><span class="rl-badge rl-open">OPEN</span>Open a brand-new Claude Code context window (Ctrl+N / Cmd+N)</div>
+        <div class="cmd-block">/bmad-qa-generate-e2e-tests</div>
+      </div>
+      <div class="step-row">
+        <div class="row-label"><span class="rl-badge rl-paste">PASTE</span>Copy and paste this prompt. Press Enter.</div>
+        <div class="prompt-block">You are the BMad QA E2E Test Generator. Read these files from the current directory:
+
+Read: test-approach.md, AISymposium.html
+
+Generate a complete Python Playwright test suite for the AI Symposium Portal.
+
+REQUIREMENTS:
+- Framework: pytest + playwright (Python)
+- All tests use Playwright's page object
+- Tests run against: http://localhost:8080/AISymposium.html
+  (HTTP server must be running — see Step 3.2)
+- Browser: Chromium, headless=False so participants can watch
+- Import: from playwright.sync_api import Page, expect
+
+CREATE TWO FILES:
+
+FILE 1: tests/test_portal.py
+Include ALL of these test functions:
+
+def test_portal_loads(page):
+    """Portal loads without JavaScript errors"""
+
+def test_navbar_navigation(page):
+    """All navbar links navigate to correct views"""
+    # Test Home, Upcoming, Past, Contact nav links
+
+def test_home_page_content(page):
+    """Home page shows hero section and featured event"""
+
+def test_upcoming_events_display(page):
+    """Upcoming events page shows event cards"""
+
+def test_event_registration_form(page):
+    """User can fill and submit event registration form"""
+    # Fill: Full Name, Email, Company, Role, Dietary
+    # Click Register button on first event
+    # Assert success message appears
+
+def test_past_events_display(page):
+    """Past events page shows completed events"""
+
+def test_recording_request_modal(page):
+    """Recording request modal opens and submits"""
+    # Click Request Recording on first past event
+    # Fill: Name, Email, Reason
+    # Submit and assert success
+
+def test_admin_login_success(page):
+    """Admin login succeeds with admin / admin123"""
+
+def test_admin_login_failure(page):
+    """Admin login fails with wrong password"""
+
+def test_admin_create_event(page):
+    """Admin can create a new event with required fields"""
+    # Login as admin first
+    # Navigate to Create Event
+    # Fill: Title, Date, Time, Mode, Venue, Speaker Name, Capacity
+    # Submit and assert event appears in Manage Events table
+
+def test_admin_delete_event(page):
+    """Admin can delete an event from Manage Events table"""
+    # Login as admin
+    # Navigate to Manage Events
+    # Click Delete on first event
+    # Confirm deletion dialog
+    # Assert event removed from table
+
+def test_chat_widget(page):
+    """Chat widget opens; typing a known FAQ keyword returns a local FAQ reply (network-independent)"""
+    # Click the chat button (#chatBtn) to open the panel
+    # Assert panel #chatPanel has class 'open'
+    # Type a known FAQ keyword (e.g. "upcoming") in #chatInput and press Enter
+    # Wait for a .chat-msg.bot element to appear (FAQ fallback always fires even if Bedrock API is unreachable)
+    # Assert the bot reply text is non-empty
+    # NOTE: The chatbot calls the live AWS Bedrock API first; if unreachable, it falls back
+    #       to local CHAT_FAQ matching. Test with a known FAQ keyword so it always passes.
+
+def test_contact_form(page):
+    """Contact form accepts input and submits"""
+
+def test_responsive_mobile(page):
+    """Portal layout works at 375px mobile width"""
+    # Set viewport: page.set_viewport_size({"width": 375, "height": 812})
+    # Navigate to home and assert no horizontal scroll
+
+FILE 2: tests/conftest.py
+Use pytest-playwright's NATIVE fixtures (do NOT define a custom 'page' fixture).
+Include:
+- browser_context_args fixture (scope="session") overriding viewport to {"width":1280,"height":800}
+- portal_home autouse fixture navigating every test to http://localhost:8080/AISymposium.html
+- admin_page fixture that navigates to #login, fills admin/admin123, clicks .login-card button.btn-primary, waits for #adminContent, and returns the authenticated page
+
+Also include: pytest.ini with testpaths = tests
+
+Inspect the actual HTML in AISymposium.html to use the correct CSS selectors, IDs, and data attributes. Do NOT make up selectors — read the file first.
+
+Save: tests/test_portal.py and tests/conftest.py</div>
+      </div>
+      <div class="step-row">
+        <div class="row-label"><span class="rl-badge rl-save">SAVE</span>Confirm files are saved</div>
+        <div class="handoff-box">Verify the <strong>tests/</strong> folder exists with <strong>test_portal.py</strong> and <strong>conftest.py</strong>. Run: <code>ls tests/</code>. Do NOT run the tests yet — Step 3 walks through each test manually first.</div>
+      </div>
+      <div class="step-row">
+        <div class="row-label">Output produced:</div>
+        <div class="chips">
+          <span class="chip ch-qa">tests/test_portal.py</span>
+          <span class="chip ch-qa">tests/conftest.py</span>
+          <span class="chip ch-qa">14 test functions</span>
+        </div>
+      </div>
+      <div class="step-row">
+        <div class="row-label">Quick check before moving on:</div>
+        <ul class="checklist">
+          <li>tests/test_portal.py exists with at least 12 test functions</li>
+          <li>tests/conftest.py has the page fixture with browser setup</li>
+          <li>No placeholder selectors like "REPLACE_WITH_ACTUAL" — all selectors read from the HTML</li>
+          <li>Admin login test uses admin / admin123</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- STEP 3 — PLAYWRIGHT MANUAL VALIDATION -->
+  <div class="phase-header">
+    <span class="phase-badge pb-qa">Phase 5 — Validation</span>
+    <h2>Playwright Validation — Step-by-Step Test Execution</h2>
+    <span class="phase-time">18 → 31 min</span>
+  </div>
+
+  <div class="step-card">
+    <div class="sc-head">
+      <div class="sc-num n-qa">3</div>
+      <div class="sc-info">
+        <div class="sc-title">Run Playwright Tests — Validate Every Portal Page</div>
+        <div class="sc-why">Follow these exact terminal commands to run the Playwright test suite. The browser will open and you will watch Playwright click through the portal automatically. Each command is explained so you understand what is being validated.</div>
+      </div>
+      <div class="sc-meta">
+        <span class="sc-time">13 min</span>
+        <span class="sc-skill">Terminal</span>
+      </div>
+    </div>
+    <div class="sc-body">
+      <div class="step-row">
+        <div class="row-label"><span class="rl-badge rl-run">STEP 3.1</span>Verify Playwright is installed</div>
+        <div class="cmd-block">python3 -m playwright --version</div>
+        <div class="pw-expect">✓ Expected: Version 1.x.x (any version). If "command not found", run: pip3 install pytest-playwright &amp;&amp; python3 -m playwright install chromium</div>
+      </div>
+
+      <div class="step-row">
+        <div class="row-label"><span class="rl-badge rl-run">STEP 3.2</span>Serve the portal on localhost (required for some browser security features)</div>
+        <div class="os-wrap">
+          <div class="os-block os-mac"><div class="os-lbl">Mac / Linux</div><span class="os-note"># Run in a SEPARATE terminal — keep it running</span>
+python3 -m http.server 8080 --directory .</div>
+          <div class="os-block os-win"><div class="os-lbl">Windows (CMD or PowerShell)</div><span class="os-note"># Run in a SEPARATE terminal — keep it running</span>
+python -m http.server 8080</div>
+        </div>
+        <div class="pw-expect">✓ Expected: "Serving HTTP on 0.0.0.0 port 8080". Open http://localhost:8080/AISymposium.html in browser to confirm.</div>
+      </div>
+
+      <div class="step-row">
+        <div class="row-label"><span class="rl-badge rl-run">STEP 3.3</span>Run the full test suite</div>
+        <div class="os-wrap">
+          <div class="os-block os-mac"><div class="os-lbl">Mac / Linux</div><span class="os-note"># In main terminal (not the server one)</span>
+cd /path/to/Project6
+python3 -m pytest tests/test_portal.py -v --headed</div>
+          <div class="os-block os-win"><div class="os-lbl">Windows</div><span class="os-note"># In main terminal (not the server one)</span>
+cd C:\Users\YourName\Project6
+python -m pytest tests/test_portal.py -v --headed</div>
+        </div>
+        <div class="pw-expect">✓ Expected: Chromium opens, tests run one by one, browser clicks through the portal. Final line: "X passed, Y failed in Zs"</div>
+      </div>
+
+      <div class="step-row">
+        <div class="row-label"><span class="rl-badge rl-run">STEP 3.4</span>Run only smoke tests first (fastest — 2 min)</div>
+        <div class="cmd-block">python3 -m pytest tests/test_portal.py::test_portal_loads tests/test_portal.py::test_navbar_navigation tests/test_portal.py::test_home_page_content -v --headed</div>
+        <div class="pw-expect">✓ Expected: 3 tests pass. If any fail, open the error output — it will say which element was not found.</div>
+      </div>
+
+      <div class="step-row">
+        <div class="row-label"><span class="rl-badge rl-run">STEP 3.5</span>Run registration flow test</div>
+        <div class="cmd-block">python3 -m pytest tests/test_portal.py::test_event_registration_form -v --headed -s</div>
+        <div class="pw-expect">✓ Expected: Browser opens Upcoming page, clicks first event, fills the registration form, and a success message appears. "-s" shows print output so you can see what the test is doing.</div>
+      </div>
+
+      <div class="step-row">
+        <div class="row-label"><span class="rl-badge rl-run">STEP 3.6</span>Run admin CRUD tests</div>
+        <div class="cmd-block">python3 -m pytest tests/test_portal.py::test_admin_login_success tests/test_portal.py::test_admin_create_event tests/test_portal.py::test_admin_delete_event -v --headed -s</div>
+        <div class="pw-expect">✓ Expected: Browser logs in with admin/admin123, navigates to Create Event, fills the form, submits, then deletes the event with a confirmation dialog.</div>
+      </div>
+
+      <div class="step-row">
+        <div class="row-label"><span class="rl-badge rl-run">STEP 3.7</span>Run chat widget test</div>
+        <div class="cmd-block">python3 -m pytest tests/test_portal.py::test_chat_widget -v --headed -s</div>
+        <div class="pw-expect">✓ Expected: Chat button clicked, panel opens, message typed ("upcoming"), bot reply appears rendered as rich text (headings, bold, bullets). The chatbot calls the live AWS Bedrock API (https://mfobabs5n0.execute-api.us-east-2.amazonaws.com/dev/ask). The API response field is <strong>output_text</strong> and contains Markdown — the portal converts it to HTML before display. If the API is unreachable, FAQ fallback fires. A bot reply always appears either way.</div>
+      </div>
+
+      <div class="step-row">
+        <div class="row-label"><span class="rl-badge rl-run">STEP 3.8</span>Run mobile responsiveness test</div>
+        <div class="cmd-block">python3 -m pytest tests/test_portal.py::test_responsive_mobile -v --headed -s</div>
+        <div class="pw-expect">✓ Expected: Browser resizes to 375px width. No horizontal scrollbar. Navbar collapses or stacks vertically.</div>
+      </div>
+
+      <div class="step-row">
+        <div class="row-label"><span class="rl-badge rl-run">STEP 3.9</span>If a test fails — debug it with Playwright's interactive inspector</div>
+        <div class="os-wrap">
+          <div class="os-block os-mac"><div class="os-lbl">Mac / Linux</div><span class="os-note"># Sets env var inline — opens inspector</span>
+PWDEBUG=1 python3 -m pytest tests/test_portal.py::test_event_registration_form --headed</div>
+          <div class="os-block os-win"><div class="os-lbl">Windows CMD</div><span class="os-note"># Set env var first, then run test</span>
+set PWDEBUG=1
+python -m pytest tests/test_portal.py::test_event_registration_form --headed</div>
+        </div>
+        <div class="cmd-block" style="margin-top:.5rem;"><span class="cmd-comment"># Windows PowerShell alternative:</span>
+$env:PWDEBUG=1; python -m pytest tests/test_portal.py::test_event_registration_form --headed</div>
+        <div class="pw-expect">✓ Opens the Playwright Inspector. Use "Step Over" to advance one action at a time and see which selector failed. Copy the correct selector from DevTools and update the test file.</div>
+      </div>
+
+      <div class="step-row">
+        <div class="row-label"><span class="rl-badge rl-run">STEP 3.10</span>Generate an HTML test report</div>
+        <div class="cmd-block">python3 -m pytest tests/test_portal.py -v --headed --html=tests/test-report.html --self-contained-html</div>
+        <div class="pw-expect">✓ Expected: tests/test-report.html created. Open it in a browser to see passed/failed tests with screenshots of failures.</div>
+      </div>
+
+      <div class="step-row">
+        <div class="row-label"><span class="rl-badge rl-note">NOTE</span>If pytest-html is not installed, run this first</div>
+        <div class="cmd-block">uv tool install pytest-html</div>
+      </div>
+
+      <div class="step-row">
+        <div class="row-label">Expected Playwright output — full suite:</div>
+        <div class="handoff-qa"><strong>Target:</strong> At least 10 of 14 tests passing on first run. Common failures are selector mismatches — fix by reading the actual HTML IDs and updating conftest.py. Ask the Dev agent to fix the HTML if a feature is missing entirely (not just a selector issue).</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- STEP 4 -->
+  <div class="phase-header">
+    <span class="phase-badge pb-rev">Phase 6 — Code Review</span>
+    <h2>Code Review Agent — Quality &amp; Security Review</h2>
+    <span class="phase-time">31 → 45 min</span>
+  </div>
+
+  <div class="step-card">
+    <div class="sc-head">
+      <div class="sc-num n-rev">4</div>
+      <div class="sc-info">
+        <div class="sc-title">Code Review Agent — HTML, JS, CSS Quality Audit</div>
+        <div class="sc-why">The Code Review Agent reads AISymposium.html and produces a structured review covering code quality, security (XSS, input validation), accessibility (ARIA, contrast), and performance. It suggests specific fixes with code snippets.</div>
+      </div>
+      <div class="sc-meta">
+        <span class="sc-time">14 min</span>
+        <span class="sc-skill">bmad-code-review</span>
+      </div>
+    </div>
+    <div class="sc-body">
+      <div class="step-row">
+        <div class="row-label"><span class="rl-badge rl-open">OPEN</span>Open a brand-new Claude Code context window (Ctrl+N / Cmd+N)</div>
+        <div class="cmd-block">/bmad-code-review</div>
+      </div>
+      <div class="step-row">
+        <div class="row-label"><span class="rl-badge rl-paste">PASTE</span>Copy and paste this prompt. Press Enter.</div>
+        <div class="prompt-block">You are the BMad Code Review Agent. Read AISymposium.html from the current directory.
+
+Read: AISymposium.html
+
+Perform a thorough code review of the AI Symposium Portal. Focus on these 5 areas:
+
+1. SECURITY (Critical Priority)
+   - XSS: Are user inputs sanitized before rendering to DOM? Check any innerHTML usage.
+   - Authentication: Is the admin login logic secure enough for a demo? Are credentials hardcoded in JS?
+   - Input validation: Are form fields validated before submission?
+   - Check for any eval() usage, inline event handlers with user data, or unsafe DOM operations.
+
+2. HTML QUALITY (High Priority)
+   - Semantic HTML: Are heading levels correct (h1 → h2 → h3)? Are landmark elements used (nav, main, section, article)?
+   - Form accessibility: Do all inputs have associated &lt;label&gt; elements?
+   - Meta tags: title, viewport meta present?
+   - Alt text: Do images/placeholders have descriptive alt attributes?
+
+3. JAVASCRIPT QUALITY (High Priority)
+   - Are global variables avoided (use const/let, not var)?
+   - Is event delegation used efficiently?
+   - Are there memory leaks (event listeners not removed)?
+   - Is the navigate() function safe from hash injection?
+   - Is the chat widget input sanitized?
+
+4. CSS QUALITY (Medium Priority)
+   - Are CSS custom properties used consistently?
+   - Is there any hardcoded colour that should be a token?
+   - Does the CSS handle both light and dark themes correctly?
+   - Any unused CSS rules?
+
+5. ACCESSIBILITY (Medium Priority)
+   - Color contrast: Do foreground/background pairs meet WCAG AA (4.5:1)?
+   - Keyboard navigation: Can the navbar and forms be used without a mouse?
+   - ARIA: Is role="dialog" used for modals? Is aria-label on icon-only buttons?
+   - Focus management: Does focus move into a modal when opened?
+
+For each finding, provide:
+- Severity: Critical | High | Medium | Low
+- Location: describe where in the file (function name or section)
+- Problem: what is wrong
+- Fix: exact code change to make
+
+At the end, produce a summary score (0–10) for each area and an overall portal quality score.
+
+Save as: code-review.md</div>
+      </div>
+      <div class="step-row">
+        <div class="row-label"><span class="rl-badge rl-save">SAVE</span>Review and apply critical fixes</div>
+        <div class="handoff-box">After code-review.md is saved, address all <strong>Critical</strong> and <strong>High</strong> findings by asking the Dev agent in a new context window to patch AISymposium.html. Keep a note of Medium/Low items for the next development sprint.</div>
+      </div>
+      <div class="step-row">
+        <div class="row-label">Output produced:</div>
+        <div class="chips">
+          <span class="chip ch-rev">code-review.md</span>
+          <span class="chip ch-rev">Security findings</span>
+          <span class="chip ch-rev">Quality scores</span>
+          <span class="chip ch-rev">Fix recommendations</span>
+        </div>
+      </div>
+      <div class="step-row">
+        <div class="row-label">Day 3 final checklist:</div>
+        <ul class="checklist">
+          <li><strong>test-approach.md</strong> — test strategy with 14 test cases</li>
+          <li><strong>tests/test_portal.py</strong> — Playwright test file with 14 functions</li>
+          <li><strong>tests/conftest.py</strong> — pytest fixture setup</li>
+          <li><strong>tests/test-report.html</strong> — HTML test report (open in browser)</li>
+          <li><strong>code-review.md</strong> — code review with security and quality findings</li>
+          <li>At least 10/14 Playwright tests passing</li>
+          <li>All Critical security findings addressed</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <div class="delivery">
+    <h3>Day 3 Delivery — Complete Project Checklist</h3>
+    <div class="delivery-grid">
+      <div class="d-item">
+        <div class="d-file">brainstorm.md</div>
+        <div class="d-desc">Day 1 — Feature ideation</div>
+      </div>
+      <div class="d-item">
+        <div class="d-file">prd.md</div>
+        <div class="d-desc">Day 1 — Requirements</div>
+      </div>
+      <div class="d-item">
+        <div class="d-file">ux-spec.md</div>
+        <div class="d-desc">Day 1 — UX design</div>
+      </div>
+      <div class="d-item">
+        <div class="d-file">architecture.md</div>
+        <div class="d-desc">Day 2 — Tech blueprint</div>
+      </div>
+      <div class="d-item">
+        <div class="d-file">epics.md + stories/</div>
+        <div class="d-desc">Day 2 — Work breakdown</div>
+      </div>
+      <div class="d-item">
+        <div class="d-file">AISymposium.html</div>
+        <div class="d-desc">Day 2 — Built portal</div>
+      </div>
+      <div class="d-item">
+        <div class="d-file">tests/test_portal.py</div>
+        <div class="d-desc">Day 3 — Playwright suite</div>
+      </div>
+      <div class="d-item">
+        <div class="d-file">code-review.md</div>
+        <div class="d-desc">Day 3 — Quality audit</div>
+      </div>
+    </div>
+  </div>
+
+</div>
+<script>
+document.addEventListener('DOMContentLoaded',function(){
+  document.querySelectorAll('.prompt-block').forEach(function(block){
+    var wrap=document.createElement('div');
+    wrap.className='copy-wrap';
+    block.parentNode.insertBefore(wrap,block);
+    wrap.appendChild(block);
+    var btn=document.createElement('button');
+    btn.className='copy-btn';
+    btn.textContent='Copy';
+    btn.addEventListener('click',function(){
+      var text=block.innerText;
+      if(navigator.clipboard&&navigator.clipboard.writeText){
+        navigator.clipboard.writeText(text).then(function(){
+          btn.textContent='Copied!';btn.classList.add('copied');
+          setTimeout(function(){btn.textContent='Copy';btn.classList.remove('copied');},2000);
+        }).catch(function(){fallback();});
+      } else {fallback();}
+      function fallback(){
+        var r=document.createRange();r.selectNodeContents(block);
+        window.getSelection().removeAllRanges();window.getSelection().addRange(r);
+        btn.textContent='Selected!';
+        setTimeout(function(){btn.textContent='Copy';},2000);
+      }
+    });
+    wrap.appendChild(btn);
+  });
+});
+</script>

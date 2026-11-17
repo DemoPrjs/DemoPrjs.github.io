@@ -1,0 +1,1707 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>BMAD Framework Installation — Windows Guide</title>
+<style>
+  :root {
+    --bg: #0B0F1A;
+    --surface: #131929;
+    --surface2: #1B2236;
+    --border: #252D42;
+    --text: #DDE4F0;
+    --muted: #7A8BA8;
+    --faint: #2E3A55;
+
+    --install: #38BDF8;
+    --install-dim: rgba(56,189,248,0.09);
+    --install-border: rgba(56,189,248,0.26);
+
+    --check:  #34D399;
+    --check-dim: rgba(52,211,153,0.10);
+    --check-border: rgba(52,211,153,0.28);
+
+    --warn:   #FB923C;
+    --warn-dim: rgba(251,146,60,0.10);
+    --warn-border: rgba(251,146,60,0.28);
+
+    --bmad:   #A78BFA;
+    --bmad-dim: rgba(167,139,250,0.10);
+    --bmad-border: rgba(167,139,250,0.28);
+
+    --restart: #FB7185;
+    --restart-dim: rgba(251,113,133,0.09);
+    --restart-border: rgba(251,113,133,0.26);
+
+    --win: #0EA5E9;
+    --win-dim: rgba(14,165,233,0.10);
+    --win-border: rgba(14,165,233,0.28);
+
+    --mac: #F59E0B;
+    --mac-dim: rgba(245,158,11,0.10);
+    --mac-border: rgba(245,158,11,0.28);
+
+    --mono: 'Courier New','Menlo','Monaco',monospace;
+    --sans: -apple-system,BlinkMacSystemFont,'Segoe UI',system-ui,sans-serif;
+  }
+  @media (prefers-color-scheme: light) {
+    :root {
+      --bg: #EFF3FA; --surface: #FFFFFF; --surface2: #E5ECF8;
+      --border: #C8D3E8; --text: #18243A; --muted: #5A6A88; --faint: #B8C6DE;
+      --install-dim: rgba(2,132,199,0.07); --install-border: rgba(2,132,199,0.28);
+      --check-dim: rgba(5,150,105,0.07); --check-border: rgba(5,150,105,0.28);
+      --warn-dim: rgba(234,88,12,0.08); --warn-border: rgba(234,88,12,0.30);
+      --bmad-dim: rgba(109,40,217,0.07); --bmad-border: rgba(109,40,217,0.28);
+      --restart-dim: rgba(225,29,72,0.07); --restart-border: rgba(225,29,72,0.26);
+      --win-dim: rgba(2,132,199,0.07); --win-border: rgba(2,132,199,0.28);
+      --mac-dim: rgba(217,119,6,0.08); --mac-border: rgba(217,119,6,0.32);
+    }
+  }
+  :root[data-theme="light"] {
+    --bg: #EFF3FA; --surface: #FFFFFF; --surface2: #E5ECF8;
+    --border: #C8D3E8; --text: #18243A; --muted: #5A6A88; --faint: #B8C6DE;
+    --install-dim: rgba(2,132,199,0.07); --install-border: rgba(2,132,199,0.28);
+    --check-dim: rgba(5,150,105,0.07); --check-border: rgba(5,150,105,0.28);
+    --warn-dim: rgba(234,88,12,0.08); --warn-border: rgba(234,88,12,0.30);
+    --bmad-dim: rgba(109,40,217,0.07); --bmad-border: rgba(109,40,217,0.28);
+    --restart-dim: rgba(225,29,72,0.07); --restart-border: rgba(225,29,72,0.26);
+    --win-dim: rgba(2,132,199,0.07); --win-border: rgba(2,132,199,0.28);
+    --mac-dim: rgba(217,119,6,0.08); --mac-border: rgba(217,119,6,0.32);
+  }
+  :root[data-theme="dark"] {
+    --bg: #0B0F1A; --surface: #131929; --surface2: #1B2236;
+    --border: #252D42; --text: #DDE4F0; --muted: #7A8BA8; --faint: #2E3A55;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  body { background: var(--bg); color: var(--text); font-family: var(--sans); font-size: 14px; line-height: 1.65; padding: 2rem 1rem 6rem; }
+  .page { max-width: 900px; margin: 0 auto; }
+
+  /* ─── HEADER ─── */
+  .header { margin-bottom: 2rem; }
+  .eyebrow { font-family: var(--mono); font-size: 10px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--muted); margin-bottom: 0.55rem; }
+  .header h1 { font-size: 1.75rem; font-weight: 700; letter-spacing: -0.02em; line-height: 1.2; text-wrap: balance; }
+  .header h1 em { font-style: normal; color: var(--win); }
+  .header-sub { color: var(--muted); margin-top: 0.6rem; font-size: 13.5px; max-width: 620px; line-height: 1.55; }
+  .author-line { margin-top: 0.5rem; font-size: 12.5px; color: var(--muted); }
+  .author-line strong { color: var(--text); }
+
+  /* ─── PLATFORM BADGE ─── */
+  .platform-page-badge { display: inline-flex; align-items: center; gap: 0.45rem; font-family: var(--mono); font-size: 10px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; padding: 0.3rem 0.8rem; border-radius: 4px; background: var(--win-dim); color: var(--win); border: 1px solid var(--win-border); margin-bottom: 0.9rem; }
+
+  /* ─── THEME TOGGLE ─── */
+  .theme-row { display: flex; justify-content: flex-end; margin-bottom: 1.5rem; }
+  .theme-btn { background: var(--surface2); border: 1px solid var(--border); color: var(--muted); font-family: var(--mono); font-size: 10px; letter-spacing: 0.08em; padding: 0.3rem 0.7rem; border-radius: 4px; cursor: pointer; }
+  .theme-btn:hover { color: var(--text); border-color: var(--muted); }
+
+  /* ─── OVERVIEW GRID ─── */
+  .overview { background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 1.5rem; margin-bottom: 2rem; }
+  .overview h2 { font-size: 13.5px; font-weight: 600; margin-bottom: 1rem; color: var(--muted); text-transform: uppercase; letter-spacing: 0.08em; font-family: var(--mono); }
+  .ov-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 0.75rem; }
+  .ov-card { background: var(--surface2); border: 1px solid var(--border); border-radius: 8px; padding: 0.9rem 1rem; }
+  .ov-icon { font-size: 20px; margin-bottom: 0.4rem; }
+  .ov-label { font-size: 12px; font-weight: 600; margin-bottom: 0.2rem; }
+  .ov-desc { font-size: 11.5px; color: var(--muted); line-height: 1.45; }
+
+  /* ─── PROGRESS TRACKER ─── */
+  .progress-bar { background: var(--surface); border: 1px solid var(--border); border-radius: 8px; padding: 1.2rem 1.4rem; margin-bottom: 2rem; }
+  .pb-label { font-family: var(--mono); font-size: 10px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--muted); margin-bottom: 0.9rem; }
+  .pb-track { display: flex; height: 22px; border-radius: 4px; overflow: hidden; gap: 2px; }
+  .pb-seg { display: flex; align-items: center; justify-content: center; font-family: var(--mono); font-size: 9px; font-weight: 700; color: #0B0F1A; border-radius: 2px; }
+  .pb-nodejs  { background: var(--check); flex: 3; }
+  .pb-python  { background: var(--warn); flex: 3; }
+  .pb-uv         { background: var(--install); flex: 2; }
+  .pb-playwright { background: #10B981; flex: 2; }
+  .pb-git        { background: #60A5FA; flex: 3; }
+  .pb-bmad    { background: var(--bmad); flex: 3; }
+  .pb-legend { display: flex; gap: 1rem; flex-wrap: wrap; margin-top: 0.7rem; }
+  .pb-li { display: flex; align-items: center; gap: 0.35rem; font-size: 11px; color: var(--muted); }
+  .pb-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+
+  /* ─── CALLOUTS ─── */
+  .callout { border-radius: 8px; padding: 0.9rem 1.1rem; margin-bottom: 1rem; border: 1px solid; font-size: 12.5px; line-height: 1.6; }
+  .callout-info  { background: var(--install-dim); border-color: var(--install-border); }
+  .callout-warn  { background: var(--warn-dim); border-color: var(--warn-border); }
+  .callout-check { background: var(--check-dim); border-color: var(--check-border); }
+  .callout-bmad  { background: var(--bmad-dim); border-color: var(--bmad-border); }
+  .callout h4 { font-size: 11px; font-weight: 700; letter-spacing: 0.07em; text-transform: uppercase; margin-bottom: 0.35rem; }
+  .callout-info h4  { color: var(--install); }
+  .callout-warn h4  { color: var(--warn); }
+  .callout-check h4 { color: var(--check); }
+  .callout-bmad h4  { color: var(--bmad); }
+  .callout p, .callout li { color: var(--muted); }
+  .callout strong { color: var(--text); }
+  .callout ul { margin-left: 1.2rem; margin-top: 0.3rem; }
+  .callout li { margin-bottom: 0.15rem; }
+  code { font-family: var(--mono); font-size: 12px; background: var(--surface2); border: 1px solid var(--border); padding: 0.05rem 0.35rem; border-radius: 3px; color: var(--install); }
+
+  /* ─── PHASE HEADER ─── */
+  .phase-header { display: flex; align-items: center; gap: 0.75rem; padding-bottom: 0.85rem; border-bottom: 1px solid var(--border); margin: 2.5rem 0 1.25rem; }
+  .phase-badge { font-family: var(--mono); font-size: 9.5px; letter-spacing: 0.12em; text-transform: uppercase; font-weight: 700; padding: 0.22rem 0.6rem; border-radius: 3px; }
+  .pb-install { background: var(--install-dim); color: var(--install); border: 1px solid var(--install-border); }
+  .pb-check   { background: var(--check-dim);   color: var(--check);   border: 1px solid var(--check-border); }
+  .pb-warn2   { background: var(--warn-dim);     color: var(--warn);    border: 1px solid var(--warn-border); }
+  .pb-bmad2   { background: var(--bmad-dim);     color: var(--bmad);    border: 1px solid var(--bmad-border); }
+  .pb-restart2{ background: var(--restart-dim);  color: var(--restart); border: 1px solid var(--restart-border); }
+  .phase-header h2 { font-size: 1rem; font-weight: 600; letter-spacing: -0.01em; }
+  .phase-time { margin-left: auto; font-family: var(--mono); font-size: 11px; color: var(--muted); background: var(--surface2); border: 1px solid var(--border); padding: 0.2rem 0.55rem; border-radius: 20px; white-space: nowrap; }
+
+  /* ─── STEP CARD ─── */
+  .step-card { background: var(--surface); border: 1px solid var(--border); border-radius: 10px; margin-bottom: 1.4rem; overflow: hidden; }
+  .sc-head { display: flex; align-items: flex-start; gap: 1rem; padding: 1.1rem 1.3rem; border-bottom: 1px solid var(--border); }
+  .sc-num { width: 32px; height: 32px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-family: var(--mono); font-size: 12px; font-weight: 700; flex-shrink: 0; margin-top: 1px; border: 1.5px solid; }
+  .n-install { background: var(--install-dim); color: var(--install); border-color: var(--install-border); }
+  .n-check   { background: var(--check-dim);   color: var(--check);   border-color: var(--check-border); }
+  .n-warn    { background: var(--warn-dim);     color: var(--warn);    border-color: var(--warn-border); }
+  .n-bmad    { background: var(--bmad-dim);     color: var(--bmad);    border-color: var(--bmad-border); }
+  .n-restart { background: var(--restart-dim);  color: var(--restart); border-color: var(--restart-border); }
+  .sc-info { flex: 1; min-width: 0; }
+  .sc-title { font-size: 15px; font-weight: 600; margin-bottom: 0.2rem; }
+  .sc-why   { font-size: 12.5px; color: var(--muted); line-height: 1.5; }
+  .sc-meta  { display: flex; flex-direction: column; align-items: flex-end; gap: 0.4rem; flex-shrink: 0; }
+  .sc-time  { font-family: var(--mono); font-size: 13px; font-weight: 700; color: var(--text); }
+  .sc-tag   { font-family: var(--mono); font-size: 9.5px; padding: 0.15rem 0.45rem; border-radius: 3px; border: 1px solid; white-space: nowrap; }
+  .tag-install { background: var(--install-dim); color: var(--install); border-color: var(--install-border); }
+  .tag-check   { background: var(--check-dim);   color: var(--check);   border-color: var(--check-border); }
+  .tag-warn    { background: var(--warn-dim);     color: var(--warn);    border-color: var(--warn-border); }
+  .tag-bmad    { background: var(--bmad-dim);     color: var(--bmad);    border-color: var(--bmad-border); }
+  .tag-restart { background: var(--restart-dim);  color: var(--restart); border-color: var(--restart-border); }
+
+  .sc-body { padding: 0; }
+  .step-row { border-bottom: 1px solid var(--border); padding: 1rem 1.3rem; }
+  .step-row:last-child { border-bottom: none; }
+  .row-label { font-family: var(--mono); font-size: 9.5px; letter-spacing: 0.13em; text-transform: uppercase; color: var(--muted); margin-bottom: 0.5rem; display: flex; align-items: center; gap: 0.5rem; }
+
+  /* ─── COMMAND BLOCKS ─── */
+  .cmd-block { background: var(--bg); border: 1px solid var(--border); border-radius: 6px; padding: 0.75rem 1rem; font-family: var(--mono); font-size: 12.5px; color: var(--text); letter-spacing: 0.01em; margin-bottom: 0.5rem; display: flex; align-items: center; justify-content: space-between; gap: 1rem; }
+  .cmd-text { flex: 1; }
+  .cmd-copy { font-family: var(--mono); font-size: 9px; padding: 0.2rem 0.5rem; border-radius: 3px; border: 1px solid var(--border); background: var(--surface2); color: var(--muted); cursor: pointer; flex-shrink: 0; }
+  .cmd-copy:hover { color: var(--check); border-color: var(--check-border); }
+  .cmd-note { font-size: 11.5px; color: var(--muted); margin-top: 0.35rem; }
+  .cmd-prompt { color: var(--check); margin-right: 0.5rem; }
+
+  /* ─── STEP LIST ─── */
+  .step-list { list-style: none; display: flex; flex-direction: column; gap: 0.5rem; }
+  .step-list li { display: flex; align-items: flex-start; gap: 0.7rem; font-size: 13px; line-height: 1.55; }
+  .step-list li .bullet { width: 20px; height: 20px; border-radius: 50%; background: var(--surface2); border: 1px solid var(--border); display: flex; align-items: center; justify-content: center; font-family: var(--mono); font-size: 9px; font-weight: 700; color: var(--muted); flex-shrink: 0; margin-top: 1px; }
+  .step-list li strong { color: var(--text); }
+  .step-list li span   { color: var(--muted); }
+
+  /* ─── WIN WINDOW ─── */
+  .win-window { border: 1px solid var(--border); border-radius: 4px; overflow: hidden; }
+  .win-titlebar { background: #1A2035; padding: 0.4rem 0.85rem; display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid var(--border); }
+  .win-title-text { font-size: 11px; color: var(--muted); }
+  .win-controls { display: flex; gap: 0.4rem; }
+  .win-ctrl { font-family: var(--mono); font-size: 9px; color: var(--muted); padding: 0.1rem 0.4rem; }
+  .win-body { background: var(--bg); padding: 1rem; }
+
+  /* ─── INSTALL METHOD BANNER ─── */
+  .method-banner { border-radius: 8px; padding: 0.85rem 1.1rem; margin-bottom: 0.6rem; border: 1px solid; }
+  .method-a { background: var(--install-dim); border-color: var(--install-border); }
+  .method-b { background: var(--surface2); border-color: var(--border); }
+  .method-badge { font-family: var(--mono); font-size: 9px; letter-spacing: 0.13em; text-transform: uppercase; font-weight: 700; margin-bottom: 0.3rem; }
+  .method-a .method-badge { color: var(--install); }
+  .method-b .method-badge { color: var(--muted); }
+  .method-title { font-size: 14px; font-weight: 700; margin-bottom: 0.2rem; }
+  .method-a .method-title { color: var(--install); }
+  .method-desc { font-size: 12px; color: var(--muted); line-height: 1.5; }
+  .method-divider { text-align: center; font-family: var(--mono); font-size: 10px; color: var(--faint); letter-spacing: 0.15em; text-transform: uppercase; padding: 0.65rem 1.3rem; border-bottom: 1px solid var(--border); }
+
+  /* ─── TERMINAL ─── */
+  .terminal { background: #0D1117; border: 1px solid var(--border); border-radius: 8px; overflow: hidden; }
+  .terminal-bar { background: #161B27; padding: 0.5rem 0.85rem; display: flex; align-items: center; gap: 0.45rem; border-bottom: 1px solid rgba(255,255,255,0.05); }
+  .mac-btn { width: 11px; height: 11px; border-radius: 50%; }
+  .mac-close   { background: #FF5F56; }
+  .mac-min     { background: #FEBC2E; }
+  .mac-max     { background: #28C840; }
+  .terminal-body { padding: 0.85rem 1rem; font-family: var(--mono); font-size: 12px; line-height: 1.7; }
+  .t-prompt { color: #34D399; }
+  .t-cmd    { color: #DDE4F0; }
+  .t-out    { color: #7A8BA8; }
+  .t-success{ color: #34D399; }
+  .t-error  { color: #FB7185; }
+  .t-info   { color: #38BDF8; }
+  .t-bmad   { color: #A78BFA; }
+  .t-line   { display: block; }
+
+  /* ─── DROPDOWN MOCKUP ─── */
+  .dropdown-mockup { background: var(--surface); border: 1px solid var(--border); border-radius: 6px; padding: 0.4rem 0; width: 220px; box-shadow: 0 8px 24px rgba(0,0,0,0.3); }
+  .dd-item { padding: 0.35rem 1rem; font-size: 12px; color: var(--muted); display: flex; justify-content: space-between; }
+  .dd-item.active { background: var(--install-dim); color: var(--install); }
+  .dd-item .shortcut { font-family: var(--mono); font-size: 10px; opacity: 0.6; }
+  .dd-divider { height: 1px; background: var(--border); margin: 0.3rem 0; }
+
+  /* ─── SUCCESS / ERROR BOXES ─── */
+  .success-box { background: var(--check-dim); border: 1px solid var(--check-border); border-radius: 8px; padding: 0.85rem 1.1rem; margin-top: 0.75rem; }
+  .success-box h5 { font-size: 11px; font-weight: 700; letter-spacing: 0.07em; text-transform: uppercase; color: var(--check); margin-bottom: 0.4rem; }
+  .success-box p { font-size: 12.5px; color: var(--muted); line-height: 1.5; }
+  .success-box strong { color: var(--text); }
+  .error-box { background: var(--restart-dim); border: 1px solid var(--restart-border); border-radius: 8px; padding: 0.85rem 1.1rem; margin-top: 0.5rem; }
+  .error-box h5 { font-size: 11px; font-weight: 700; letter-spacing: 0.07em; text-transform: uppercase; color: var(--restart); margin-bottom: 0.4rem; }
+  .error-box p { font-size: 12.5px; color: var(--muted); line-height: 1.5; }
+  .error-box strong { color: var(--text); }
+  .error-box ul { margin-left: 1.2rem; margin-top: 0.4rem; }
+  .error-box li { font-size: 12.5px; color: var(--muted); margin-bottom: 0.2rem; }
+
+  /* ─── RESTART CARD ─── */
+  .restart-card { background: var(--restart-dim); border: 1px solid var(--restart-border); border-radius: 10px; padding: 1.4rem 1.5rem; margin-bottom: 1.4rem; display: flex; align-items: flex-start; gap: 1rem; }
+  .restart-icon { font-size: 28px; flex-shrink: 0; }
+  .restart-card h3 { font-size: 15px; font-weight: 700; color: var(--restart); margin-bottom: 0.35rem; }
+  .restart-card p { font-size: 13px; color: var(--muted); line-height: 1.5; }
+
+  /* ─── VS CODE FRAME ─── */
+  .vscode-frame { border: 1px solid var(--border); border-radius: 8px; overflow: hidden; display: flex; flex-direction: column; }
+  .vscode-menubar { background: #1E2437; padding: 0.35rem 0.9rem; display: flex; align-items: center; gap: 1.2rem; border-bottom: 1px solid var(--border); }
+  .vs-menu-item { font-size: 11.5px; color: var(--muted); cursor: default; }
+  .vs-menu-item.active { background: rgba(255,255,255,0.08); color: var(--text); padding: 0.15rem 0.5rem; border-radius: 3px; }
+  .vs-terminal-panel { background: #0D1117; border-top: 1px solid var(--border); padding: 0.5rem 0.75rem; font-family: var(--mono); font-size: 11.5px; height: 60px; display: flex; flex-direction: column; justify-content: center; }
+
+  /* ─── MOCKUP WRAP ─── */
+  .mockup-wrap { margin-top: 0.75rem; }
+  .mockup-label { font-family: var(--mono); font-size: 9.5px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted); margin-bottom: 0.4rem; display: flex; align-items: center; gap: 0.4rem; }
+  .mockup-label::before { content: ''; display: inline-block; width: 6px; height: 6px; border-radius: 50%; background: var(--faint); }
+
+  /* ─── TIPS SECTION ─── */
+  .tips-section { background: var(--surface); border: 1px solid var(--border); border-radius: 8px; padding: 1.3rem 1.5rem; margin-top: 3rem; }
+  .tips-section h3 { font-size: 13.5px; font-weight: 600; margin-bottom: 1rem; }
+  .tips-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 0.9rem; }
+  .tip { font-size: 12.5px; color: var(--muted); line-height: 1.55; }
+  .tip strong { color: var(--text); display: block; margin-bottom: 0.15rem; }
+
+  /* ─── CHECK LIST ─── */
+  .check-list { list-style: none; display: flex; flex-direction: column; gap: 0.35rem; margin-top: 0.4rem; }
+  .check-list li { display: flex; align-items: flex-start; gap: 0.6rem; font-size: 12.5px; color: var(--muted); }
+  .check-list li::before { content: '✓'; color: var(--check); flex-shrink: 0; font-weight: 700; font-size: 11px; margin-top: 1px; }
+  .check-list li strong { color: var(--text); }
+
+  .divider { height: 1px; background: var(--border); margin: 2.5rem 0; }
+
+  a { color: var(--install); text-decoration: none; }
+  a:hover { text-decoration: underline; }
+
+  /* ─── CONTROLS / PDF ─── */
+  .controls-row { display: flex; justify-content: flex-end; align-items: center; gap: 0.6rem; margin-bottom: 1.5rem; }
+  .pdf-btn {
+    display: flex; align-items: center; gap: 0.5rem;
+    background: var(--bmad-dim); border: 1px solid var(--bmad-border);
+    color: var(--bmad); font-family: var(--mono); font-size: 10.5px;
+    letter-spacing: 0.06em; font-weight: 700; padding: 0.45rem 1rem;
+    border-radius: 5px; cursor: pointer; transition: all 0.15s;
+  }
+  .pdf-btn:hover { background: var(--bmad); color: #0B0F1A; border-color: var(--bmad); }
+  .pdf-btn svg { width: 13px; height: 13px; flex-shrink: 0; }
+
+  @media (max-width: 600px) {
+    .sc-head { flex-wrap: wrap; }
+    .sc-meta { flex-direction: row; align-items: center; margin-top: 0.5rem; }
+    .ov-grid { grid-template-columns: 1fr 1fr; }
+    .tips-grid { grid-template-columns: 1fr; }
+  }
+
+  @media print {
+    .controls-row { display: none !important; }
+    body { padding: 0.5rem 1rem; font-size: 12px; }
+    .page { max-width: 100%; }
+    * { -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
+    .step-card  { page-break-inside: avoid; break-inside: avoid; margin-bottom: 0.9rem; }
+    .restart-card { page-break-inside: avoid; break-inside: avoid; }
+    .phase-header { page-break-after: avoid; break-after: avoid; }
+    .sc-head  { page-break-after: avoid; break-after: avoid; }
+    .mockup-wrap { page-break-inside: avoid; break-inside: avoid; }
+    .terminal { page-break-inside: avoid; break-inside: avoid; }
+    .tips-section { page-break-inside: avoid; break-inside: avoid; }
+    a { text-decoration: none; }
+  }
+</style>
+</head>
+<body>
+<div class="page">
+
+  <!-- CONTROLS ROW -->
+  <div class="controls-row">
+    <button class="theme-btn" onclick="toggleTheme()">Toggle Light / Dark</button>
+    <button class="pdf-btn" onclick="downloadPDF()">
+      <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M8 1v9M5 7l3 3 3-3"/>
+        <path d="M2 11v2a1 1 0 001 1h10a1 1 0 001-1v-2"/>
+      </svg>
+      Download PDF
+    </button>
+  </div>
+
+  <!-- HEADER -->
+  <div class="header">
+    <div class="platform-page-badge">🪟 Windows — Command Prompt &amp; Git Bash</div>
+    <div class="eyebrow">BMAD Training · Framework Installation Playbook · v1.0 · November 2026 · 🪟 Windows</div>
+    <h1>BMAD Framework — <em>Windows</em> Installation Guide</h1>
+    <p class="header-sub">Step-by-step setup for Windows machines using Command Prompt and Git Bash. Follow every step in order. Each step includes a validation check so you know it worked before moving on.</p>
+    <p class="author-line">Authors: <strong>Puneet Gaur</strong> &nbsp;/&nbsp; <strong>Nagaraj Yanambakkam</strong> &nbsp;·&nbsp; Questions? See the contact card at the bottom of this page.</p>
+  </div>
+
+  <!-- OVERVIEW -->
+  <div class="overview">
+    <h2>What you will install</h2>
+    <div class="ov-grid">
+      <div class="ov-card">
+        <div class="ov-icon">💚</div>
+        <div class="ov-label">Node.js</div>
+        <div class="ov-desc">JavaScript runtime required for the BMAD CLI. Minimum: <strong>v20 LTS</strong> (v22 recommended).</div>
+      </div>
+      <div class="ov-card">
+        <div class="ov-icon">🐍</div>
+        <div class="ov-label">Python</div>
+        <div class="ov-desc">Required by BMAD internal scripts that read configuration. Minimum: <strong>Python 3.11</strong>.</div>
+      </div>
+      <div class="ov-card">
+        <div class="ov-icon">⚡</div>
+        <div class="ov-label">UV</div>
+        <div class="ov-desc">Fast Python package manager used by BMAD to run scripts. Any current version.</div>
+      </div>
+      <div class="ov-card">
+        <div class="ov-icon">🎭</div>
+        <div class="ov-label">Playwright</div>
+        <div class="ov-desc">Python browser automation framework for end-to-end testing. Installed via UV.</div>
+      </div>
+      <div class="ov-card">
+        <div class="ov-icon">🔧</div>
+        <div class="ov-label">Git + Git Bash</div>
+        <div class="ov-desc">Version control system. Git Bash is the shell BMAD uses on Windows. Any Git 2.x.</div>
+      </div>
+      <div class="ov-card">
+        <div class="ov-icon">⚡</div>
+        <div class="ov-label">BMAD Framework</div>
+        <div class="ov-desc">The AI-powered development methodology tool. Installed last, after all dependencies.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- PROGRESS BAR -->
+  <div class="progress-bar">
+    <div class="pb-label">Installation Order &amp; Estimated Time</div>
+    <div class="pb-track">
+      <div class="pb-seg pb-nodejs">Node.js</div>
+      <div class="pb-seg pb-python">Python</div>
+      <div class="pb-seg pb-uv">UV</div>
+      <div class="pb-seg pb-playwright">Playwright</div>
+      <div class="pb-seg pb-git">Git+Bash</div>
+      <div class="pb-seg pb-bmad">BMAD</div>
+    </div>
+    <div class="pb-legend">
+      <div class="pb-li"><div class="pb-dot" style="background:var(--check)"></div>Node.js (5–10 min)</div>
+      <div class="pb-li"><div class="pb-dot" style="background:var(--warn)"></div>Python (5–10 min)</div>
+      <div class="pb-li"><div class="pb-dot" style="background:var(--install)"></div>UV (3–5 min)</div>
+      <div class="pb-li"><div class="pb-dot" style="background:#10B981"></div>Playwright (5–10 min)</div>
+      <div class="pb-li"><div class="pb-dot" style="background:#60A5FA"></div>Git + Git Bash (5–10 min)</div>
+      <div class="pb-li"><div class="pb-dot" style="background:var(--bmad)"></div>BMAD Framework (5–10 min)</div>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════════════ -->
+  <!-- PHASE 1: NODE.JS -->
+  <!-- ═══════════════════════════════════════════════ -->
+  <div class="phase-header">
+    <span class="phase-badge pb-check">Phase 1</span>
+    <h2>Validate &amp; Install Node.js</h2>
+    <span class="phase-time">Steps 1 – 3</span>
+  </div>
+
+  <!-- STEP 1 -->
+  <div class="step-card">
+    <div class="sc-head">
+      <div class="sc-num n-check">1</div>
+      <div class="sc-info">
+        <div class="sc-title">Check if Node.js is Already Installed</div>
+        <div class="sc-why">Before installing, check if Node.js is already on your machine. You need version 20 or higher.</div>
+      </div>
+      <div class="sc-meta">
+        <div class="sc-time">2 min</div>
+        <div class="sc-tag tag-check">Check</div>
+      </div>
+    </div>
+    <div class="sc-body">
+      <div class="step-row">
+        <div class="row-label">Open Command Prompt</div>
+        <div class="step-list">
+          <li><div class="bullet">1</div><span>Press <strong>Windows key + R</strong> on your keyboard.</span></li>
+          <li><div class="bullet">2</div><span>Type <code>cmd</code> and press <strong>Enter</strong>. A black Command Prompt window opens.</span></li>
+          <li><div class="bullet">3</div><span>In the Command Prompt window, type the command below and press <strong>Enter</strong>:</span></li>
+        </div>
+        <div class="cmd-block" style="margin-top:0.5rem">
+          <span class="cmd-text"><span class="cmd-prompt">C:\&gt;</span> node -v</span>
+          <button class="cmd-copy" onclick="copyCmd(this,'node -v')">Copy</button>
+        </div>
+
+        <div class="mockup-wrap">
+          <div class="mockup-label">Command Prompt — two possible outcomes</div>
+          <div class="terminal">
+            <div class="terminal-bar">
+              <div class="mac-btn mac-close"></div><div class="mac-btn mac-min"></div><div class="mac-btn mac-max"></div>
+              <span style="font-family:var(--mono);font-size:10px;color:var(--muted);margin-left:0.75rem">Command Prompt</span>
+            </div>
+            <div class="terminal-body">
+              <span class="t-line"><span class="t-prompt">C:\Users\you&gt;</span> <span class="t-cmd">node -v</span></span>
+              <span class="t-line t-success">v22.18.0 &nbsp;&nbsp;&nbsp;← Node.js IS installed (v20+). Skip to Phase 2!</span>
+              <span class="t-line" style="color:var(--faint);font-size:10px;margin-top:0.5rem">—— OR ——</span>
+              <span class="t-line t-error">'node' is not recognized as an internal or external command &nbsp;← Not installed. Continue below.</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="callout callout-info" style="margin-top:0.75rem">
+          <h4>Version too old?</h4>
+          <p>If <code>node -v</code> shows a version lower than v20 (e.g. <code>v16.x.x</code> or <code>v18.x.x</code>) — treat it as not installed and follow Steps 2 and 3 below to upgrade.</p>
+        </div>
+
+        <div class="success-box">
+          <h5>Already on v20+? Skip ahead!</h5>
+          <p>If the terminal shows <strong>v20.x.x</strong> or higher — Node.js is ready. <strong>Skip to Phase 2.</strong></p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- STEP 2 -->
+  <div class="step-card">
+    <div class="sc-head">
+      <div class="sc-num n-check">2</div>
+      <div class="sc-info">
+        <div class="sc-title">Download &amp; Install Node.js</div>
+        <div class="sc-why">Only follow this step if node -v returned an error or a version older than v20.</div>
+      </div>
+      <div class="sc-meta">
+        <div class="sc-time">5–8 min</div>
+        <div class="sc-tag tag-check">Install</div>
+      </div>
+    </div>
+    <div class="sc-body">
+      <div class="step-row">
+        <div class="row-label">Download Node.js installer</div>
+        <div class="step-list">
+          <li><div class="bullet">1</div><span>Open your web browser (Edge, Chrome, or Firefox) and go to this address:</span></li>
+        </div>
+        <div class="cmd-block" style="margin-top:0.5rem">
+          <span class="cmd-text">https://nodejs.org/en/download</span>
+          <button class="cmd-copy" onclick="copyCmd(this,'https://nodejs.org/en/download')">Copy</button>
+        </div>
+        <div class="step-list" style="margin-top:0.6rem">
+          <li><div class="bullet">2</div><span>On the page, find the <strong>LTS</strong> (Long Term Support) version — this is the stable, recommended version.</span></li>
+          <li><div class="bullet">3</div><span>Click the <strong>Windows Installer (.msi)</strong> button for the LTS version (currently v22.x).</span></li>
+          <li><div class="bullet">4</div><span>Your browser downloads a file named something like <code>node-v22.x.x-x64.msi</code>. Find it in your <strong>Downloads</strong> folder.</span></li>
+          <li><div class="bullet">5</div><span><strong>Double-click</strong> the downloaded <code>.msi</code> file to start the installer.</span></li>
+        </div>
+      </div>
+
+      <div class="step-row">
+        <div class="row-label">Run the installer</div>
+        <div class="step-list">
+          <li><div class="bullet">6</div><span>The Node.js Setup wizard opens. Click <strong>Next</strong> on the first screen.</span></li>
+          <li><div class="bullet">7</div><span>On the License Agreement screen — click <strong>I accept the terms</strong>, then <strong>Next</strong>.</span></li>
+          <li><div class="bullet">8</div><span>On each following screen — click <strong>Next</strong>. The default options are all correct. Do not change anything.</span></li>
+          <li><div class="bullet">9</div><span>Click <strong>Install</strong> on the final screen. Windows may ask for permission — click <strong>Yes</strong>.</span></li>
+          <li><div class="bullet">10</div><span>Wait for the installation to complete, then click <strong>Finish</strong>.</span></li>
+        </div>
+
+        <div class="mockup-wrap" style="margin-top:0.75rem">
+          <div class="mockup-label">Node.js installer wizard</div>
+          <div class="win-window">
+            <div class="win-titlebar">
+              <span class="win-title-text">Node.js Setup</span>
+              <div class="win-controls"><span class="win-ctrl">─</span><span class="win-ctrl">□</span><span class="win-ctrl">✕</span></div>
+            </div>
+            <div class="win-body">
+              <div style="font-size:14px;font-weight:700;color:var(--text);margin-bottom:0.4rem;">💚 Node.js v22.x.x Setup</div>
+              <div style="font-size:11.5px;color:var(--muted);margin-bottom:0.75rem;">Destination Folder:</div>
+              <div style="background:var(--surface2);border:1px solid var(--border);padding:0.4rem 0.7rem;font-family:var(--mono);font-size:11px;color:var(--muted);border-radius:4px;margin-bottom:0.75rem">C:\Program Files\nodejs\</div>
+              <div style="font-size:11px;color:var(--muted);margin-bottom:0.75rem">This folder requires 95 MB on your hard drive.</div>
+              <div style="display:flex;justify-content:flex-end;gap:0.5rem">
+                <div style="background:var(--surface2);border:1px solid var(--border);padding:0.3rem 0.9rem;border-radius:4px;font-size:11.5px;cursor:default;color:var(--muted)">Back</div>
+                <div style="background:var(--check-dim);border:1px solid var(--check-border);padding:0.3rem 0.9rem;border-radius:4px;font-size:11.5px;color:var(--check);cursor:default">Next ›</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- STEP 3 -->
+  <div class="restart-card">
+    <div class="restart-icon">🔄</div>
+    <div>
+      <h3>Step 3 — Close &amp; Reopen Command Prompt</h3>
+      <p>After installing Node.js, <strong>close Command Prompt completely</strong> and open a new one. Windows only adds new programs to PATH when a new window is opened.</p>
+    </div>
+  </div>
+
+  <div class="step-card">
+    <div class="sc-head">
+      <div class="sc-num n-check">3</div>
+      <div class="sc-info">
+        <div class="sc-title">Verify Node.js is Working</div>
+        <div class="sc-why">Confirm Node.js installed correctly and is on your system PATH.</div>
+      </div>
+      <div class="sc-meta">
+        <div class="sc-time">2 min</div>
+        <div class="sc-tag tag-check">Verify</div>
+      </div>
+    </div>
+    <div class="sc-body">
+      <div class="step-row">
+        <div class="row-label">Open a new Command Prompt and run all three verification commands</div>
+        <div class="callout callout-info" style="margin-bottom:0.75rem">
+          <h4>Why a new window?</h4>
+          <p>Windows only registers new PATH entries when a <strong>new</strong> Command Prompt is opened. Commands typed in the same window you used for installation will not find the new tools. Always open a fresh window after installing.</p>
+        </div>
+        <div class="step-list">
+          <li><div class="bullet">1</div><span>Press <strong>Win + R</strong>, type <code>cmd</code>, press <strong>Enter</strong> to open a fresh Command Prompt.</span></li>
+          <li><div class="bullet">2</div><span>Run all three commands below — <strong>node</strong> (the runtime), <strong>npm</strong> (package manager), and <strong>npx</strong> (package runner). All three must respond with a version number:</span></li>
+        </div>
+        <div class="cmd-block" style="margin-top:0.5rem">
+          <span class="cmd-text"><span class="cmd-prompt">C:\&gt;</span> node -v</span>
+          <button class="cmd-copy" onclick="copyCmd(this,'node -v')">Copy</button>
+        </div>
+        <div class="cmd-block">
+          <span class="cmd-text"><span class="cmd-prompt">C:\&gt;</span> npm -v</span>
+          <button class="cmd-copy" onclick="copyCmd(this,'npm -v')">Copy</button>
+        </div>
+        <div class="cmd-block">
+          <span class="cmd-text"><span class="cmd-prompt">C:\&gt;</span> npx --version</span>
+          <button class="cmd-copy" onclick="copyCmd(this,'npx --version')">Copy</button>
+        </div>
+
+        <div class="mockup-wrap">
+          <div class="mockup-label">Expected output — all three commands succeed</div>
+          <div class="terminal">
+            <div class="terminal-bar">
+              <div class="mac-btn mac-close"></div><div class="mac-btn mac-min"></div><div class="mac-btn mac-max"></div>
+              <span style="font-family:var(--mono);font-size:10px;color:var(--muted);margin-left:0.75rem">Command Prompt — new window</span>
+            </div>
+            <div class="terminal-body">
+              <span class="t-line"><span class="t-prompt">C:\Users\you&gt;</span> <span class="t-cmd">node -v</span></span>
+              <span class="t-line t-success">v22.18.0</span>
+              <span class="t-line"><span class="t-prompt">C:\Users\you&gt;</span> <span class="t-cmd">npm -v</span></span>
+              <span class="t-line t-success">10.9.2</span>
+              <span class="t-line"><span class="t-prompt">C:\Users\you&gt;</span> <span class="t-cmd">npx --version</span></span>
+              <span class="t-line t-success">10.9.2</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="error-box">
+          <h5>Any command not recognized? Fix the PATH manually</h5>
+          <p>If <code>node</code>, <code>npm</code>, or <code>npx</code> is not recognized after opening a new window — add Node.js to your system PATH:</p>
+          <ul>
+            <li>Right-click <strong>Start</strong> → <strong>System</strong> → <strong>Advanced system settings</strong> → <strong>Environment Variables</strong></li>
+            <li>Under <strong>System variables</strong>, find <strong>Path</strong> and click <strong>Edit</strong></li>
+            <li>Click <strong>New</strong> and add: <code>C:\Program Files\nodejs</code></li>
+            <li>Click <strong>OK</strong> on all dialogs, then open a <strong>new</strong> Command Prompt and run the three commands again</li>
+          </ul>
+        </div>
+
+        <div class="success-box">
+          <h5>Success — Node.js, npm, and npx are ready ✓</h5>
+          <p><code>node -v</code> shows <strong>v20.x.x or higher</strong>, <code>npm -v</code> shows a version, and <code>npx --version</code> shows a version. All three are on your PATH. Move to Phase 2.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════════════ -->
+  <!-- PHASE 2: PYTHON -->
+  <!-- ═══════════════════════════════════════════════ -->
+  <div class="phase-header">
+    <span class="phase-badge pb-warn2">Phase 2</span>
+    <h2>Validate &amp; Install Python</h2>
+    <span class="phase-time">Steps 4 – 6</span>
+  </div>
+
+  <!-- STEP 4 -->
+  <div class="step-card">
+    <div class="sc-head">
+      <div class="sc-num n-warn">4</div>
+      <div class="sc-info">
+        <div class="sc-title">Check if Python 3.11+ is Already Installed</div>
+        <div class="sc-why">BMAD scripts require Python 3.11 or newer. Older Python versions will cause errors.</div>
+      </div>
+      <div class="sc-meta">
+        <div class="sc-time">2 min</div>
+        <div class="sc-tag tag-warn">Check</div>
+      </div>
+    </div>
+    <div class="sc-body">
+      <div class="step-row">
+        <div class="row-label">Run the check command</div>
+        <div class="step-list">
+          <li><div class="bullet">1</div><span>In Command Prompt, run:</span></li>
+        </div>
+        <div class="cmd-block" style="margin-top:0.5rem">
+          <span class="cmd-text"><span class="cmd-prompt">C:\&gt;</span> python --version</span>
+          <button class="cmd-copy" onclick="copyCmd(this,'python --version')">Copy</button>
+        </div>
+
+        <div class="mockup-wrap">
+          <div class="mockup-label">Three possible outcomes</div>
+          <div class="terminal">
+            <div class="terminal-bar">
+              <div class="mac-btn mac-close"></div><div class="mac-btn mac-min"></div><div class="mac-btn mac-max"></div>
+            </div>
+            <div class="terminal-body">
+              <span class="t-line"><span class="t-prompt">C:\Users\you&gt;</span> <span class="t-cmd">python --version</span></span>
+              <span class="t-line t-success">Python 3.11.9 &nbsp;&nbsp;← 3.11+ installed. Skip to Phase 3!</span>
+              <span class="t-line" style="color:var(--faint);font-size:10px;margin-top:0.4rem">—— OR ——</span>
+              <span class="t-line t-error">Python 3.9.7 &nbsp;&nbsp;&nbsp;← Too old. Install Python 3.11 below.</span>
+              <span class="t-line" style="color:var(--faint);font-size:10px;margin-top:0.4rem">—— OR ——</span>
+              <span class="t-line t-error">Python was not found &nbsp;← Not installed. Follow Steps 5 and 6.</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="callout callout-warn" style="margin-top:0.75rem">
+          <h4>Why Python 3.11 specifically?</h4>
+          <p>BMAD uses a Python built-in module called <code>tomllib</code> to read configuration files. This module was added to Python in version 3.11. Older versions (3.9, 3.10, etc.) will cause BMAD scripts to fail with an import error.</p>
+        </div>
+
+        <div class="success-box">
+          <h5>Already on 3.11+? Skip ahead!</h5>
+          <p>If the output shows <strong>Python 3.11.x</strong> or higher — Python is ready. <strong>Skip to Phase 3.</strong></p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- STEP 5 -->
+  <div class="step-card">
+    <div class="sc-head">
+      <div class="sc-num n-warn">5</div>
+      <div class="sc-info">
+        <div class="sc-title">Install Python 3.11 — Choose Your Method</div>
+        <div class="sc-why">Only follow this step if python --version showed an error or a version older than 3.11. Two methods available — Microsoft Store is the easiest.</div>
+      </div>
+      <div class="sc-meta">
+        <div class="sc-time">3–8 min</div>
+        <div class="sc-tag tag-warn">Install</div>
+      </div>
+    </div>
+    <div class="sc-body">
+
+      <!-- ── METHOD A: Microsoft Store ── -->
+      <div class="step-row">
+        <div class="method-banner method-a">
+          <div class="method-badge">Method A — Recommended</div>
+          <div class="method-title">Install from Microsoft Store</div>
+          <div class="method-desc">Easiest option for most users. Windows automatically configures PATH — no checkbox to worry about.</div>
+        </div>
+
+        <div class="step-list" style="margin-top:0.75rem">
+          <li><div class="bullet">1</div><span>Press the <strong>Windows key</strong> on your keyboard (or click Start). Type <strong>Microsoft Store</strong> and press <strong>Enter</strong>.</span></li>
+          <li><div class="bullet">2</div><span>In the <strong>search bar at the top</strong> of the Store, type <strong>Python</strong> and press Enter.</span></li>
+          <li><div class="bullet">3</div><span>Find <strong>Python 3.11</strong> published by <strong>Python Software Foundation</strong>. Click on it. <em style="color:var(--muted)">(Python 3.12 or 3.13 also work with BMAD — any 3.11+ version is fine.)</em></span></li>
+          <li><div class="bullet">4</div><span>Click the blue <strong>Get</strong> button. The app is free — no Microsoft account is required for free apps.</span></li>
+          <li><div class="bullet">5</div><span>Wait for the progress bar to complete. The download is ~30–60 MB and takes 1–3 minutes.</span></li>
+          <li><div class="bullet">6</div><span>When the button changes to <strong>Open</strong>, installation is done. Close the Store and proceed to Step 6.</span></li>
+        </div>
+
+        <div class="mockup-wrap">
+          <div class="mockup-label">Microsoft Store — search "Python" then click Python 3.11</div>
+          <div class="win-window">
+            <div class="win-titlebar">
+              <span class="win-title-text">⊞ Microsoft Store</span>
+              <div class="win-controls"><span class="win-ctrl">─</span><span class="win-ctrl">□</span><span class="win-ctrl">✕</span></div>
+            </div>
+            <div class="win-body">
+              <div style="display:flex;align-items:center;gap:.5rem;background:var(--surface2);border:1px solid var(--border);border-radius:20px;padding:.4rem .9rem;margin-bottom:.9rem">
+                <span style="color:var(--muted);font-size:13px">🔍</span>
+                <span style="font-family:var(--mono);font-size:12px;color:var(--text)">Python</span>
+              </div>
+              <div style="font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.08em;font-family:var(--mono);margin-bottom:.55rem">Search results · Apps</div>
+
+              <div style="display:flex;align-items:center;gap:.75rem;background:var(--install-dim);border:2px solid var(--install-border);border-radius:8px;padding:.75rem .9rem;margin-bottom:.25rem">
+                <div style="width:44px;height:44px;background:var(--surface2);border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:22px;flex-shrink:0">🐍</div>
+                <div style="flex:1;min-width:0">
+                  <div style="font-size:13.5px;font-weight:700;color:var(--install)">Python 3.11</div>
+                  <div style="font-size:11px;color:var(--muted);margin-top:.1rem">Python Software Foundation</div>
+                  <div style="font-size:10.5px;color:var(--muted)">Free · Trusted publisher ✓</div>
+                </div>
+                <div style="background:var(--install);color:#0B0F1A;font-size:12px;font-weight:700;padding:.4rem 1rem;border-radius:5px;flex-shrink:0">Get</div>
+              </div>
+              <div style="font-size:10px;color:var(--install);font-family:var(--mono);margin-bottom:.6rem;padding-left:.25rem">↑ Click this one — Python 3.11 by Python Software Foundation</div>
+
+              <div style="display:flex;align-items:center;gap:.75rem;background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:.65rem .9rem;margin-bottom:.4rem;opacity:.5">
+                <div style="width:44px;height:44px;background:var(--surface);border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:22px;flex-shrink:0">🐍</div>
+                <div style="flex:1;min-width:0">
+                  <div style="font-size:13px;font-weight:600;color:var(--muted)">Python 3.12</div>
+                  <div style="font-size:11px;color:var(--muted)">Python Software Foundation · Free</div>
+                </div>
+                <div style="background:var(--surface);color:var(--muted);font-size:12px;border:1px solid var(--border);padding:.4rem 1rem;border-radius:5px;flex-shrink:0">Get</div>
+              </div>
+              <div style="display:flex;align-items:center;gap:.75rem;background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:.65rem .9rem;opacity:.35">
+                <div style="width:44px;height:44px;background:var(--surface);border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:22px;flex-shrink:0">🐍</div>
+                <div style="flex:1;min-width:0">
+                  <div style="font-size:13px;font-weight:600;color:var(--muted)">Python 3.13</div>
+                  <div style="font-size:11px;color:var(--muted)">Python Software Foundation · Free</div>
+                </div>
+                <div style="background:var(--surface);color:var(--muted);font-size:12px;border:1px solid var(--border);padding:.4rem 1rem;border-radius:5px;flex-shrink:0">Get</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="callout callout-check" style="margin-top:0.75rem">
+          <h4>✅ No PATH setup needed</h4>
+          <p>The Microsoft Store version automatically registers Python with Windows. You do <strong>not</strong> need to check any "Add Python to PATH" box — it just works.</p>
+        </div>
+
+        <div class="callout callout-warn">
+          <h4>Microsoft Store blocked by your IT policy?</h4>
+          <p>Some corporate or school machines disable the Microsoft Store. If you see "Microsoft Store is blocked" or can't install apps, use <strong>Method B</strong> below instead.</p>
+        </div>
+      </div>
+
+      <!-- ── Divider ── -->
+      <div class="step-row">
+        <div class="method-divider">—— or use method b if microsoft store is unavailable ——</div>
+      </div>
+
+      <!-- ── METHOD B: python.org ── -->
+      <div class="step-row">
+        <div class="method-banner method-b">
+          <div class="method-badge">Method B — Alternative</div>
+          <div class="method-title">Install from python.org</div>
+          <div class="method-desc">Use this if Microsoft Store is blocked by your organisation's IT policy, or if you prefer a traditional system-wide installer.</div>
+        </div>
+
+        <div class="row-label" style="margin-top:0.75rem">Download the Python installer</div>
+        <div class="step-list">
+          <li><div class="bullet">1</div><span>Open your browser and go to:</span></li>
+        </div>
+        <div class="cmd-block" style="margin-top:0.5rem">
+          <span class="cmd-text">https://www.python.org/downloads/windows/</span>
+          <button class="cmd-copy" onclick="copyCmd(this,'https://www.python.org/downloads/windows/')">Copy</button>
+        </div>
+        <div class="step-list" style="margin-top:0.6rem">
+          <li><div class="bullet">2</div><span>Find <strong>Python 3.11.x</strong> in the list of releases and click on that version.</span></li>
+          <li><div class="bullet">3</div><span>Scroll to the "Files" section and click <strong>Windows installer (64-bit)</strong> to download.</span></li>
+          <li><div class="bullet">4</div><span>Find the downloaded <code>.exe</code> in your <strong>Downloads</strong> folder and <strong>double-click</strong> it.</span></li>
+        </div>
+
+        <div class="callout callout-warn" style="margin-top:0.75rem;margin-bottom:0.75rem">
+          <h4>⚠️ You MUST check "Add Python to PATH" before clicking Install Now</h4>
+          <p>On the very first screen of the installer there is a checkbox at the bottom: <strong>"Add Python to PATH"</strong>. This box is <strong>unchecked by default</strong> and easy to miss. If you skip it, Python won't be found from Command Prompt and you'll need to fix it manually.</p>
+        </div>
+
+        <div class="mockup-wrap">
+          <div class="mockup-label">Python installer first screen — check the box at the bottom</div>
+          <div class="win-window">
+            <div class="win-titlebar">
+              <span class="win-title-text">Python 3.11.x (64-bit) Setup</span>
+              <div class="win-controls"><span class="win-ctrl">─</span><span class="win-ctrl">□</span><span class="win-ctrl">✕</span></div>
+            </div>
+            <div class="win-body">
+              <div style="font-size:14px;font-weight:700;color:var(--text);margin-bottom:0.75rem;">🐍 Install Python 3.11.x (64-bit)</div>
+              <div style="display:flex;gap:0.75rem;margin-bottom:1rem">
+                <div style="background:var(--install-dim);border:1px solid var(--install-border);border-radius:4px;padding:0.5rem 0.8rem;font-size:11.5px;color:var(--install);flex:1;text-align:center;">Install Now<br><span style="font-size:10px;opacity:0.7">C:\Users\you\AppData\...</span></div>
+                <div style="background:var(--surface2);border:1px solid var(--border);border-radius:4px;padding:0.5rem 0.8rem;font-size:11.5px;color:var(--muted);flex:1;text-align:center;">Customize installation</div>
+              </div>
+              <div style="border-top:1px solid var(--border);padding-top:0.6rem;display:flex;flex-direction:column;gap:0.4rem">
+                <div style="display:flex;align-items:center;gap:0.5rem;font-size:12px;color:var(--muted)">
+                  <span style="color:var(--muted)">☐</span> Use admin privileges when installing py.exe
+                </div>
+                <div style="display:flex;align-items:center;gap:0.5rem;font-size:12px;background:var(--warn-dim);border:2px solid var(--warn-border);border-radius:4px;padding:0.4rem 0.6rem;">
+                  <span style="color:var(--warn);font-weight:700;font-size:14px;">☑</span>
+                  <span style="color:var(--warn);font-weight:700;">Add Python 3.11 to PATH</span>
+                  <span style="color:var(--warn);font-family:var(--mono);font-size:9px;margin-left:auto">← CHECK THIS!</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="step-list" style="margin-top:0.75rem">
+          <li><div class="bullet">5</div><span>After checking the <strong>Add Python to PATH</strong> box, click <strong>Install Now</strong>.</span></li>
+          <li><div class="bullet">6</div><span>Windows may ask for permission — click <strong>Yes</strong>.</span></li>
+          <li><div class="bullet">7</div><span>Wait for the installation to finish (1–3 minutes).</span></li>
+          <li><div class="bullet">8</div><span>Click <strong>Close</strong> when the installer says "Setup was successful".</span></li>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- STEP 6 -->
+  <div class="step-card">
+    <div class="sc-head">
+      <div class="sc-num n-warn">6</div>
+      <div class="sc-info">
+        <div class="sc-title">Verify Python &amp; PATH</div>
+        <div class="sc-why">Confirm Python 3.11 is installed and accessible from the Command Prompt.</div>
+      </div>
+      <div class="sc-meta">
+        <div class="sc-time">2 min</div>
+        <div class="sc-tag tag-warn">Verify</div>
+      </div>
+    </div>
+    <div class="sc-body">
+      <div class="step-row">
+        <div class="row-label">Open new Command Prompt and verify Python and pip</div>
+        <div class="step-list">
+          <li><div class="bullet">1</div><span>Close Command Prompt and open a new one: <strong>Win + R → cmd → Enter</strong>.</span></li>
+          <li><div class="bullet">2</div><span>Run both commands below — <strong>python</strong> (the interpreter) and <strong>pip</strong> (the package installer). Both must show version numbers:</span></li>
+        </div>
+        <div class="cmd-block" style="margin-top:0.5rem">
+          <span class="cmd-text"><span class="cmd-prompt">C:\&gt;</span> python --version</span>
+          <button class="cmd-copy" onclick="copyCmd(this,'python --version')">Copy</button>
+        </div>
+        <div class="cmd-block">
+          <span class="cmd-text"><span class="cmd-prompt">C:\&gt;</span> pip --version</span>
+          <button class="cmd-copy" onclick="copyCmd(this,'pip --version')">Copy</button>
+        </div>
+
+        <div class="mockup-wrap">
+          <div class="mockup-label">Expected output — both commands succeed</div>
+          <div class="terminal">
+            <div class="terminal-bar">
+              <div class="mac-btn mac-close"></div><div class="mac-btn mac-min"></div><div class="mac-btn mac-max"></div>
+            </div>
+            <div class="terminal-body">
+              <span class="t-line"><span class="t-prompt">C:\Users\you&gt;</span> <span class="t-cmd">python --version</span></span>
+              <span class="t-line t-success">Python 3.11.9</span>
+              <span class="t-line"><span class="t-prompt">C:\Users\you&gt;</span> <span class="t-cmd">pip --version</span></span>
+              <span class="t-line t-success">pip 24.x.x from C:\...\Python311\lib\site-packages\pip (python 3.11)</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="error-box">
+          <h5>Any command not found? (Method B / python.org installs only)</h5>
+          <p>If you used <strong>Method B</strong> (python.org) and forgot the "Add Python to PATH" checkbox, fix it manually — add both paths to your Environment Variables. <em>If you used Method A (Microsoft Store), this should not happen; try opening a new Command Prompt first.</em></p>
+          <ul>
+            <li>Press <strong>Win + R</strong>, type <code>sysdm.cpl</code>, press Enter → <strong>Advanced</strong> tab → <strong>Environment Variables</strong></li>
+            <li>Under <strong>User variables</strong>, find <strong>Path</strong> and click <strong>Edit</strong></li>
+            <li>Click <strong>New</strong> and add: <code>%LocalAppData%\Programs\Python\Python311\</code></li>
+            <li>Click <strong>New</strong> again and add: <code>%LocalAppData%\Programs\Python\Python311\Scripts\</code></li>
+            <li>Click <strong>OK</strong> on all dialogs, open a <strong>new</strong> Command Prompt, and try again</li>
+          </ul>
+          <p style="margin-top:0.5rem">The <code>Scripts\</code> path is where <code>pip</code> lives — both paths are required.</p>
+        </div>
+
+        <div class="success-box">
+          <h5>Success — Python and pip are ready ✓</h5>
+          <p><code>python --version</code> shows <strong>Python 3.11.x</strong> or higher, and <code>pip --version</code> shows a version number. Both are on your PATH. Move to Phase 3.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════════════ -->
+  <!-- PHASE 3: UV -->
+  <!-- ═══════════════════════════════════════════════ -->
+  <div class="phase-header">
+    <span class="phase-badge pb-install">Phase 3</span>
+    <h2>Validate &amp; Install UV</h2>
+    <span class="phase-time">Steps 7 – 9</span>
+  </div>
+
+  <!-- STEP 7 -->
+  <div class="step-card">
+    <div class="sc-head">
+      <div class="sc-num n-install">7</div>
+      <div class="sc-info">
+        <div class="sc-title">Check if UV is Already Installed</div>
+        <div class="sc-why">UV is a fast Python package manager. BMAD uses it to run its internal scripts.</div>
+      </div>
+      <div class="sc-meta">
+        <div class="sc-time">1 min</div>
+        <div class="sc-tag tag-install">Check</div>
+      </div>
+    </div>
+    <div class="sc-body">
+      <div class="step-row">
+        <div class="row-label">Run the check command</div>
+        <div class="cmd-block">
+          <span class="cmd-text"><span class="cmd-prompt">C:\&gt;</span> uv --version</span>
+          <button class="cmd-copy" onclick="copyCmd(this,'uv --version')">Copy</button>
+        </div>
+
+        <div class="mockup-wrap">
+          <div class="mockup-label">Two possible outcomes</div>
+          <div class="terminal">
+            <div class="terminal-bar">
+              <div class="mac-btn mac-close"></div><div class="mac-btn mac-min"></div><div class="mac-btn mac-max"></div>
+            </div>
+            <div class="terminal-body">
+              <span class="t-line"><span class="t-prompt">C:\Users\you&gt;</span> <span class="t-cmd">uv --version</span></span>
+              <span class="t-line t-success">uv 0.7.x &nbsp;&nbsp;← UV is installed. Skip to Phase 4!</span>
+              <span class="t-line" style="color:var(--faint);font-size:10px;margin-top:0.4rem">—— OR ——</span>
+              <span class="t-line t-error">'uv' is not recognized &nbsp;← Not installed. Follow Steps 8 and 9.</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="callout callout-info">
+          <h4>What is UV?</h4>
+          <p>UV is a fast Python package manager used by BMAD to run its internal scripts. Any current version works. If <code>uv --version</code> shows any version number, you're done with this phase — skip to Phase 4.</p>
+        </div>
+
+        <div class="success-box">
+          <h5>UV found? Move on to Phase 4!</h5>
+          <p>Any version number means UV is installed. <strong>Move on to Phase 4 — Playwright.</strong></p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- STEP 8 -->
+  <div class="step-card">
+    <div class="sc-head">
+      <div class="sc-num n-install">8</div>
+      <div class="sc-info">
+        <div class="sc-title">Install UV</div>
+        <div class="sc-why">Only follow this step if uv --version returned an error. Two methods are shown — try Option A first.</div>
+      </div>
+      <div class="sc-meta">
+        <div class="sc-time">3–5 min</div>
+        <div class="sc-tag tag-install">Install</div>
+      </div>
+    </div>
+    <div class="sc-body">
+      <div class="step-row">
+        <div class="row-label">Option A — Via PowerShell (recommended)</div>
+        <div class="callout callout-warn" style="margin-bottom:0.65rem">
+          <h4>Use PowerShell for Option A — not Command Prompt</h4>
+          <p>Click <strong>Start</strong>, search for <strong>PowerShell</strong>, and open <strong>Windows PowerShell</strong>. Then paste the command below.</p>
+        </div>
+        <div class="cmd-block">
+          <span class="cmd-text" style="font-size:11.5px">powershell -c "irm https://astral.sh/uv/install.ps1 | iex"</span>
+          <button class="cmd-copy" onclick="copyCmd(this,'powershell -c &quot;irm https://astral.sh/uv/install.ps1 | iex&quot;')">Copy</button>
+        </div>
+
+        <div class="mockup-wrap">
+          <div class="mockup-label">PowerShell — UV installation output</div>
+          <div class="terminal">
+            <div class="terminal-bar">
+              <div class="mac-btn mac-close"></div><div class="mac-btn mac-min"></div><div class="mac-btn mac-max"></div>
+              <span style="font-family:var(--mono);font-size:10px;color:var(--muted);margin-left:0.75rem">Windows PowerShell</span>
+            </div>
+            <div class="terminal-body">
+              <span class="t-line"><span class="t-prompt">PS C:\Users\you&gt;</span> <span class="t-cmd">powershell -c "irm https://astral.sh/uv/install.ps1 | iex"</span></span>
+              <span class="t-line t-info">Downloading uv installer...</span>
+              <span class="t-line t-info">Installing uv to C:\Users\you\.local\bin\uv.exe</span>
+              <span class="t-line t-success">uv (0.7.x) installed successfully</span>
+              <span class="t-line t-info">Run 'uv --version' in a new terminal to confirm.</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="step-row">
+        <div class="row-label">Option B — Via pip (Command Prompt, if Option A fails)</div>
+        <div class="step-list">
+          <li><div class="bullet">1</div><span>Open Command Prompt (Win + R → cmd → Enter).</span></li>
+          <li><div class="bullet">2</div><span>Run:</span></li>
+        </div>
+        <div class="cmd-block" style="margin-top:0.5rem">
+          <span class="cmd-text"><span class="cmd-prompt">C:\&gt;</span> pip install uv</span>
+          <button class="cmd-copy" onclick="copyCmd(this,'pip install uv')">Copy</button>
+        </div>
+
+        <div class="mockup-wrap">
+          <div class="mockup-label">Command Prompt — pip install output</div>
+          <div class="terminal">
+            <div class="terminal-bar">
+              <div class="mac-btn mac-close"></div><div class="mac-btn mac-min"></div><div class="mac-btn mac-max"></div>
+            </div>
+            <div class="terminal-body">
+              <span class="t-line"><span class="t-prompt">C:\Users\you&gt;</span> <span class="t-cmd">pip install uv</span></span>
+              <span class="t-line t-info">Collecting uv</span>
+              <span class="t-line t-info">  Downloading uv-0.7.x-cp311-...-win_amd64.whl</span>
+              <span class="t-line t-success">Successfully installed uv-0.7.x</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- STEP 9 -->
+  <div class="step-card">
+    <div class="sc-head">
+      <div class="sc-num n-install">9</div>
+      <div class="sc-info">
+        <div class="sc-title">Open New Terminal &amp; Verify UV</div>
+        <div class="sc-why">UV's PATH is added to new terminal sessions. You must open a fresh window to test it.</div>
+      </div>
+      <div class="sc-meta">
+        <div class="sc-time">1 min</div>
+        <div class="sc-tag tag-install">Verify</div>
+      </div>
+    </div>
+    <div class="sc-body">
+      <div class="step-row">
+        <div class="row-label">Open new window and test</div>
+        <div class="step-list">
+          <li><div class="bullet">1</div><span>Close Command Prompt / PowerShell completely. Open a <strong>new</strong> Command Prompt.</span></li>
+          <li><div class="bullet">2</div><span>Run:</span></li>
+        </div>
+        <div class="cmd-block" style="margin-top:0.5rem">
+          <span class="cmd-text"><span class="cmd-prompt">C:\&gt;</span> uv --version</span>
+          <button class="cmd-copy" onclick="copyCmd(this,'uv --version')">Copy</button>
+        </div>
+
+        <div class="mockup-wrap">
+          <div class="mockup-label">Expected output</div>
+          <div class="terminal">
+            <div class="terminal-bar">
+              <div class="mac-btn mac-close"></div><div class="mac-btn mac-min"></div><div class="mac-btn mac-max"></div>
+            </div>
+            <div class="terminal-body">
+              <span class="t-line"><span class="t-prompt">C:\Users\you&gt;</span> <span class="t-cmd">uv --version</span></span>
+              <span class="t-line t-success">uv 0.7.x</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="error-box">
+          <h5>Still not found? Fix UV PATH manually</h5>
+          <p>If installed via Option A (PowerShell), UV is placed in <code>%APPDATA%\uv\bin\</code> or <code>%LocalAppData%\uv\bin\</code>. Manual fix:</p>
+          <ul>
+            <li>Open File Explorer, go to <code>%APPDATA%\uv\bin</code> — if you see <code>uv.exe</code> here, note this path</li>
+            <li>Add that folder to your <strong>Path</strong> environment variable (same steps as the Node.js PATH fix in Step 3)</li>
+            <li>Open a new Command Prompt and retry <code>uv --version</code></li>
+          </ul>
+        </div>
+
+        <div class="success-box">
+          <h5>Success — UV is ready ✓</h5>
+          <p><code>uv --version</code> shows a version number. Move on to Phase 4 — Playwright.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════════════ -->
+  <!-- PHASE 4: PLAYWRIGHT -->
+  <!-- ═══════════════════════════════════════════════ -->
+  <div class="phase-header">
+    <span class="phase-badge pb-install">Phase 4</span>
+    <h2>Install Playwright</h2>
+    <span class="phase-time">Steps 10 – 12</span>
+  </div>
+
+  <!-- STEP 10 -->
+  <div class="step-card">
+    <div class="sc-head">
+      <div class="sc-num n-install">10</div>
+      <div class="sc-info">
+        <div class="sc-title">Check if Playwright is Already Installed</div>
+        <div class="sc-why">Playwright may already be present if you have used it before. Any version is compatible.</div>
+      </div>
+      <div class="sc-meta">
+        <div class="sc-time">1 min</div>
+        <div class="sc-tag tag-install">Check</div>
+      </div>
+    </div>
+    <div class="sc-body">
+      <div class="step-row">
+        <div class="row-label">Run the check command</div>
+        <div class="callout callout-info">
+          <h4>What is Playwright?</h4>
+          <p>Playwright is a browser automation framework used for end-to-end testing. It lets you write tests that control a real browser (Chromium, Firefox, or WebKit). BMAD's test architecture skills use Playwright to verify that your application works correctly from a user's perspective.</p>
+        </div>
+        <div class="cmd-block" style="margin-top:0.5rem">
+          <span class="cmd-text"><span class="cmd-prompt">C:\&gt;</span> playwright --version</span>
+          <button class="cmd-copy" onclick="copyCmd(this,'playwright --version')">Copy</button>
+        </div>
+        <div class="mockup-wrap">
+          <div class="mockup-label">Two possible outcomes</div>
+          <div class="terminal">
+            <div class="terminal-bar">
+              <div class="mac-btn mac-close"></div><div class="mac-btn mac-min"></div><div class="mac-btn mac-max"></div>
+            </div>
+            <div class="terminal-body">
+              <span class="t-line"><span class="t-prompt">C:\Users\you&gt;</span> <span class="t-cmd">playwright --version</span></span>
+              <span class="t-line t-success">Version 1.x.x &nbsp;&nbsp;← Playwright IS installed. Skip to Phase 5!</span>
+              <span class="t-line" style="color:var(--faint);font-size:10px;margin-top:0.4rem">—— OR ——</span>
+              <span class="t-line t-error">'playwright' is not recognized &nbsp;← Not installed. Follow Steps 11 and 12.</span>
+            </div>
+          </div>
+        </div>
+        <div class="success-box">
+          <h5>Playwright already installed? Skip ahead!</h5>
+          <p>Any version number means Playwright is installed. <strong>Skip to Phase 5 — Git.</strong></p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- STEP 11 -->
+  <div class="step-card">
+    <div class="sc-head">
+      <div class="sc-num n-install">11</div>
+      <div class="sc-info">
+        <div class="sc-title">Install Playwright via UV (only if missing)</div>
+        <div class="sc-why">Two commands are required — the first installs the Playwright Python package, the second downloads the browser binaries Playwright needs to run tests.</div>
+      </div>
+      <div class="sc-meta">
+        <div class="sc-time">5–10 min</div>
+        <div class="sc-tag tag-install">Install</div>
+      </div>
+    </div>
+    <div class="sc-body">
+      <div class="step-row">
+        <div class="row-label">Step 1 — Install the Playwright package via UV</div>
+        <div class="step-list">
+          <li><div class="bullet">1</div><span>Open Command Prompt (Win + R → cmd → Enter).</span></li>
+          <li><div class="bullet">2</div><span>Run:</span></li>
+        </div>
+        <div class="cmd-block" style="margin-top:0.5rem">
+          <span class="cmd-text"><span class="cmd-prompt">C:\&gt;</span> uv tool install playwright</span>
+          <button class="cmd-copy" onclick="copyCmd(this,'uv tool install playwright')">Copy</button>
+        </div>
+        <div class="step-list" style="margin-top:0.5rem">
+          <li><div class="bullet">3</div><span>Wait for UV to finish downloading and installing the package.</span></li>
+        </div>
+        <div class="mockup-wrap">
+          <div class="mockup-label">Command Prompt — UV installing Playwright</div>
+          <div class="terminal">
+            <div class="terminal-bar">
+              <div class="mac-btn mac-close"></div><div class="mac-btn mac-min"></div><div class="mac-btn mac-max"></div>
+            </div>
+            <div class="terminal-body">
+              <span class="t-line"><span class="t-prompt">C:\Users\you&gt;</span> <span class="t-cmd">uv tool install playwright</span></span>
+              <span class="t-line t-info">Resolved 1 package in 0.5s</span>
+              <span class="t-line t-info">Installed 1 package in 1.2s</span>
+              <span class="t-line t-success"> + playwright==1.x.x</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="step-row">
+        <div class="row-label">Step 2 — Download Chromium browser binaries</div>
+        <div class="callout callout-info" style="margin-bottom:0.65rem">
+          <h4>Why a second command?</h4>
+          <p>The first command installed the Playwright Python package, but Playwright also needs a real browser to automate. This second command downloads a pre-built Chromium binary (~150 MB) that Playwright controls during tests.</p>
+        </div>
+        <div class="step-list">
+          <li><div class="bullet">4</div><span>Run:</span></li>
+        </div>
+        <div class="cmd-block" style="margin-top:0.5rem">
+          <span class="cmd-text"><span class="cmd-prompt">C:\&gt;</span> playwright install chromium</span>
+          <button class="cmd-copy" onclick="copyCmd(this,'playwright install chromium')">Copy</button>
+        </div>
+        <div class="step-list" style="margin-top:0.5rem">
+          <li><div class="bullet">5</div><span>Wait for the download to complete. This takes 2–5 minutes depending on your connection.</span></li>
+        </div>
+        <div class="mockup-wrap">
+          <div class="mockup-label">Command Prompt — downloading Chromium</div>
+          <div class="terminal">
+            <div class="terminal-bar">
+              <div class="mac-btn mac-close"></div><div class="mac-btn mac-min"></div><div class="mac-btn mac-max"></div>
+            </div>
+            <div class="terminal-body">
+              <span class="t-line"><span class="t-prompt">C:\Users\you&gt;</span> <span class="t-cmd">playwright install chromium</span></span>
+              <span class="t-line t-info">Downloading Chromium 1xx.x.xxxx.x (playwright build vxxxx)</span>
+              <span class="t-line t-info">  from https://playwright.azureedge.net/...</span>
+              <span class="t-line t-success">Chromium 1xx.x.xxxx.x (playwright build vxxxx) downloaded to:</span>
+              <span class="t-line t-success">  C:\Users\you\AppData\Local\ms-playwright\chromium-xxxx\</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- STEP 12 -->
+  <div class="step-card">
+    <div class="sc-head">
+      <div class="sc-num n-install">12</div>
+      <div class="sc-info">
+        <div class="sc-title">Verify Playwright Installation</div>
+        <div class="sc-why">Open a new Command Prompt and confirm Playwright is accessible from the command line.</div>
+      </div>
+      <div class="sc-meta">
+        <div class="sc-time">1 min</div>
+        <div class="sc-tag tag-install">Verify</div>
+      </div>
+    </div>
+    <div class="sc-body">
+      <div class="step-row">
+        <div class="row-label">Open new window and test</div>
+        <div class="step-list">
+          <li><div class="bullet">1</div><span>Close Command Prompt. Open a <strong>new</strong> Command Prompt (Win + R → cmd → Enter).</span></li>
+          <li><div class="bullet">2</div><span>Run:</span></li>
+        </div>
+        <div class="cmd-block" style="margin-top:0.5rem">
+          <span class="cmd-text"><span class="cmd-prompt">C:\&gt;</span> playwright --version</span>
+          <button class="cmd-copy" onclick="copyCmd(this,'playwright --version')">Copy</button>
+        </div>
+        <div class="mockup-wrap">
+          <div class="mockup-label">Expected output</div>
+          <div class="terminal">
+            <div class="terminal-bar">
+              <div class="mac-btn mac-close"></div><div class="mac-btn mac-min"></div><div class="mac-btn mac-max"></div>
+            </div>
+            <div class="terminal-body">
+              <span class="t-line"><span class="t-prompt">C:\Users\you&gt;</span> <span class="t-cmd">playwright --version</span></span>
+              <span class="t-line t-success">Version 1.x.x</span>
+            </div>
+          </div>
+        </div>
+        <div class="error-box">
+          <h5>Still not found? Fix Playwright PATH manually</h5>
+          <p>UV tool installs may not update your PATH automatically. Try closing and reopening Command Prompt. If still missing, run <code>uv tool update-shell</code> in a new Command Prompt, then close and reopen again.</p>
+        </div>
+        <div class="success-box">
+          <h5>Success — Playwright is ready ✓</h5>
+          <p><code>playwright --version</code> shows a version number. Move to Phase 5 — Git.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════════════ -->
+  <!-- PHASE 5: GIT + GIT BASH -->
+  <!-- ═══════════════════════════════════════════════ -->
+  <div class="phase-header">
+    <span class="phase-badge pb-warn2">Phase 5</span>
+    <h2>Validate &amp; Install Git + Git Bash</h2>
+    <span class="phase-time">Steps 13 – 15</span>
+  </div>
+
+  <!-- STEP 13 -->
+  <div class="step-card">
+    <div class="sc-head">
+      <div class="sc-num n-warn">13</div>
+      <div class="sc-info">
+        <div class="sc-title">Check if Git is Already Installed</div>
+        <div class="sc-why">Git manages files for BMAD. Git Bash is the shell BMAD uses on Windows. Check if they're already present.</div>
+      </div>
+      <div class="sc-meta">
+        <div class="sc-time">1 min</div>
+        <div class="sc-tag tag-warn">Check</div>
+      </div>
+    </div>
+    <div class="sc-body">
+      <div class="step-row">
+        <div class="row-label">Run the check command</div>
+        <div class="cmd-block">
+          <span class="cmd-text"><span class="cmd-prompt">C:\&gt;</span> git -v</span>
+          <button class="cmd-copy" onclick="copyCmd(this,'git -v')">Copy</button>
+        </div>
+
+        <div class="mockup-wrap">
+          <div class="mockup-label">Two possible outcomes</div>
+          <div class="terminal">
+            <div class="terminal-bar">
+              <div class="mac-btn mac-close"></div><div class="mac-btn mac-min"></div><div class="mac-btn mac-max"></div>
+            </div>
+            <div class="terminal-body">
+              <span class="t-line"><span class="t-prompt">C:\Users\you&gt;</span> <span class="t-cmd">git -v</span></span>
+              <span class="t-line t-success">git version 2.49.0.windows.1 &nbsp;&nbsp;← Git IS installed. Verify Git Bash below.</span>
+              <span class="t-line" style="color:var(--faint);font-size:10px;margin-top:0.4rem">—— OR ——</span>
+              <span class="t-line t-error">'git' is not recognized as an internal or external command &nbsp;← Not installed. Follow Steps 14 and 15.</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="callout callout-info" style="margin-top:0.75rem">
+          <h4>Git found? Also verify Git Bash</h4>
+          <p>If Git is installed, jump to the "Verify Git Bash" section in Step 15 to confirm Git Bash is also available — BMAD needs it.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- STEP 14 -->
+  <div class="step-card">
+    <div class="sc-head">
+      <div class="sc-num n-warn">14</div>
+      <div class="sc-info">
+        <div class="sc-title">Download &amp; Install Git for Windows</div>
+        <div class="sc-why">Git for Windows includes both the Git command-line tool AND Git Bash in a single installer.</div>
+      </div>
+      <div class="sc-meta">
+        <div class="sc-time">5–8 min</div>
+        <div class="sc-tag tag-warn">Install</div>
+      </div>
+    </div>
+    <div class="sc-body">
+      <div class="step-row">
+        <div class="row-label">Download the installer</div>
+        <div class="step-list">
+          <li><div class="bullet">1</div><span>Open your browser and go to:</span></li>
+        </div>
+        <div class="cmd-block" style="margin-top:0.5rem">
+          <span class="cmd-text">https://git-scm.com/downloads/win</span>
+          <button class="cmd-copy" onclick="copyCmd(this,'https://git-scm.com/downloads/win')">Copy</button>
+        </div>
+        <div class="step-list" style="margin-top:0.6rem">
+          <li><div class="bullet">2</div><span>Click <strong>64-bit Git for Windows Setup</strong> to download the installer (file name like <code>Git-2.xx.x-64-bit.exe</code>).</span></li>
+          <li><div class="bullet">3</div><span>Find the downloaded file in your <strong>Downloads</strong> folder and <strong>double-click</strong> it.</span></li>
+        </div>
+      </div>
+
+      <div class="step-row">
+        <div class="row-label">Run the installer</div>
+        <div class="callout callout-info" style="margin-bottom:0.65rem">
+          <h4>Git Bash is included automatically</h4>
+          <p>Git Bash is automatically installed as part of Git for Windows. You do <strong>not</strong> need to select any extra option — just click Next on every screen.</p>
+        </div>
+        <div class="step-list">
+          <li><div class="bullet">4</div><span>Click <strong>Next</strong> on every screen of the installer. All default settings are correct.</span></li>
+          <li><div class="bullet">5</div><span>Click <strong>Install</strong> and wait for it to finish.</span></li>
+          <li><div class="bullet">6</div><span>Click <strong>Finish</strong>. Leave the "Launch Git Bash" checkbox checked if you want to open it immediately.</span></li>
+        </div>
+
+        <div class="mockup-wrap" style="margin-top:0.75rem">
+          <div class="mockup-label">Git for Windows installer</div>
+          <div class="win-window">
+            <div class="win-titlebar">
+              <span class="win-title-text">Git 2.xx.x Setup</span>
+              <div class="win-controls"><span class="win-ctrl">─</span><span class="win-ctrl">□</span><span class="win-ctrl">✕</span></div>
+            </div>
+            <div class="win-body">
+              <div style="font-size:14px;font-weight:700;color:var(--text);margin-bottom:0.4rem;">🔧 Installing Git</div>
+              <div style="font-size:11.5px;color:var(--muted);margin-bottom:0.75rem">Select destination location:</div>
+              <div style="background:var(--surface2);border:1px solid var(--border);padding:0.4rem 0.7rem;font-family:var(--mono);font-size:11px;color:var(--muted);border-radius:4px;margin-bottom:0.75rem">C:\Program Files\Git</div>
+              <div style="font-size:11px;color:var(--muted);margin-bottom:0.75rem">Required disk space: 340 MB</div>
+              <div style="display:flex;justify-content:flex-end;gap:0.5rem">
+                <div style="background:var(--surface2);border:1px solid var(--border);padding:0.3rem 0.9rem;border-radius:4px;font-size:11.5px;cursor:default;color:var(--muted)">Back</div>
+                <div style="background:var(--warn-dim);border:1px solid var(--warn-border);padding:0.3rem 0.9rem;border-radius:4px;font-size:11.5px;color:var(--warn);cursor:default">Next ›</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- STEP 15 RESTART -->
+  <div class="restart-card">
+    <div class="restart-icon">🔄</div>
+    <div>
+      <h3>Step 15 — Restart Your Computer</h3>
+      <p>After installing Git, <strong>restart your computer</strong>. This ensures Git and Git Bash are fully recognized by Windows and all programs, including VS Code. Save any open files before restarting.</p>
+    </div>
+  </div>
+
+  <div class="step-card">
+    <div class="sc-head">
+      <div class="sc-num n-warn">15</div>
+      <div class="sc-info">
+        <div class="sc-title">Verify Git &amp; Git Bash After Restart</div>
+        <div class="sc-why">Confirm git command works and Git Bash is available from the Start Menu and VS Code.</div>
+      </div>
+      <div class="sc-meta">
+        <div class="sc-time">3 min</div>
+        <div class="sc-tag tag-warn">Verify</div>
+      </div>
+    </div>
+    <div class="sc-body">
+      <div class="step-row">
+        <div class="row-label">Verify git command</div>
+        <div class="step-list">
+          <li><div class="bullet">1</div><span>Open Command Prompt (Win + R → cmd → Enter).</span></li>
+          <li><div class="bullet">2</div><span>Run:</span></li>
+        </div>
+        <div class="cmd-block" style="margin-top:0.5rem">
+          <span class="cmd-text"><span class="cmd-prompt">C:\&gt;</span> git -v</span>
+          <button class="cmd-copy" onclick="copyCmd(this,'git -v')">Copy</button>
+        </div>
+        <div class="mockup-wrap">
+          <div class="mockup-label">Expected output</div>
+          <div class="terminal">
+            <div class="terminal-bar">
+              <div class="mac-btn mac-close"></div><div class="mac-btn mac-min"></div><div class="mac-btn mac-max"></div>
+            </div>
+            <div class="terminal-body">
+              <span class="t-line"><span class="t-prompt">C:\Users\you&gt;</span> <span class="t-cmd">git -v</span></span>
+              <span class="t-line t-success">git version 2.49.0.windows.1</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="step-row">
+        <div class="row-label">Verify Git Bash from Start Menu</div>
+        <div class="step-list">
+          <li><div class="bullet">3</div><span>Click the <strong>Start</strong> button and type <strong>Git Bash</strong>.</span></li>
+          <li><div class="bullet">4</div><span>Git Bash should appear in results — click it to open.</span></li>
+          <li><div class="bullet">5</div><span>A terminal window opens with a prompt like <code>user@COMPUTER MINGW64 ~</code>. This is Git Bash.</span></li>
+        </div>
+      </div>
+
+      <div class="step-row">
+        <div class="row-label">Set Git Bash as default in VS Code (optional but recommended)</div>
+        <div class="step-list">
+          <li><div class="bullet">6</div><span>Open <strong>VS Code</strong> and open a terminal: <strong>Terminal → New Terminal</strong>.</span></li>
+          <li><div class="bullet">7</div><span>In the top-right of the terminal panel, click the <strong>dropdown arrow</strong> next to the <code>+</code> button.</span></li>
+          <li><div class="bullet">8</div><span>Select <strong>Git Bash</strong> from the list. Use this Bash terminal for all BMAD work.</span></li>
+        </div>
+
+        <div class="mockup-wrap" style="margin-top:0.75rem">
+          <div class="mockup-label">VS Code — click + dropdown and select Git Bash</div>
+          <div class="vscode-frame">
+            <div style="display:flex;align-items:center;justify-content:space-between;background:var(--surface2);padding:0.4rem 0.85rem;border-bottom:1px solid var(--border)">
+              <span style="font-size:11px;color:var(--muted);font-family:var(--mono)">TERMINAL &nbsp; PROBLEMS &nbsp; OUTPUT</span>
+              <div style="display:flex;align-items:center;gap:0.5rem">
+                <span style="font-size:18px;color:var(--muted);cursor:pointer">+</span>
+                <span style="font-size:12px;color:var(--install);border:1px solid var(--install-border);padding:0.1rem 0.3rem;border-radius:2px;cursor:pointer">▾</span>
+              </div>
+            </div>
+            <div style="display:flex">
+              <div style="flex:1;padding:0.5rem">
+                <div class="dropdown-mockup" style="width:220px;margin-left:auto">
+                  <div class="dd-item">Command Prompt</div>
+                  <div class="dd-item">PowerShell</div>
+                  <div class="dd-item active">Git Bash &nbsp; ✓ Select this</div>
+                  <div class="dd-item">JavaScript Debug Terminal</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="success-box">
+          <h5>Success — Git and Git Bash are ready ✓</h5>
+          <p><code>git -v</code> shows version <strong>2.x.x</strong> and Git Bash opens from the Start Menu. Move to Phase 6.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════════════ -->
+  <!-- PHASE 6: BMAD FRAMEWORK -->
+  <!-- ═══════════════════════════════════════════════ -->
+  <div class="phase-header">
+    <span class="phase-badge pb-bmad2">Phase 6</span>
+    <h2>Install BMAD Framework</h2>
+    <span class="phase-time">Steps 16 – 18</span>
+  </div>
+
+  <!-- STEP 16 -->
+  <div class="step-card">
+    <div class="sc-head">
+      <div class="sc-num n-bmad">16</div>
+      <div class="sc-info">
+        <div class="sc-title">Open Git Bash &amp; Navigate to Your Project Folder</div>
+        <div class="sc-why">BMAD must be installed from inside your project folder. Git Bash is required on Windows — not regular Command Prompt.</div>
+      </div>
+      <div class="sc-meta">
+        <div class="sc-time">2 min</div>
+        <div class="sc-tag tag-bmad">Setup</div>
+      </div>
+    </div>
+    <div class="sc-body">
+      <div class="step-row">
+        <div class="row-label">Open Git Bash</div>
+        <div class="step-list">
+          <li><div class="bullet">1</div><span>Click <strong>Start</strong> and search for <strong>Git Bash</strong>. Open it.</span></li>
+          <li><div class="bullet">2</div><span>A terminal window appears. Navigate to your project folder:</span></li>
+        </div>
+        <div class="cmd-block" style="margin-top:0.5rem">
+          <span class="cmd-text"><span class="cmd-prompt">$</span> cd ~/Desktop/BMAD_Project</span>
+          <button class="cmd-copy" onclick="copyCmd(this,'cd ~/Desktop/BMAD_Project')">Copy</button>
+        </div>
+        <div class="cmd-note">Replace <code>BMAD_Project</code> with the actual name of your project folder if it's different.</div>
+
+        <div class="callout callout-info" style="margin-top:0.65rem">
+          <h4>Tip — drag the folder to get the path</h4>
+          <p>In Git Bash, type <code>cd </code> (with a space), then drag your project folder from Windows Explorer into the Git Bash window. The path will be filled in automatically. Press Enter.</p>
+        </div>
+
+        <div class="mockup-wrap">
+          <div class="mockup-label">Git Bash — navigated to project folder</div>
+          <div class="terminal">
+            <div class="terminal-bar">
+              <div class="mac-btn mac-close"></div><div class="mac-btn mac-min"></div><div class="mac-btn mac-max"></div>
+              <span style="font-family:var(--mono);font-size:10px;color:var(--muted);margin-left:0.75rem">Git Bash</span>
+            </div>
+            <div class="terminal-body">
+              <span class="t-line"><span class="t-prompt">user@COMPUTER MINGW64 ~</span></span>
+              <span class="t-line"><span class="t-prompt">$</span> <span class="t-cmd">cd ~/Desktop/BMAD_Project</span></span>
+              <span class="t-line"><span class="t-prompt">user@COMPUTER MINGW64 ~/Desktop/BMAD_Project</span></span>
+              <span class="t-line"><span class="t-prompt">$</span> <span style="color:var(--text)">_</span></span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- STEP 17 -->
+  <div class="step-card">
+    <div class="sc-head">
+      <div class="sc-num n-bmad">17</div>
+      <div class="sc-info">
+        <div class="sc-title">Install the BMAD Framework</div>
+        <div class="sc-why">Run the BMAD installer from inside your project folder using Git Bash.</div>
+      </div>
+      <div class="sc-meta">
+        <div class="sc-time">5–10 min</div>
+        <div class="sc-tag tag-bmad">Install</div>
+      </div>
+    </div>
+    <div class="sc-body">
+      <div class="step-row">
+        <div class="row-label">Run the BMAD installer</div>
+        <div class="step-list">
+          <li><div class="bullet">1</div><span>In Git Bash (inside your project folder), run:</span></li>
+        </div>
+        <div class="cmd-block" style="margin-top:0.5rem">
+          <span class="cmd-text"><span class="cmd-prompt">$</span> npx bmad-method install</span>
+          <button class="cmd-copy" onclick="copyCmd(this,'npx bmad-method install')">Copy</button>
+        </div>
+
+        <div class="callout callout-info" style="margin-top:0.65rem">
+          <h4>If prompted "Ok to proceed?"</h4>
+          <p>On the first run, npm may ask: <code>Need to install the following packages: bmad-method. Ok to proceed? (y)</code> — type <code>y</code> and press <strong>Enter</strong>.</p>
+        </div>
+
+        <div class="mockup-wrap">
+          <div class="mockup-label">Git Bash — BMAD installation output</div>
+          <div class="terminal">
+            <div class="terminal-bar">
+              <div class="mac-btn mac-close"></div><div class="mac-btn mac-min"></div><div class="mac-btn mac-max"></div>
+              <span style="font-family:var(--mono);font-size:10px;color:var(--muted);margin-left:0.75rem">Git Bash — BMAD_Project</span>
+            </div>
+            <div class="terminal-body">
+              <span class="t-line"><span class="t-prompt">$</span> <span class="t-cmd">npx bmad-method install</span></span>
+              <span class="t-line t-info">Need to install the following packages:</span>
+              <span class="t-line t-info">&nbsp;&nbsp;bmad-method@6.x.x</span>
+              <span class="t-line t-info">Ok to proceed? (y) <span class="t-cmd">y</span></span>
+              <span class="t-line" style="margin-top:0.3rem"></span>
+              <span class="t-line t-info">Installing BMAD Method v6.x.x...</span>
+              <span class="t-line t-success">✓ Core module installed</span>
+              <span class="t-line t-success">✓ Configuration written</span>
+              <span class="t-line t-bmad">✓ Ready to use BMAD agents</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="step-list" style="margin-top:0.65rem">
+          <li><div class="bullet">2</div><span>Wait for the installation to complete — this may take <strong>2–5 minutes</strong> as packages are downloaded.</span></li>
+          <li><div class="bullet">3</div><span>When the installer finishes, you should see a success message and a <strong>_bmad/</strong> folder created in your project directory.</span></li>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- STEP 18 -->
+  <div class="step-card">
+    <div class="sc-head">
+      <div class="sc-num n-bmad">18</div>
+      <div class="sc-info">
+        <div class="sc-title">Validate BMAD Installation</div>
+        <div class="sc-why">Confirm BMAD installed correctly and is ready to use.</div>
+      </div>
+      <div class="sc-meta">
+        <div class="sc-time">2 min</div>
+        <div class="sc-tag tag-bmad">Verify</div>
+      </div>
+    </div>
+    <div class="sc-body">
+      <div class="step-row">
+        <div class="row-label">Check BMAD version</div>
+        <div class="cmd-block">
+          <span class="cmd-text"><span class="cmd-prompt">$</span> npx bmad-method --version</span>
+          <button class="cmd-copy" onclick="copyCmd(this,'npx bmad-method --version')">Copy</button>
+        </div>
+
+        <div class="mockup-wrap">
+          <div class="mockup-label">Expected output — BMAD version number</div>
+          <div class="terminal">
+            <div class="terminal-bar">
+              <div class="mac-btn mac-close"></div><div class="mac-btn mac-min"></div><div class="mac-btn mac-max"></div>
+            </div>
+            <div class="terminal-body">
+              <span class="t-line"><span class="t-prompt">$</span> <span class="t-cmd">npx bmad-method --version</span></span>
+              <span class="t-line t-bmad">6.x.x</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="step-list" style="margin-top:0.65rem">
+          <li><div class="bullet">A</div><span>Also check that a <code>_bmad/</code> folder was created in your project folder — this confirms the framework files are installed locally.</span></li>
+        </div>
+
+        <div class="success-box" style="margin-top:0.75rem">
+          <h5>🎉 BMAD Framework is installed and ready!</h5>
+          <p><code>npx bmad-method --version</code> shows a version number and the <code>_bmad/</code> folder exists. You can now open VS Code, load your project folder, and start using <strong>BMAD agents</strong>.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- CONTACT / AUTHOR CARD -->
+  <div class="callout callout-bmad" style="margin-top:3rem">
+    <h4>Having trouble? Reach out to the author</h4>
+    <p>This playbook was created by <strong>Puneet Gaur</strong> and <strong>Nagaraj Yanambakkam</strong> for the BMAD Training programme.<br>
+    If you encounter any issue not covered in this guide, please reach out to:<br><br>
+    <strong>Puneet Gaur</strong> &nbsp;/&nbsp; <strong>Nagaraj Yanambakkam</strong></p>
+  </div>
+
+  <!-- TIPS -->
+  <div class="tips-section">
+    <h3>💡 Tips for Windows Users</h3>
+    <div class="tips-grid">
+      <div class="tip">
+        <strong>Always open a new window after installing</strong>
+        PATH changes only take effect in new Command Prompt / PowerShell / Git Bash windows. If a command isn't found, close and reopen the terminal first.
+      </div>
+      <div class="tip">
+        <strong>Machine restart solves many issues</strong>
+        If any command still fails after fixing the PATH, try restarting your machine entirely. A full restart guarantees all environment changes take effect.
+      </div>
+      <div class="tip">
+        <strong>All tools here are free</strong>
+        Node.js, Python, UV, Git, and BMAD are all free and widely used in professional software development.
+      </div>
+      <div class="tip">
+        <strong>Git Bash is required for BMAD</strong>
+        The BMAD installer and its scripts need Git Bash (not regular Command Prompt or PowerShell) on Windows. Always use Git Bash for BMAD commands.
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<script>
+function toggleTheme() {
+  const root = document.documentElement;
+  const current = root.getAttribute('data-theme') || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+  const next = current === 'dark' ? 'light' : 'dark';
+  root.setAttribute('data-theme', next);
+  localStorage.setItem('bmad-theme', next);
+}
+function downloadPDF() { window.print(); }
+function copyCmd(btn, text) {
+  navigator.clipboard.writeText(text).then(() => {
+    const orig = btn.textContent;
+    btn.textContent = 'Copied!';
+    btn.style.color = 'var(--check)';
+    setTimeout(() => { btn.textContent = orig; btn.style.color = ''; }, 1800);
+  }).catch(() => {
+    // fallback for environments without clipboard API
+    const ta = document.createElement('textarea');
+    ta.value = text;
+    ta.style.position = 'fixed';
+    ta.style.opacity = '0';
+    document.body.appendChild(ta);
+    ta.select();
+    document.execCommand('copy');
+    document.body.removeChild(ta);
+    const orig = btn.textContent;
+    btn.textContent = 'Copied!';
+    btn.style.color = 'var(--check)';
+    setTimeout(() => { btn.textContent = orig; btn.style.color = ''; }, 1800);
+  });
+}
+// Restore saved theme on page load
+(function() {
+  const saved = localStorage.getItem('bmad-theme');
+  if (saved) document.documentElement.setAttribute('data-theme', saved);
+})();
+</script>
+</body>
+</html>
